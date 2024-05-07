@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
 
-import CVKHotel from "@/public/images/CVK-Hotel.jpg";
 import location from "@/public/icons/location.svg";
 import share from "@/public/icons/share.svg";
 import checkInOut from "@/public/icons/checkInOut.svg";
