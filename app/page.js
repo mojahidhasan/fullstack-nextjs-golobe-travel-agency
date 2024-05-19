@@ -8,15 +8,13 @@ import { auth } from "@/lib/auth";
 
 export default async function HomePage() {
   const session = await auth();
-  const isLoggedIn = !!session?.user;
   return (
     <>
       <header className="relative mb-20">
         <Nav
           type="home"
           className={"absolute left-0 top-0"}
-          isLoggedIn={isLoggedIn}
-          user={session?.user}
+          session={session}
         />
         <section
           className={`flex h-[600px] items-center rounded-3xl bg-home-header bg-cover bg-[center_40%] bg-no-repeat`}

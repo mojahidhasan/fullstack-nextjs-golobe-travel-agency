@@ -17,6 +17,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import Link from "next/link";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { signOut } from "@/lib/actions";
 export function AvatarWithName({
@@ -28,13 +29,10 @@ export function AvatarWithName({
     <DropdownMenu>
       <DropdownMenuTrigger asChild className="focus-visible:ring-offset-[none]">
         <Button variant="link" className={"gap-2 text-inherit"}>
-          <Image
-            src={profilePic}
-            alt="profile_pic"
-            height={45}
-            width={45}
-            className="rounded-full"
-          />
+          <Avatar>
+            <AvatarImage src={profilePic} className="rounded-full" />
+            <AvatarFallback></AvatarFallback>
+          </Avatar>
           <span>{profileName}</span>
         </Button>
       </DropdownMenuTrigger>

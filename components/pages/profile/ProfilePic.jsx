@@ -1,5 +1,5 @@
 import { UploadCoverPhoto } from "./ui/UploadCoverPhoto";
-import { Avatar } from "./ui/Avatar";
+import { ProfileAvatar } from "./ui/ProfileAvatar";
 import Image from "next/image";
 
 export function ProfilePic({ avatar, cover, name, email }) {
@@ -19,7 +19,7 @@ export function ProfilePic({ avatar, cover, name, email }) {
       </div>
       <div className="relative -top-[80px] flex w-full flex-col items-center">
         <div className="relative mb-[24px] inline-block rounded-full border-4 border-tertiary">
-          <Avatar avatar={avatar} />
+          <ProfileAvatar avatar={avatar} />
         </div>
         <div className="text-center">
           <h2 className="text-[1.5rem] font-semibold">{name}</h2>

@@ -1,24 +1,24 @@
 import { ActiveNavLink } from "@/components/ui/nav/ActiveNavLink";
 import { Logo } from "@/components/Logo";
-import { ProfileSettings } from "@/components/ui/nav/ProfileSettings";
 import { AvatarWithName } from "@/components/ui/nav/AvatarWithName";
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
 import { SideBar } from "@/components/ui/nav/SideBar";
 import { cn } from "@/lib/utils";
-import { Separator } from "@/components/ui/separator";
 
-import { getUserData } from "@/lib/data";
+import { getUserData, getAvatar } from "@/lib/data";
 
-export async function Nav({
-  isLoggedIn = false,
-  className,
-  type = "default",
-  user,
-  ...props
-}) {
+export async function Nav({ className, type = "default", session, ...props }) {
+  const isLoggedIn = !!session?.user;
+  let nameOfUser, avatar;
+  if (isLoggedIn) {
+    const userData = await getUserData(session.user.email);
+    avatar = await getAvatar(userData.profileInfo.images.avatar);
+    nameOfUser =
+      userData.profileInfo.firstname + " " + userData.profileInfo.lastname;
+  }
+
   const types = {
     home: {
       nav: "rounded-[24px] px-[32px] text-white backdrop-blur-[2px]",
@@ -33,13 +33,6 @@ export async function Nav({
       btnSignup: "text-white bg-secondary hover:bg-secondary/90",
     },
   };
-  const userData = await getUserData(user?.email);
-  const nameOfUser =
-    userData?.profileInfo?.firstname + " " + userData?.profileInfo?.lastname;
-  const avatarUrl = userData?.profileInfo?.images?.avatar;
-
-  const getAvatar = await fetch(avatarUrl);
-  const avatar = (await getAvatar.json()).img;
 
   return (
     <nav
