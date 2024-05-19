@@ -20,7 +20,7 @@ export function FlightResultCard({
   }
 
   return (
-    <div className="flex h-min rounded-l-[8px] rounded-r-[8px] bg-white text-[0.75rem] font-medium text-secondary shadow-small max-md:flex-col">
+    <div className="flex shadow-md h-min rounded-l-[8px] rounded-r-[8px] bg-white text-[0.75rem] font-medium text-secondary shadow-small max-md:flex-col">
       <div className="aspect-square h-auto w-full max-md:h-[200px] md:w-[300px]">
         <Image
           width={300}
@@ -67,7 +67,7 @@ export function FlightResultCard({
           </div>
           <div className="flex gap-[40px]">
             <div className="flex gap-[12px]">
-              <div className="h-[18px] w-[18px] rounded-sm border-2 border-secondary/25"></div>
+              <div className="min-h-[18px] h-[18px] w-[18px] min-w-[18px] rounded-sm border-2 border-secondary/25"></div>
               <div>
                 <p className="text-[1rem] font-semibold">12:00 pm - 01:28 pm</p>
                 <p className="text-[0.875rem] text-secondary/40">Emirates</p>

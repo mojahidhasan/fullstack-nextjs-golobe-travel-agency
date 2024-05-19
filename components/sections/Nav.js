@@ -10,10 +10,13 @@ import { SideBar } from "@/components/ui/nav/SideBar";
 import { cn } from "@/lib/utils";
 import { Separator } from "@/components/ui/separator";
 
-export function Nav({
+import { getUserData } from "@/lib/data";
+
+export async function Nav({
   isLoggedIn = false,
   className,
   type = "default",
+  user,
   ...props
 }) {
   const types = {
@@ -30,6 +33,10 @@ export function Nav({
       btnSignup: "text-white bg-secondary hover:bg-secondary/90",
     },
   };
+  const userData = await getUserData(user?.email);
+  const nameOfUser =
+    userData?.profileInfo?.firstname + " " + userData?.profileInfo?.lastname;
+  const avatar = userData?.profileInfo?.images?.avatar;
 
   return (
     <nav
@@ -85,7 +92,7 @@ export function Nav({
 
           <div className="flex gap-2">
             <Button asChild variant="link" className={"gap-2 text-inherit"}>
-              <AvatarWithName />
+              <AvatarWithName profileName={nameOfUser} profilePic={avatar} />
             </Button>
           </div>
         </div>

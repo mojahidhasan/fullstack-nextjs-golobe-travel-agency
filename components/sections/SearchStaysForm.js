@@ -2,13 +2,12 @@ import { option } from "@/data/selectInputOption";
 import { Button } from "../ui/button";
 import Image from "next/image";
 import { DatePicker } from "../ui/DatePicker";
-import { Combobox } from "../ui/ComboBox";
+import { Combobox } from "../local-ui/ComboBox";
 import { AddPromoCode } from "../AddPromoCode";
-
-// import building from "../../assets/icons/building.svg";
-// import addOutline from "../../assets/icons/add-outline.svg";
-import { Check } from "lucide-react";
-
+import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
 function SearchStaysForm() {
   return (
     <form action="/flights/search" method="get">
@@ -28,7 +27,7 @@ function SearchStaysForm() {
 
           <div className="h-full grow">
             <Combobox
-              placeholder="Where are you going?"
+              defaultValue="Where are you going?"
               searchResult={option}
               className={"h-full w-full"}
             />
@@ -83,10 +82,67 @@ function SearchStaysForm() {
             Rooms - Guests
           </span>
           <div className="h-full grow">
-            <Combobox
-              searchResult={option}
-              className="h-full w-full rounded-[8px]"
-            />
+            <Popover>
+              <PopoverTrigger
+                asChild
+                className="h-full w-full justify-start rounded-lg"
+              >
+                <Button className="font-normal justify-start" variant={"ghost"}>
+                  {`1 Room, 1 Guest`}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent>
+                <Card className="p-3 bg-primary/30 border-primary border-2 mb-3">
+                  <CardHeader className="p-0 mb-4">
+                    <CardTitle>Rooms</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0">
+                    <Label>
+                      <Input
+                        defaultValue={1}
+                        label="Adult"
+                        type="number"
+                        min={0}
+                        max={10}
+                        // onChange={(e) => {
+                        //   setFormData({
+                        //     ...formData,
+                        //     passenger: {
+                        //       ...formData.passenger,
+                        //       adult: e.currentTarget.value,
+                        //     },
+                        //   });
+                        // }}
+                      />
+                    </Label>
+                  </CardContent>
+                </Card>
+                <Card className="p-3 bg-primary/30 border-primary border-2">
+                  <CardHeader className="p-0 mb-4">
+                    <CardTitle>Guests</CardTitle>
+                  </CardHeader>
+                  <CardContent className="p-0 flex-col flex gap-3">
+                    <Label>
+                      <Input
+                        defaultValue={1}
+                        type="number"
+                        min={0}
+                        max={10}
+                        // onChange={(e) => {
+                        //   setFormData({
+                        //     ...formData,
+                        //     passenger: {
+                        //       ...formData.passenger,
+                        //       adult: e.currentTarget.value,
+                        //     },
+                        //   });
+                        // }}
+                      />
+                    </Label>
+                  </CardContent>
+                </Card>
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
       </div>

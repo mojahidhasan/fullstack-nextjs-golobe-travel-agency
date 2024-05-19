@@ -1,5 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 // const { createSlice } = require("@reduxjs/toolkit");
+
 const initialState = {
   value: 0,
 };
@@ -10,6 +11,7 @@ const counterSlice = createSlice({
   reducers: {
     increment: (state) => {
       state.value += 1;
+      localStorage.setItem("counter", JSON.stringify(state.value));
     },
     decrement: (state) => {
       state.value -= 1;

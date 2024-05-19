@@ -1,35 +1,32 @@
 import { NextResponse } from "next/server";
-
 export const authConfig = {
   pages: {
     signIn: "/login",
   },
+  session: {
+    strategy: "jwt",
+  },
   callbacks: {
     authorized({ auth, request }) {
-      const isLoggedIn = !!auth?.user;
-      const requestHeaders = new Headers(request.headers);
-      requestHeaders.set("x-pathname", request.nextUrl.pathname);
-
-      const response = NextResponse.next({
-        headers: requestHeaders,
-      });
-
-      switch (request.nextUrl.pathname) {
-        case "/login":
-          if (isLoggedIn) {
-            return NextResponse.redirect(request.nextUrl.origin);
-          }
-          return response;
-        case "/dashboard":
-        case "/profile":
-          if (isLoggedIn) {
-            return NextResponse.next();
-          }
-          return false;
-        default:
-          return response;
+      const isloggedIn = !!auth?.user;
+      const isOnLoginPage = request.nextUrl.pathname === "/login";
+      if (isloggedIn && isOnLoginPage) {
+        //callbackPath will come from protected route when it is hit without login
+        const callbackPath =
+          request.nextUrl.searchParams.get("callbackPath") || "/";
+        return NextResponse.redirect(
+          new URL(decodeURIComponent(callbackPath), request.nextUrl.origin)
+        );
       }
+      return true;
+    },
+    async session({ session, token }) {
+      // Send properties to the client, like an access_token and user id from a provider.
+      session.accessToken = token.accessToken;
+      session.user.id = token.id;
+
+      return session;
     },
   },
-  providers: [], // Add providers with an empty array for now
+  providers: [],
 };

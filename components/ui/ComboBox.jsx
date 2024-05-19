@@ -27,13 +27,12 @@ export function Combobox({
     const filter = items.filter((item) =>
       item.label.toLowerCase().includes(value.toLowerCase())
     );
-    console.log(filter);
     setFilter(filter);
   }
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <Input value={value} name={name} disabled type="hidden" />
+      <input value={value} name={name} disabled type="hidden" />
       <PopoverTrigger className={className} asChild>
         <Button variant="ghost" className="justify-start font-normal">
           {value === "" ? placeholder : value}
@@ -51,7 +50,7 @@ export function Combobox({
           ) : (
             filter.map((obj) => (
               <div
-                key={obj.value}
+                key={obj.label}
                 onClick={() => {
                   setValue(obj.label === value ? "" : obj.label);
                   setOpen(false);

@@ -1,22 +1,26 @@
-export const option = [
+import { faker } from "@faker-js/faker";
+const option = [
   {
-    value: "next.js",
-    label: "Next.js",
+    label: "Dhaka, Bangladesh",
   },
   {
-    value: "sveltekit",
-    label: "SvelteKit",
+    label: "Chittagong, Bangladesh",
   },
   {
-    value: "nuxt.js",
-    label: "Nuxt.js",
+    label: "Sylhet, Bangladesh",
   },
   {
-    value: "remix",
-    label: "Remix",
+    label: "Rajshahi, Bangladesh",
   },
   {
-    value: "astro",
-    label: "Astro",
+    label: "Kolkata, India",
   },
 ];
+
+for (let i = 0; i < 100; i++) {
+  option.push({
+    label: faker.location.city() + ", " + faker.location.country(),
+  });
+}
+
+export { option };

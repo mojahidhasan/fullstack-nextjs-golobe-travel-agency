@@ -15,15 +15,11 @@ import { Label } from "@/components/ui/label";
 import Image from "next/image";
 
 import { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { setPromocode } from "@/reduxStore/features/flightFormSlice";
 
 import { debounce } from "@/lib/utils";
-export function AddPromoCode() {
+export function AddPromoCode({ defaultCode = "", getPromoCode = () => {} }) {
   const [open, setOpen] = useState(false);
-  const [promo, setPromo] = useState("");
-  const dispatch = useDispatch();
-  const state = useSelector((state) => state.flightForm);
+  const [promo, setPromo] = useState(defaultCode);
   return (
     <Dialog
       open={open}
@@ -53,7 +49,7 @@ export function AddPromoCode() {
             id="name"
             name="promocode"
             className="col-span-3"
-            defaultValue={state.promocode}
+            defaultValue={promo}
             onChange={debounce((e) => {
               setPromo(e.target.value);
             }, 200)}
@@ -64,7 +60,7 @@ export function AddPromoCode() {
             type="button"
             onClick={() => {
               setOpen(false);
-              dispatch(setPromocode(promo));
+              getPromoCode(promo);
             }}
           >
             Save changes

@@ -7,10 +7,13 @@ export function Rating({ className, setRating }) {
       onValueChange={(value) => {
         setRating(value);
       }}
-      className={cn("w-full [data-state=on]:bg-primary/20", className)}
+      className={cn(
+        "w-full [&_button[data-state=on]]:bg-primary/20 [&_button]:border [&_button[data-state=on]]:border-primary",
+        className
+      )}
     >
       <ToggleGroupItem
-        className="[data-state=on]:bg-primary/20"
+        className="data-[state=on]:bg-primary/20"
         name={"star1"}
         value="1"
         aria-label="Toggle 1 star"

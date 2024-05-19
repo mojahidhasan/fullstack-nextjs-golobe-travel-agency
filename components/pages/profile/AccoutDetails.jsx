@@ -4,7 +4,7 @@ export function AccoutDetails({ data }) {
   const accountDetails = {
     name: data.firstname + " " + data.lastname,
     email: data.email,
-    phoneNo: data.phone,
+    phoneNo: data.phone.number,
     address: data?.address,
     dateOfBirth: data?.dateOfBirth,
   };
@@ -41,9 +41,13 @@ export function AccoutDetails({ data }) {
       <div className="flex items-center justify-between">
         <div>
           <h4 className="mb-[8px] opacity-75">Email</h4>
-          <p className="text-[1.25rem] font-semibold">
-            {accountDetails?.email}
-          </p>
+          {accountDetails?.email.map((item, index) => {
+            return (
+              <p key={index} className="text-[1.25rem] font-semibold">
+                {item.username}
+              </p>
+            );
+          })}
         </div>
         <div className="flex items-center gap-[8px]">
           <Button variant={"outline"} className={"gap-2"}>
@@ -146,7 +150,7 @@ export function AccoutDetails({ data }) {
         <div>
           <h4 className="mb-[8px] opacity-75">Address</h4>
           <p className="text-[1.25rem] font-semibold">
-            {accountDetails.address}
+            {accountDetails.address || "N/A"}
           </p>
         </div>
         <Button variant={"outline"} className={"gap-2"}>
@@ -175,7 +179,7 @@ export function AccoutDetails({ data }) {
         <div>
           <h4 className="mb-[8px] opacity-75">Date of birth</h4>
           <p className="text-[1.25rem] font-semibold">
-            {accountDetails.dateOfBirth || "None"}
+            {accountDetails.dateOfBirth || "N/A"}
           </p>
         </div>
         <Button variant={"outline"} className={"gap-2"}>

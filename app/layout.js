@@ -2,6 +2,7 @@ import { Montserrat } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
+import { Toaster } from "@/components/ui/toaster";
 import { WebVitals } from "@/components/web-vitals";
 import { StoreProvider } from "./StoreProvider";
 
@@ -31,6 +32,7 @@ export default function RootLayout({ children }) {
             {/* <WebVitals /> */}
             {children}
           </div>
+          <Toaster className="bg-secondary" />
         </body>
       </html>
     </StoreProvider>

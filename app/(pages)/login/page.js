@@ -1,9 +1,12 @@
 import { LoginForm } from "@/components/pages/login/LoginForm";
 import { Logo } from "@/components/Logo";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+} from "@/components/local-ui/carousel";
 import Image from "next/image";
-
-export const dynamic = "force-dynamic";
-export default function LoginPage({ searchParams }) {
+export default async function LoginPage({ searchParams }) {
   return (
     <section className="relative mx-auto flex h-screen w-[90%] items-center justify-between gap-[40px] py-[104px] xl:gap-[100px]">
       <div className="grow text-left">
@@ -21,13 +24,37 @@ export default function LoginPage({ searchParams }) {
         <LoginForm callbackUrl={searchParams?.callbackUrl} />
       </div>
       <div className="hidden h-full max-w-[40%] min-w-[300px] md:block xl:max-w-[490px]">
-        <Image
-          className="h-full w-full rounded-[30px] object-cover object-center"
-          src="https://source.unsplash.com/490x490/?travel&airplane&flight&hotel"
-          alt=""
-          width={490}
-          height={490}
-        />
+        <Carousel className={"w-full h-full rounded-[30px]"}>
+          <CarouselContent>
+            <CarouselItem>
+              <Image
+                className="h-full w-full object-cover object-center"
+                src="https://source.unsplash.com/Koei_7yYtIo"
+                alt=""
+                width={490}
+                height={490}
+              />
+            </CarouselItem>
+            <CarouselItem>
+              <Image
+                className="h-full w-full object-cover object-center"
+                src="https://source.unsplash.com/Emvf_emPMdY"
+                alt=""
+                width={490}
+                height={490}
+              />
+            </CarouselItem>
+            <CarouselItem>
+              <Image
+                className="h-full w-full object-cover object-center"
+                src="https://source.unsplash.com/cnL7ebMpuSo"
+                alt=""
+                width={490}
+                height={490}
+              />
+            </CarouselItem>
+          </CarouselContent>
+        </Carousel>
       </div>
     </section>
   );

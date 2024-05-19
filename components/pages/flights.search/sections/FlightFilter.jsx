@@ -60,7 +60,10 @@ export function FlightsFilter({ className }) {
 
   return (
     <section
-      className={cn("relative w-[400px] border-r-[1px] pr-[12px]", className)}
+      className={cn(
+        "relative lg:w-[400px] w-full border-none lg:border-r-[1px] pr-[12px]",
+        className
+      )}
     >
       <div className="flex items-center justify-between mb-[32px] font-semibold text-secondary">
         <Button

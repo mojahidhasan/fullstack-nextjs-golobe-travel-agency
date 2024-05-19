@@ -13,7 +13,6 @@ import { signOut } from "@/lib/actions";
 
 import { LogIn } from "lucide-react";
 import love from "@/public/icons/love.svg";
-import signup from "@/public/icons/signup.svg";
 import plane from "@/public/icons/airplane-filled.svg";
 import hotel from "@/public/icons/building.svg";
 import user from "@/public/icons/user.svg";
@@ -116,7 +115,7 @@ export function SideBar({ isLoggedIn }) {
                     variant="link"
                     asChild
                   >
-                    <Link href="/flights">
+                    <Link href="/signup">
                       <svg
                         width="24"
                         height="24"

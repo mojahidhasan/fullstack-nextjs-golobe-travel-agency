@@ -5,70 +5,129 @@ import Image from "next/image";
 import { Button } from "../ui/button";
 import { DatePickerWithRange } from "../ui/DatePickerWithRange";
 import { SearchAirportDropdown } from "@/components/SearchAirportDropdown";
-import { Combobox } from "../ui/ComboBox";
+import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
+import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+
+import { Label } from "../ui/label";
+import { Input } from "../ui/input";
 import { SelectTrip } from "../SelectTrip";
 import { AddPromoCode } from "../AddPromoCode";
 
-import { useRouter } from "next/navigation";
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
 
-import {
-  setFrom,
-  setTo,
-  setDepart,
-  setReturn,
-} from "@/reduxStore/features/flightFormSlice";
+import { addDays } from "date-fns";
 
 import { option } from "@/data/selectInputOption";
-import swap from "../../public/icons/swap.svg";
+import swap from "@/public/icons/swap.svg";
 
-function SearchFlightsForm() {
-  const router = useRouter();
-  const dispatch = useDispatch();
-  const flightFormState = useSelector((state) => state.flightForm);
-
+function SearchFlightsForm({ searchParams = {} }) {
+  let searchParamsObj = {};
+  if (Object.keys(searchParams).length > 0) {
+    for (const [key, value] of Object.entries(searchParams)) {
+      if (key === "passenger") {
+        searchParamsObj[key] = JSON.parse(value);
+        continue;
+      }
+      searchParamsObj[key] = value;
+    }
+  } else {
+    searchParamsObj = {
+      from: "",
+      to: "",
+      depart: new Date().toISOString(),
+      return: addDays(new Date(), 7).toISOString(),
+      trip: "Economy",
+      passenger: {
+        adult: 1,
+        children: 0,
+      },
+      class: "Economy",
+      promocode: "",
+    };
+  }
+  const [formData, setFormData] = useState(searchParamsObj);
   function handleSubmit(e) {
     e.preventDefault();
-    console.log(flightFormState);
-    const params = new URLSearchParams();
-    Object.entries(flightFormState).forEach(([key, value]) => {
-      if (value && key !== "filters") params.append(key, value);
-    });
-    router.push(`/flights/search?${params.toString()}`);
+    const str = processSearchParams(new FormData(e.target));
+    const makeUrlSearchParams = new URLSearchParams(str).toString();
+    console.log(makeUrlSearchParams);
+    e.target.submit();
   }
+
+  function processSearchParams(paramObj) {
+    const formObj = {};
+
+    for (const [keys, value] of Object.entries(Object.fromEntries(paramObj))) {
+      if (keys === "passenger") {
+        formObj[keys] = JSON.parse(value);
+        continue;
+      }
+      formObj[keys] = value;
+    }
+
+    return formObj;
+  }
+  function totalPassenger() {
+    return Object.values(formData.passenger).reduce((a, b) => +a + +b, 0);
+  }
+
   return (
-    <form id="flightform" onSubmit={handleSubmit}>
+    <form id="flightform" action="/flights/search" onSubmit={handleSubmit}>
+      <input type="hidden" name="from" value={formData.from} />
+      <input type="hidden" name="to" value={formData.to} />
+      <input type="hidden" name="depart" value={formData.depart} />
+      <input type="hidden" name="return" value={formData.return} />
+      <input
+        type="hidden"
+        value={JSON.stringify(formData.passenger)}
+        form="flightform"
+        name="passenger"
+      />
+      <input
+        type="hidden"
+        value={formData.class}
+        form="flightform"
+        name="class"
+      />
+
       <div className="my-[20px] grid gap-[24px] lg:grid-cols-2 xl:grid-cols-[2fr_1fr_repeat(2,_2fr)]">
-        <div className="relative flex h-[48px] w-full items-center gap-[4px] rounded-[8px] border-2 border-primary">
+        <div className="relative justify-between flex h-[48px] w-full items-center gap-[4px] rounded-[8px] border-2 border-primary">
           <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
             From - to
           </span>
 
-          <div className="h-full grow">
+          <div className="h-full w-[45%]">
             <SearchAirportDropdown
               name={"from"}
-              defaultValue={""}
+              defaultValue={formData.from}
               searchResult={option}
-              className="h-full w-full"
+              className="h-full w-full text-start"
               getAirportName={(value) => {
-                dispatch(setFrom(value));
+                setFormData({ ...formData, from: value });
               }}
             />
           </div>
-          <span className="select-none font-bold">—</span>
+          <span className="select-none text-center font-normal">{/*—*/}-</span>
 
-          <div className="h-full grow">
+          <div className="h-full w-[45%]">
             <SearchAirportDropdown
               searchResult={option}
-              className="h-full w-full"
+              defaultValue={formData.to}
+              className="h-full w-full text-start"
               name={"to"}
               getAirportName={(value) => {
-                dispatch(setTo(value));
+                setFormData({ ...formData, to: value });
               }}
             />
           </div>
-          <div className="p-2 rounded-lg hover:bg-slate-400/20 transition-all transition-[duration:.4s]">
-            <Image alt="" width={16} height={16} src={swap} />
+          <div className="flex h-full items-center justify-center w-[10%] rounded-lg hover:bg-slate-400/20 transition-all transition-[duration:.4s]">
+            <Image
+              alt=""
+              className="min-h-[16px] min-w-[16px]"
+              width={16}
+              height={16}
+              src={swap}
+            />
           </div>
         </div>
 
@@ -77,7 +136,7 @@ function SearchFlightsForm() {
             Trip
           </span>
           <div className="h-full">
-            <SelectTrip />
+            <SelectTrip tripType={formData.trip} />
           </div>
         </div>
         <div
@@ -88,12 +147,16 @@ function SearchFlightsForm() {
           <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
             Depart - Return
           </span>
+
           <DatePickerWithRange
             name={"depart&return"}
             className={"h-full w-full border-0"}
             getDate={(value) => {
-              dispatch(setDepart(value.from.toISOString()));
-              dispatch(setReturn(value.to.toISOString()));
+              setFormData({
+                ...formData,
+                depart: value.from.toISOString(),
+                return: value.to.toISOString(),
+              });
             }}
           />
         </div>
@@ -102,26 +165,88 @@ function SearchFlightsForm() {
           <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
             Passenger - Class
           </span>
-          <div className="h-full grow">
-            <Combobox
-              name={"passenger"}
-              searchResult={option}
-              className="h-full w-full"
-            />
-          </div>
-          <span className="shrink select-none font-bold">—</span>
-
-          <div className="h-full grow">
-            <Combobox
-              name={"class"}
-              searchResult={option}
-              className="h-full w-full"
-            />
-          </div>
+          <Popover>
+            <PopoverTrigger
+              asChild
+              className="h-full w-full justify-start rounded-lg"
+            >
+              <Button className="font-normal" variant={"ghost"}>
+                {`${totalPassenger(formData.passenger)} ${
+                  totalPassenger(formData.passenger) > 1 ? "people" : "person"
+                }, ${formData.class}`}
+              </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+              <Card className="p-3 bg-primary/30 border-primary border-2 mb-3">
+                <CardHeader className="p-0 mb-4">
+                  <CardTitle>Class</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0">
+                  <div className="border-2 border-primary rounded-lg">
+                    <SelectTrip
+                      getValue={(value) =>
+                        setFormData({ ...formData, class: value })
+                      }
+                    />
+                  </div>
+                </CardContent>
+              </Card>
+              <Card className="p-3 bg-primary/30 border-primary border-2">
+                <CardHeader className="p-0 mb-4">
+                  <CardTitle>Passenger</CardTitle>
+                </CardHeader>
+                <CardContent className="p-0 flex-col flex gap-3">
+                  <Label>
+                    Adult:
+                    <Input
+                      defaultValue={+formData.passenger.adult}
+                      label="Adult"
+                      type="number"
+                      min={0}
+                      max={10}
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          passenger: {
+                            ...formData.passenger,
+                            adult: e.currentTarget.value,
+                          },
+                        });
+                      }}
+                    />
+                  </Label>
+                  <Label>
+                    Children:
+                    <Input
+                      defaultValue={formData.passenger.children}
+                      label="Children"
+                      type="number"
+                      min={0}
+                      max={5}
+                      onChange={(e) => {
+                        setFormData({
+                          ...formData,
+                          passenger: {
+                            ...formData.passenger,
+                            children: e.currentTarget.value,
+                          },
+                        });
+                      }}
+                    />
+                  </Label>
+                </CardContent>
+              </Card>
+            </PopoverContent>
+          </Popover>
         </div>
       </div>
       <div className="flex justify-end gap-[24px]">
-        <AddPromoCode />
+        <AddPromoCode
+          defaultCode={formData.promocode}
+          getPromoCode={(promo) => {
+            setFormData({ ...formData, promocode: promo });
+          }}
+        />
         <Button type="submit" className="gap-1">
           <Image
             width={24}

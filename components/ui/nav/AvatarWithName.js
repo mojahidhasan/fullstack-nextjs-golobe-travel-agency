@@ -29,13 +29,13 @@ export function AvatarWithName({
       <DropdownMenuTrigger asChild className="focus-visible:ring-offset-[none]">
         <Button variant="link" className={"gap-2 text-inherit"}>
           <Image
-            src={"https://source.unsplash.com/45x45"}
+            src={profilePic}
             alt="profile_pic"
             height={45}
             width={45}
             className="rounded-full"
           />
-          <span>John D.</span>
+          <span>{profileName}</span>
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent
@@ -46,7 +46,7 @@ export function AvatarWithName({
         <DropdownMenuLabel>
           <div className="flex items-center gap-3">
             <Image
-              src={"https://source.unsplash.com/45x45"}
+              src={profilePic}
               alt="profile_pic"
               height={50}
               width={50}

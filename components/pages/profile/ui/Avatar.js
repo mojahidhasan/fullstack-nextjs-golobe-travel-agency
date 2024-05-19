@@ -9,9 +9,9 @@ export function Avatar({ avatar }) {
       <Image
         width={160}
         height={160}
-        src={avatar || "https://source.unsplash.com/0YHIlxeCuhg"}
+        src={avatar}
         alt="defaultProfilePhoto"
-        className="h-[160px] w-[160px] rounded-full object-cover object-center"
+        className="h-[160px] bg-slate-500 w-[160px] rounded-full object-cover object-center"
       />
       <Button
         className={

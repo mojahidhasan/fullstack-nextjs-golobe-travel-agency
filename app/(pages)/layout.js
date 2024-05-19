@@ -4,7 +4,7 @@ import { Footer } from "@/components/sections/Footer";
 import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 
-export default async function PagesLayout({ children, params }) {
+export default async function PagesLayout({ children }) {
   const user = await auth();
   const isLoggedIn = !!user?.user;
   const currentPathname = headers().get("x-pathname");
@@ -16,7 +16,9 @@ export default async function PagesLayout({ children, params }) {
   );
   return (
     <>
-      {isAllowed && <Nav isLoggedIn={isLoggedIn} type="default" />}
+      {isAllowed && (
+        <Nav user={user?.user} isLoggedIn={isLoggedIn} type="default" />
+      )}
       {children}
       {isAllowed && <Footer />}
     </>

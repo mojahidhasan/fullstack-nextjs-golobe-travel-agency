@@ -37,7 +37,10 @@ export function SearchAirportDropdown({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger className={className} asChild>
-        <Button variant="ghost" className="justify-start font-normal">
+        <Button
+          variant="ghost"
+          className="justify-start line-clamp-1 font-normal"
+        >
           {value === "" ? "Select airport" : value}
         </Button>
       </PopoverTrigger>
@@ -47,25 +50,27 @@ export function SearchAirportDropdown({
           placeholder="Search..."
           onChange={handleChange}
         />
-        <div>
-          {Object.keys(filter).length < 1 ? (
-            <div className="p-4 text-center text-sm">No results found</div>
-          ) : (
-            filter.map((obj) => (
-              <div
-                key={obj.value}
-                onClick={() => {
-                  setValue(obj.label === value ? "" : obj.label);
-                  setOpen(false);
-                  getValue(obj.label === value ? "" : obj.label);
-                }}
-                obj={obj.label}
-                className="flex cursor-pointer items-center justify-between p-4 hover:bg-muted"
-              >
-                <div className="text-sm">{obj.label}</div>
-              </div>
-            ))
-          )}
+        <div className="h-80 overflow-auto">
+          <div className="">
+            {Object.keys(filter).length < 1 ? (
+              <div className="p-4 text-center text-sm">No results found</div>
+            ) : (
+              filter.map((obj) => (
+                <div
+                  key={obj.label}
+                  onClick={() => {
+                    setValue(obj.label === value ? "" : obj.label);
+                    setOpen(false);
+                    getValue(obj.label === value ? "" : obj.label);
+                  }}
+                  obj={obj.label}
+                  className="flex cursor-pointer items-center justify-between p-4 hover:bg-muted"
+                >
+                  <div className="text-sm">{obj.label}</div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </PopoverContent>
     </Popover>

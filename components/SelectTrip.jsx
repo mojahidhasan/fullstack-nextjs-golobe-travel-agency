@@ -9,19 +9,24 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 
-import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
 import { setTrip } from "@/reduxStore/features/flightFormSlice";
 
-export function SelectTrip() {
-  const state = useSelector((state) => state.flightForm);
-  const dispatch = useDispatch();
+export function SelectTrip({ tripType = "Economy", getValue = () => {} }) {
+  const [trip, setTrip] = useState(tripType);
   return (
-    <SelectShadcn onValueChange={(value) => dispatch(setTrip(value))}>
-      <SelectTrigger className="focus-within::ring-0 bg-white hover:bg-slate-500/10 w-full h-full border-0 ring-blue-700">
+    <SelectShadcn
+      onValueChange={(value) => {
+        setTrip(value);
+        getValue(value);
+      }}
+    >
+      <input value={trip} name="trip" type="hidden" />
+      <SelectTrigger className="focus:ring-transparent focus:ring-offset-0 bg-white hover:bg-slate-500/10 w-full h-full border-0 ">
         <SelectValue
           className="h-full"
-          defaultValue={state.trip}
-          placeholder={state.trip}
+          defaultValue={trip}
+          placeholder={trip}
         />
       </SelectTrigger>
       <SelectContent className={"bg-primary"}>
