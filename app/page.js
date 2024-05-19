@@ -16,6 +16,7 @@ export default async function HomePage() {
           type="home"
           className={"absolute left-0 top-0"}
           isLoggedIn={isLoggedIn}
+          user={session?.user}
         />
         <section
           className={`flex h-[600px] items-center rounded-3xl bg-home-header bg-cover bg-[center_40%] bg-no-repeat`}

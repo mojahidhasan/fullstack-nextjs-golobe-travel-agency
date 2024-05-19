@@ -1,4 +1,9 @@
 import { Button } from "@/components/ui/button";
+import {
+  AvatarFallback,
+  AvatarImage,
+  Avatar as RadixAvatar,
+} from "@/components/ui/avatar";
 import Image from "next/image";
 
 import pen from "@/public/icons/pen.svg";
@@ -6,13 +11,10 @@ import pen from "@/public/icons/pen.svg";
 export function Avatar({ avatar }) {
   return (
     <>
-      <Image
-        width={160}
-        height={160}
-        src={avatar}
-        alt="defaultProfilePhoto"
-        className="h-[160px] bg-slate-500 w-[160px] rounded-full object-cover object-center"
-      />
+      <RadixAvatar className="h-[160px] bg-slate-500 w-[160px] rounded-full object-cover object-center">
+        <AvatarImage src={avatar} alt="profilePic" />
+        <AvatarFallback></AvatarFallback>
+      </RadixAvatar>
       <Button
         className={
           "absolute bottom-0 right-0 flex h-[44px] w-[44px] items-center justify-center rounded-full bg-tertiary p-0"
