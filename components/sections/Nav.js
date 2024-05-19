@@ -36,7 +36,10 @@ export async function Nav({
   const userData = await getUserData(user?.email);
   const nameOfUser =
     userData?.profileInfo?.firstname + " " + userData?.profileInfo?.lastname;
-  const avatar = userData?.profileInfo?.images?.avatar;
+  const avatarUrl = userData?.profileInfo?.images?.avatar;
+
+  const getAvatar = await fetch(avatarUrl);
+  const avatar = (await getAvatar.json()).img;
 
   return (
     <nav

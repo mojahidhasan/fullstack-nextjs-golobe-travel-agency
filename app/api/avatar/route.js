@@ -1,9 +1,10 @@
 import { ImageResponse } from "next/og";
-
+import { NextResponse } from "next/server";
 export async function GET(req) {
   const { searchParams } = new URL(req.url);
   const params = Object.fromEntries(searchParams);
-  return new ImageResponse(
+
+  const imgRes = new ImageResponse(
     (
       <div
         style={{
@@ -27,4 +28,11 @@ export async function GET(req) {
       height: 128,
     }
   );
+
+  const blob = await imgRes.blob();
+  const buffer = await blob.arrayBuffer();
+
+  return NextResponse.json({
+    img: `data:${blob.type};base64,${Buffer.from(buffer).toString("base64")}`,
+  });
 }

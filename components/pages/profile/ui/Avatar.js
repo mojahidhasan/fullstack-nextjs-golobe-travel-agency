@@ -8,11 +8,13 @@ import Image from "next/image";
 
 import pen from "@/public/icons/pen.svg";
 
-export function Avatar({ avatar }) {
+export async function Avatar({ avatar }) {
+  const getAvt = await fetch(avatar);
+  const avt = (await getAvt.json()).img;
   return (
     <>
       <RadixAvatar className="h-[160px] bg-slate-500 w-[160px] rounded-full object-cover object-center">
-        <AvatarImage src={avatar} alt="profilePic" />
+        <AvatarImage src={avt} alt="profilePic" />
         <AvatarFallback></AvatarFallback>
       </RadixAvatar>
       <Button
