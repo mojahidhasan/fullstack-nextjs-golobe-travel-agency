@@ -14,10 +14,14 @@ export async function Nav({ className, type = "default", session, ...props }) {
   let nameOfUser, avatar;
   if (isLoggedIn) {
     const userData = await getUserData(session.user.email);
-    if (!validateURL(userData.profileInfo.images.avatar)) {
+    if (userData.profileInfo.images.avatar.startsWith("data:image")) {
       avatar = userData.profileInfo.images.avatar;
     } else {
-      avatar = await getAvatar(userData.profileInfo.images.avatar);
+      avatar = await getAvatar(
+        process.env.NEXT_PUBLIC_API_URL +
+          "/avatar" +
+          userData.profileInfo.images.avatar
+      );
     }
     nameOfUser =
       userData.profileInfo.firstname + " " + userData.profileInfo.lastname;

@@ -13,17 +13,20 @@ export function ProfileAvatar({ avatar }) {
 
   useEffect(() => {
     (async function () {
-      if (!validateURL(avatar)) {
+      if (avatar.startsWith("data:image")) {
         setAvt(avatar);
         return;
       }
-      if (validateURL(avatar)) {
-        const getAvt = await fetch(avatar, {
-          next: {
-            tags: ["avatar"],
-            revalidate: 3600,
-          },
-        });
+      if (avatar.startsWith("?name")) {
+        const getAvt = await fetch(
+          process.env.NEXT_PUBLIC_API_URL + "/avatar" + avatar,
+          {
+            next: {
+              tags: ["avatar"],
+              revalidate: 3600,
+            },
+          }
+        );
         const avt = (await getAvt.json()).img;
         setAvt(avt);
         return;
