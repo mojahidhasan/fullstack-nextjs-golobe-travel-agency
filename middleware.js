@@ -7,7 +7,6 @@ const auth = NextAuth(authConfig).auth;
 export default auth((req) => {
   const response = NextResponse.next();
   response.headers.set("x-pathname", req.nextUrl.pathname);
-  console.log("middleware", req.nextUrl.pathname);
   return response;
 });
 

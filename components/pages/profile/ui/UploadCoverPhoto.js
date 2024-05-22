@@ -26,9 +26,9 @@ export function UploadCoverPhoto() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button className={"gap-1"}>
+        <Button className={"gap-1 h-auto p-2"}>
           <Image alt="upload_icon" width={24} height={24} src={upload} />
-          <span>Upload new cover</span>
+          <span className="hidden sm:inline">Upload new cover</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">

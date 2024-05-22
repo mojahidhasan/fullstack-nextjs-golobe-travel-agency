@@ -5,7 +5,7 @@ import { AvatarWithName } from "@/components/ui/nav/AvatarWithName";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SideBar } from "@/components/ui/nav/SideBar";
-import { cn } from "@/lib/utils";
+import { cn, validateURL } from "@/lib/utils";
 
 import { getUserData, getAvatar } from "@/lib/data";
 
@@ -14,7 +14,11 @@ export async function Nav({ className, type = "default", session, ...props }) {
   let nameOfUser, avatar;
   if (isLoggedIn) {
     const userData = await getUserData(session.user.email);
-    avatar = await getAvatar(userData.profileInfo.images.avatar);
+    if (!validateURL(userData.profileInfo.images.avatar)) {
+      avatar = userData.profileInfo.images.avatar;
+    } else {
+      avatar = await getAvatar(userData.profileInfo.images.avatar);
+    }
     nameOfUser =
       userData.profileInfo.firstname + " " + userData.profileInfo.lastname;
   }

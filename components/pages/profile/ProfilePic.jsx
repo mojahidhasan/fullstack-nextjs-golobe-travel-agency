@@ -11,17 +11,15 @@ export function ProfilePic({ avatar, cover, name, email }) {
           height={350}
           src={cover}
           alt="defaultCoverPhoto"
-          className="h-[350px] w-full rounded-[12px] object-cover object-center"
+          className="h-[350px] w-full rounded-md sm:rounded-[12px] object-cover object-center"
         />
         <div className="absolute z-50 bottom-[24px] right-[24px]">
           <UploadCoverPhoto />
         </div>
       </div>
-      <div className="relative -top-[80px] flex w-full flex-col items-center">
-        <div className="relative mb-[24px] inline-block rounded-full border-4 border-tertiary">
-          <ProfileAvatar avatar={avatar} />
-        </div>
-        <div className="text-center">
+      <div className="relative gap-3 -top-[80px] flex w-full xsm:text-center px-5 flex-col items-start xsm:items-center">
+        <ProfileAvatar avatar={avatar} />
+        <div>
           <h2 className="text-[1.5rem] font-semibold">{name}</h2>
           <p className="opacity-75">{email}</p>
         </div>

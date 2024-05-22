@@ -1,32 +1,44 @@
-import { Button } from "@/components/ui/button";
+"use client";
+
 import { AvatarFallback, AvatarImage, Avatar } from "@/components/ui/avatar";
-import Image from "next/image";
 
-import pen from "@/public/icons/pen.svg";
+import { UploadProfilePicture } from "./UploadProfilePicture";
 
-export async function ProfileAvatar({ avatar }) {
-  const getAvt = await fetch(avatar);
-  const avt = (await getAvt.json()).img;
+import { useState, useEffect } from "react";
+
+import { validateURL } from "@/lib/utils";
+
+export function ProfileAvatar({ avatar }) {
+  const [avt, setAvt] = useState(null);
+
+  useEffect(() => {
+    (async function () {
+      if (!validateURL(avatar)) {
+        setAvt(avatar);
+        return;
+      }
+      if (validateURL(avatar)) {
+        const getAvt = await fetch(avatar, {
+          next: {
+            tags: ["avatar"],
+            revalidate: 3600,
+          },
+        });
+        const avt = (await getAvt.json()).img;
+        setAvt(avt);
+        return;
+      }
+    })();
+  }, [avatar]);
   return (
     <>
-      <Avatar className="h-[160px] bg-slate-500 w-[160px] rounded-full object-cover object-center">
-        <AvatarImage src={avt} alt="profilePic" />
-        <AvatarFallback></AvatarFallback>
-      </Avatar>
-      <Button
-        className={
-          "absolute bottom-0 right-0 flex h-[44px] w-[44px] items-center justify-center rounded-full bg-tertiary p-0"
-        }
-        variant={"icon"}
-      >
-        <Image
-          className="h-auto w-auto"
-          width={44}
-          height={44}
-          src={pen}
-          alt=""
-        />
-      </Button>
+      <div className="relative inline-block rounded-full border-4 border-tertiary">
+        <Avatar className="h-[160px] bg-background w-[160px] rounded-full object-cover object-center">
+          <AvatarImage src={avt} alt="profilePic" />
+          <AvatarFallback>Loading...</AvatarFallback>
+        </Avatar>
+        <UploadProfilePicture />
+      </div>
     </>
   );
 }

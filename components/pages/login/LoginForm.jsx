@@ -34,9 +34,8 @@ export function LoginForm() {
         });
         router.replace("/login");
       }
-
-      return () => clearTimeout(timeout);
     }, 1000);
+    return () => clearTimeout(timeout);
   }, [searchParams]);
 
   const errors = {};
