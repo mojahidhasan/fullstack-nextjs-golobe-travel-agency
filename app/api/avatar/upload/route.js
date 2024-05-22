@@ -22,6 +22,7 @@ export async function POST(request) {
     revalidateTag("avatar");
     return new Response("OK", { status: 200 });
   } catch (error) {
+    console.error(error);
     throw new Error("Something went wrong");
   }
 }
