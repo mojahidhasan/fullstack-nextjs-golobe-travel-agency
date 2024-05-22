@@ -3,6 +3,8 @@ import { ProfileData } from "@/components/pages/profile/ProfileData";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getUserData } from "@/lib/data";
+
+export const maxDuration = 30;
 export default async function ProfilePage() {
   const user = (await auth())?.user;
   const isloggedIn = !!user;
