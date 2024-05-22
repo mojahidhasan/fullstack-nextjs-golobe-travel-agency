@@ -56,6 +56,7 @@ export function UploadProfilePicture() {
         body: new Uint8Array(buffer),
       }
     );
+    console.log(res);
     if (res.status === 200) {
       toast({
         title: "Success",
