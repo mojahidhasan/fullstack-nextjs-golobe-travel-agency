@@ -49,10 +49,13 @@ export function UploadProfilePicture() {
       title: "Uploading...",
       description: "Your avatar is being uploaded",
     });
-    const res = await fetch("http://localhost:3000/api/avatar/upload", {
-      method: "POST",
-      body: new Uint8Array(buffer),
-    });
+    const res = await fetch(
+      process.env.NEXT_PUBLIC_API_URL + "/avatar/upload",
+      {
+        method: "POST",
+        body: new Uint8Array(buffer),
+      }
+    );
     if (res.status === 200) {
       toast({
         title: "Success",
