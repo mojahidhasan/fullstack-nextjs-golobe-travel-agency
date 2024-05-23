@@ -40,6 +40,7 @@
     "mongoose": "^8.3.2",
     "next": "14.2.3",
     "next-auth": "^5.0.0-beta.17",
+    "nextjs-toploader": "^1.6.12",
     "react": "^18",
     "react-avatar-editor": "^13.0.2",
     "react-day-picker": "^8.10.1",

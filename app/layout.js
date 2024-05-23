@@ -4,6 +4,7 @@ import "./globals.css";
 
 import { Toaster } from "@/components/ui/toaster";
 import { WebVitals } from "@/components/web-vitals";
+import NextTopLoader from "nextjs-toploader";
 import { StoreProvider } from "./StoreProvider";
 
 import db from "@/lib/db";
@@ -38,6 +39,7 @@ export default function RootLayout({ children }) {
     <StoreProvider>
       <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
         <body className={monse.className}>
+          <NextTopLoader color="hsl(159, 44%, 69%)" showSpinner={false} />
           <div className="max-w-[1440px] mx-auto">
             {/* <WebVitals /> */}
             {children}
