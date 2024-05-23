@@ -17,64 +17,49 @@ import Image from "next/image";
 
 import AvatarEditor from "react-avatar-editor";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
+import { useFormState } from "react-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
+
+import { changeProfilePicture } from "@/lib/actions";
 
 import pen from "@/public/icons/pen.svg";
 
 export function UploadProfilePicture() {
   const [file, setFile] = useState(null);
-  const [buffer, setBuffer] = useState(null);
   const [preview, setPreview] = useState(null);
   const [saved, setSaved] = useState(false);
 
   const editorRef = useRef(null);
+
+  const [state, dispatch] = useFormState(changeProfilePicture, undefined);
 
   const { toast } = useToast();
   const router = useRouter();
 
   function handleSave() {
     const image = editorRef.current.getImage().toDataURL();
-    fetch(image)
-      .then((res) => res.blob())
-      .then(async (blob) => {
-        setBuffer(await blob.arrayBuffer());
-        setPreview(URL.createObjectURL(blob));
-        setSaved(true);
-      });
+    setPreview(image);
+    setSaved(true);
   }
-  async function send() {
-    toast({
-      title: "Uploading...",
-      description: "Your avatar is being uploaded",
-    });
-    const res = await fetch(
-      process.env.NEXT_PUBLIC_API_URL + "/avatar/upload",
-      {
-        method: "POST",
-        body: new Uint8Array(buffer),
-      }
-    );
-    console.log(res);
-    if (res.status === 200) {
+  useEffect(() => {
+    if (state?.success) {
       toast({
         title: "Success",
         description: "Your avatar has been uploaded",
       });
       setFile(null);
-      setBuffer(null);
       setPreview(null);
       setSaved(false);
-      router.refresh();
-    } else {
+    } else if (state?.error) {
       toast({
         title: "Error",
         description: "Something went wrong",
         variant: "destructive",
       });
     }
-  }
+  }, [state]);
 
   return (
     <Dialog>
@@ -103,15 +88,11 @@ export function UploadProfilePicture() {
         </DialogHeader>
         <form
           id="upload_profile_pic_form"
-          onSubmit={(e) => {
-            e.preventDefault();
-            send();
-          }}
           className="flex items-center space-x-2"
         >
           <div className="grid flex-1 gap-2">
             <Label
-              htmlFor="link"
+              htmlFor="upload-profile-pic"
               className="cursor-pointer flex items-center justify-center bg-gray-100 rounded-md border border-gray-200 p-2 text-center w-full"
             >
               <span className="text-sm text-gray-500">Choose a file</span>
@@ -123,9 +104,10 @@ export function UploadProfilePicture() {
                 setSaved(false);
               }}
               accept="image/png, image/jpeg, image/jpg, image/gif"
-              id="link"
+              id="upload-profile-pic"
               type="file"
               className="hidden"
+              name="upload-profile-pic"
             />
           </div>
         </form>
@@ -172,9 +154,15 @@ export function UploadProfilePicture() {
           ))}
 
         <DialogClose asChild>
-          {buffer && (
+          {preview && (
             <Button
-              formAction="submit"
+              formAction={dispatch}
+              onClick={() => {
+                toast({
+                  title: "Uploading...",
+                  description: "Please wait",
+                });
+              }}
               form="upload_profile_pic_form"
               type="submit"
               size="lg"
