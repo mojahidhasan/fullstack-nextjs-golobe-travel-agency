@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { WebVitals } from "@/components/web-vitals";
 import { StoreProvider } from "./StoreProvider";
 
+import db from "@/lib/db";
+
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",
@@ -28,6 +30,8 @@ export const metadata = {
     images: ["https://unsplash.com/photos/Vv3iG9XBNx8"],
   },
 };
+
+await db.connect();
 
 export default function RootLayout({ children }) {
   return (
