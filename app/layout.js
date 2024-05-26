@@ -32,14 +32,14 @@ export const metadata = {
   },
 };
 
-await db.connect();
+// await db.connect();
 
 export default function RootLayout({ children }) {
   return (
     <StoreProvider>
       <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
         <body className={monse.className}>
-          <NextTopLoader color="hsl(159, 44%, 69%)" showSpinner={false} />
+          <NextTopLoader color="hsl(159, 44%, 69%)" />
           <div className="max-w-[1440px] mx-auto">
             {/* <WebVitals /> */}
             {children}
