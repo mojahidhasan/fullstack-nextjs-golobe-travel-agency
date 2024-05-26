@@ -32,7 +32,7 @@ export const metadata = {
   },
 };
 
-// await db.connect();
+await db.connect();
 
 export default function RootLayout({ children }) {
   return (
