@@ -20,28 +20,36 @@ export function BookHotels() {
       </div>
       <div className="grid gap-[16px] sm:grid-cols-2 xl:grid-cols-4">
         <BookingCard
-          bgImg={"https://source.unsplash.com/WR5_Ev_bh-I"}
+          bgImg={
+            "https://images.unsplash.com/photo-1565099824688-e93eb20fe622?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          }
           placeName={"Melbourne"}
           subTitle={"An amazing journey"}
           flightCost={700}
           btnTitle={"Book a Hotel"}
         />
         <BookingCard
-          bgImg={"https://source.unsplash.com/qF_pqc9lZKo"}
+          bgImg={
+            "https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          }
           placeName={"Paris"}
           subTitle={"A Paris Adventure"}
           flightCost={600}
           btnTitle={"Book a Hotel"}
         />
         <BookingCard
-          bgImg={"https://source.unsplash.com/VrbdFH3n9mw"}
+          bgImg={
+            "https://images.unsplash.com/photo-1534974790529-3af7cf1c4075?q=80&w=1087&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          }
           placeName={"London"}
           subTitle={"London eye adventure"}
           flightCost={350}
           btnTitle={"Book a Hotel"}
         />
         <BookingCard
-          bgImg={"https://source.unsplash.com/z_Xqu90w3dg"}
+          bgImg={
+            "https://images.unsplash.com/photo-1606298246186-08868ab77562?q=80&w=1287&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          }
           placeName={"Columbia"}
           subTitle={"Amazing streets"}
           flightCost={700}

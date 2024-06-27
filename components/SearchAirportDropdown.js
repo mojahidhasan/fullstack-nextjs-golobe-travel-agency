@@ -13,25 +13,22 @@ import { useState } from "react";
 export function SearchAirportDropdown({
   className,
   defaultValue = "",
-  searchResult,
-  name,
-  getAirportName,
+  airportsName,
+  getData = () => {},
 }) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState(defaultValue);
-  const [items, setItems] = useState(searchResult);
+  const [items, setItems] = useState(airportsName);
   const [filter, setFilter] = useState(items);
 
   function handleChange(e) {
     const value = e.target.value;
     const filter = items.filter((item) =>
-      item.label.toLowerCase().includes(value.toLowerCase())
+      (item.city + ", " + item.country)
+        .toLowerCase()
+        .includes(value.toLowerCase())
     );
     setFilter(filter);
-  }
-
-  function getValue(value) {
-    getAirportName(value);
   }
 
   return (
@@ -57,16 +54,19 @@ export function SearchAirportDropdown({
             ) : (
               filter.map((obj) => (
                 <div
-                  key={obj.label}
+                  key={obj.code}
                   onClick={() => {
-                    setValue(obj.label === value ? "" : obj.label);
+                    setValue(
+                      obj.city + ", " + obj.country === value
+                        ? ""
+                        : obj.city + ", " + obj.country
+                    );
                     setOpen(false);
-                    getValue(obj.label === value ? "" : obj.label);
+                    getData(obj.city + ", " + obj.country === value ? "" : obj);
                   }}
-                  obj={obj.label}
                   className="flex cursor-pointer items-center justify-between p-4 hover:bg-muted"
                 >
-                  <div className="text-sm">{obj.label}</div>
+                  <div className="text-sm">{obj.city + ", " + obj.country}</div>
                 </div>
               ))
             )}

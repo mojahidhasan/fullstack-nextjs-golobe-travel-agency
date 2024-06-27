@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Fragment } from "react";
 export function PLacesCard({
-  imgSrc = `https://source.unsplash.com/O453M2Liufs`,
+  imgSrc = ``,
   placeName = "Tokyo",
   tags = ["Flight", "Hotel"],
 }) {

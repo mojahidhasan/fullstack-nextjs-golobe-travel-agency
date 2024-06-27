@@ -16,8 +16,7 @@ import { AddPromoCode } from "../AddPromoCode";
 import { useState } from "react";
 
 import { addDays } from "date-fns";
-
-import { option } from "@/data/selectInputOption";
+import { airports } from "@/data/airports";
 import swap from "@/public/icons/swap.svg";
 
 function SearchFlightsForm({ searchParams = {} }) {
@@ -34,6 +33,8 @@ function SearchFlightsForm({ searchParams = {} }) {
     searchParamsObj = {
       from: "",
       to: "",
+      departIataCode: "",
+      arriveIataCode: "",
       depart: new Date().toISOString(),
       return: addDays(new Date(), 7).toISOString(),
       trip: "Economy",
@@ -46,6 +47,7 @@ function SearchFlightsForm({ searchParams = {} }) {
     };
   }
   const [formData, setFormData] = useState(searchParamsObj);
+  console.log(formData);
   function handleSubmit(e) {
     e.preventDefault();
     const str = processSearchParams(new FormData(e.target));
@@ -75,6 +77,16 @@ function SearchFlightsForm({ searchParams = {} }) {
     <form id="flightform" action="/flights/search" onSubmit={handleSubmit}>
       <input type="hidden" name="from" value={formData.from} />
       <input type="hidden" name="to" value={formData.to} />
+      <input
+        type="hidden"
+        name="departIataCode"
+        value={formData.departIataCode}
+      />
+      <input
+        type="hidden"
+        name="arriveIataCode"
+        value={formData.arriveIataCode}
+      />
       <input type="hidden" name="depart" value={formData.depart} />
       <input type="hidden" name="return" value={formData.return} />
       <input
@@ -100,10 +112,14 @@ function SearchFlightsForm({ searchParams = {} }) {
             <SearchAirportDropdown
               name={"from"}
               defaultValue={formData.from}
-              searchResult={option}
+              airportsName={airports}
               className="h-full w-full text-start"
-              getAirportName={(value) => {
-                setFormData({ ...formData, from: value });
+              getData={(value) => {
+                setFormData({
+                  ...formData,
+                  from: value.city + ", " + value.country,
+                  departIataCode: value.code,
+                });
               }}
             />
           </div>
@@ -111,12 +127,16 @@ function SearchFlightsForm({ searchParams = {} }) {
 
           <div className="h-full w-[45%]">
             <SearchAirportDropdown
-              searchResult={option}
+              airportsName={airports}
               defaultValue={formData.to}
               className="h-full w-full text-start"
               name={"to"}
-              getAirportName={(value) => {
-                setFormData({ ...formData, to: value });
+              getData={(value) => {
+                setFormData({
+                  ...formData,
+                  to: value?.city + ", " + value?.country || "",
+                  arriveIataCode: value?.code || "",
+                });
               }}
             />
           </div>

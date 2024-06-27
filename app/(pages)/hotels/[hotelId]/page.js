@@ -102,14 +102,14 @@ export default function HotelDetailsPage() {
         <Image
           height={300}
           className="col-span-2 w-full row-span-2 h-full object-cover object-center"
-          src="https://source.unsplash.com/M7GddPqJowg"
+          src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt=""
           width={302}
         />
         <Image
           className="h-full w-full"
           height={300}
-          src="https://source.unsplash.com/Yrxr3bsPdS0"
+          src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           width={302}
           alt=""
         />
@@ -117,21 +117,21 @@ export default function HotelDetailsPage() {
           className="h-full w-full"
           height={300}
           width={302}
-          src="https://source.unsplash.com/T5pL6ciEn-I"
+          src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt=""
         />
         <Image
           className="h-full w-full"
           height={300}
           width={302}
-          src="https://source.unsplash.com/oxeCZrodz78"
+          src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt=""
         />
         <Image
           className="h-full w-full"
           height={300}
           width={302}
-          src="https://source.unsplash.com/67-sOi7mVIk"
+          src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt=""
         />
         <Button className={"absolute bottom-[8px] right-[8px]"}>
@@ -236,7 +236,7 @@ export default function HotelDetailsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[16px]">
               <Image
-                src="https://source.unsplash.com/oxeCZrodz78"
+                src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
                 width={48}
                 height={48}
@@ -258,7 +258,7 @@ export default function HotelDetailsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[16px]">
               <Image
-                src="https://source.unsplash.com/67-sOi7mVIk"
+                src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
                 width={48}
                 height={48}
@@ -280,7 +280,7 @@ export default function HotelDetailsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[16px]">
               <Image
-                src="https://source.unsplash.com/T5pL6ciEn-I"
+                src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
                 width={48}
                 height={48}
@@ -302,7 +302,7 @@ export default function HotelDetailsPage() {
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-[16px]">
               <Image
-                src="https://source.unsplash.com/T5pL6ciEn-I"
+                src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
                 width={48}
                 height={48}

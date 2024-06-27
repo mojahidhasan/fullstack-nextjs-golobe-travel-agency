@@ -37,7 +37,7 @@ export function Reviews() {
               describedComment={describedComment}
               rate={rate}
               reviewer={reviewer}
-              imgSrc={UNSPLASH_BASE_URL + imgSrc}
+              imgSrc={imgSrc}
             />
           );
         })}

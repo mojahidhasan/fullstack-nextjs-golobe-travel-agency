@@ -1,12 +1,11 @@
 import Link from "next/link";
-import { Button } from "./ui/button";
 import { cn } from "@/lib/utils";
 export function Logo({ worldFill, otherFill, className }) {
   return (
     <Link href={"/"}>
       <svg
-        width="938"
-        height="306"
+        width="120"
+        height="40"
         viewBox="0 0 938 306"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

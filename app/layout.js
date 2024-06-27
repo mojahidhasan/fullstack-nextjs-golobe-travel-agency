@@ -7,7 +7,7 @@ import { WebVitals } from "@/components/web-vitals";
 import NextTopLoader from "nextjs-toploader";
 import { StoreProvider } from "./StoreProvider";
 
-import db from "@/lib/db";
+import mongoose from "mongoose";
 
 const monse = Montserrat({
   subsets: ["latin"],
@@ -32,14 +32,16 @@ export const metadata = {
   },
 };
 
-await db.connect();
+if (mongoose.connection.readyState === 0) {
+  mongoose.connect(process.env.MONGODB_URL);
+}
 
 export default function RootLayout({ children }) {
   return (
     <StoreProvider>
       <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
         <body className={monse.className}>
-          <NextTopLoader color="hsl(159, 44%, 69%)" />
+          <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
           <div className="max-w-[1440px] mx-auto">
             {/* <WebVitals /> */}
             {children}

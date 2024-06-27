@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import Image from "next/image";
 
 export function RecentSearchesCard({
-  imgSrc = `https://source.unsplash.com/O453M2Liufs`,
+  imgSrc = ``,
   placeName = "Tokyo",
   tags = ["Flight", "Hotel"],
 }) {

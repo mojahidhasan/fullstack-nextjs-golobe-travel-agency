@@ -82,7 +82,7 @@ export function FlightData({ data }) {
           width={800}
           height={395}
           className="h-full w-full rounded-[12px] object-cover"
-          src={"https://source.unsplash.com/" + imgSrc}
+          src={imgSrc}
           alt={name}
         />
       </div>

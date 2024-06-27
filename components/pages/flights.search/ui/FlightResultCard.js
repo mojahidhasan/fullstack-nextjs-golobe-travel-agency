@@ -5,8 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-
+import { format } from "date-fns";
+import { minToHour } from "@/lib/utils";
 export function FlightResultCard({
+  data,
   image,
   price = 240,
   rate = 4.2,
@@ -18,7 +20,6 @@ export function FlightResultCard({
   function handleClick() {
     setIsliked(!isLiked);
   }
-
   return (
     <div className="flex shadow-md h-min rounded-l-[8px] rounded-r-[8px] bg-white text-[0.75rem] font-medium text-secondary shadow-small max-md:flex-col">
       <div className="aspect-square h-auto w-full max-md:h-[200px] md:w-[300px]">
@@ -26,7 +27,7 @@ export function FlightResultCard({
           width={300}
           height={300}
           className="h-full w-full rounded-l-[12px] object-cover max-md:rounded-r-[8px]"
-          src={"https://source.unsplash.com/" + image.src}
+          src={image.src}
           alt={image.alt}
         />
       </div>
@@ -45,40 +46,34 @@ export function FlightResultCard({
                 starting from
               </p>
               <p className="text-right text-[1.5rem] font-bold text-tertiary">
-                ${price}
+                ${parseInt(data?.price.base)}
               </p>
             </div>
           </div>
           <div className="mb-[16px] flex gap-[40px]">
             <div className="flex gap-[12px]">
-              <div className="min-h-[18px] h-[18px] w-[18px] min-w-[18px] rounded-sm border-2 border-secondary/25"></div>
+              <div className="min-h-[18px] mt-1 h-[18px] w-[18px] min-w-[18px] rounded-sm border-2 border-secondary/25"></div>
               <div>
-                <p className="text-[1rem] font-semibold">12:00 pm - 01:28 pm</p>
-                <p className="text-[0.875rem] text-secondary/40">Emirates</p>
+                <p className="text-[1rem] font-semibold">
+                  {format(data?.flightDetails.departTime, "hh:mm aaa")} {"- "}
+                  {format(data?.flightDetails.arriveTime, "hh:mm aaa")}
+                </p>
+                <p className="text-[0.875rem] text-secondary/40">
+                  {data?.flightDetails.airline.name}
+                </p>
               </div>
             </div>
             <div>
               <p className="font-semibold text-secondary/75">non stop</p>
             </div>
             <div>
-              <p className="text-secondary/75">2h 28m</p>
-              <p className="text-[0.875rem] text-secondary/40">EWR-BNA</p>
-            </div>
-          </div>
-          <div className="flex gap-[40px]">
-            <div className="flex gap-[12px]">
-              <div className="min-h-[18px] h-[18px] w-[18px] min-w-[18px] rounded-sm border-2 border-secondary/25"></div>
-              <div>
-                <p className="text-[1rem] font-semibold">12:00 pm - 01:28 pm</p>
-                <p className="text-[0.875rem] text-secondary/40">Emirates</p>
-              </div>
-            </div>
-            <div>
-              <p className="font-semibold text-secondary/75">non stop</p>
-            </div>
-            <div>
-              <p className="text-secondary/75">2h 28m</p>
-              <p className="text-[0.875rem] text-secondary/40">EWR-BNA</p>
+              <p className="text-secondary/75">
+                {minToHour(data?.flightDetails.timeTaken)}
+              </p>
+              <p className="text-[0.875rem] text-secondary/40">
+                {data?.flightDetails.departFrom.iataCode}-
+                {data?.flightDetails.arriveTo.iataCode}
+              </p>
             </div>
           </div>
         </div>

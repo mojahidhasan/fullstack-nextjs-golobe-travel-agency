@@ -26,7 +26,7 @@ export function HotelResultCard({
           width={300}
           height={300}
           className="h-full w-full rounded-l-[12px] object-cover max-md:rounded-r-[8px]"
-          src={"https://source.unsplash.com/" + image.src}
+          src={image.src}
           alt={image.alt}
         />
       </div>

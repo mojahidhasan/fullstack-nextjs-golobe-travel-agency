@@ -1,14 +1,15 @@
 "use client";
 import { FlightResultCard } from "../ui/FlightResultCard";
 import { Button } from "@/components/ui/button";
-export function Cheapest() {
+
+export function Cheapest({ data }) {
   return (
     <>
       <div className="my-10">
         <div className="flex my-5 justify-between text-[0.875rem] font-semibold">
           <p>
             Showing {"4"} of{" "}
-            <span className="text-destructive">{"257"} places</span>
+            <span className="text-destructive">{data.length} places</span>
           </p>
           <p>
             <span className="font-normal">Sort by </span>
@@ -22,26 +23,14 @@ export function Cheapest() {
           </p>
         </div>
         <div className="grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2">
-          <FlightResultCard
-            image={{ src: "vv5qijsMPys", alt: "abs" }}
-            liked={false}
-          />
-          <FlightResultCard
-            image={{ src: "vv5qijsMPys", alt: "abs" }}
-            liked={false}
-          />
-          <FlightResultCard
-            image={{ src: "vv5qijsMPys", alt: "abs" }}
-            liked={false}
-          />
-          <FlightResultCard
-            image={{ src: "vv5qijsMPys", alt: "abs" }}
-            liked={false}
-          />
-          <FlightResultCard
-            image={{ src: "vv5qijsMPys", alt: "abs" }}
-            liked={false}
-          />
+          {data.map((item, i) => (
+            <FlightResultCard
+              key={i}
+              image={{ src: "vv5qijsMPys", alt: "abs" }}
+              liked={false}
+              data={item}
+            />
+          ))}
         </div>
 
         <div>

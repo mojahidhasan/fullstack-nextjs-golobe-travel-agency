@@ -2,8 +2,6 @@ import { SectionTitle } from "@/components/SectionTitle";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { PLacesCard } from "@/components/pages/home/ui/PlacesCard";
-
-import { UNSPLASH_BASE_URL } from "@/lib/constants";
 import { places } from "@/data/places";
 
 export function PopularTrips() {
@@ -25,7 +23,7 @@ export function PopularTrips() {
           return (
             <PLacesCard
               key={place.id}
-              imgSrc={UNSPLASH_BASE_URL + place.img}
+              imgSrc={place.img}
               placeName={place.place}
               tags={place.tags}
             />
