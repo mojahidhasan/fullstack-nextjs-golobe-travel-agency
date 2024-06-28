@@ -2,7 +2,7 @@ import { Cheapest } from "@/components/pages/flights.search/sections/Cheapest";
 import { Best } from "@/components/pages/flights.search/sections/Best";
 import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { getFlight } from "@/data/flights";
+import { getFlight } from "@/data/flights.mjs";
 import { minToHour } from "@/lib/utils";
 async function FLightResultPage({ searchParams }) {
   const data = await getFlight(searchParams);
