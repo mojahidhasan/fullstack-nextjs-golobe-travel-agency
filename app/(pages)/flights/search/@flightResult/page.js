@@ -3,9 +3,10 @@ import { Best } from "@/components/pages/flights.search/sections/Best";
 import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { getFlight } from "@/data/flights.mjs";
+import db from "@/lib/db";
 import { minToHour } from "@/lib/utils";
 async function FLightResultPage({ searchParams }) {
-  const data = await getFlight(searchParams);
+  const data = await db.getFlightSearchResult(searchParams);
   console.log(data);
   const sortByCheapest = data.slice(0).sort((a, b) => {
     return +a.price.base - +b.price.base;
