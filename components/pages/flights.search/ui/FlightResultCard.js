@@ -7,19 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { minToHour } from "@/lib/utils";
-export function FlightResultCard({
-  data,
-  image,
-  price = 240,
-  rate = 4.2,
-  reviews = 371,
-  liked = true,
-  id = 123,
-}) {
+export function FlightResultCard({ data, liked, image }) {
   const [isLiked, setIsliked] = useState(liked);
   function handleClick() {
     setIsliked(!isLiked);
   }
+
   return (
     <div className="flex shadow-md h-min rounded-l-[8px] rounded-r-[8px] bg-white text-[0.75rem] font-medium text-secondary shadow-small max-md:flex-col">
       <div className="aspect-square h-auto w-full max-md:h-[200px] md:w-[300px]">
@@ -46,7 +39,7 @@ export function FlightResultCard({
                 starting from
               </p>
               <p className="text-right text-[1.5rem] font-bold text-tertiary">
-                ${parseInt(data?.price.base)}
+                ${parseInt(data?.price?.base)}
               </p>
             </div>
           </div>
@@ -55,11 +48,11 @@ export function FlightResultCard({
               <div className="min-h-[18px] mt-1 h-[18px] w-[18px] min-w-[18px] rounded-sm border-2 border-secondary/25"></div>
               <div>
                 <p className="text-[1rem] font-semibold">
-                  {format(data?.flightDetails.departTime, "hh:mm aaa")} {"- "}
-                  {format(data?.flightDetails.arriveTime, "hh:mm aaa")}
+                  {format(data?.flightDetails?.departTime, "hh:mm aaa")} {"- "}
+                  {format(data?.flightDetails?.arriveTime, "hh:mm aaa")}
                 </p>
                 <p className="text-[0.875rem] text-secondary/40">
-                  {data?.flightDetails.airline.name}
+                  {data?.flightDetails?.airline?.name}
                 </p>
               </div>
             </div>
