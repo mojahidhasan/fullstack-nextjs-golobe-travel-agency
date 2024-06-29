@@ -10,7 +10,7 @@ A full-stack nextjs project to practice and showcase the work. UI design was tak
 
 Here is the live preview of this website [golob-travel-agency.vercel.app](https://golob-travel-agency.vercel.app)
 
-###Note:
+### Note:
 
 - This website is not a real travel agency website. This was only for practicing web development. Every data is shown here are not real data. This website used [fakerjs](https://fakerjs.dev/) to generate fake data also fake data will be used for hotel data as well when it is implemented.
 - This website can collect information from some places (e.g: subscription, signup, payment method adding, profile photo and cover photo uploading etc.). So it is recommended not to provide your real information there. This website does not verify email during sign up. So you can signup using fake email. But if you sign in with google, facebook, or apple, it can collect your real information. So do it with caution. And **Never provide your real card data here**. Use fake data instead. This data will only be saved in database and will do nothing with it. You can still test buying tickets functionalities with fake data.
