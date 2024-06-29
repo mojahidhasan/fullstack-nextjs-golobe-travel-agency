@@ -8,6 +8,8 @@ Welcome to the repository for Golobe Travel Service’s website, your go-to plat
 
 A full-stack nextjs project to practice and showcase the work. UI design was taken from [Figma community](https://www.figma.com/community/file/1182308758714734501/golobe-travel-agency-website).
 
+Here is the live preview of this website [golob-travel-agency.vercel.app](https://golob-travel-agency.vercel.app)
+
 ## Technologies used in this project
 
 <img src="https://nextjs.org/favicon.ico" width="16" height="16"> Next js v14
