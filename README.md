@@ -10,15 +10,15 @@ This is a full-stack nextjs project to practice and showcase the work.
 
 ## Technologies used in this project
 
-<font size="20"><img src="https://nextjs.org/favicon.ico" width="16" height="16"> Next js</font>
+<font size="50"><img src="https://nextjs.org/favicon.ico" width="16" height="16"> Next js</font>
 
-<font size="20"><img src="https://www.mongodb.com/assets/images/global/favicon.ico" width="16" height="16"> MongoDB</font>
+<font size="50"><img src="https://www.mongodb.com/assets/images/global/favicon.ico" width="16" height="16"> MongoDB</font>
 
-<font size="20"><img src="https://tailwindcss.com/favicons/favicon-32x32.png?v=3" width="16" height="16"> Tailwind CSS</font>
+<font size="50"><img src="https://tailwindcss.com/favicons/favicon-32x32.png?v=3" width="16" height="16"> Tailwind CSS</font>
 
-<font size="20"><img src="https://redux.js.org/img/favicon/favicon.ico" width="16" height="16"> Redux</font>
+<font size="50"><img src="https://redux.js.org/img/favicon/favicon.ico" width="16" height="16"> Redux</font>
 
-<font size="20"><img src="https://authjs.dev/favicon-32x32.png" width="16" height="16"> Next Auth</font>
+<font size="50"><img src="https://authjs.dev/favicon-32x32.png" width="16" height="16"> Next Auth</font>
 
 First, run the development server:
 
