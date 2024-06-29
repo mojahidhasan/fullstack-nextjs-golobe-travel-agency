@@ -10,11 +10,11 @@ This is a full-stack nextjs project to practice and showcase the work.
 
 ## Technologies used in this project
 
-- <img src="https://nextjs.org/favicon.ico" width="32" height="32"> <span font="32">Next js</span>
-- ![mongodb_icon](https://www.mongodb.com/assets/images/global/favicon.ico =32x32) MongoDB
-- ![taiwindcss_icon](https://tailwindcss.com/favicons/favicon-32x32.png?v=3 =32x32) Tailwind CSS
-- ![redux_icon](https://redux.js.org/img/favicon/favicon.ico =32x32) Redux
-- ![redux_icon](https://authjs.dev/favicon-32x32.png =32x32) Next Auth
+<img src="https://nextjs.org/favicon.ico" width="16" height="16"> <span font="32">Next js</span>
+![mongodb_icon](https://www.mongodb.com/assets/images/global/favicon.ico) MongoDB
+![taiwindcss_icon](https://tailwindcss.com/favicons/favicon-32x32.png?v=3) Tailwind CSS
+![redux_icon](https://redux.js.org/img/favicon/favicon.ico) Redux
+![redux_icon](https://authjs.dev/favicon-32x32.png) Next Auth
 
 First, run the development server:
 
