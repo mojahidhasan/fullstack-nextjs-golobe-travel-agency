@@ -1,37 +1,37 @@
 // import "server-only";
 
-import { readFileSync, openSync, closeSync } from "node:fs";
-import { open, writeFile, readFile } from "node:fs/promises";
-import { faker } from "@faker-js/faker";
-import { add } from "date-fns";
+// import { readFileSync, openSync, closeSync } from "node:fs";
+// import { open, writeFile, readFile } from "node:fs/promises";
+// import { faker } from "@faker-js/faker";
+// import { add } from "date-fns";
 
-const schema = {
-  id: String("ID"),
-  flightDetails: {
-    airline: {
-      name: String("Airline Name"),
-      iataCode: String("Airline IATA Code"),
-    },
-    departFrom: {
-      name: String("Depart From"),
-      iataCode: String("Depart From Code"),
-    },
-    arriveTo: { name: String("Arrive To"), iataCode: String("Arrive To Code") },
-    departTime: String("Depart Time"),
-    arriveTime: String("Arrive Time"),
-    timeTaken: String("Time Taken"),
-    airplane: {
-      name: String("Airplane Name"),
-      iataTypeCode: String("Airplane IATA Code"),
-    },
-  },
-  price: {
-    base: Number(0),
-    tax: Number(0),
-    discount: Number(0),
-    serviceFee: Number(0),
-  },
-};
+// const schema = {
+//   id: String("ID"),
+//   flightDetails: {
+//     airline: {
+//       name: String("Airline Name"),
+//       iataCode: String("Airline IATA Code"),
+//     },
+//     departFrom: {
+//       name: String("Depart From"),
+//       iataCode: String("Depart From Code"),
+//     },
+//     arriveTo: { name: String("Arrive To"), iataCode: String("Arrive To Code") },
+//     departTime: String("Depart Time"),
+//     arriveTime: String("Arrive Time"),
+//     timeTaken: String("Time Taken"),
+//     airplane: {
+//       name: String("Airplane Name"),
+//       iataTypeCode: String("Airplane IATA Code"),
+//     },
+//   },
+//   price: {
+//     base: Number(0),
+//     tax: Number(0),
+//     discount: Number(0),
+//     serviceFee: Number(0),
+//   },
+// };
 
 //   flightDetails: {
 //     airline: faker.airline.airline(),
@@ -73,27 +73,6 @@ const schema = {
 //   },
 // };
 
-export async function getFlight(options) {
-  const departIataCode = options.departIataCode || "AAA",
-    arriveIataCode = options.arriveIataCode || "AAE";
-
-  const flightsFd = await open(process.cwd() + "/data/flights.json", "r");
-  const data = await readFile(flightsFd, "utf8");
-  const toObj = JSON.parse(data);
-
-  const filteredFlights = toObj.filter((f) => {
-    return (
-      f.flightDetails.departFrom.iataCode === departIataCode &&
-      f.flightDetails.arriveTo.iataCode === arriveIataCode
-    );
-  });
-
-  return await new Promise((resolve) => resolve(filteredFlights));
-}
-
-// getFlight();
-
-//fake delay
 // let airportData = [];
 // const fd = await open(process.cwd() + "/airports.json", "r");
 // const data = await readFile(fd, { encoding: "utf-8" });

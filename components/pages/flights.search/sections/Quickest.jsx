@@ -1,13 +1,25 @@
+"use client";
+
 import { FlightResultCard } from "@/components/pages/flights.search/ui/FlightResultCard";
 import { Button } from "@/components/ui/button";
-export function Quickest({ data }) {
+
+import { useState } from "react";
+
+import { cn } from "@/lib/utils";
+
+import emiratesLogo from "@/public/images/emirates_logo.png";
+export function Quickest({ data, resultType = "results" }) {
+  const maxResultPerPage = 4;
+  const [shownTill, setShownTill] = useState(maxResultPerPage);
   return (
     <>
       <div className="my-10">
         <div className="flex my-5 justify-between text-[0.875rem] font-semibold">
           <p>
             Showing {"4"} of{" "}
-            <span className="text-destructive">{data.length} places</span>
+            <span className="text-destructive">
+              {data.length} {resultType}
+            </span>
           </p>
           <p>
             <span className="font-normal">Sort by </span>
@@ -21,12 +33,12 @@ export function Quickest({ data }) {
           </p>
         </div>
         <div className="grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2">
-          {data.map((item, i) => (
+          {data.slice(0, shownTill).map((item, i) => (
             <FlightResultCard
               key={i}
               image={{
-                src: "https://images.unsplash.com/photo-1551882026-d2525cfc9656?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-                alt: "abs",
+                src: emiratesLogo,
+                alt: "emirates_logo",
               }}
               liked={false}
               data={item}
@@ -36,8 +48,12 @@ export function Quickest({ data }) {
 
         <div>
           <Button
-            className={
-              "w-full hover:bg-secondary/90 bg-secondary focus:bg-secondary !font-semibold text-white"
+            className={cn(
+              "w-full hover:bg-secondary/90 bg-secondary focus:bg-secondary !font-semibold text-white",
+              shownTill >= data.length && "hidden"
+            )}
+            onClick={() =>
+              setShownTill(Math.min(shownTill + maxResultPerPage, data.length))
             }
           >
             Show more result
