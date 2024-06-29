@@ -6,7 +6,7 @@
 
 Welcome to the repository for Golobe Travel Service’s website, your go-to platform for exploring and booking your next travel adventure. This intuitive web interface allows users to effortlessly search for flights and accommodations.
 
-This is a full-stack nextjs project to practice and showcase the work.
+A full-stack nextjs project to practice and showcase the work. UI design was taken from [Figma community](https://www.figma.com/community/file/1182308758714734501/golobe-travel-agency-website).
 
 ## Technologies used in this project
 
@@ -20,35 +20,31 @@ This is a full-stack nextjs project to practice and showcase the work.
 
 <img src="https://authjs.dev/favicon-32x32.png" width="16" height="16"> Next Auth v5
 
-First, run the development server:
+## Features
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+- Fully Responsive
+- Easy login/signup functionality.
+- Search flights and hotels (Not real data, demo purpose only)
+- Buy tickets for flight and Book hotels (demo)
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## TODO
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+This project is still in development. Many funtionalities have not implemented yet. Here are some funtionalities that are yet to development:
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+- Flight and Hotel search form validation and some funtionalities and improvements.
+- Hotel search funtionality.
+- Implementing hotel data (fake) in database.
+- Showing hotel data in search result.
+- Search filter working properly.
+- Implementing login with facebook, google and apple.
+- Buying tickets and Booking hotels funtionality (demo).
+- Adding forget password form to recover password.
+- Adding payment method form and making it functional.
+- Adding funtionality of changing password, phone number, address, date of birth from profile
+- Showing histories (i.e. Hotel book, Ticket buy) and also showing added payment methods.
+- Adding funtionality to add be able to add hotels and flights in favorite list which will show in /favorites page
+- Making changing cover photo work.
+- Download ticket funtionality
+- Letting users know via email that they have succesfully bought ticket or booked hotel.
+- Adding email verification during sign up while signinf up with credentials
+- And some more small funtionalities

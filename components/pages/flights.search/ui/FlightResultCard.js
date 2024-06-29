@@ -7,7 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { minToHour } from "@/lib/utils";
-export function FlightResultCard({ data, liked, image }) {
+export function FlightResultCard({
+  data,
+  liked,
+  image,
+  rate = 5,
+  reviews = 233,
+  id = 123,
+}) {
   const [isLiked, setIsliked] = useState(liked);
   function handleClick() {
     setIsliked(!isLiked);
