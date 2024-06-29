@@ -10,7 +10,7 @@ This is a full-stack nextjs project to practice and showcase the work.
 
 ## Technologies used in this project
 
-<img src="https://nextjs.org/favicon.ico" width="16" height="16"> Next js
+<img src="https://nextjs.org/favicon.ico" width="16" height="16"> Next js v14
 
 <img src="https://www.mongodb.com/assets/images/global/favicon.ico" width="16" height="16"> MongoDB
 
@@ -18,7 +18,7 @@ This is a full-stack nextjs project to practice and showcase the work.
 
 <img src="https://redux.js.org/img/favicon/favicon.ico" width="16" height="16"> Redux
 
-<img src="https://authjs.dev/favicon-32x32.png" width="16" height="16"> Next Auth
+<img src="https://authjs.dev/favicon-32x32.png" width="16" height="16"> Next Auth v5
 
 First, run the development server:
 
