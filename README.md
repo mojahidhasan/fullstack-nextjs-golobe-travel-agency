@@ -1,6 +1,20 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Golobe Travel Service Website
 
-## Getting Started
+![Home Screen Golobe Travel Agency](/preview.png)
+
+## Overview
+
+Welcome to the repository for Golobe Travel Service’s website, your go-to platform for exploring and booking your next travel adventure. This intuitive web interface allows users to effortlessly search for flights and accommodations.
+
+This is a full-stack nextjs project to practice and showcase the work.
+
+## Technologies used in this project
+
+- ![nextjs_icon](https://nextjs.org/favicon.ico) Nextjs
+- ![mongodb_icon](https://www.mongodb.com/assets/images/global/favicon.ico) MongoDB
+- ![taiwindcss_icon](https://tailwindcss.com/favicons/favicon-32x32.png?v=3) Tailwind CSS
+- ![redux_icon](https://redux.js.org/img/favicon/favicon.ico) Redux
+- ![redux_icon](https://authjs.dev/favicon-32x32.png) Next Auth
 
 First, run the development server:
 
