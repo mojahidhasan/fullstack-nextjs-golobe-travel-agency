@@ -10,7 +10,7 @@ This is a full-stack nextjs project to practice and showcase the work.
 
 ## Technologies used in this project
 
-- <img src="https://nextjs.org/favicon.ico" width="32"> <sup> Next js</sup>
+- ## <img src="https://nextjs.org/favicon.ico" width="32"> <sup><sub> Next js</sub></sup>
 - ![mongodb_icon](https://www.mongodb.com/assets/images/global/favicon.ico =32x32) MongoDB
 - ![taiwindcss_icon](https://tailwindcss.com/favicons/favicon-32x32.png?v=3 =32x32) Tailwind CSS
 - ![redux_icon](https://redux.js.org/img/favicon/favicon.ico =32x32) Redux
