@@ -36,7 +36,7 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 ## TODO
 
-This project is still in development. Many funtionalities have not implemented yet. Here are some funtionalities that are yet to development:
+This project is still in development. Many funtionalities have not been implemented yet. Here are some funtionalities that are yet to development:
 
 - Flight and Hotel search form validation and some funtionalities and improvements.
 - Hotel search funtionality.
