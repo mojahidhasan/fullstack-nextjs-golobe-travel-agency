@@ -53,4 +53,5 @@ This project is still in development. Many functionalities have not been impleme
 - Making changing cover photo work.
 - Download ticket functionality
 - Let users know via email that they have successfully bought a ticket or booked a hotel.
+- Adding Dark mode.
 - And some more small functionalities
