@@ -8,6 +8,8 @@ import { StoreProvider } from "./StoreProvider";
 import { Notification } from "./_notification";
 import mongoose from "mongoose";
 
+import preview from "/preview.jpg";
+
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",
@@ -23,11 +25,37 @@ export const metadata = {
   title: "Golob Travel Agency",
   description:
     "Golob Travel Agency is a travel agency that provides top-notch travel services.",
-  opengraph: {
+  keywords: [
+    "travel",
+    "agency",
+    "golob",
+    "travel agency",
+    "golob travel agency",
+    "nextjs",
+    "react",
+    "javascript",
+    "tailwind css",
+    "next auth",
+    "mongodb",
+    "node js",
+    "redux",
+    "web app",
+  ],
+  openGraph: {
     title: "Golob Travel Agency",
     description:
       "Golob Travel Agency is a travel agency that provides top-notch travel services.",
-    images: ["https://unsplash.com/photos/Vv3iG9XBNx8"],
+    url: "https://golob-travel-agency.vercel.app",
+    siteName: "Golob Travel Agency",
+    images: [
+      {
+        url: "https://golob-travel-agency.vercel.app/opengraph-image.jpg", // Must be an absolute URL
+        width: 800,
+        height: 600,
+      },
+    ],
+    locale: "en_US",
+    type: "website",
   },
 };
 
