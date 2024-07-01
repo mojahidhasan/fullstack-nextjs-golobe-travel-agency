@@ -3,10 +3,9 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 import { Toaster } from "@/components/ui/toaster";
-import { WebVitals } from "@/components/web-vitals";
 import NextTopLoader from "nextjs-toploader";
 import { StoreProvider } from "./StoreProvider";
-
+import { Notification } from "./_notification";
 import mongoose from "mongoose";
 
 const monse = Montserrat({
@@ -38,17 +37,17 @@ if (mongoose.connection.readyState === 0) {
 
 export default function RootLayout({ children }) {
   return (
-    <StoreProvider>
-      <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
-        <body className={monse.className}>
-          <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
+    <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
+      <body className={monse.className}>
+        <StoreProvider>
           <div className="max-w-[1440px] mx-auto">
-            {/* <WebVitals /> */}
+            <Notification />
             {children}
           </div>
-          <Toaster className="bg-secondary" />
-        </body>
-      </html>
-    </StoreProvider>
+        </StoreProvider>
+        <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
+        <Toaster className="bg-secondary" />
+      </body>
+    </html>
   );
 }

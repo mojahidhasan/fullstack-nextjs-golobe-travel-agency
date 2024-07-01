@@ -1,6 +1,6 @@
 # Golobe Travel Agency Website
 
-![Home Screen Golobe Travel Agency](/preview.png)
+![Home Screen Golobe Travel Agency](/preview.jpg)
 
 ## Overview
 

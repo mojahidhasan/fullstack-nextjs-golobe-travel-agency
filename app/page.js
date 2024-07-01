@@ -17,7 +17,7 @@ export default async function HomePage() {
           session={session}
         />
         <section
-          className={`flex h-[600px] items-center rounded-3xl bg-home-header bg-cover bg-[center_40%] bg-no-repeat`}
+          className={`flex h-[600px] items-center bg-home-header bg-cover bg-[center_40%] bg-no-repeat`}
         >
           <div className="w-full text-center text-white">
             <h2 className="font-tradeGothic leading-[5rem] text-2xl font-bold md:text-[2rem] lg:text-[2.8125rem]">

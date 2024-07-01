@@ -9,7 +9,7 @@ export function Footer() {
       <SubscribeNewsletter />
       <QuickLinks />
       <div className="relative z-10 text-center font-medium">
-        The design was taken from &nbsp;
+        The UI design was taken from &nbsp;
         <Link
           className="inline text-white"
           href="https://www.figma.com/community/file/1182308758714734501/golobe-travel-agency-website"
