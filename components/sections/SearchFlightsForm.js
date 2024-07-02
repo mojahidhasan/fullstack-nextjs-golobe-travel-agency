@@ -47,12 +47,10 @@ function SearchFlightsForm({ searchParams = {} }) {
     };
   }
   const [formData, setFormData] = useState(searchParamsObj);
-  console.log(formData);
   function handleSubmit(e) {
     e.preventDefault();
     const str = processSearchParams(new FormData(e.target));
     const makeUrlSearchParams = new URLSearchParams(str).toString();
-    console.log(makeUrlSearchParams);
     e.target.submit();
   }
 

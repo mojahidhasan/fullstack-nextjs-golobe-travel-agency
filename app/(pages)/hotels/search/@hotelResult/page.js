@@ -3,7 +3,6 @@ import { Best } from "@/components/pages/flights.search/sections/Best";
 import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 export default function HotelResultPage({ searchParams }) {
-  console.log("sss", searchParams);
   return (
     <div className="flex flex-grow flex-col gap-[32px]">
       <Tabs defaultValue="cheapest" className="w-full">

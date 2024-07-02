@@ -25,7 +25,6 @@ export function PassangerDropdown({
     const filter = items.filter((item) =>
       item.label.toLowerCase().includes(value.toLowerCase())
     );
-    console.log(filter);
     setFilter(filter);
   }
 

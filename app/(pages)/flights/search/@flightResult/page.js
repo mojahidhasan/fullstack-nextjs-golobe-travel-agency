@@ -6,7 +6,6 @@ import db from "@/lib/db";
 import { minToHour } from "@/lib/utils";
 async function FLightResultPage({ searchParams }) {
   const data = await db.getFlightSearchResult(searchParams);
-  console.log(data);
   const sortByCheapest = data.slice(0).sort((a, b) => {
     return +a.price.base - +b.price.base;
   });
@@ -28,7 +27,6 @@ async function FLightResultPage({ searchParams }) {
 
   for (let i = 0; i < sortByQuickest.length; i++) {
     const timeTaken = sortByQuickest[i].flightDetails.timeTaken;
-    console.log(timeTaken);
   }
 
   return (
