@@ -2,8 +2,6 @@ import { SectionTitle } from "@/components/SectionTitle";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { ReviewsCard } from "@/components/pages/home/ui/ReviewsCard";
-
-import { UNSPLASH_BASE_URL } from "@/lib/constants";
 import { reviews } from "@/data/reviews";
 
 export function Reviews() {
@@ -19,7 +17,7 @@ export function Reviews() {
         </Button>
       </div>
       <div
-        className="flex flex-col gap-[16px] overflow-y-scroll pb-5 md:flex-row md:gap-[30px] lg:gap-[40px] lg:overflow-x-scroll"
+        className="flex flex-col h-[600px] gap-[16px] overflow-auto pb-5 md:flex-row md:h-auto md:gap-[30px] lg:gap-[40px] "
         style={{
           scrollbarGutter: "none",
           scrollbarWidth: "thin",
