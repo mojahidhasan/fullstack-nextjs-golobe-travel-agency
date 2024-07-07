@@ -10,9 +10,6 @@ module.exports = {
   ],
   prefix: "",
   theme: {
-    screens: {
-      xs: "375px",
-    },
     container: {
       center: true,
       padding: "2rem",
@@ -23,6 +20,7 @@ module.exports = {
     extend: {
       screens: {
         xsm: "450px",
+        xs: "350px",
       },
       fontFamily: {
         tradeGothic: ["var(--font-tradegothic)"],
