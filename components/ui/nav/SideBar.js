@@ -127,28 +127,28 @@ export function SideBar({ isLoggedIn }) {
                         <path
                           d="M10 19L15 14L10 9"
                           stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
+                          strokeWidth="2"
+                          strokeLinecap="round"
                           stroke-linejoin="round"
                         />
                         <path
                           d="M15 14H3"
                           stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
+                          strokeWidth="2"
+                          strokeLinecap="round"
                           stroke-linejoin="round"
                         />
                         <path
                           d="M14 7.5H21"
                           stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
+                          strokeWidth="2"
+                          strokeLinecap="round"
                         />
                         <path
                           d="M17.5 4V11"
                           stroke="currentColor"
-                          stroke-width="2"
-                          stroke-linecap="round"
+                          strokeWidth="2"
+                          strokeLinecap="round"
                         />
                       </svg>
 

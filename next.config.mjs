@@ -2,11 +2,11 @@
 
 const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-eval' ;
+    script-src 'self' 'unsafe-eval' 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data:;
+    img-src 'self' blob: data: https://images.unsplash.com/;
     font-src 'self';
-    object-src 'https:';
+    object-src 'self';
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
@@ -30,6 +30,11 @@ const nextConfig = {
         protocol: "http",
         hostname: "localhost",
         port: "3000",
+      },
+      {
+        protocol: "https",
+        hostname: "localhost",
+        port: "3001",
       },
     ],
   },

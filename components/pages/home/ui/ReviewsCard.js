@@ -61,10 +61,10 @@ export function ReviewsCard({
         </div>
         <Image
           src={imgSrc}
+          width={500}
+          height={500}
           alt=""
-          height={200}
-          width={400}
-          className="h-[200px] w-full object-center object-cover rounded-[8px]"
+          className="object-center w-full h-[200px] object-cover rounded-[8px]"
         />
       </div>
       {/* fake shadow */}

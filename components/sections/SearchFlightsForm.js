@@ -121,7 +121,15 @@ function SearchFlightsForm({ searchParams = {} }) {
               }}
             />
           </div>
-          <span className="select-none text-center font-normal">{/*—*/}-</span>
+          <div className="flex h-full items-center justify-center w-[10%] rounded-lg hover:bg-slate-400/20 transition-all transition-[duration:.4s]">
+            <Image
+              alt=""
+              className="min-h-[16px] min-w-[16px]"
+              width={18}
+              height={22}
+              src={swap}
+            />
+          </div>
 
           <div className="h-full w-[45%]">
             <SearchAirportDropdown
@@ -136,15 +144,6 @@ function SearchFlightsForm({ searchParams = {} }) {
                   arriveIataCode: value?.code || "",
                 });
               }}
-            />
-          </div>
-          <div className="flex h-full items-center justify-center w-[10%] rounded-lg hover:bg-slate-400/20 transition-all transition-[duration:.4s]">
-            <Image
-              alt=""
-              className="min-h-[16px] min-w-[16px]"
-              width={16}
-              height={16}
-              src={swap}
             />
           </div>
         </div>
@@ -258,7 +257,7 @@ function SearchFlightsForm({ searchParams = {} }) {
           </Popover>
         </div>
       </div>
-      <div className="flex justify-end gap-[24px]">
+      <div className="flex flex-wrap justify-end gap-[24px]">
         <AddPromoCode
           defaultCode={formData.promocode}
           getPromoCode={(promo) => {
