@@ -3,11 +3,16 @@ import { addDays } from "date-fns";
 const initialState = {
   from: "",
   to: "",
+  departIataCode: "",
+  arriveIataCode: "",
   trip: "Economy",
   depart: new Date().toISOString(),
   return: addDays(new Date(), 7).toISOString(),
-  passenger: "1",
-  class: "",
+  passenger: {
+    adult: 1,
+    children: 0,
+  },
+  class: "Economy",
   promocode: "",
   filters: {
     rate: [],
@@ -22,32 +27,16 @@ const flightFormSlice = createSlice({
   name: "flightForm",
   initialState,
   reducers: {
-    setFrom: (state, action) => {
-      state.from = action.payload;
+    setFlightForm(state, action) {
+      state = {
+        ...state,
+        passenger: { ...state.passenger },
+        filters: { ...state.filters },
+        ...action.payload,
+      };
     },
-    setTo: (state, action) => {
-      state.to = action.payload;
-    },
-    setTrip: (state, action) => {
-      state.trip = action.payload;
-    },
-    setDepart: (state, action) => {
-      state.depart = action.payload;
-    },
-    setReturn: (state, action) => {
-      state.return = action.payload;
-    },
-    setDate: (state, action) => {
-      state.date = action.payload;
-    },
-    setPassenger: (state, action) => {
-      state.passenger = action.payload;
-    },
-    setClass: (state, action) => {
-      state.class = action.payload;
-    },
-    setPromocode: (state, action) => {
-      state.promocode = action.payload;
+    setFlightFormFilters(state, action) {
+      state.filters = { ...state.filters, ...action.payload };
     },
     setFilterRate: (state, action) => {
       state.filters.rate = action.payload;
@@ -69,16 +58,6 @@ const flightFormSlice = createSlice({
           return val !== action.payload.remove;
         });
       }
-    },
-    setFilterPrice: (state, action) => {
-      state.filters.price = action.payload;
-    },
-    setFilterDepartureTime: (state, action) => {
-      state.filters.departureTime = action.payload;
-    },
-
-    resetFilters: (state) => {
-      state.filters = initialState.filters;
     },
   },
 });

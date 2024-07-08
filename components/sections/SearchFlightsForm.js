@@ -50,7 +50,7 @@ function SearchFlightsForm({ searchParams = {} }) {
   function handleSubmit(e) {
     e.preventDefault();
     const str = processSearchParams(new FormData(e.target));
-    const makeUrlSearchParams = new URLSearchParams(str).toString();
+    // const makeUrlSearchParams = new URLSearchParams(str).toString();
     e.target.submit();
   }
 
@@ -121,7 +121,14 @@ function SearchFlightsForm({ searchParams = {} }) {
               }}
             />
           </div>
-          <div className="flex h-full items-center justify-center w-[10%] rounded-lg hover:bg-slate-400/20 transition-all transition-[duration:.4s]">
+          <button
+            onClick={() =>
+              setFormData({ ...formData, from: formData.to, to: formData.from })
+            }
+            role={"button"}
+            type={"button"}
+            className="flex h-full items-center justify-center w-[10%] rounded-lg hover:bg-slate-400/20 transition-all transition-[duration:.4s]"
+          >
             <Image
               alt=""
               className="min-h-[16px] min-w-[16px]"
@@ -129,7 +136,7 @@ function SearchFlightsForm({ searchParams = {} }) {
               height={22}
               src={swap}
             />
-          </div>
+          </button>
 
           <div className="h-full w-[45%]">
             <SearchAirportDropdown

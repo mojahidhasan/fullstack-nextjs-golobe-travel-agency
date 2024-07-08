@@ -19,7 +19,14 @@ export function ReviewsCard({
 
   return (
     <div className="relative h-[608px]">
-      <div className="relative overflow-y-auto z-[2] flex h-[584px] w-[calc(100%-16px)] flex-col justify-between rounded-[20px] border bg-white p-[24px] shadow-lg md:w-[350px] lg:w-[425px]">
+      <div
+        className="relative overflow-y-auto z-[2] flex h-[584px] w-[calc(100%-16px)] flex-col justify-between rounded-[20px] border bg-white p-[24px] shadow-lg md:w-[350px] lg:w-[425px]"
+        style={{
+          scrollbarGutter: "none",
+          scrollbarWidth: "thin",
+          scrollbarColor: "#8dd3bb grey",
+        }}
+      >
         <div>
           <h3 className="mb-[16px] font-tradeGothic text-1.5rem font-bold text-secondary">
             {comment}

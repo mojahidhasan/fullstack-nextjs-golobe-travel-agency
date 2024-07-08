@@ -59,11 +59,14 @@ export const metadata = {
   },
 };
 
-if (mongoose.connection.readyState === 0) {
-  await mongoose.connect(process.env.MONGODB_URL);
-}
-
-export default function RootLayout({ children }) {
+export default async function RootLayout({ children }) {
+  if (mongoose.connection.readyState === 0) {
+    try {
+      await mongoose.connect(process.env.MONGODB_URL);
+    } catch (e) {
+      console.log(e.message);
+    }
+  }
   return (
     <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
       <body className={monse.className}>
