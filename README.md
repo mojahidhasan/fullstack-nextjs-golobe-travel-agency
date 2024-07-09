@@ -29,10 +29,17 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 ## Features
 
-- Fully Responsive
-- Easy login/signup functionality.
-- Search flights and hotels (Not real data, demo purpose only)
-- Buy tickets for flights and Book hotels (demo)
+1. Fully Responsive
+2. Used redux for state management
+3. Used tailwind for styling
+4. Flight and Hotel search (dummy data)
+5. Filter Flight and Hotel
+6. Show flight and hotel details
+7. Buy a ticket or book a hotel
+8. Get a ticket after buying
+9. Sorting search results by best, shortest, and cheapest
+10. Add to favorite
+11. Login and Signup
 
 ## TODO
 
