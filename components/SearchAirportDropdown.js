@@ -9,15 +9,24 @@ import {
 } from "@/components/ui/popover";
 
 import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
 
 export function SearchAirportDropdown({
   className,
-  defaultValue = "",
   airportsName,
-  getData = () => {},
+  name,
+  codeName,
 }) {
+  const dispatch = useDispatch();
+  const formData = useSelector((state) => state.flightForm.value);
+
+  const oppositeCodeName = {
+    arriveIataCode: "departIataCode",
+    departIataCode: "arriveIataCode",
+  };
+
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(defaultValue);
   const [items, setItems] = useState(airportsName);
   const [filter, setFilter] = useState(items);
 
@@ -38,7 +47,7 @@ export function SearchAirportDropdown({
           variant="ghost"
           className="justify-start line-clamp-1 font-normal"
         >
-          {value === "" ? "Select airport" : value}
+          {formData[name] === "" ? "Select airport" : formData[name]}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80" align="center">
@@ -52,23 +61,37 @@ export function SearchAirportDropdown({
             {Object.keys(filter).length < 1 ? (
               <div className="p-4 text-center text-sm">No results found</div>
             ) : (
-              filter.map((obj) => (
-                <div
-                  key={obj.code}
-                  onClick={() => {
-                    setValue(
-                      obj.city + ", " + obj.country === value
-                        ? ""
-                        : obj.city + ", " + obj.country
-                    );
-                    setOpen(false);
-                    getData(obj.city + ", " + obj.country === value ? "" : obj);
-                  }}
-                  className="flex cursor-pointer items-center justify-between p-4 hover:bg-muted"
-                >
-                  <div className="text-sm">{obj.city + ", " + obj.country}</div>
-                </div>
-              ))
+              filter.map((obj) => {
+                if (formData[oppositeCodeName[codeName]] === obj.code) {
+                  return null;
+                }
+                return (
+                  <div
+                    key={obj.code}
+                    onClick={() => {
+                      const data =
+                        obj.city + ", " + obj.country === formData[name]
+                          ? {
+                              [name]: "",
+                              [codeName]: "",
+                            }
+                          : {
+                              [name]: obj?.city + ", " + obj?.country,
+                              [codeName]: obj?.code,
+                            };
+
+                      dispatch(setFlightForm(data));
+
+                      setOpen(false);
+                    }}
+                    className="flex cursor-pointer items-center justify-between p-4 hover:bg-muted"
+                  >
+                    <div className="text-sm">
+                      {obj.city + ", " + obj.country}
+                    </div>
+                  </div>
+                );
+              })
             )}
           </div>
         </div>

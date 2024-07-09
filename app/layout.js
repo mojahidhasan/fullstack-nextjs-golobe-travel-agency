@@ -8,8 +8,6 @@ import { StoreProvider } from "./StoreProvider";
 import { Notification } from "./_notification";
 import mongoose from "mongoose";
 
-import preview from "/preview.jpg";
-
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",

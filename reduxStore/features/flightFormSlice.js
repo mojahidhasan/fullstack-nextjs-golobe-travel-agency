@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { addDays } from "date-fns";
-const initialState = {
+const value = {
   from: "",
   to: "",
   departIataCode: "",
@@ -25,13 +25,14 @@ const initialState = {
 
 const flightFormSlice = createSlice({
   name: "flightForm",
-  initialState,
+  initialState: {
+    value,
+  },
   reducers: {
     setFlightForm(state, action) {
-      state = {
-        ...state,
-        passenger: { ...state.passenger },
-        filters: { ...state.filters },
+      state.value = {
+        ...state.value,
+        filters: { ...state.value.filters },
         ...action.payload,
       };
     },
@@ -63,16 +64,10 @@ const flightFormSlice = createSlice({
 });
 
 export const {
-  setFrom,
-  setTo,
-  setTrip,
-  setDepart,
-  setReturn,
-  setDate,
-  setPassenger,
-  setClass,
-  setPromocode,
+  setFlightForm,
+  setFlightFormFilters,
 
+  getFlightForm,
   setFilterAirlines,
   setFilterRate,
   setFilterTrips,

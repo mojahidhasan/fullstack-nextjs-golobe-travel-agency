@@ -12,21 +12,32 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-import { useSelector } from "react-redux";
+import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
 
 export function DatePickerWithRange({ name, className, getDate }) {
-  const state = useSelector((state) => state.flightForm);
+  const dispatch = useDispatch();
+
+  const state = useSelector((state) => state.flightForm.value);
   const [date, setDate] = React.useState({
     from: new Date(state.depart),
     to: new Date(state.return),
   });
-
-  function handle(d) {
-    return getDate(d);
-  }
   return (
     <div className={cn("grid gap-2", className)}>
-      <Popover onOpenChange={(open) => !open && handle(date)}>
+      <Popover
+        onOpenChange={(open) => {
+          !open &&
+            dispatch(
+              setFlightForm({
+                depart: date?.from?.toISOString() || "",
+                return: date?.to?.toISOString() || "",
+              })
+            );
+        }}
+      >
         <PopoverTrigger asChild>
           <Button
             id="date"
@@ -36,18 +47,8 @@ export function DatePickerWithRange({ name, className, getDate }) {
               !date && "text-muted-foreground"
             )}
           >
-            {date?.from ? (
-              date.to ? (
-                <>
-                  {format(date.from, "LLL dd, y")} -{" "}
-                  {format(date.to, "LLL dd, y")}
-                </>
-              ) : (
-                format(date.from, "LLL dd, y")
-              )
-            ) : (
-              <span>Pick a date</span>
-            )}
+            {date?.from ? format(date.from, "LLL dd, y") : "Pick a date"} -{" "}
+            {date?.to ? format(date.to, "LLL dd, y") : "Pick a date"}
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-0" align="center">

@@ -13,14 +13,14 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
 
-export function SelectTrip() {
+export function SelectClass() {
   const dispatch = useDispatch();
 
-  const trip = useSelector((state) => state.flightForm.value.trip);
+  const trip = useSelector((state) => state.flightForm.value.class);
   return (
     <SelectShadcn
       onValueChange={(value) => {
-        dispatch(setFlightForm({ trip: value }));
+        dispatch(setFlightForm({ class: value }));
       }}
     >
       <input value={trip} name="trip" type="hidden" />
@@ -34,8 +34,9 @@ export function SelectTrip() {
       <SelectContent className={"bg-primary"}>
         <SelectGroup>
           <SelectItem value="Economy">Economy</SelectItem>
-          <SelectItem value="Round-Trip">Round-Trip</SelectItem>
-          <SelectItem value="One Way">One Way</SelectItem>
+          <SelectItem value="Premium Economy">Premium Economy</SelectItem>
+          <SelectItem value="Business">Business</SelectItem>
+          <SelectItem value="First class">First class</SelectItem>
         </SelectGroup>
       </SelectContent>
     </SelectShadcn>
