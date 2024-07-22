@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { TabContentMockup } from "./ui/TabContentMockup";
-import { ChangeNamePopup } from "./ui/changeNamePopup";
+import { TabContentMockup } from "@/components/pages/profile/ui/TabContentMockup";
+import { ChangeNamePopup } from "@/components/pages/profile/ui/changeNamePopup";
 export function AccoutDetails({ data }) {
   const accountDetails = {
     name: data.firstname + " " + data.lastname,

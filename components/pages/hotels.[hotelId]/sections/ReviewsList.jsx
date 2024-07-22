@@ -1,4 +1,4 @@
-import { OneReview } from "./OneReview";
+import { OneReview } from "@/components/pages/hotels.[hotelId]/sections/OneReview";
 import Image from "next/image";
 
 import leftArrow from "@/public/icons/forward.svg";

@@ -6,7 +6,7 @@ import { Separator } from "@/components/ui/separator";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import Rating from "../ui/Rating";
+import { FilterRating } from "@/components/local-ui/FilterRating";
 
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -116,7 +116,7 @@ export function FlightsFilter({ className }) {
             </div>
           </Dropdown>
           <Dropdown title={"Rating"} open>
-            <Rating
+            <FilterRating
               setRating={(rate) => {
                 dispatch(setFilterRate(rate));
               }}

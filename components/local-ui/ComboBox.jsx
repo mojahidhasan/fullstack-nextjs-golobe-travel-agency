@@ -9,20 +9,20 @@ import {
 } from "@/components/ui/popover";
 
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { setStayForm } from "@/reduxStore/features/stayFormSlice";
 
 import { cn } from "@/lib/utils";
 
-export function Combobox({
-  className,
-  defaultValue = "",
-  searchResult,
-  name,
-  getAirportName,
-}) {
+export function Combobox({ className, searchResult, name }) {
+  const dispatch = useDispatch();
+
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState(defaultValue);
   const [items, setItems] = useState(searchResult);
   const [filter, setFilter] = useState(items);
+
+  const value = useSelector((state) => state.stayForm.value.destination);
 
   function handleChange(e) {
     const value = e.target.value;
@@ -32,10 +32,6 @@ export function Combobox({
     setFilter(filter);
   }
 
-  function getValue(value) {
-    getAirportName(value);
-  }
-
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger className={cn("text-left", className)} asChild>
@@ -43,7 +39,7 @@ export function Combobox({
           variant="ghost"
           className="justify-start line-clamp-1 font-normal"
         >
-          {value === "" ? "Select airport" : value}
+          {value === "" ? "Where are you going?" : value}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80" align="center">
@@ -61,9 +57,12 @@ export function Combobox({
                 <div
                   key={obj.label}
                   onClick={() => {
-                    setValue(obj.label === value ? "" : obj.label);
+                    dispatch(
+                      setStayForm({
+                        destination: obj.label === value ? "" : obj.label,
+                      })
+                    );
                     setOpen(false);
-                    getValue(obj.label === value ? "" : obj.label);
                   }}
                   obj={obj.label}
                   className="flex cursor-pointer items-center justify-between p-4 hover:bg-muted"

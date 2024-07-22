@@ -12,9 +12,11 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 
-export function DatePicker({ className, defaultDate = new Date() }) {
-  const [date, setDate] = React.useState(defaultDate);
-
+export function DatePicker({
+  className,
+  date = new Date(),
+  setDate = () => {},
+}) {
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -26,7 +28,7 @@ export function DatePicker({ className, defaultDate = new Date() }) {
             className
           )}
         >
-          {date ? format(date, "yy/dd") : <span>Pick a date</span>}
+          {date ? format(new Date(date), "yy/dd") : <span>Pick a date</span>}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-auto p-0">
@@ -36,7 +38,7 @@ export function DatePicker({ className, defaultDate = new Date() }) {
           classNames={{
             day_today: "border border-secondary",
           }}
-          selected={date}
+          selected={new Date(date)}
           onSelect={setDate}
           initialFocus
         />

@@ -49,7 +49,7 @@ export function AddPromoCode({ defaultCode = "", getPromoCode = () => {} }) {
             id="name"
             name="promocode"
             className="col-span-3"
-            defaultValue={promo}
+            defaultValue={defaultCode}
             onChange={debounce((e) => {
               setPromo(e.target.value);
             }, 200)}

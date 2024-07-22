@@ -45,8 +45,6 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 This project is still in development. Many functionalities have not been implemented yet. Here are some functionalities that are yet to develop:
 
-- Hotel search form validation and some functionalities and improvements.
-- Hotel search functionality.
 - Implementing hotel data (fake) in the database.
 - Showing hotel data in search results.
 - Search filter working properly.

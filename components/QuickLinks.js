@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Logo } from "./Logo";
+import { Logo } from "@/components/Logo";
 export function QuickLinks() {
   const links = {
     "Our Destination": [
@@ -62,7 +62,7 @@ export function QuickLinks() {
         href: "/",
       },
     ],
-    "Contact": [
+    Contact: [
       {
         name: "Contact Us",
         href: "/",

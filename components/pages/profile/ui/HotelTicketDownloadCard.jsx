@@ -1,4 +1,4 @@
-import { SmallDataCard } from "./SmallDataCard";
+import { SmallDataCard } from "@/components/pages/profile/ui/SmallDataCard";
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";

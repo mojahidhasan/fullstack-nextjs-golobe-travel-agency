@@ -1,6 +1,6 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
-export function Rating({ className, setRating }) {
+export function FilterRating({ className, setRating }) {
   return (
     <ToggleGroup
       type="multiple"
@@ -35,5 +35,3 @@ export function Rating({ className, setRating }) {
     </ToggleGroup>
   );
 }
-
-export default Rating;

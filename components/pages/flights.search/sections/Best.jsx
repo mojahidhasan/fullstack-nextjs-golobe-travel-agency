@@ -1,5 +1,5 @@
 "use client";
-import { FlightResultCard } from "../ui/FlightResultCard";
+import { FlightResultCard } from "@/components/pages/flights.search/ui/FlightResultCard";
 import { Button } from "@/components/ui/button";
 
 import { useState } from "react";

@@ -2,17 +2,21 @@
 
 import Image from "next/image";
 
-import { Button } from "../ui/button";
-import { DatePickerWithRange } from "../ui/DatePickerWithRange";
+import { Button } from "@/components/ui/button";
+import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
 import { SearchAirportDropdown } from "@/components/SearchAirportDropdown";
-import { Popover, PopoverTrigger, PopoverContent } from "../ui/popover";
-import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
-import { SelectTrip } from "../SelectTrip";
-import { SelectClass } from "../SelectClass";
-import { AddPromoCode } from "../AddPromoCode";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { SelectTrip } from "@/components/SelectTrip";
+import { SelectClass } from "@/components/SelectClass";
+import { AddPromoCode } from "@/components/AddPromoCode";
 
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
@@ -56,55 +60,48 @@ function SearchFlightsForm({ searchParams = {} }) {
     dispatch(setFlightForm(searchParamsObj));
   }, []);
 
-  const formData = useSelector((state) => state.flightForm.value);
+  const flightFormData = useSelector((state) => state.flightForm.value);
 
   function handleSubmit(e) {
     e.preventDefault();
-    const str = processSearchParams(new FormData(e.target));
 
-    function searchForEmptyValues(obj) {
-      for (const [key, value] of Object.entries(obj)) {
-        if (value === "") {
-          return true;
-        }
-      }
-      return false;
-    }
-    if (searchForEmptyValues(str)) {
-      alert("Please fill all the required fields");
+    if (searchForEmptyValues(flightFormData)) {
+      alert(
+        "Please fill all the required fields. Asterisk (*) indicates 'required'"
+      );
       return;
     }
-    if (str.passenger.adult === 0) {
+    if (flightFormData.passenger.adult <= 0) {
       alert("Please select at least one passenger");
       return;
     }
-    if (str.passenger.adult > 10) {
-      alert("Maximum number of adults is 10");
+    if (flightFormData.passenger.adult > 10) {
+      alert("Maximum number for adults is 10");
       return;
     }
-    if (str.passenger.children > 5) {
-      alert("Maximum number of children is 5");
+    if (flightFormData.passenger.children > 5) {
+      alert("Maximum number for children is 5");
       return;
     }
 
     e.target.submit();
   }
 
-  function processSearchParams(paramObj) {
-    const formObj = {};
-
-    for (const [keys, value] of Object.entries(Object.fromEntries(paramObj))) {
-      if (keys === "passenger") {
-        formObj[keys] = JSON.parse(value);
+  function searchForEmptyValues(obj) {
+    const optionals = ["promocode"];
+    for (const [key, value] of Object.entries(obj)) {
+      if (optionals.includes(key)) {
         continue;
       }
-      formObj[keys] = value;
+      if (value === "") {
+        return true;
+      }
     }
-
-    return formObj;
+    return false;
   }
+
   function totalPassenger() {
-    return Object.values(formData.passenger).reduce((a, b) => +a + +b, 0);
+    return Object.values(flightFormData.passenger).reduce((a, b) => +a + +b, 0);
   }
 
   return (
@@ -115,29 +112,29 @@ function SearchFlightsForm({ searchParams = {} }) {
         action="/flights/search"
         onSubmit={handleSubmit}
       >
-        <input type="hidden" name="from" value={formData.from} />
-        <input type="hidden" name="to" value={formData.to} />
+        <input type="hidden" name="from" value={flightFormData.from} />
+        <input type="hidden" name="to" value={flightFormData.to} />
         <input
           type="hidden"
           name="departIataCode"
-          value={formData.departIataCode}
+          value={flightFormData.departIataCode}
         />
         <input
           type="hidden"
           name="arriveIataCode"
-          value={formData.arriveIataCode}
+          value={flightFormData.arriveIataCode}
         />
-        <input type="hidden" name="depart" value={formData.depart} />
-        <input type="hidden" name="return" value={formData.return} />
+        <input type="hidden" name="depart" value={flightFormData.depart} />
+        <input type="hidden" name="return" value={flightFormData.return} />
         <input
           type="hidden"
-          value={JSON.stringify(formData.passenger)}
+          value={JSON.stringify(flightFormData.passenger)}
           form="flightform"
           name="passenger"
         />
         <input
           type="hidden"
-          value={formData.class}
+          value={flightFormData.class}
           form="flightform"
           name="class"
         />
@@ -145,7 +142,8 @@ function SearchFlightsForm({ searchParams = {} }) {
         <div className="my-[20px] grid gap-[24px] lg:grid-cols-2 xl:grid-cols-[2fr_1fr_repeat(2,_2fr)]">
           <div className="relative justify-between flex h-[48px] w-full items-center gap-[4px] rounded-[8px] border-2 border-primary">
             <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
-              From - to
+              From <span className={"text-red-600"}>*</span> - to{" "}
+              <span className={"text-red-600"}>*</span>
             </span>
 
             <div className="h-full w-[45%]">
@@ -160,11 +158,11 @@ function SearchFlightsForm({ searchParams = {} }) {
               onClick={() =>
                 dispatch(
                   setFlightForm({
-                    ...formData,
-                    from: formData.to,
-                    to: formData.from,
-                    departIataCode: formData.arriveIataCode,
-                    arriveIataCode: formData.departIataCode,
+                    ...flightFormData,
+                    from: flightFormData.to,
+                    to: flightFormData.from,
+                    departIataCode: flightFormData.arriveIataCode,
+                    arriveIataCode: flightFormData.departIataCode,
                   })
                 )
               }
@@ -193,7 +191,7 @@ function SearchFlightsForm({ searchParams = {} }) {
 
           <div className="relative rounded-[8px] border-2 border-primary">
             <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
-              Trip
+              Trip <span className={"text-red-600"}>*</span>
             </span>
             <div className="h-full">
               <SelectTrip />
@@ -205,7 +203,8 @@ function SearchFlightsForm({ searchParams = {} }) {
             }
           >
             <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
-              Depart - Return
+              Depart <span className={"text-red-600"}>*</span> - Return{" "}
+              <span className={"text-red-600"}>*</span>
             </span>
 
             <DatePickerWithRange
@@ -214,7 +213,7 @@ function SearchFlightsForm({ searchParams = {} }) {
               getDate={(value) => {
                 dispatch(
                   setFlightForm({
-                    ...formData,
+                    ...flightFormData,
                     depart: value.from.toISOString(),
                     return: value.to.toISOString(),
                   })
@@ -225,7 +224,8 @@ function SearchFlightsForm({ searchParams = {} }) {
 
           <div className="relative flex h-[48px] items-center gap-[4px] rounded-[8px] border-2 border-primary">
             <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
-              Passenger - Class
+              Passenger <span className={"text-red-600"}>*</span> - Class{" "}
+              <span className={"text-red-600"}>*</span>
             </span>
             <Popover>
               <PopoverTrigger
@@ -233,9 +233,11 @@ function SearchFlightsForm({ searchParams = {} }) {
                 className="h-full w-full justify-start rounded-lg"
               >
                 <Button className="font-normal" variant={"ghost"}>
-                  {`${totalPassenger(formData.passenger)} ${
-                    totalPassenger(formData.passenger) > 1 ? "people" : "person"
-                  }, ${formData.class}`}
+                  {`${totalPassenger(flightFormData.passenger)} ${
+                    totalPassenger(flightFormData.passenger) > 1
+                      ? "people"
+                      : "person"
+                  }, ${flightFormData.class}`}
                 </Button>
               </PopoverTrigger>
               <PopoverContent>
@@ -255,9 +257,9 @@ function SearchFlightsForm({ searchParams = {} }) {
                   </CardHeader>
                   <CardContent className="p-0 flex-col flex gap-3">
                     <Label>
-                      Adult:
+                      Adult (max 10):
                       <Input
-                        defaultValue={+formData.passenger.adult}
+                        defaultValue={+flightFormData.passenger.adult}
                         label="Adult"
                         type="number"
                         min={1}
@@ -266,7 +268,7 @@ function SearchFlightsForm({ searchParams = {} }) {
                           dispatch(
                             setFlightForm({
                               passenger: {
-                                ...formData.passenger,
+                                ...flightFormData.passenger,
                                 adult: +e.currentTarget.value,
                               },
                             })
@@ -275,9 +277,9 @@ function SearchFlightsForm({ searchParams = {} }) {
                       />
                     </Label>
                     <Label>
-                      Children:
+                      Children (max 5):
                       <Input
-                        defaultValue={formData.passenger.children}
+                        defaultValue={flightFormData.passenger.children}
                         label="Children"
                         type="number"
                         min={1}
@@ -286,7 +288,7 @@ function SearchFlightsForm({ searchParams = {} }) {
                           dispatch(
                             setFlightForm({
                               passenger: {
-                                ...formData.passenger,
+                                ...flightFormData.passenger,
                                 children: +e.currentTarget.value,
                               },
                             })
@@ -302,7 +304,7 @@ function SearchFlightsForm({ searchParams = {} }) {
         </div>
         <div className="flex flex-wrap justify-end gap-[24px]">
           <AddPromoCode
-            defaultCode={formData.promocode}
+            defaultCode={flightFormData.promocode}
             getPromoCode={(promo) => {
               dispatch(setFlightForm({ promocode: promo }));
             }}

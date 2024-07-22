@@ -3,14 +3,13 @@
 import { Input } from "@/components/local-ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { LoginBtn } from "./loginBtn";
 import Link from "next/link";
 import Image from "next/image";
 
 import { authenticate, authenticateWithGoogle } from "@/lib/actions";
 
 import { useEffect } from "react";
-import { useFormState } from "react-dom";
+import { useFormState, useFormStatus } from "react-dom";
 import { useToast } from "@/components/ui/use-toast";
 import { useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -145,27 +144,11 @@ export function LoginForm() {
   );
 }
 
-// export async function action({ request }) {
-//   const formData = await request.formData();
-//   const json = Object.fromEntries(formData);
-//   console.log(json);
-//   const delay = 3000;
-//   await new Promise((resolve) => setTimeout(resolve, delay));
-//   const res = await fetch("http://127.0.0.1:1111/api/user/login", {
-//     method: "POST",
-//     body: JSON.stringify(json),
-//     headers: {
-//       "Content-Type": "application/json",
-//     },
-//   });
-//   const data = await res.json();
-
-//   if (data.accessToken) {
-//     if (json.rememberMe) {
-//       localStorage.setItem("access_token", data.accessToken);
-//     } else {
-//       sessionStorage.setItem("access_token", data.accessToken);
-//     }
-//   }
-//   return redirect("/");
-// }
+function LoginBtn() {
+  const { pending } = useFormStatus();
+  return (
+    <Button type="submit" className="w-full mt-10" disabled={pending}>
+      {pending ? "Submitting..." : "Login"}
+    </Button>
+  );
+}

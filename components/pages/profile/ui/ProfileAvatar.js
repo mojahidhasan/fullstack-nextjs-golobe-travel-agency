@@ -2,11 +2,9 @@
 
 import { AvatarFallback, AvatarImage, Avatar } from "@/components/ui/avatar";
 
-import { UploadProfilePicture } from "./UploadProfilePicture";
+import { UploadProfilePicture } from "@/components/pages/profile/ui/UploadProfilePicture";
 
 import { useState, useEffect } from "react";
-
-import { validateURL } from "@/lib/utils";
 
 export function ProfileAvatar({ avatar }) {
   const [avt, setAvt] = useState(null);

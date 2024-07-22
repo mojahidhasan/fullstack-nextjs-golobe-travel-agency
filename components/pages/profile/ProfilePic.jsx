@@ -1,5 +1,5 @@
-import { UploadCoverPhoto } from "./ui/UploadCoverPhoto";
-import { ProfileAvatar } from "./ui/ProfileAvatar";
+import { UploadCoverPhoto } from "@/components/pages/profile/ui/UploadCoverPhoto";
+import { ProfileAvatar } from "@/components/pages/profile/ui/ProfileAvatar";
 import Image from "next/image";
 
 export function ProfilePic({ avatar, cover, name, email }) {

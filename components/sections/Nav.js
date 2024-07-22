@@ -1,10 +1,10 @@
-import { ActiveNavLink } from "@/components/ui/nav/ActiveNavLink";
+import { ActiveNavLink } from "@/components/local-ui/nav/ActiveNavLink";
 import { Logo } from "@/components/Logo";
-import { AvatarWithName } from "@/components/ui/nav/AvatarWithName";
+import { AvatarWithName } from "@/components/local-ui/nav/AvatarWithName";
 
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { SideBar } from "@/components/ui/nav/SideBar";
+import { SideBar } from "@/components/local-ui/nav/SideBar";
 import { cn, validateURL } from "@/lib/utils";
 
 import { getUserData, getAvatar } from "@/lib/data";

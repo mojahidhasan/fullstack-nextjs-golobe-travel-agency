@@ -9,8 +9,14 @@ export default function Error({ error, reset }) {
   }, [error]);
 
   return (
-    <div>
-      <h2>Something went wrong!</h2>
+    <div
+      className={
+        "h-screen p-1 w-full flex justify-center items-center flex-col"
+      }
+    >
+      <h2 className={"font-bold text-4xl text-center mb-5"}>
+        Something went wrong!
+      </h2>
       <Button
         onClick={
           // Attempt to recover by trying to re-render the segment

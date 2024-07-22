@@ -2,10 +2,10 @@ import { Montserrat } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 
-import { Toaster } from "@/components/ui/toaster";
 import NextTopLoader from "nextjs-toploader";
-import { StoreProvider } from "./StoreProvider";
-import { Notification } from "./_notification";
+import { Toaster } from "@/components/ui/toaster";
+import { StoreProvider } from "@/app/StoreProvider";
+import { Notification } from "@/app/_notification";
 import mongoose from "mongoose";
 
 const monse = Montserrat({

@@ -1,6 +1,6 @@
 import { TabsContent, TabsList, TabsTrigger, Tabs } from "@/components/ui/tabs";
-import { FlightTicketDownloadCard } from "./ui/FlightTicketDownloadCard";
-import { HotelTicketDownloadCard } from "./ui/HotelTicketDownloadCard";
+import { FlightTicketDownloadCard } from "@//components/pages/profile/ui/FlightTicketDownloadCard";
+import { HotelTicketDownloadCard } from "@/components/pages/profile/ui/HotelTicketDownloadCard";
 
 import Image from "next/image";
 

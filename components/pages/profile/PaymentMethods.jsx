@@ -1,5 +1,5 @@
-import { TabContentMockup } from "./ui/TabContentMockup";
-import { PaymentCard } from "./ui/PaymentCard";
+import { TabContentMockup } from "@/components/pages/profile/ui/TabContentMockup";
+import { PaymentCard } from "@/components/pages/profile/ui/PaymentCard";
 import { AddPaymentCard } from "@/components/AddPaymentCard";
 export function PaymentMethods() {
   const cardData = {

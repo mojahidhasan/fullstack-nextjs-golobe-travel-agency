@@ -1,6 +1,6 @@
 import "server-only";
-import { SubscribeNewsletter } from "../SubscribeNewsletter";
-import { QuickLinks } from "../QuickLinks";
+import { SubscribeNewsletter } from "@/components/SubscribeNewsletter";
+import { QuickLinks } from "@/components/QuickLinks";
 
 import Link from "next/link";
 export function Footer() {

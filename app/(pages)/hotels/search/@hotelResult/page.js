@@ -36,13 +36,13 @@ export default function HotelResultPage({ searchParams }) {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="cheapest">
-          <Cheapest />
+          <div>cheapest</div>
         </TabsContent>
         <TabsContent value="best">
-          <Best />
+          <div>best</div>
         </TabsContent>
         <TabsContent value="quickest">
-          <Quickest />
+          <div>quickest</div>
         </TabsContent>
       </Tabs>
     </div>

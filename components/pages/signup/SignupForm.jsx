@@ -4,7 +4,7 @@ import { Input } from "@/components/local-ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { SignupBtn } from "./signup-button";
+import { SignupBtn } from "@/components/pages/signup/signup-button";
 import Link from "next/link";
 import Image from "next/image";
 

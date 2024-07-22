@@ -5,7 +5,7 @@ import { Dropdown } from "@/components/ui/Dropdown";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
-import Rating from "../ui/Rating";
+import { FilterRating } from "@/components/local-ui/FilterRating";
 
 import { cn } from "@/lib/utils";
 import { useState, useEffect } from "react";
@@ -59,7 +59,10 @@ export function HotelsFilter({ className }) {
 
   return (
     <section
-      className={cn("relative w-[400px] border-r-[1px] pr-[12px]", className)}
+      className={cn(
+        "relative lg:w-[400px] w-full border-none lg:border-r-[1px] pr-[12px]",
+        className
+      )}
     >
       <div className="flex items-center justify-between mb-[32px] font-semibold text-secondary">
         <Button
@@ -80,7 +83,7 @@ export function HotelsFilter({ className }) {
       </div>
       <div
         className={cn(
-          "w-full max-lg:absolute max-lg:z-10 max-lg:bg-white max-lg:p-5",
+          "w-full max-lg:absolute max-lg:z-50 max-lg:bg-white max-lg:p-5",
           filter === false && "max-lg:hidden"
         )}
       >
@@ -99,7 +102,7 @@ export function HotelsFilter({ className }) {
             </div>
           </Dropdown>
           <Dropdown title={"Rating"} open>
-            <Rating
+            <FilterRating
               setRating={(rate) => {
                 dispatch(setFilterRate(rate));
               }}

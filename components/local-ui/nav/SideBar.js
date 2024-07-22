@@ -5,7 +5,7 @@ import {
   SheetContent,
   SheetClose,
 } from "@/components/ui/sheet";
-import { Separator } from "../separator";
+import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -96,11 +96,7 @@ export function SideBar({ isLoggedIn }) {
             <>
               <li>
                 <SheetClose asChild>
-                  <Button
-                    className={"p-0 h-auto text-blue-800 gap-2"}
-                    variant="link"
-                    asChild
-                  >
+                  <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
                     <Link href="/login">
                       <LogIn width={20} />
                       <span>Login</span>
@@ -110,11 +106,7 @@ export function SideBar({ isLoggedIn }) {
               </li>
               <li>
                 <SheetClose asChild>
-                  <Button
-                    className={"p-0 h-auto text-tertiary gap-2"}
-                    variant="link"
-                    asChild
-                  >
+                  <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
                     <Link href="/signup">
                       <svg
                         width="24"
