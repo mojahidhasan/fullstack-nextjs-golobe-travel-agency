@@ -5,7 +5,7 @@ const value = {
   to: "",
   departIataCode: "",
   arriveIataCode: "",
-  trip: "Economy",
+  trip: "Round-Trip",
   depart: new Date().toISOString(),
   return: addDays(new Date(), 7).toISOString(),
   passenger: {

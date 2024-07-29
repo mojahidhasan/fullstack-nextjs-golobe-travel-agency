@@ -33,7 +33,6 @@ export function SelectTrip() {
       </SelectTrigger>
       <SelectContent className={"bg-primary"}>
         <SelectGroup>
-          <SelectItem value="Economy">Economy</SelectItem>
           <SelectItem value="Round-Trip">Round-Trip</SelectItem>
           <SelectItem value="One Way">One Way</SelectItem>
         </SelectGroup>

@@ -46,7 +46,7 @@ function SearchFlightsForm({ searchParams = {} }) {
       arriveIataCode: "",
       depart: new Date().toISOString(),
       return: addDays(new Date(), 7).toISOString(),
-      trip: "Economy",
+      trip: "Round-Trip",
       passenger: {
         adult: 1,
         children: 0,

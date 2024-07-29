@@ -121,14 +121,14 @@ export function SideBar({ isLoggedIn }) {
                           stroke="currentColor"
                           strokeWidth="2"
                           strokeLinecap="round"
-                          stroke-linejoin="round"
+                          strokeLinejoin="round"
                         />
                         <path
                           d="M15 14H3"
                           stroke="currentColor"
                           strokeWidth="2"
                           strokeLinecap="round"
-                          stroke-linejoin="round"
+                          strokeLinejoin="round"
                         />
                         <path
                           d="M14 7.5H21"
