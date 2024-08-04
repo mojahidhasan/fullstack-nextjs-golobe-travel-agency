@@ -6,10 +6,11 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest"
   },
   "dependencies": {
-    "@auth/mongodb-adapter": "^3.0.0",
+    "@auth/mongodb-adapter": "^3.4.2",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-avatar": "^1.0.4",
     "@radix-ui/react-checkbox": "^1.0.4",
@@ -36,11 +37,10 @@
     "embla-carousel-react": "^8.0.4",
     "image-to-base64": "^2.2.0",
     "lucide-react": "^0.372.0",
-    "mongodb": "^6.6.1",
+    "mongodb": "^6.8.0",
     "mongoose": "^8.3.2",
-    "nedb": "^1.8.0",
     "next": "14.2.3",
-    "next-auth": "^5.0.0-beta.17",
+    "next-auth": "^5.0.0-beta.20",
     "nextjs-toploader": "^1.6.12",
     "react": "^18",
     "react-avatar-editor": "^13.0.2",
@@ -56,9 +56,14 @@
   },
   "devDependencies": {
     "@faker-js/faker": "^8.4.1",
+    "@testing-library/jest-dom": "^6.4.8",
+    "@testing-library/react": "^16.0.0",
+    "@vitejs/plugin-react": "^4.3.1",
     "eslint": "^8",
     "eslint-config-next": "^14.2.3",
+    "jsdom": "^24.1.1",
     "postcss": "^8",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.1",
+    "vitest": "^2.0.4"
   }
 }

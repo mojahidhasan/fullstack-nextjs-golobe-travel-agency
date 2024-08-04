@@ -7,26 +7,16 @@ import Link from "next/link";
 import { SideBar } from "@/components/local-ui/nav/SideBar";
 import { cn, validateURL } from "@/lib/utils";
 
-import { getUserData, getAvatar } from "@/lib/data";
+import { getUserCatched } from "@/lib/db/catchedData/getCatchedOperationDB";
 
 export async function Nav({ className, type = "default", session, ...props }) {
   const isLoggedIn = !!session?.user;
   let nameOfUser, avatar;
   if (isLoggedIn) {
-    const userData = await getUserData(session.user.email);
-    if (userData.profileInfo.images.avatar.startsWith("data:image")) {
-      avatar = userData.profileInfo.images.avatar;
-    } else {
-      avatar = await getAvatar(
-        process.env.NEXT_PUBLIC_API_URL +
-          "/avatar" +
-          userData.profileInfo.images.avatar
-      );
-    }
-    nameOfUser =
-      userData.profileInfo.firstname + " " + userData.profileInfo.lastname;
+    const userData = await getUserCatched(session.user.id);
+    avatar = userData.image;
+    nameOfUser = userData.name;
   }
-
   const types = {
     home: {
       nav: "rounded-[24px] px-[32px] text-white backdrop-blur-[2px]",

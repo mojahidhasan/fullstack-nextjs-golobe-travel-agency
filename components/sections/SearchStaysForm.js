@@ -46,7 +46,6 @@ function SearchStaysForm({ searchParams = {} }) {
   }
 
   useEffect(() => {
-    console.log(staySearchParamsObj);
     dispatch(setStayForm(staySearchParamsObj));
   }, []);
 

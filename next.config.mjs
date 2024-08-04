@@ -1,10 +1,9 @@
 /** @type {import('next').NextConfig} */
-
 const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data: https://images.unsplash.com/;
+    img-src 'self' blob: data: https://images.unsplash.com/ https://platform-lookaside.fbsbx.com/;
     font-src 'self';
     object-src 'self';
     base-uri 'self';
@@ -27,21 +26,24 @@ const nextConfig = {
         port: "",
       },
       {
-        protocol: "http",
-        hostname: "localhost",
-        port: "3000",
+        protocol: "https",
+        hostname: "platform-lookaside.fbsbx.com",
       },
       {
         protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "http",
         hostname: "localhost",
-        port: "3001",
+        port: "3000",
       },
     ],
   },
   async headers() {
     return [
       {
-        source: "/(.*)",
+        source: "/:path*",
         headers: [
           {
             key: "Content-Security-Policy",
@@ -50,6 +52,10 @@ const nextConfig = {
           {
             key: "X-Content-Type-Options",
             value: "nosniff",
+          },
+          {
+            key: "X-Pathname",
+            value: "/:path*",
           },
         ],
       },

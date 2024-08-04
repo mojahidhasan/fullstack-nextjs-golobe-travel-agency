@@ -41,3 +41,7 @@ next-env.d.ts
 
 #folder
 app/dev
+
+#diagram
+*.bkp
+*.dtmp
