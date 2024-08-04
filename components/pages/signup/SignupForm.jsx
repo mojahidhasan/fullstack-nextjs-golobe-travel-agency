@@ -11,28 +11,31 @@ import Image from "next/image";
 import { AlertCircle } from "lucide-react";
 import { UserRoundPlus } from "lucide-react";
 
-import { signUp } from "@/lib/actions";
+import { signUpAction } from "@/lib/actions";
 
 import { useFormState } from "react-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 
 import { cn } from "@/lib/utils";
 export function SignupForm() {
   const router = useRouter();
-  const [state, dispatch] = useFormState(signUp, undefined);
+  const [state, dispatch] = useFormState(signUpAction, undefined);
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
-    if (state?.success) {
+    if (state?.success === false && state?.error !== undefined) {
+      setErrors(state.error);
+    }
+
+    if (state?.success === true && state?.error === undefined) {
       setTimeout(() => {
         router.push("/login?s=true");
       }, 2000);
     }
   }, [state]);
 
-  const errors = {};
-
-  if (state?.error === "validation_error") {
+  if (state?.success === false && state?.error !== undefined) {
     for (let key in state?.message) {
       errors[state?.message[key].path[0]] = state?.message[key].message;
     }
@@ -54,7 +57,7 @@ export function SignupForm() {
             <p>{state?.message}</p>
           </>
         )}
-        {state?.success && (
+        {state?.success === true && (
           <>
             <UserRoundPlus className="h-5 w-5" />
             <p>{state?.message}</p>
