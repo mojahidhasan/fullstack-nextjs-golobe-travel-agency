@@ -5,11 +5,11 @@ import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-import emiratesLogo from "@/public/images/emirates_logo.png";
+import emiratesLogo from "@/public/images/ek.svg";
 
-export function Cheapest({ data, resultType = "results" }) {
+export function Cheapest({ data, resultType = "result(s)" }) {
   const maxResultPerPage = 4;
-  const [shownTill, setShownTill] = useState(maxResultPerPage);
+  const [shownTill, setShownTill] = useState(data.length < maxResultPerPage ? data.length : maxResultPerPage);
 
   return (
     <>
@@ -35,11 +35,7 @@ export function Cheapest({ data, resultType = "results" }) {
         <div className="grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2">
           {data.slice(0, shownTill).map((item, i) => (
             <FlightResultCard
-              key={i}
-              image={{
-                src: emiratesLogo,
-                alt: "emirates_logo",
-              }}
+              key={item._id}
               liked={false}
               data={item}
             />

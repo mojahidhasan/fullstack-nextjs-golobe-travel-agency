@@ -19,7 +19,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
-import { signOut } from "@/lib/actions";
+import { signOutAction } from "@/lib/actions";
 export function AvatarWithName({
   onlineStatus = "Online",
   profilePic = "",
@@ -108,7 +108,7 @@ export function AvatarWithName({
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="cursor-pointer">
-            <form action={signOut}>
+            <form action={signOutAction}>
               <Button
                 variant="Ghost"
                 className={

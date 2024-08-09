@@ -28,8 +28,9 @@ export function LoginForm() {
   const { toast } = useToast();
   const searchParams = useSearchParams();
   useEffect(() => {
+    const hasJustSignedUp = searchParams.has("s", "true");
     const timeout = setTimeout(() => {
-      if (searchParams.has("s", "true")) {
+      if (hasJustSignedUp) {
         toast({
           title: "Signup Successful",
           description: "You have successfully signed up",
@@ -37,9 +38,13 @@ export function LoginForm() {
         });
         router.replace("/login");
       }
-    }, 1000);
+    }, 0);
     return () => clearTimeout(timeout);
   }, [searchParams]);
+
+  if (state?.success === true) {
+    router.refresh();
+  }
 
   const errors = {};
 

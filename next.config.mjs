@@ -17,11 +17,6 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "source.unsplash.com",
-        port: "",
-      },
-      {
-        protocol: "https",
         hostname: "images.unsplash.com",
         port: "",
       },
@@ -32,6 +27,10 @@ const nextConfig = {
       {
         protocol: "https",
         hostname: "lh3.googleusercontent.com",
+      },
+      {
+        protocol: "https",
+        hostname: "golob-travel-agency.vercel.app",
       },
       {
         protocol: "http",

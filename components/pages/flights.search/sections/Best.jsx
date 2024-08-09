@@ -6,10 +6,10 @@ import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-import emiratesLogo from "@/public/images/emirates_logo.png";
-export function Best({ data, resultType = "results" }) {
+import emiratesLogo from "@/public/images/ek.svg";
+export function Best({ data, resultType = "result(s)" }) {
   const maxResultPerPage = 4;
-  const [shownTill, setShownTill] = useState(maxResultPerPage);
+  const [shownTill, setShownTill] = useState(data.length < maxResultPerPage ? data.length : maxResultPerPage);
   return (
     <>
       <div className="my-10">
@@ -34,7 +34,7 @@ export function Best({ data, resultType = "results" }) {
         <div className="grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2">
           {data.slice(0, shownTill).map((item, i) => (
             <FlightResultCard
-              key={i}
+              key={item._id}
               image={{ src: emiratesLogo, alt: "abs" }}
               liked={false}
               data={item}

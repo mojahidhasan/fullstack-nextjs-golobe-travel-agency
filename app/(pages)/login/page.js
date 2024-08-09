@@ -5,8 +5,26 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/local-ui/carousel";
+import { Button } from "@/components/ui/button";
 import Image from "next/image";
+
+import { signOutAction } from "@/lib/actions";
+import { auth } from "@/lib/auth";
 export default async function LoginPage({ searchParams }) {
+  const session = await auth();
+  if (session?.user) {
+    return (
+      <div>
+        <p>You are already logged in</p>
+        <p>Want to login into another account?</p>
+        <p>Want to logout?</p>
+        <form action={signOutAction}>
+          <Button type="submit">Logout</Button>
+        </form>
+      </div>
+    );
+  }
+
   return (
     <section className="relative mx-auto flex h-screen w-[90%] items-center justify-between gap-[40px] py-[104px] xl:gap-[100px]">
       <div className="grow text-left">

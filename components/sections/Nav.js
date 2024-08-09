@@ -7,13 +7,13 @@ import Link from "next/link";
 import { SideBar } from "@/components/local-ui/nav/SideBar";
 import { cn, validateURL } from "@/lib/utils";
 
-import { getUserCatched } from "@/lib/db/catchedData/getCatchedOperationDB";
+import { getUserByIdCatched } from "@/lib/db/catchedData/getCatchedOperationDB";
 
 export async function Nav({ className, type = "default", session, ...props }) {
   const isLoggedIn = !!session?.user;
   let nameOfUser, avatar;
   if (isLoggedIn) {
-    const userData = await getUserCatched(session.user.id);
+    const userData = await getUserByIdCatched(session.user.id);
     avatar = userData.image;
     nameOfUser = userData.name;
   }

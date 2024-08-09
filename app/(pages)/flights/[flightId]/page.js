@@ -5,7 +5,7 @@ import { FlightsSchedule } from "@/components/pages/flights.[flightId]/sections/
 
 import Image from "next/image";
 
-import emiratesLogo from "@/public/images/emirates_logo.png";
+import emiratesLogo from "@/public/images/ek.svg";
 import stopwatch from "@/public/icons/stopwatch.svg";
 
 export default async function FlightDetailsPage() {

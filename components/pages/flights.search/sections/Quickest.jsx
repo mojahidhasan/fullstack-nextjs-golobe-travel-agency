@@ -7,16 +7,16 @@ import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-import emiratesLogo from "@/public/images/emirates_logo.png";
-export function Quickest({ data, resultType = "results" }) {
+import emiratesLogo from "@/public/images/ek.svg";
+export function Quickest({ data, resultType = "result(s)" }) {
   const maxResultPerPage = 4;
-  const [shownTill, setShownTill] = useState(maxResultPerPage);
+  const [shownTill, setShownTill] = useState(data.length < maxResultPerPage ? data.length : maxResultPerPage);
   return (
     <>
       <div className="my-10">
         <div className="flex my-5 justify-between text-[0.875rem] font-semibold">
           <p>
-            Showing {"4"} of{" "}
+            Showing {shownTill} of{" "}
             <span className="text-destructive">
               {data.length} {resultType}
             </span>
@@ -35,7 +35,7 @@ export function Quickest({ data, resultType = "results" }) {
         <div className="grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2">
           {data.slice(0, shownTill).map((item, i) => (
             <FlightResultCard
-              key={i}
+              key={item._i}
               image={{
                 src: emiratesLogo,
                 alt: "emirates_logo",

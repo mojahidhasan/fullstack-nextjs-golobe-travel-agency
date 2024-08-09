@@ -7,10 +7,15 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { format } from "date-fns";
 import { minToHour } from "@/lib/utils";
+
+import EK from "@/public/images/ek.svg";
+import EY from "@/public/images/ey.svg";
+import FZ from "@/public/images/fz.svg";
+import QR from "@/public/images/qr.svg";
+
 export function FlightResultCard({
   data,
   liked,
-  image,
   rate = 5,
   reviews = 233,
   id = 123,
@@ -20,6 +25,12 @@ export function FlightResultCard({
     setIsliked(!isLiked);
   }
 
+  const airlines = {
+    EK,
+    EY,
+    FZ,
+    QR,
+  };
   return (
     <div className="flex shadow-md h-min rounded-l-[8px] rounded-r-[8px] bg-white text-[0.75rem] font-medium text-secondary shadow-small max-md:flex-col">
       <div className="aspect-square h-auto w-full max-md:h-[200px] md:w-[300px]">
@@ -27,8 +38,8 @@ export function FlightResultCard({
           width={300}
           height={300}
           className="h-full p-5 w-full rounded-l-[12px] object-contain max-md:rounded-r-[8px]"
-          src={image.src}
-          alt={image.alt}
+          src={airlines[data?.flightDetails?.airline?.iataCode]}
+          alt={data?.flightDetails?.airline?.name}
         />
       </div>
       <div className="h-min w-full p-[24px]">
@@ -98,7 +109,7 @@ export function FlightResultCard({
             </svg>
           </Button>
           <Button asChild className={"w-full"}>
-            <Link href={"/flights/" + id}>View Deals</Link>
+            <Link href={"/flights/" + data._id}>View Deals</Link>
           </Button>
         </div>
       </div>

@@ -6,7 +6,6 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -20,9 +19,8 @@ import AvatarEditor from "react-avatar-editor";
 import { useState, useRef, useEffect } from "react";
 import { useFormState } from "react-dom";
 import { useToast } from "@/components/ui/use-toast";
-import { useRouter } from "next/navigation";
 
-import { changeProfilePicture } from "@/lib/actions";
+import { changeProfilePictureAction } from "@/lib/actions";
 
 import pen from "@/public/icons/pen.svg";
 
@@ -33,10 +31,9 @@ export function UploadProfilePicture() {
 
   const editorRef = useRef(null);
 
-  const [state, dispatch] = useFormState(changeProfilePicture, undefined);
+  const [state, dispatch] = useFormState(changeProfilePictureAction, undefined);
 
   const { toast } = useToast();
-  const router = useRouter();
 
   function handleSave() {
     const image = editorRef.current.getImage().toDataURL();
@@ -86,10 +83,7 @@ export function UploadProfilePicture() {
             Want to update your avatar? Upload a new one.
           </DialogDescription>
         </DialogHeader>
-        <form
-          id="upload_profile_pic_form"
-          className="flex items-center space-x-2"
-        >
+        <form className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
             <Label
               htmlFor="upload-profile-pic"

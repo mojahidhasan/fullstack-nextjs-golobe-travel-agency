@@ -5,7 +5,7 @@ import { HotelTicketDownloadCard } from "@/components/pages/profile/ui/HotelTick
 import Image from "next/image";
 
 import CVKHotel from "@/public/images/CVK-hotel.jpg";
-import emiratesLogo from "@/public/images/emirates_logo.png";
+import emiratesLogo from "@/public/images/ek.svg";
 
 export function TicketsOrBookings() {
   const ticketFlight = {

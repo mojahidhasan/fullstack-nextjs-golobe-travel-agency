@@ -1,7 +1,7 @@
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 
-import emiratesLogo from "@/public/images/emirates_logo.png";
+import emiratesLogo from "@/public/images/ek.svg";
 import plane from "@/public/icons/airplane-filled.svg";
 import wifi from "@/public/icons/wifi.svg";
 import stopwatch from "@/public/icons/stopwatch.svg";

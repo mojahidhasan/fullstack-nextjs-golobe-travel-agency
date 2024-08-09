@@ -1,15 +1,16 @@
 import { Button } from "@/components/ui/button";
 import { TabContentMockup } from "@/components/pages/profile/ui/TabContentMockup";
 import { ChangeNamePopup } from "@/components/pages/profile/ui/changeNamePopup";
-export function AccoutDetails({ data }) {
+import Link from "next/link";
+import Image from "next/image";
+export function AccoutDetails({ userDetails }) {
   const accountDetails = {
-    name: data.firstname + " " + data.lastname,
-    email: data.email,
-    phoneNo: data.phone.number,
-    address: data?.address,
-    dateOfBirth: data?.dateOfBirth,
+    name: userDetails.firstname + " " + userDetails.lastname,
+    emails: userDetails.email,
+    phone: userDetails.phone,
+    address: userDetails?.address,
+    dateOfBirth: userDetails?.dateOfBirth,
   };
-
   return (
     <TabContentMockup title={"Account"}>
       <div className="">
@@ -21,15 +22,26 @@ export function AccoutDetails({ data }) {
       </div>
       <div className="">
         <h4 className="mb-[8px] opacity-75">Email</h4>
-        <div className="flex flex-wrap items-start justify-between">
-          {accountDetails?.email.map((item, index) => {
+        <div>
+          {accountDetails?.emails.map((item) => {
             return (
-              <p key={index} className="text-[1.25rem] font-semibold">
-                {item.username}
+              <p key={item.email} className="text-[1.25rem] font-semibold">
+                {item.email}{" "}
+                {item.primary === true && (
+                  <span className={"text-sm"}>(primary)</span>
+                )}{" "}
+                {item.emailVerified === null && (
+                  <Link
+                    href={"/verify/email"}
+                    className={"text-xs font-normal text-blue-500 underline"}
+                  >
+                    verify
+                  </Link>
+                )}
               </p>
             );
           })}
-          <div className="flex sm:flex-col md:flex-row items-end md:items-center gap-[8px]">
+          <div className="flex mt-3 sm:flex-col md:flex-row items-end md:items-center gap-[8px]">
             <Button variant={"outline"} className={"gap-1 p-2 h-auto"}>
               <svg
                 width="14"
@@ -102,9 +114,10 @@ export function AccoutDetails({ data }) {
         <div>
           <h4 className="mb-[8px] opacity-75">Phone</h4>
           <p className="text-[1.25rem] font-semibold">
-            {accountDetails.phoneNo}
-          </p>
-        </div>
+            {accountDetails.phone ?? "N/A"}
+          </p>{" "}
+        </div>{" "}
+        <div></div>
         <Button variant={"outline"} className={"gap-1 p-2 h-auto"}>
           <svg
             width="14"
@@ -188,3 +201,5 @@ export function AccoutDetails({ data }) {
     </TabContentMockup>
   );
 }
+
+function ChangeBtn() {}

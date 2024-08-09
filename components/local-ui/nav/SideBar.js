@@ -9,7 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
 
-import { signOut } from "@/lib/actions";
+import { signOutAction } from "@/lib/actions";
 
 import { LogIn } from "lucide-react";
 import love from "@/public/icons/love.svg";
@@ -190,7 +190,7 @@ export function SideBar({ isLoggedIn }) {
               })}
               <li>
                 <SheetClose asChild>
-                  <form action={signOut}>
+                  <form action={signOutAction}>
                     <Button className={"p-0 h-auto gap-2"} variant="link">
                       <Image src={logout} alt="logout_icon" width={20} />
                       <span>Logout</span>

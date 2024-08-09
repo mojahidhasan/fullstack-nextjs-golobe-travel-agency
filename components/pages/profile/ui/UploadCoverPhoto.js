@@ -17,12 +17,35 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useFormState } from "react-dom";
+import { useToast } from "@/components/ui/use-toast";
 
+import { changeCoverPhotoAction } from "@/lib/actions";
 import upload from "@/public/icons/upload.svg";
 
 export function UploadCoverPhoto() {
-  const [file, setFile] = useState("");
+  const [file, setFile] = useState(null);
+
+  const [state, dispatch] = useFormState(changeCoverPhotoAction, undefined);
+
+  const { toast } = useToast();
+
+  useEffect(() => {
+    if (state?.success) {
+      toast({
+        title: "Success",
+        description: "Your cover photo has been uploaded",
+      });
+      setFile(null);
+    } else if (state?.error) {
+      toast({
+        title: "Error",
+        description: "Something went wrong",
+        variant: "destructive",
+      });
+    }
+  }, [state]);
   return (
     <Dialog>
       <DialogTrigger asChild>
@@ -38,22 +61,17 @@ export function UploadCoverPhoto() {
             Want to update your cover photo? Upload a new one.
           </DialogDescription>
         </DialogHeader>
-        <form
-          className="flex items-center space-x-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            setFile("");
-          }}
-        >
+        <form action={dispatch} className="flex items-center space-x-2">
           <div className="grid flex-1 gap-2">
             <Label
-              htmlFor="link"
+              htmlFor="upload-cover-photo-form"
               className="cursor-pointer flex items-center justify-center bg-gray-100 rounded-md border border-gray-200 p-2 text-center w-full"
             >
               <span className="text-sm text-gray-500">Choose a file</span>
             </Label>
             <Input
-              id="link"
+              id="upload-cover-photo-form"
+              name="upload-cover-photo-form"
               type="file"
               className="hidden"
               onChange={(e) => {
@@ -61,7 +79,7 @@ export function UploadCoverPhoto() {
                 setFile(img);
               }}
             />
-            <Button type="submit" size="sm" className="px-3">
+            <Button type="submit" size="sm" className={"px-3"} disabled={!file}>
               <span className="sr-only">Submit</span>
               <Upload className="h-4 w-4" />
             </Button>
@@ -81,17 +99,15 @@ export function UploadCoverPhoto() {
                     />
                   </DialogTrigger>
                 )}
-                <DialogContent className="h-[350px] p-2 box-content max-w-[90%]">
+                <DialogContent className="h-[350px] p-2 box-content max-w-[1296px]">
                   <DialogHeader>
-                    <DialogTitle>
-                      Preview how it will look like after uploading it.
-                    </DialogTitle>
+                    <DialogTitle>Preview:</DialogTitle>
                   </DialogHeader>
                   <Image
                     className="h-full rounded-[12px] w-full object-cover"
                     src={file}
-                    width={1000}
-                    height={1000}
+                    width={1296}
+                    height={350}
                     alt="preview"
                   />
                   <DialogFooter className="sm:justify-start">
