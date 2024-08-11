@@ -2,23 +2,42 @@ import { Cheapest } from "@/components/pages/flights.search/sections/Cheapest";
 import { Best } from "@/components/pages/flights.search/sections/Best";
 import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import db from "@/lib/db";
+import { auth } from "@/lib/auth";
+import {
+  getFlightsByDepartAndArriveIataCodeCached,
+  getUserDetailsByUserIdCached,
+} from "@/lib/db/catchedData/getCatchedOperationDB";
 import { minToHour } from "@/lib/utils";
 export async function FLightResult({ searchParams }) {
-  const data = await db.getFlightSearchResult(searchParams);
+  const session = await auth();
+  const flightResults = await getFlightsByDepartAndArriveIataCodeCached(
+    searchParams
+  );
+  const userDetails = await getUserDetailsByUserIdCached(session?.user?.id);
 
-  if (data?.error) {
-    return <div className={"text-center font-bold"}>{data.error}</div>;
+  const extendedFlightResults = flightResults.map((flight) => {
+    return {
+      ...flight,
+      liked: userDetails?.likes?.flights?.includes(flight._id),
+    };
+  });
+
+  if (extendedFlightResults?.error) {
+    return (
+      <div className={"text-center font-bold"}>
+        {extendedFlightResults.error}
+      </div>
+    );
   }
-  if (data?.length < 1) {
+  if (extendedFlightResults?.length < 1) {
     return <div className={"text-center font-bold"}>No data found</div>;
   }
 
-  const sortByCheapest = data.slice(0).sort((a, b) => {
+  const sortByCheapest = extendedFlightResults.slice(0).sort((a, b) => {
     return +a.price.base - +b.price.base;
   });
 
-  const sortByBest = data.slice(0).sort((a, b) => {
+  const sortByBest = extendedFlightResults.slice(0).sort((a, b) => {
     const aMinutes = a.flightDetails.timeTaken;
     const bMinutes = b.flightDetails.timeTaken;
     return (
@@ -27,7 +46,7 @@ export async function FLightResult({ searchParams }) {
       (parseFloat(b.price.base) + bMinutes)
     );
   });
-  const sortByQuickest = [...data].sort((a, b) => {
+  const sortByQuickest = [...extendedFlightResults].sort((a, b) => {
     const aMinutes = a.flightDetails.timeTaken;
     const bMinutes = b.flightDetails.timeTaken;
     return aMinutes - bMinutes;

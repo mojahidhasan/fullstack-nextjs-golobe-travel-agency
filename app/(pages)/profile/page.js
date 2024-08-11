@@ -3,7 +3,7 @@ import { ProfileData } from "@/components/pages/profile/ProfileData";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import {
-  getUserDetailsByUserIdCatched,
+  getUserDetailsByUserIdCached,
   getUserByIdCatched,
 } from "@/lib/db/catchedData/getCatchedOperationDB";
 
@@ -15,7 +15,7 @@ export default async function ProfilePage({ searchParams }) {
   }
 
   if (isloggedIn) {
-    const userDetails = await getUserDetailsByUserIdCatched(sessionUser?.id);
+    const userDetails = await getUserDetailsByUserIdCached(sessionUser?.id);
     const user = await getUserByIdCatched(sessionUser?.id);
 
     return (

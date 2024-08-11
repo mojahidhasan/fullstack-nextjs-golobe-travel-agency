@@ -61,7 +61,7 @@ This project is still in development. Many functionalities have not been impleme
 - Adding payment method form and making it functional.
 - Adding functionality of changing password, phone number, address, and date of birth from profile
 - Showing histories (i.e. Hotel book, Ticket buy) and added payment methods.
-- Adding functionality to add be able to add hotels and flights in the favorite list which will show on the "/favorites" page
+- Adding hotels card in "/favorites" page
 - Download ticket functionality
 - Let users know via email that they have successfully bought a ticket or booked a hotel.
 - Adding Dark mode.
