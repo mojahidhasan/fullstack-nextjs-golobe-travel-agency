@@ -2,7 +2,6 @@ import { Button } from "@/components/ui/button";
 import { TabContentMockup } from "@/components/pages/profile/ui/TabContentMockup";
 import { ChangeNamePopup } from "@/components/pages/profile/ui/changeNamePopup";
 import Link from "next/link";
-import Image from "next/image";
 export function AccoutDetails({ userDetails }) {
   const accountDetails = {
     name: userDetails.firstname + " " + userDetails.lastname,
@@ -13,14 +12,14 @@ export function AccoutDetails({ userDetails }) {
   };
   return (
     <TabContentMockup title={"Account"}>
-      <div className="">
+      <div>
         <h4 className="mb-[8px] opacity-75">Name</h4>
         <div className="flex items-center justify-between">
           <p className="text-[1.25rem] font-semibold">{accountDetails.name}</p>
           <ChangeNamePopup />
         </div>
       </div>
-      <div className="">
+      <div>
         <h4 className="mb-[8px] opacity-75">Email</h4>
         <div>
           {accountDetails?.emails.map((item) => {
@@ -114,7 +113,7 @@ export function AccoutDetails({ userDetails }) {
         <div>
           <h4 className="mb-[8px] opacity-75">Phone</h4>
           <p className="text-[1.25rem] font-semibold">
-            {accountDetails.phone ?? "N/A"}
+            {accountDetails.phone?.number ?? "N/A"}
           </p>{" "}
         </div>{" "}
         <div></div>
@@ -144,7 +143,7 @@ export function AccoutDetails({ userDetails }) {
         <div>
           <h4 className="mb-[8px] opacity-75">Address</h4>
           <p className="text-[1.25rem] font-semibold">
-            {accountDetails.address || "N/A"}
+            {accountDetails.address ?? "N/A"}
           </p>
         </div>
         <Button variant={"outline"} className={"gap-1 p-2 h-auto"}>
@@ -173,7 +172,7 @@ export function AccoutDetails({ userDetails }) {
         <div>
           <h4 className="mb-[8px] opacity-75">Date of birth</h4>
           <p className="text-[1.25rem] font-semibold">
-            {accountDetails.dateOfBirth || "N/A"}
+            {accountDetails.dateOfBirth ?? "N/A"}
           </p>
         </div>
         <Button variant={"outline"} className={"gap-1 p-2 h-auto"}>
@@ -201,5 +200,3 @@ export function AccoutDetails({ userDetails }) {
     </TabContentMockup>
   );
 }
-
-function ChangeBtn() {}

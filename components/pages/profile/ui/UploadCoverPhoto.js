@@ -26,7 +26,7 @@ import upload from "@/public/icons/upload.svg";
 
 export function UploadCoverPhoto() {
   const [file, setFile] = useState(null);
-
+  const [opened, setOpened] = useState(false);
   const [state, dispatch] = useFormState(changeCoverPhotoAction, undefined);
 
   const { toast } = useToast();
@@ -37,6 +37,7 @@ export function UploadCoverPhoto() {
         title: "Success",
         description: "Your cover photo has been uploaded",
       });
+      setOpened(false);
       setFile(null);
     } else if (state?.error) {
       toast({
@@ -47,7 +48,7 @@ export function UploadCoverPhoto() {
     }
   }, [state]);
   return (
-    <Dialog>
+    <Dialog open={opened} onOpenChange={setOpened}>
       <DialogTrigger asChild>
         <Button className={"gap-1 h-auto p-2"}>
           <Image alt="upload_icon" width={24} height={24} src={upload} />

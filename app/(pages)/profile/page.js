@@ -7,7 +7,7 @@ import {
   getUserByIdCatched,
 } from "@/lib/db/catchedData/getCatchedOperationDB";
 
-export default async function ProfilePage() {
+export default async function ProfilePage({ searchParams }) {
   const sessionUser = (await auth())?.user;
   const isloggedIn = !!sessionUser;
   if (!isloggedIn) {
@@ -26,7 +26,7 @@ export default async function ProfilePage() {
           name={user.name}
           email={user.email}
         />
-        <ProfileData userDetails={userDetails} />
+        <ProfileData tab={searchParams?.tab} userDetails={userDetails} />
       </main>
     );
   }

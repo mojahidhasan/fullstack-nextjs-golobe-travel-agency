@@ -28,6 +28,7 @@ export function UploadProfilePicture() {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState(null);
   const [saved, setSaved] = useState(false);
+  const [isDialogOpened, setIsDialogOpened] = useState(false);
 
   const editorRef = useRef(null);
 
@@ -40,15 +41,17 @@ export function UploadProfilePicture() {
     setPreview(image);
     setSaved(true);
   }
+
   useEffect(() => {
     if (state?.success) {
+      setFile(null);
+      setPreview(null);
+      setSaved(false);
+      setIsDialogOpened(false);
       toast({
         title: "Success",
         description: "Your avatar has been uploaded",
       });
-      setFile(null);
-      setPreview(null);
-      setSaved(false);
     } else if (state?.error) {
       toast({
         title: "Error",
@@ -59,13 +62,14 @@ export function UploadProfilePicture() {
   }, [state]);
 
   return (
-    <Dialog>
+    <Dialog open={isDialogOpened} onOpenChange={setIsDialogOpened}>
       <DialogTrigger asChild>
         <Button
           className={
             "absolute bottom-0 right-0 flex h-[44px] w-[44px] items-center justify-center rounded-full bg-tertiary p-0"
           }
           variant={"icon"}
+          onClick={() => setIsDialogOpened(!isDialogOpened)}
         >
           <Image
             className="h-auto w-auto"
@@ -83,7 +87,10 @@ export function UploadProfilePicture() {
             Want to update your avatar? Upload a new one.
           </DialogDescription>
         </DialogHeader>
-        <form className="flex items-center space-x-2">
+        <form
+          id={"upload_profile_pic_form"}
+          className="flex items-center space-x-2"
+        >
           <div className="grid flex-1 gap-2">
             <Label
               htmlFor="upload-profile-pic"
@@ -147,24 +154,22 @@ export function UploadProfilePicture() {
             </Button>
           ))}
 
-        <DialogClose asChild>
-          {preview && (
-            <Button
-              formAction={dispatch}
-              onClick={() => {
-                toast({
-                  title: "Uploading...",
-                  description: "Please wait",
-                });
-              }}
-              form="upload_profile_pic_form"
-              type="submit"
-              size="lg"
-            >
-              Upload
-            </Button>
-          )}
-        </DialogClose>
+        {preview && (
+          <Button
+            formAction={dispatch}
+            onClick={() => {
+              toast({
+                title: "Uploading...",
+                description: "Please wait",
+              });
+            }}
+            form="upload_profile_pic_form"
+            type="submit"
+            size="lg"
+          >
+            Upload
+          </Button>
+        )}
       </DialogContent>
     </Dialog>
   );
