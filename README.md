@@ -27,6 +27,8 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 <img src="https://authjs.dev/favicon-32x32.png" width="16" height="16"> Next Auth v5
 
+<img src="https://www.gstatic.com/mobilesdk/240501_mobilesdk/firebase_96dp.png" width="16" height="16"> Firebase Cloud Storage
+
 ## Features
 
 1. Fully Responsive
@@ -40,6 +42,12 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 9. Sorting search results by best, shortest, and cheapest
 10. Add to favorite
 11. Login and Signup
+
+## Limitations
+
+- The website is not a real travel agency website. This was only for practicing web development.
+- The data shown here is not real data.
+- This website is hosted on Vercel with the hobby plan and hosting location is europe. Timeout of tasks in hobby plan is 10 seconds. So sometimes users with slow connection or location far from Europe may not be able to change profile picture, cover photo, etc. because of exceeding task time limit on vercel.
 
 ## TODO
 
