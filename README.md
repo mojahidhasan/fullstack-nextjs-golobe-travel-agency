@@ -12,8 +12,8 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 ## Note
 
-- This website is not a real travel agency website. This was only for practicing web development. Every data shown here is not real data. This website used [fakerjs](https://fakerjs.dev/) to generate fake data.
-- **Never provide your real card data here**. This website can collect information from some places (e.g.: subscription, signup, payment method adding, profile photo and cover photo uploading, etc.). So it is recommended that you don't provide your real information there. This website does not verify email during sign-up. So you can sign up using a fake email. But if you sign in with Google, Facebook, or Apple, it can collect your real information. So do it with caution. Use fake data instead. This data will only be saved in the database and will do nothing with it. You can still test buying tickets for flights and book flight functionalities with fake data.
+- This website is not a real travel agency website. This was only for practicing web development. Not all the data shown here is real. This website used [fakerjs](https://fakerjs.dev/) to generate fake data.
+- **Never provide your real card data here**. This website can collect information from some places (e.g.: subscription, signup, payment method adding, profile photo and cover photo uploading, etc.). So it is recommended that you don't provide your real information there. This website does not verify email during sign-up. So you can sign up using a fake email. However, if you sign in with Google, Facebook, or Apple, it can collect your real information. So do it with caution. Use fake data instead. This data will only be saved in the database, and nothing will be done with it. You can still test buying tickets for flights and book flight functionalities with fake data.
 
 ## Technologies used in this project
 
@@ -47,7 +47,7 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 - The website is not a real travel agency website. This was only for practicing web development.
 - The data shown here is not real data.
-- This website is hosted on Vercel with the hobby plan and hosting location is europe. Timeout of tasks in hobby plan is 10 seconds. So sometimes users with slow connection or location far from Europe may not be able to change profile picture, cover photo, etc. because of exceeding task time limit on vercel.
+- This website is hosted on Vercel with the hobby plan and the hosting location is Europe. The timeout of tasks in the hobby plan is 10 seconds. So sometimes users with a slow connection or locations far from Europe may not be able to change their profile picture, cover photo, etc. because of exceeding the task time limit on Vercel.
 
 ## TODO
 
