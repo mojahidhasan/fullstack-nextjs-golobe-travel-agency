@@ -47,7 +47,7 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 - The website is not a real travel agency website. This was only for practicing web development.
 - The data shown here is not real data.
-- This website is hosted on Vercel with the hobby plan and the hosting location is Europe. The timeout of tasks in the hobby plan is 10 seconds. So sometimes users with a slow connection or locations far from Europe may not be able to change their profile picture, cover photo, etc. because of exceeding the task time limit on Vercel.
+- This website is hosted on Vercel with the hobby plan and the hosting location is Europe. The timeout of tasks in the hobby plan is 10 seconds. So sometimes users with a slow connection or locations far from Europe may be unable to change their profile picture, cover photo, etc. because of exceeding the task time limit on Vercel.
 
 ## TODO
 
@@ -58,10 +58,10 @@ This project is still in development. Many functionalities have not been impleme
 - Search filter working properly.
 - Buying tickets and Booking hotel functionality (demo).
 - Adding a forget password form to recover the password.
-- Adding payment method form and making it functional.
+- Add payment method form and make it functional.
 - Adding functionality of changing password, phone number, address, and date of birth from profile
 - Showing histories (i.e. Hotel book, Ticket buy) and added payment methods.
-- Adding hotels card in "/favorites" page
+- Adding hotel card to the "/favorites" page
 - Download ticket functionality
 - Let users know via email that they have successfully bought a ticket or booked a hotel.
 - Adding Dark mode.
@@ -79,23 +79,23 @@ This project is still in development. Many functionalities have not been impleme
 ```bash
 # env file keys
 
-BASE_URL=http://localhost:3000 # production url in production
+BASE_URL=http://localhost:3000 # production URL in production
 
-MONGODB_URI= # mogodb url to connect to the database
+MONGODB_URI= # mongodb URL to connect to the database
 
 AUTH_SECRET= # random 32 bytes random string required for next auth
 
-AUTH_GOOGLE_ID= # google client id for login with google
-AUTH_GOOGLE_SECRET= # google client secret for login with google
-AUTH_FACEBOOK_ID= # facebook client id for login with facebook
-AUTH_FACEBOOK_SECRET= # facebook client secret for login with facebook
-AUTH_APPLE_ID= # apple client id for login with apple
+AUTH_GOOGLE_ID= # Google client ID for login with google
+AUTH_GOOGLE_SECRET= # Google client secret for login with google
+AUTH_FACEBOOK_ID= # Facebook client ID for login with Facebook
+AUTH_FACEBOOK_SECRET= # Facebook client secret for login with Facebook
+AUTH_APPLE_ID= # apple client ID for login with apple
 AUTH_APPLE_SECRET= # apple client secret for login with apple
 
 REVALIDATION_TIME= 600 # revalidation time in seconds, this specifies how often the data in the database should be revalidated
 
-# create a firebase project and create a web app to get these firebase configuration keys
-FIREBASE_API_KEY= # firebase api key
+# create a Firebase project and create a web app to get these Firebase configuration keys
+FIREBASE_API_KEY= # firebase API key
 FIREBASE_AUTH_DOMAIN= # firebase auth domain
 FIREBASE_PROJECT_ID= # firebase project id
 FIREBASE_STORAGE_BUCKET= # firebase storage bucket
@@ -103,7 +103,7 @@ FIREBASE_MESSAGING_SENDER_ID= # firebase messaging sender id
 FIREBASE_APP_ID= # firebase app id
 FIREBASE_MEASUREMENT_ID= # firebase measurement id
 
-# register an user in firebase authentication with email and password and place those email and password below
+# register a user in Firebase authentication with email and password and place those email and password below
 FIREBASE_AUTH_EMAIL= # firebase auth email
 FIREBASE_AUTH_PASSWORD= # firebase auth password
 ```
