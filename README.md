@@ -66,3 +66,44 @@ This project is still in development. Many functionalities have not been impleme
 - Let users know via email that they have successfully bought a ticket or booked a hotel.
 - Adding Dark mode.
 - And some more small functionalities
+
+## Work locally
+
+1. Download or clone the repository
+2. Install dependencies by running `npm install`
+3. setup `.env` file
+4. run `npm run dev` to start the server
+
+### .env file keys setup
+
+```bash
+# env file keys
+
+BASE_URL=http://localhost:3000 # production url in production
+
+MONGODB_URI= # mogodb url to connect to the database
+
+AUTH_SECRET= # random 32 bytes random string required for next auth
+
+AUTH_GOOGLE_ID= # google client id for login with google
+AUTH_GOOGLE_SECRET= # google client secret for login with google
+AUTH_FACEBOOK_ID= # facebook client id for login with facebook
+AUTH_FACEBOOK_SECRET= # facebook client secret for login with facebook
+AUTH_APPLE_ID= # apple client id for login with apple
+AUTH_APPLE_SECRET= # apple client secret for login with apple
+
+REVALIDATION_TIME= 600 # revalidation time in seconds, this specifies how often the data in the database should be revalidated
+
+# create a firebase project and create a web app to get these firebase configuration keys
+FIREBASE_API_KEY= # firebase api key
+FIREBASE_AUTH_DOMAIN= # firebase auth domain
+FIREBASE_PROJECT_ID= # firebase project id
+FIREBASE_STORAGE_BUCKET= # firebase storage bucket
+FIREBASE_MESSAGING_SENDER_ID= # firebase messaging sender id
+FIREBASE_APP_ID= # firebase app id
+FIREBASE_MEASUREMENT_ID= # firebase measurement id
+
+# register an user in firebase authentication with email and password and place those email and password below
+FIREBASE_AUTH_EMAIL= # firebase auth email
+FIREBASE_AUTH_PASSWORD= # firebase auth password
+```
