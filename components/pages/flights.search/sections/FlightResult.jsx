@@ -10,34 +10,32 @@ import {
 import { minToHour } from "@/lib/utils";
 export async function FLightResult({ searchParams }) {
   const session = await auth();
-  const flightResults = await getFlightsByDepartAndArriveIataCodeCached(
+  let flightResults = await getFlightsByDepartAndArriveIataCodeCached(
     searchParams
   );
-  const userDetails = await getUserDetailsByUserIdCached(session?.user?.id);
+  if (session?.user?.id) {
+    const userDetails = await getUserDetailsByUserIdCached(session?.user?.id);
 
-  const extendedFlightResults = flightResults.map((flight) => {
-    return {
-      ...flight,
-      liked: userDetails?.likes?.flights?.includes(flight._id),
-    };
-  });
-
-  if (extendedFlightResults?.error) {
-    return (
-      <div className={"text-center font-bold"}>
-        {extendedFlightResults.error}
-      </div>
-    );
+    flightResults = flightResults.map((flight) => {
+      return {
+        ...flight,
+        liked: userDetails?.likes?.flights?.includes(flight._id),
+      };
+    });
   }
-  if (extendedFlightResults?.length < 1) {
+
+  if (flightResults?.error) {
+    return <div className={"text-center font-bold"}>{flightResults.error}</div>;
+  }
+  if (flightResults?.length < 1) {
     return <div className={"text-center font-bold"}>No data found</div>;
   }
 
-  const sortByCheapest = extendedFlightResults.slice(0).sort((a, b) => {
+  const sortByCheapest = flightResults.slice(0).sort((a, b) => {
     return +a.price.base - +b.price.base;
   });
 
-  const sortByBest = extendedFlightResults.slice(0).sort((a, b) => {
+  const sortByBest = flightResults.slice(0).sort((a, b) => {
     const aMinutes = a.flightDetails.timeTaken;
     const bMinutes = b.flightDetails.timeTaken;
     return (
@@ -46,7 +44,7 @@ export async function FLightResult({ searchParams }) {
       (parseFloat(b.price.base) + bMinutes)
     );
   });
-  const sortByQuickest = [...extendedFlightResults].sort((a, b) => {
+  const sortByQuickest = [...flightResults].sort((a, b) => {
     const aMinutes = a.flightDetails.timeTaken;
     const bMinutes = b.flightDetails.timeTaken;
     return aMinutes - bMinutes;

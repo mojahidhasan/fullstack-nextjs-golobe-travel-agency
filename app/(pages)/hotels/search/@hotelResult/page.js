@@ -2,6 +2,7 @@ import { Cheapest } from "@/components/pages/flights.search/sections/Cheapest";
 import { Best } from "@/components/pages/flights.search/sections/Best";
 import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { HotelResultCard } from "@/components/pages/hotels.search/ui/HotelResultCard";
 export default function HotelResultPage({ searchParams }) {
   return (
     <div className="flex flex-grow flex-col gap-[32px]">
@@ -36,13 +37,31 @@ export default function HotelResultPage({ searchParams }) {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="cheapest">
-          <div>cheapest</div>
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
         </TabsContent>
         <TabsContent value="best">
-          <div>best</div>
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
         </TabsContent>
         <TabsContent value="quickest">
-          <div>quickest</div>
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
+          <HotelResultCard />
         </TabsContent>
       </Tabs>
     </div>

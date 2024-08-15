@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
 export function HotelResultCard({
-  image,
+  image = "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   price = 240,
   rate = 4.2,
   reviews = 371,
-  liked = true,
+  liked = false,
   id = 123,
 }) {
   const [isLiked, setIsliked] = useState(liked);
@@ -26,8 +26,8 @@ export function HotelResultCard({
           width={300}
           height={300}
           className="h-full w-full rounded-l-[12px] object-cover max-md:rounded-r-[8px]"
-          src={image.src}
-          alt={image.alt}
+          src={image}
+          alt={""}
         />
       </div>
       <div className="h-min w-full p-[24px]">

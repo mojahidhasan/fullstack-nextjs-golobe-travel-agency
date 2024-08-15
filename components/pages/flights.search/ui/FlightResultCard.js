@@ -1,14 +1,11 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
+import { LikeButton } from "@/components/likeButton";
+
 import { format } from "date-fns";
 import { minToHour } from "@/lib/utils";
-
-import { useState, useEffect } from "react";
-import { addOrRemoveLike } from "@/lib/actions";
 
 import EK from "@/public/images/ek.svg";
 import EY from "@/public/images/ey.svg";
@@ -16,20 +13,6 @@ import FZ from "@/public/images/fz.svg";
 import QR from "@/public/images/qr.svg";
 
 export function FlightResultCard({ data, rate = 5, reviews = 233 }) {
-  const [isLiked, setIsliked] = useState(data?.liked);
-
-  useEffect(() => {
-    setIsliked(data?.liked);
-  }, [data?.liked]);
-
-  async function handleClick() {
-    setIsliked(!isLiked);
-    addOrRemoveLike({
-      isLiked,
-      id: data._id,
-      flightsOrHotels: "flights",
-    });
-  }
   const airlines = {
     EK,
     EY,
@@ -95,26 +78,11 @@ export function FlightResultCard({ data, rate = 5, reviews = 233 }) {
         </div>
         <Separator className="my-[24px]" />
         <div className="flex gap-[16px]">
-          <form action={handleClick}>
-            <Button onClick={handleClick} variant={"outline"}>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-              >
-                <path
-                  d="M16.5436 3.75C13.5005 3.75 12.0005 6.75 12.0005 6.75C12.0005 6.75 10.5005 3.75 7.45735 3.75C4.98423 3.75 3.02579 5.81906 3.00048 8.28797C2.94892 13.4128 7.06595 17.0573 11.5786 20.1202C11.703 20.2048 11.85 20.2501 12.0005 20.2501C12.151 20.2501 12.2979 20.2048 12.4224 20.1202C16.9345 17.0573 21.0516 13.4128 21.0005 8.28797C20.9752 5.81906 19.0167 3.75 16.5436 3.75V3.75Z"
-                  stroke="black"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  fill={isLiked ? "black" : "none"}
-                />
-              </svg>
-            </Button>
-          </form>
+          <LikeButton
+            liked={data?.liked}
+            cardId={data?._id}
+            flightsOrHotels={"flights"}
+          />
           <Button asChild className={"w-full"}>
             <Link href={"/flights/" + data._id}>View Deals</Link>
           </Button>
