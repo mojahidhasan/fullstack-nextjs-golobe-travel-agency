@@ -41,11 +41,11 @@ export const metadata = {
     "redux",
     "web app",
   ],
+  metadataBase: new URL("https://golob-travel-agency.vercel.app"),
   openGraph: {
     title: "Golob Travel Agency",
     description:
       "Golob Travel Agency is a travel agency that provides top-notch travel services.",
-    metadataBase: "https://golob-travel-agency.vercel.app",
     siteName: "Golob Travel Agency",
     images: [
       {
