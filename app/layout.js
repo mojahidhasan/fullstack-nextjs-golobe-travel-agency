@@ -45,7 +45,7 @@ export const metadata = {
   openGraph: {
     title: "Golob Travel Agency",
     description:
-      "Golob Travel Agency is a travel agency that provides top-notch travel services.",
+      "Golob Travel Agency is a travel agency that provides top-notch travel services (fake, personal project).",
     siteName: "Golob Travel Agency",
     images: [
       {
