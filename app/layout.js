@@ -8,6 +8,8 @@ import { StoreProvider } from "@/app/StoreProvider";
 import { Notification } from "@/app/_notification";
 import mongoose from "mongoose";
 
+import openGraph from "./opengraph-image.jpg";
+
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",
@@ -43,13 +45,13 @@ export const metadata = {
     title: "Golob Travel Agency",
     description:
       "Golob Travel Agency is a travel agency that provides top-notch travel services.",
-    url: "https://golob-travel-agency.vercel.app",
+    metadataBase: "https://golob-travel-agency.vercel.app",
     siteName: "Golob Travel Agency",
     images: [
       {
-        url: "https://golob-travel-agency.vercel.app/opengraph-image.jpg", // Must be an absolute URL
-        width: 800,
-        height: 600,
+        url: openGraph.src,
+        width: openGraph.width,
+        height: openGraph.height,
       },
     ],
     locale: "en_US",

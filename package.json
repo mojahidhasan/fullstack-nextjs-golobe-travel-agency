@@ -40,6 +40,7 @@
     "embla-carousel-react": "^8.0.4",
     "image-to-base64": "^2.2.0",
     "lucide-react": "^0.372.0",
+    "mailersend": "^2.2.0",
     "mongodb": "^6.8.0",
     "mongoose": "^8.3.2",
     "next": "14.2.3",
