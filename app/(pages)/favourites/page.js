@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import {
   getUserDetailsByUserIdCached,
   getFlightsByFlightIdsCached,
-} from "@/lib/db/catchedData/getCatchedOperationDB";
+} from "@/lib/db/catchedData/getOperationDBCatched";
 export default async function FavouritesPage() {
   const session = await auth();
   if (!session?.user) {

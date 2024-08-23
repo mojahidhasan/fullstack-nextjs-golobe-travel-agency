@@ -3,11 +3,11 @@ import { addDays } from "date-fns";
 const value = {
   from: "",
   to: "",
-  departIataCode: "",
-  arriveIataCode: "",
+  originAirportCode: "",
+  destinationAirportCode: "",
   trip: "Round-Trip",
-  depart: new Date().toISOString(),
-  return: addDays(new Date(), 7).toISOString(),
+  departDate: new Date().toISOString(),
+  returnDate: addDays(new Date(), 7).toISOString(),
   passenger: {
     adult: 1,
     children: 0,

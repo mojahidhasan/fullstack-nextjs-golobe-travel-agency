@@ -13,7 +13,7 @@ import doorMint from "@/public/icons/door-closed-mint.svg";
 import airLineSeatMint from "@/public/icons/airline-seat-mint.svg";
 import flightPic from "@/public/images/flightPic.png";
 
-export default function FlightTicketDownloadPagee() {
+export default function FlightTicketDownloadPage() {
   const breadcrumb = [
     { id: 1, title: "Turkey", link: "/" },
     { id: 2, title: "Istanbul", link: "/" },

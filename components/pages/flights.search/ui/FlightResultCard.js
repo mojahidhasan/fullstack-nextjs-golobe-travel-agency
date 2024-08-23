@@ -5,7 +5,7 @@ import { Separator } from "@/components/ui/separator";
 import { LikeButton } from "@/components/likeButton";
 
 import { format } from "date-fns";
-import { minToHour } from "@/lib/utils";
+import { minToHour, substractTimeInMins } from "@/lib/utils";
 
 import EK from "@/public/images/ek.svg";
 import EY from "@/public/images/ey.svg";
@@ -26,8 +26,8 @@ export function FlightResultCard({ data, rate = 5, reviews = 233 }) {
           width={300}
           height={300}
           className="h-full p-5 w-full rounded-l-[12px] object-contain max-md:rounded-r-[8px]"
-          src={airlines[data?.flightDetails?.airline?.iataCode]}
-          alt={data?.flightDetails?.airline?.name}
+          src={airlines[data?.airline?.iataCode]}
+          alt={data?.airline?.name}
         />
       </div>
       <div className="h-min w-full p-[24px]">
@@ -54,11 +54,11 @@ export function FlightResultCard({ data, rate = 5, reviews = 233 }) {
               <div className="min-h-[18px] mt-1 h-[18px] w-[18px] min-w-[18px] rounded-sm border-2 border-secondary/25"></div>
               <div>
                 <p className="text-[1rem] font-semibold">
-                  {format(data?.flightDetails?.departTime, "hh:mm aaa")} {"- "}
-                  {format(data?.flightDetails?.arriveTime, "hh:mm aaa")}
+                  {format(data?.departureDateTime, "hh:mm aaa")} {"- "}
+                  {format(data?.arrivalDateTime, "hh:mm aaa")}
                 </p>
                 <p className="text-[0.875rem] text-secondary/40">
-                  {data?.flightDetails?.airline?.name}
+                  {data?.airline?.name}
                 </p>
               </div>
             </div>
@@ -67,11 +67,16 @@ export function FlightResultCard({ data, rate = 5, reviews = 233 }) {
             </div>
             <div>
               <p className="text-secondary/75">
-                {minToHour(data?.flightDetails.timeTaken)}
+                {minToHour(
+                  substractTimeInMins(
+                    data?.arrivalDateTime,
+                    data?.departureDateTime
+                  )
+                )}
               </p>
               <p className="text-[0.875rem] text-secondary/40">
-                {data?.flightDetails.departFrom.iataCode}-
-                {data?.flightDetails.arriveTo.iataCode}
+                {data?.originAirport.iataCode}-
+                {data?.destinationAirport.iataCode}
               </p>
             </div>
           </div>

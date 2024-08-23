@@ -1,4 +1,3 @@
-"use client";
 import { Map } from "@/components/pages/hotels.[hotelId]/sections/Map";
 import { ReviewsList } from "@/components/pages/hotels.[hotelId]/sections/ReviewsList";
 import { BreadcrumbWithCustomSeparator } from "@/components/ui/BreadcrumbWithCustomSeparator";
@@ -12,14 +11,8 @@ import { generateStars } from "@/lib/utils";
 
 import location from "@/public/icons/location.svg";
 
-import { useState } from "react";
-
 export default function HotelDetailsPage() {
-  const [isLiked, setIsliked] = useState(false);
-
-  function handleClick() {
-    setIsliked(!isLiked);
-  }
+  const isLiked = false;
   return (
     <main className={"mx-auto mt-10 mb-[90px] w-[90%]"}>
       <BreadcrumbWithCustomSeparator />

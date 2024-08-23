@@ -76,14 +76,16 @@ This project is still in development. Many functionalities have not been impleme
 
 ### .env file keys setup
 
+App may get runtime errors if .env file is not setup.
+
 ```bash
 # env file keys
 
-BASE_URL=http://localhost:3000 # production URL in production
+BASE_URL=http://localhost:3000 # production URL in the production
 
 MONGODB_URI= # mongodb URL to connect to the database
 
-AUTH_SECRET= # random 32 bytes random string required for next auth
+AUTH_SECRET= # random string minimum 32 bytes required for next auth
 
 AUTH_GOOGLE_ID= # Google client ID for login with google
 AUTH_GOOGLE_SECRET= # Google client secret for login with google
@@ -92,7 +94,7 @@ AUTH_FACEBOOK_SECRET= # Facebook client secret for login with Facebook
 AUTH_APPLE_ID= # apple client ID for login with apple
 AUTH_APPLE_SECRET= # apple client secret for login with apple
 
-REVALIDATION_TIME= 600 # revalidation time in seconds, this specifies how often the data in the database should be revalidated
+REVALIDATION_TIME= 600 # revalidation time in seconds, this specifies how often the data retrived from the database should be revalidated
 
 # create a Firebase project and create a web app to get these Firebase configuration keys
 FIREBASE_API_KEY= # firebase API key

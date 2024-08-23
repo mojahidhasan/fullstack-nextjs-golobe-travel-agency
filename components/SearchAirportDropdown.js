@@ -22,8 +22,8 @@ export function SearchAirportDropdown({
   const formData = useSelector((state) => state.flightForm.value);
 
   const oppositeCodeName = {
-    arriveIataCode: "departIataCode",
-    departIataCode: "arriveIataCode",
+    destinationAirportCode: "originAirportCode",
+    originAirportCode: "destinationAirportCode",
   };
 
   const [open, setOpen] = useState(false);

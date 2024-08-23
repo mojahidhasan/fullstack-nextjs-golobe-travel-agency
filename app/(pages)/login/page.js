@@ -5,24 +5,14 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/local-ui/carousel";
-import { Button } from "@/components/ui/button";
 import Image from "next/image";
 
-import { signOutAction } from "@/lib/actions";
 import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 export default async function LoginPage({ searchParams }) {
   const session = await auth();
   if (session?.user) {
-    return (
-      <div>
-        <p>You are already logged in</p>
-        <p>Want to login into another account?</p>
-        <p>Want to logout?</p>
-        <form action={signOutAction}>
-          <Button type="submit">Logout</Button>
-        </form>
-      </div>
-    );
+    redirect("/");
   }
 
   return (

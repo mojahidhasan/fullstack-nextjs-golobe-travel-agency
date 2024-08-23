@@ -42,10 +42,10 @@ function SearchFlightsForm({ searchParams = {} }) {
     searchParamsObj = {
       from: "",
       to: "",
-      departIataCode: "",
-      arriveIataCode: "",
-      depart: new Date().toISOString(),
-      return: addDays(new Date(), 7).toISOString(),
+      originAirportCode: "",
+      destinationAirportCode: "",
+      departDate: new Date().toISOString(),
+      returnDate: addDays(new Date(), 7).toISOString(),
       trip: "Round-Trip",
       passenger: {
         adult: 1,
@@ -116,16 +116,24 @@ function SearchFlightsForm({ searchParams = {} }) {
         <input type="hidden" name="to" value={flightFormData.to} />
         <input
           type="hidden"
-          name="departIataCode"
-          value={flightFormData.departIataCode}
+          name="originAirportCode"
+          value={flightFormData.originAirportCode}
         />
         <input
           type="hidden"
-          name="arriveIataCode"
-          value={flightFormData.arriveIataCode}
+          name="destinationAirportCode"
+          value={flightFormData.destinationAirportCode}
         />
-        <input type="hidden" name="depart" value={flightFormData.depart} />
-        <input type="hidden" name="return" value={flightFormData.return} />
+        <input
+          type="hidden"
+          name="departDate"
+          value={flightFormData.departDate}
+        />
+        <input
+          type="hidden"
+          name="returnDate"
+          value={flightFormData.returnDate}
+        />
         <input
           type="hidden"
           value={JSON.stringify(flightFormData.passenger)}
@@ -149,7 +157,7 @@ function SearchFlightsForm({ searchParams = {} }) {
             <div className="h-full w-[45%]">
               <SearchAirportDropdown
                 name={"from"}
-                codeName={"departIataCode"}
+                codeName={"originAirportCode"}
                 airportsName={airports}
                 className="h-full w-full text-start"
               />
@@ -161,8 +169,8 @@ function SearchFlightsForm({ searchParams = {} }) {
                     ...flightFormData,
                     from: flightFormData.to,
                     to: flightFormData.from,
-                    departIataCode: flightFormData.arriveIataCode,
-                    arriveIataCode: flightFormData.departIataCode,
+                    originAirportCode: flightFormData.destinationAirportCode,
+                    destinationAirportCode: flightFormData.originAirportCode,
                   })
                 )
               }
@@ -184,7 +192,7 @@ function SearchFlightsForm({ searchParams = {} }) {
                 airportsName={airports}
                 className="h-full w-full text-start"
                 name={"to"}
-                codeName={"arriveIataCode"}
+                codeName={"destinationAirportCode"}
               />
             </div>
           </div>
@@ -210,15 +218,6 @@ function SearchFlightsForm({ searchParams = {} }) {
             <DatePickerWithRange
               name={"depart&return"}
               className={"h-full w-full border-0"}
-              getDate={(value) => {
-                dispatch(
-                  setFlightForm({
-                    ...flightFormData,
-                    depart: value.from.toISOString(),
-                    return: value.to.toISOString(),
-                  })
-                );
-              }}
             />
           </div>
 

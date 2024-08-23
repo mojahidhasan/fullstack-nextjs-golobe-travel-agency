@@ -7,7 +7,7 @@ import Link from "next/link";
 import { SideBar } from "@/components/local-ui/nav/SideBar";
 import { cn, validateURL } from "@/lib/utils";
 
-import { getUserByIdCatched } from "@/lib/db/catchedData/getCatchedOperationDB";
+import { getUserByIdCatched } from "@/lib/db/catchedData/getOperationDBCatched";
 
 export async function Nav({ className, type = "default", session, ...props }) {
   const isLoggedIn = !!session?.user;

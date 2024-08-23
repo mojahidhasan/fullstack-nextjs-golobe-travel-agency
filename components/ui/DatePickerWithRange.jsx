@@ -1,7 +1,5 @@
 "use client";
-
-import * as React from "react";
-import { addDays, format } from "date-fns";
+import { format } from "date-fns";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -17,13 +15,14 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
 
-export function DatePickerWithRange({ name, className, getDate }) {
+export function DatePickerWithRange({ name, className }) {
   const dispatch = useDispatch();
 
   const state = useSelector((state) => state.flightForm.value);
-  const [date, setDate] = React.useState({
-    from: new Date(state.depart),
-    to: new Date(state.return),
+
+  const [date, setDate] = useState({
+    from: new Date(state.departDate),
+    to: new Date(state.returnDate),
   });
   return (
     <div className={cn("grid gap-2", className)}>
@@ -32,8 +31,8 @@ export function DatePickerWithRange({ name, className, getDate }) {
           !open &&
             dispatch(
               setFlightForm({
-                depart: date?.from?.toISOString() || "",
-                return: date?.to?.toISOString() || "",
+                departDate: date?.from?.toISOString() || "",
+                returnDate: date?.to?.toISOString() || "",
               })
             );
         }}

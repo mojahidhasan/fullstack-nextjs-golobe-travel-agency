@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import {
   getUserDetailsByUserIdCached,
   getUserByIdCatched,
-} from "@/lib/db/catchedData/getCatchedOperationDB";
+} from "@/lib/db/catchedData/getOperationDBCatched";
 
 export default async function ProfilePage({ searchParams }) {
   const sessionUser = (await auth())?.user;

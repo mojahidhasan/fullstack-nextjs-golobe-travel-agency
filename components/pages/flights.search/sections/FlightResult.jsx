@@ -4,13 +4,13 @@ import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { auth } from "@/lib/auth";
 import {
-  getFlightsByDepartAndArriveIataCodeCached,
+  getFlightsByDepartAndArriveAirportIataCodeCatched,
   getUserDetailsByUserIdCached,
-} from "@/lib/db/catchedData/getCatchedOperationDB";
-import { minToHour } from "@/lib/utils";
+} from "@/lib/db/catchedData/getOperationDBCatched";
+import { minToHour, substractTimeInMins } from "@/lib/utils";
 export async function FLightResult({ searchParams }) {
   const session = await auth();
-  let flightResults = await getFlightsByDepartAndArriveIataCodeCached(
+  let flightResults = await getFlightsByDepartAndArriveAirportIataCodeCatched(
     searchParams
   );
   if (session?.user?.id) {
@@ -36,8 +36,14 @@ export async function FLightResult({ searchParams }) {
   });
 
   const sortByBest = flightResults.slice(0).sort((a, b) => {
-    const aMinutes = a.flightDetails.timeTaken;
-    const bMinutes = b.flightDetails.timeTaken;
+    const aMinutes = substractTimeInMins(
+      a.arrivalDateTime,
+      a.departureDateTime
+    );
+    const bMinutes = substractTimeInMins(
+      b.arrivalDateTime,
+      b.departureDateTime
+    );
     return (
       parseFloat(a.price.base) +
       aMinutes -
@@ -45,11 +51,16 @@ export async function FLightResult({ searchParams }) {
     );
   });
   const sortByQuickest = [...flightResults].sort((a, b) => {
-    const aMinutes = a.flightDetails.timeTaken;
-    const bMinutes = b.flightDetails.timeTaken;
+    const aMinutes = substractTimeInMins(
+      a.arrivalDateTime,
+      a.departureDateTime
+    );
+    const bMinutes = substractTimeInMins(
+      b.arrivalDateTime,
+      b.departureDateTime
+    );
     return aMinutes - bMinutes;
   });
-
   return (
     <div className="flex flex-grow flex-col gap-[32px]">
       <Tabs defaultValue="cheapest" className="w-full">
@@ -71,7 +82,12 @@ export async function FLightResult({ searchParams }) {
               <p className="mb-[8px] block font-semibold">Best</p>
               <p>
                 ${sortByBest[0].price.base} .{" "}
-                {minToHour(sortByBest[0].flightDetails.timeTaken)}
+                {minToHour(
+                  substractTimeInMins(
+                    sortByBest[0].arrivalDateTime,
+                    sortByBest[0].departureDateTime
+                  )
+                )}
               </p>
             </div>
           </TabsTrigger>
@@ -81,7 +97,14 @@ export async function FLightResult({ searchParams }) {
           >
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Quickest</p>
-              <p>{minToHour(sortByQuickest[0].flightDetails.timeTaken)}</p>
+              <p>
+                {minToHour(
+                  substractTimeInMins(
+                    sortByQuickest[0].arrivalDateTime,
+                    sortByQuickest[0].departureDateTime
+                  )
+                )}
+              </p>
             </div>
           </TabsTrigger>
         </TabsList>
