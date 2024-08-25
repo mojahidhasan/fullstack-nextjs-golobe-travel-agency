@@ -49,23 +49,6 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 - The data shown here is not real data.
 - This website is hosted on Vercel with the hobby plan and the hosting location is Europe. The timeout of tasks in the hobby plan is 10 seconds. So sometimes users with a slow connection or locations far from Europe may be unable to change their profile picture, cover photo, etc. because of exceeding the task time limit on Vercel.
 
-## TODO
-
-This project is still in development. Many functionalities have not been implemented yet. Here are some functionalities that are yet to develop:
-
-- Implementing hotel data (fake) in the database.
-- Showing hotel data in search results.
-- Search filter working properly.
-- Buying tickets and Booking hotel functionality (demo).
-- Adding a forget password form to recover the password.
-- Add payment method form and make it functional.
-- Adding functionality of changing password, phone number, address, and date of birth from profile
-- Showing histories (i.e. Hotel book, Ticket buy) and added payment methods.
-- Adding hotel card to the "/favorites" page
-- Download ticket functionality
-- Let users know via email that they have successfully bought a ticket or booked a hotel.
-- Adding Dark mode.
-- And some more small functionalities
 
 ## Work locally
 
@@ -109,3 +92,22 @@ FIREBASE_MEASUREMENT_ID= # firebase measurement id
 FIREBASE_AUTH_EMAIL= # firebase auth email
 FIREBASE_AUTH_PASSWORD= # firebase auth password
 ```
+
+
+## TODO
+
+This project is still in development. Many functionalities have not been implemented yet. Here are some functionalities that are yet to develop:
+
+- Implementing hotel data (fake) in the database.
+- Showing hotel data in search results.
+- Search filter working properly.
+- Buying tickets and Booking hotel functionality (demo).
+- Adding a forget password form to recover the password.
+- Add payment method form and make it functional.
+- Adding functionality of changing password, phone number, address, and date of birth from profile
+- Showing histories (i.e. Hotel book, Ticket buy) and added payment methods.
+- Adding hotel card to the "/favorites" page
+- Download ticket functionality
+- Let users know via email that they have successfully bought a ticket or booked a hotel.
+- Adding Dark mode.
+- And some more small functionalities
