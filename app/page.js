@@ -24,6 +24,7 @@ export default async function HomePage() {
           <Image src={"https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&amp;w=870&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
           alt="home-header"
           fill
+          sizes="(max-width: 640px) 50vw, 100vw"
           className="object-cover -z-10 object-[center_40%]"
           priority
           />
