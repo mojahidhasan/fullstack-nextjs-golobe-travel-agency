@@ -4,6 +4,8 @@ import { PopularTrips } from "@/components/pages/home/sections/PopularTrips";
 import { FindFlightAndHotelcards } from "@/components/pages/home/sections/FindFlightAndHotelCards";
 import { Reviews } from "@/components/pages/home/sections/Reviews";
 import { Footer } from "@/components/sections/Footer";
+import Image from "next/image";
+
 import { auth } from "@/lib/auth";
 
 export default async function HomePage() {
@@ -13,12 +15,17 @@ export default async function HomePage() {
       <header className="relative mb-20">
         <Nav
           type="home"
-          className={"absolute left-0 top-0"}
+          className={"absolute z-10 left-0 top-0"}
           session={session}
         />
         <section
-          className={`flex h-[600px] items-center bg-home-header bg-cover bg-[center_40%] bg-no-repeat`}
+          className={`flex relative h-[600px] items-center bg-home-header`}
         >
+          <Image src={"https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?q=80&amp;w=870&amp;auto=format&amp;fit=crop&amp;ixlib=rb-4.0.3&amp;ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"}
+          alt="home-header"
+          fill
+          className="object-cover -z-10 object-[center_40%]"
+          />
           <div className="w-full text-center text-white">
             <h2 className="font-tradeGothic leading-[5rem] text-2xl font-bold md:text-[2rem] lg:text-[2.8125rem]">
               Helping Others
