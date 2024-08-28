@@ -25,6 +25,7 @@ export default async function HomePage() {
           alt="home-header"
           fill
           className="object-cover -z-10 object-[center_40%]"
+          priority
           />
           <div className="w-full text-center text-white">
             <h2 className="font-tradeGothic leading-[5rem] text-2xl font-bold md:text-[2rem] lg:text-[2.8125rem]">
