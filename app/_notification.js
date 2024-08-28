@@ -20,7 +20,7 @@ export function Notification() {
         to see which functionalities are yet to develop.
       </div>
       <button
-        className="text-primary xsm:hidden underline-offset-4 underline"
+        className="text-primary min-[583px]:hidden underline-offset-4 underline"
         onClick={expandLines}
       >
         View more

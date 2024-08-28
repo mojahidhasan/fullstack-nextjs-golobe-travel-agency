@@ -92,7 +92,17 @@ FIREBASE_MEASUREMENT_ID= # firebase measurement id
 FIREBASE_AUTH_EMAIL= # firebase auth email
 FIREBASE_AUTH_PASSWORD= # firebase auth password
 ```
+### Generate Fake Flight Data for Database
 
+After cloning the project, from the root directory `/golob-travel-agency-nextjs` run:
+
+```bash
+cd lib/db
+node generateFakeFlightData.mjs
+```
+It will generate a file called `flights.json` in a directory from where you called the commander. If you called the the command from  `./golob-travel-agency-nextjs/lib/db`, `flights.json` file will be generated on that directory.
+
+Upload this json file in the database in the collection named "flights".
 
 ## TODO
 
