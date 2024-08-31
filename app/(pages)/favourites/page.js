@@ -36,6 +36,7 @@ export default async function FavouritesPage() {
   //     userDetails.likes.hotels
   //   );
   // }
+  
   return (
     <main className={"mx-auto mb-[90px] w-[95%] sm:w-[90%]"}>
       <h1 className={"text-[2rem] my-10 font-bold"}>Favourites</h1>

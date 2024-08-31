@@ -78,37 +78,7 @@ This project is still in development. Many functionalities have not been impleme
 
 App may get runtime errors if .env file is not setup.
 
-```bash
-# env file keys
-
-BASE_URL=http://localhost:3000 # production URL in the production
-
-MONGODB_URI= # mongodb URL to connect to the database
-
-AUTH_SECRET= # random string minimum 32 bytes required for next auth
-
-AUTH_GOOGLE_ID= # Google client ID for login with google
-AUTH_GOOGLE_SECRET= # Google client secret for login with google
-AUTH_FACEBOOK_ID= # Facebook client ID for login with Facebook
-AUTH_FACEBOOK_SECRET= # Facebook client secret for login with Facebook
-AUTH_APPLE_ID= # apple client ID for login with apple
-AUTH_APPLE_SECRET= # apple client secret for login with apple
-
-REVALIDATION_TIME= 600 # revalidation time in seconds, this specifies how often the data retrived from the database should be revalidated
-
-# create a Firebase project and create a web app to get these Firebase configuration keys
-FIREBASE_API_KEY= # firebase API key
-FIREBASE_AUTH_DOMAIN= # firebase auth domain
-FIREBASE_PROJECT_ID= # firebase project id
-FIREBASE_STORAGE_BUCKET= # firebase storage bucket
-FIREBASE_MESSAGING_SENDER_ID= # firebase messaging sender id
-FIREBASE_APP_ID= # firebase app id
-FIREBASE_MEASUREMENT_ID= # firebase measurement id
-
-# register a user in Firebase authentication with email and password and place those email and password below
-FIREBASE_AUTH_EMAIL= # firebase auth email
-FIREBASE_AUTH_PASSWORD= # firebase auth password
-```
+See `.env.example` file
 
 ### Generate Fake Flight Data for Database
 
@@ -120,4 +90,4 @@ node generateFakeFlightData.mjs
 ```
 It will generate a file called `flights.json` in a directory from where you called the commander. If you called the the command from  `./golob-travel-agency-nextjs/lib/db`, `flights.json` file will be generated on that directory.
 
-Upload this json file in the database in the collection named "flights".
+Upload this json file in the database in a collection named "flights".
