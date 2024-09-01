@@ -31,7 +31,7 @@ export function SignupForm() {
     if (state?.success === true && state?.error === undefined) {
       setTimeout(() => {
         router.push("/login?s=true");
-      }, 2000);
+      }, 1000);
     }
   }, [state]);
 

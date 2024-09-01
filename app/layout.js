@@ -5,8 +5,9 @@ import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "@/components/ui/toaster";
 import { StoreProvider } from "@/app/StoreProvider";
-import { Notification } from "@/app/_notification";
 import mongoose from "mongoose";
+
+import dynamic from "next/dynamic";
 
 import openGraph from "./opengraph-image.jpg";
 
@@ -67,6 +68,12 @@ export default async function RootLayout({ children }) {
       console.log(e.message);
     }
   }
+
+
+  const Notification = dynamic(() => import("@/app/_notification").then((mod) => mod.Notification), {
+    ssr: false,
+  });
+
   return (
     <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
       <body className={monse.className}>

@@ -61,37 +61,8 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 App may get runtime errors if .env file is not setup.
 
-```bash
-# env file keys
+See `.env.example` file
 
-BASE_URL=http://localhost:3000 # production URL in the production
-
-MONGODB_URI= # mongodb URL to connect to the database
-
-AUTH_SECRET= # random string minimum 32 bytes required for next auth
-
-AUTH_GOOGLE_ID= # Google client ID for login with google
-AUTH_GOOGLE_SECRET= # Google client secret for login with google
-AUTH_FACEBOOK_ID= # Facebook client ID for login with Facebook
-AUTH_FACEBOOK_SECRET= # Facebook client secret for login with Facebook
-AUTH_APPLE_ID= # apple client ID for login with apple
-AUTH_APPLE_SECRET= # apple client secret for login with apple
-
-REVALIDATION_TIME= 600 # revalidation time in seconds, this specifies how often the data retrived from the database should be revalidated
-
-# create a Firebase project and create a web app to get these Firebase configuration keys
-FIREBASE_API_KEY= # firebase API key
-FIREBASE_AUTH_DOMAIN= # firebase auth domain
-FIREBASE_PROJECT_ID= # firebase project id
-FIREBASE_STORAGE_BUCKET= # firebase storage bucket
-FIREBASE_MESSAGING_SENDER_ID= # firebase messaging sender id
-FIREBASE_APP_ID= # firebase app id
-FIREBASE_MEASUREMENT_ID= # firebase measurement id
-
-# register a user in Firebase authentication with email and password and place those email and password below
-FIREBASE_AUTH_EMAIL= # firebase auth email
-FIREBASE_AUTH_PASSWORD= # firebase auth password
-```
 ### Generate Fake Flight Data for Database
 
 After cloning the project, from the root directory `/golob-travel-agency-nextjs` run:
