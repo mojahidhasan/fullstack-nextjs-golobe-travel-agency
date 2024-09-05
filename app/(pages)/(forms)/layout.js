@@ -1,5 +1,4 @@
 import { Logo } from "@/components/Logo";
-import { SignupForm } from "@/components/pages/signup/SignupForm";
 import Image from "next/image";
 import {
   Carousel,
@@ -7,10 +6,10 @@ import {
   CarouselItem,
 } from "@/components/local-ui/carousel";
 
-export default function SignupPage() {
+export default function FormsLayout({ children }) {
   return (
-    <section className="relative max-sm:mb-20 mx-auto flex h-screen w-[90%] items-center justify-between gap-[40px] py-[104px]">
-      <div className="hidden h-full max-w-[40%] min-w-[320px] xl:max-w-[490px] md:block">
+    <section className="my-20 mx-auto flex h-full w-[90%] items-stretch justify-between gap-[40px]">
+      <div className="hidden h-screen max-w-[40%] min-w-[320px] xl:max-w-[490px] md:block">
         <Carousel className={"w-full h-full rounded-[30px]"}>
           <CarouselContent>
             <CarouselItem>
@@ -47,15 +46,8 @@ export default function SignupPage() {
         <div className="mb-[20px] lg:mb-[64px]">
           <Logo otherFill={"black"} />
         </div>
-        <div className="mb-[24px]">
-          <h2 className="mb-[16px] font-tradeGothic text-[2rem] font-bold text-black xl:text-[2.5rem]">
-            Sign up
-          </h2>
-          <p className="text-[0.875rem] text-secondary/75 xl:text-[1rem]">
-            Let’s get you all st up so you can access your personal account.
-          </p>
-        </div>
-        <SignupForm />
+
+        {children}
       </div>
     </section>
   );
