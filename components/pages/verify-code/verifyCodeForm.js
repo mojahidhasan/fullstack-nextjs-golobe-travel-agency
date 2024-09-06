@@ -52,7 +52,6 @@ export function VerifyCodeForm() {
         formData.get("p_reset_v_token") || "null",
       { method: "GET" }
     );
-    console.log(res);
     const data = await res.json();
     setRes(data);
     submitBtnRef.current.disabled = false;

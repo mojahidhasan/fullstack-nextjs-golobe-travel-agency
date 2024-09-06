@@ -42,7 +42,6 @@ export async function GET(req) {
       identifier: vdObj.id,
       token: p_reset_v_token,
     });
-    console.log(isMatched);
     if (isMatched) {
       cookies().set("e_i", vdStr, {
         maxAge: 60 * 60 * 24,
