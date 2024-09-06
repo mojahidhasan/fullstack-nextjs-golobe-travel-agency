@@ -3,7 +3,7 @@ import { Input } from "@/components/local-ui/input";
 import { Button } from "@/components/ui/button";
 import { ErrorMessage } from "@/components/local-ui/errorMessage";
 import { SuccessMessage } from "@/components/local-ui/successMessage";
-import { sendPassResetCodeAction } from "@/lib/actions";
+import { resendCodeAction } from "@/lib/actions";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
@@ -24,13 +24,15 @@ export function VerifyCodeForm() {
       router.replace("/verify-code");
     }
     if (res?.success == true) {
-      setTimeout(() => router.push("/set-password"), 2000);
+      setTimeout(() => router.replace("/set-new-password"), 1000);
     }
   }, [searchParams.has("sent"), res?.success]);
   async function resendCode(e) {
     e.target.disabled = true;
     try {
-      await sendPassResetCodeAction();
+      const res = await resendCodeAction();
+      setRes(res);
+      router.replace("/verify-code?sent=true");
     } catch (e) {
       toast({
         title: "Error",

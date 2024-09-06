@@ -1,10 +1,7 @@
 import { PasswordResetForm } from "@/components/pages/password-reset/passwordResetForm";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-
-export default async function SignupPage() {
-  const session = await auth();
-  const email = session?.user?.email;
+export default async function PasswordResetPage() {
   return (
     <div className="grow text-left">
       <div>
@@ -25,7 +22,7 @@ export default async function SignupPage() {
           funcionality.
         </p>
       </div>
-      <PasswordResetForm loginEmail={email} />
+      <PasswordResetForm />
     </div>
   );
 }

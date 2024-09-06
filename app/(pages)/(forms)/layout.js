@@ -5,8 +5,13 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/local-ui/carousel";
-
-export default function FormsLayout({ children }) {
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
+export default async function FormsLayout({ children }) {
+  const session = await auth();
+  if (session?.user) {
+    redirect("/");
+  }
   return (
     <section className="my-20 mx-auto flex h-full w-[90%] items-stretch justify-between gap-[40px]">
       <div className="hidden h-screen max-w-[40%] min-w-[320px] xl:max-w-[490px] md:block">

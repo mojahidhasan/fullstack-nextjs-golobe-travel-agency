@@ -3,7 +3,7 @@ import { Input } from "@/components/local-ui/input";
 import { SubmitBtn } from "@/components/local-ui/SubmitBtn";
 import { sendPassResetCodeAction } from "@/lib/actions";
 import { useFormState } from "react-dom";
-export function PasswordResetForm({ loginEmail }) {
+export function PasswordResetForm() {
   const [state, dispatch] = useFormState(sendPassResetCodeAction, undefined);
   return (
     <div>
@@ -15,7 +15,6 @@ export function PasswordResetForm({ loginEmail }) {
           placeholder="Enter email address"
           className={"mb-3"}
           error={state?.error?.email}
-          defaultValue={loginEmail}
         />
         <SubmitBtn formId={"password-reset-form"} />
       </form>

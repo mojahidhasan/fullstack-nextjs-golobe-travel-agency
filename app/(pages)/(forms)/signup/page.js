@@ -1,4 +1,3 @@
-import { Logo } from "@/components/Logo";
 import { SignupForm } from "@/components/pages/signup/SignupForm";
 
 export default function SignupPage() {
