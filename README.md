@@ -49,7 +49,6 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 - The data shown here is not real data.
 - This website is hosted on Vercel with the hobby plan and the hosting location is Europe. The timeout of tasks in the hobby plan is 10 seconds. So sometimes users with a slow connection or locations far from Europe may be unable to change their profile picture, cover photo, etc. because of exceeding the task time limit on Vercel.
 
-
 ## Work locally
 
 1. Download or clone the repository
@@ -68,10 +67,10 @@ See `.env.example` file
 After cloning the project, from the root directory `/golob-travel-agency-nextjs` run:
 
 ```bash
-cd lib/db
-node generateFakeFlightData.mjs
+node lib/db/generateFakeFlightData.mjs
 ```
-It will generate a file called `flights.json` in a directory from where you called the commander. If you called the the command from  `./golob-travel-agency-nextjs/lib/db`, `flights.json` file will be generated on that directory.
+
+It will generate a file called `flights.json` in the root directory.
 
 Upload this json file in the database in the collection named "flights".
 
