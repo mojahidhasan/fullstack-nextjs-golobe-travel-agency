@@ -5,7 +5,7 @@ export async function GET(req) {
   const searchParams = new URL(req.url).searchParams;
 
   if (searchParams.has("p_reset_v_token")) {
-    const p_reset_v_token = searchParams.get("p_reset_v_token");
+    const p_reset_v_token = searchParams.get("p_reset_v_token").trim();
 
     if (!Boolean(p_reset_v_token)) {
       return Response.json({
@@ -50,7 +50,10 @@ export async function GET(req) {
         secure: true,
       });
       cookies().delete("vd");
-      return Response.json({ success: true, message: "Verified" });
+      return Response.json({
+        success: true,
+        message: "Verified, Redirecting...",
+      });
     } else {
       return Response.json({
         success: false,
