@@ -22,9 +22,13 @@ export async function GET(req) {
 
     const ve = cookies().get("ve")?.value;
     if (!ve) {
-      return Response.json({ success: false, message: "Code expired" });
+      return Response.json({
+        success: false,
+        message: "Code expired, resend new code",
+      });
     }
 
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const isMatched = await MongoDBAdapter.useVerificationToken({
       identifier: ve,
       token: p_reset_v_token,
