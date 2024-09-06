@@ -47,7 +47,7 @@ export function VerifyCodeForm() {
     submitBtnRef.current.disabled = true;
     const formData = new FormData(e.target);
     const res = await fetch(
-      process.env.NEXT_PUBLIC_BASE_URL +
+      process.env.NEXT_PUBLIC_NEXT_PUBLIC_BASE_URL +
         "/api/verify?p_reset_v_token=" +
         formData.get("p_reset_v_token") || "null",
       { method: "GET" }
