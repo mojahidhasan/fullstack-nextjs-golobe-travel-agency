@@ -3,6 +3,7 @@ import { Input } from "@/components/local-ui/input";
 import { Button } from "@/components/ui/button";
 import { ErrorMessage } from "@/components/local-ui/errorMessage";
 import { SuccessMessage } from "@/components/local-ui/successMessage";
+import { AuthenticateWith } from "@/components/local-ui/authenticateWith";
 import { setNewPasswordAction } from "@/lib/actions";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect } from "react";
@@ -45,6 +46,7 @@ export function SetNewPasswordForm() {
         />
         <SubmitBtn formId={"set-new-password-form"} />
       </form>
+      <AuthenticateWith message={"Or login with"} />
     </div>
   );
 }

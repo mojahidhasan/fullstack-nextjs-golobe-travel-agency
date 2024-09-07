@@ -1,7 +1,7 @@
 import { VerifyCodeForm } from "@/components/pages/verify-code/verifyCodeForm";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-export default function SignupPage() {
+export default function VerifyCodePage() {
   return (
     <div className="grow text-left">
       <div>

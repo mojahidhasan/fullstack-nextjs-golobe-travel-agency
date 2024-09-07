@@ -4,13 +4,8 @@ import { Input } from "@/components/local-ui/input";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import Image from "next/image";
-
-import {
-  authenticate,
-  authenticateWithGoogle,
-  authenticateWithFacebook,
-} from "@/lib/actions";
+import { AuthenticateWith } from "@/components/local-ui/authenticateWith";
+import { authenticate } from "@/lib/actions";
 
 import { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
@@ -120,39 +115,7 @@ export function LoginForm() {
           </Link>
         </div>
       </form>
-      <Separator className="my-[24px]" />
-      <div className="grid grid-cols-1 gap-[16px] sm:grid-cols-3">
-        <form className="w-full" action={authenticateWithFacebook}>
-          <Button className="w-full" variant={"outline"}>
-            <Image
-              src={"/icons/facebook.svg"}
-              alt="facebook_icon"
-              height={24}
-              width={24}
-            />
-          </Button>
-        </form>
-
-        <form className="w-full" action={authenticateWithGoogle}>
-          <Button className="w-full" type={"submit"} variant={"outline"}>
-            <Image
-              src={"/icons/google.svg"}
-              alt={"google_icon"}
-              height={24}
-              width={24}
-            />
-          </Button>
-        </form>
-
-        <Button variant={"outline"}>
-          <Image
-            src={"/icons/apple.svg"}
-            alt="apple_icon"
-            height={24}
-            width={24}
-          />
-        </Button>
-      </div>
+      <AuthenticateWith message={"Or Login With"} />
     </>
   );
 }

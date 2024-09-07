@@ -10,6 +10,7 @@ import Image from "next/image";
 
 import { AlertCircle } from "lucide-react";
 import { UserRoundPlus } from "lucide-react";
+import { AuthenticateWith } from "@/components/local-ui/authenticateWith";
 
 import { signUpAction } from "@/lib/actions";
 
@@ -155,33 +156,7 @@ export function SignupForm() {
           Login
         </Link>
       </div>
-      <Separator className="my-[24px]" />
-      <div className="grid gap-[16px] sm:grid-cols-3">
-        <Button variant={"outline"}>
-          <Image
-            alt="facebook_icon"
-            src={"/icons/facebook.svg"}
-            height={24}
-            width={24}
-          />
-        </Button>
-        <Button variant={"outline"}>
-          <Image
-            alt="google_icon"
-            src={"/icons/google.svg"}
-            height={24}
-            width={24}
-          />
-        </Button>
-        <Button variant={"outline"}>
-          <Image
-            alt="apple_icon"
-            src={"/icons/apple.svg"}
-            height={24}
-            width={24}
-          />
-        </Button>
-      </div>
+      <AuthenticateWith message={"Or signup with"} />
     </>
   );
 }

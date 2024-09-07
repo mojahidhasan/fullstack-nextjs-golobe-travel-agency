@@ -1,6 +1,7 @@
 "use client";
 import { Input } from "@/components/local-ui/input";
 import { SubmitBtn } from "@/components/local-ui/SubmitBtn";
+import { AuthenticateWith } from "@/components/local-ui/authenticateWith";
 import { sendPassResetCodeAction } from "@/lib/actions";
 import { useFormState } from "react-dom";
 export function PasswordResetForm() {
@@ -18,6 +19,7 @@ export function PasswordResetForm() {
         />
         <SubmitBtn formId={"password-reset-form"} />
       </form>
+      <AuthenticateWith message={"Or login with"} />
     </div>
   );
 }

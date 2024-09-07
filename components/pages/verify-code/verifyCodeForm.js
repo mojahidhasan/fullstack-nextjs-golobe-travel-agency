@@ -3,6 +3,7 @@ import { Input } from "@/components/local-ui/input";
 import { Button } from "@/components/ui/button";
 import { ErrorMessage } from "@/components/local-ui/errorMessage";
 import { SuccessMessage } from "@/components/local-ui/successMessage";
+import { AuthenticateWith } from "@/components/local-ui/authenticateWith";
 import { resendCodeAction } from "@/lib/actions";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -23,10 +24,26 @@ export function VerifyCodeForm() {
       });
       router.replace("/verify-code");
     }
+    if (searchParams.has("p_reset_v_token")) {
+      (async () => {
+        const res = await fetch(
+          process.env.NEXT_PUBLIC_BASE_URL +
+            "/api/verify?p_reset_v_token=" +
+            formData.get("p_reset_v_token") || "null",
+          { method: "GET" }
+        );
+        const data = await res.json();
+        setRes(data);
+      })();
+    }
     if (res?.success == true) {
       setTimeout(() => router.replace("/set-new-password"), 1000);
     }
-  }, [searchParams.has("sent"), res?.success]);
+  }, [
+    searchParams.has("sent"),
+    searchParams.has("p_reset_v_token"),
+    res?.success,
+  ]);
   async function resendCode(e) {
     e.target.disabled = true;
     try {
@@ -95,6 +112,7 @@ export function VerifyCodeForm() {
           Verify
         </Button>
       </form>
+      <AuthenticateWith message={"Or login with"} />
     </div>
   );
 }
