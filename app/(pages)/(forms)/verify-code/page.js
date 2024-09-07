@@ -6,11 +6,12 @@ export default function VerifyCodePage() {
     <div className="grow text-left">
       <div>
         <Link
-          href={"/login"}
+          replace
+          href={"/password-reset"}
           className={"inline-flex gap-2 items-center hover:underline"}
         >
           <ChevronLeft height={28} width={28} />
-          <span className={"text-sm"}>Back to login</span>
+          <span className={"text-sm"}>Back to Password Reset</span>
         </Link>
       </div>
       <div className="mb-[24px]">

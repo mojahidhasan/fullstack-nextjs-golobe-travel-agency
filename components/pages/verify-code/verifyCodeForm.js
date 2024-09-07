@@ -24,32 +24,19 @@ export function VerifyCodeForm() {
       });
       router.replace("/verify-code");
     }
-    if (searchParams.has("p_reset_v_token")) {
-      (async () => {
-        const res = await fetch(
-          process.env.NEXT_PUBLIC_BASE_URL +
-            "/api/verify?p_reset_v_token=" +
-            formData.get("p_reset_v_token") || "null",
-          { method: "GET" }
-        );
-        const data = await res.json();
-        setRes(data);
-      })();
-    }
     if (res?.success == true) {
       setTimeout(() => router.replace("/set-new-password"), 1000);
     }
-  }, [
-    searchParams.has("sent"),
-    searchParams.has("p_reset_v_token"),
-    res?.success,
-  ]);
+  }, [searchParams.has("sent"), res?.success]);
+
   async function resendCode(e) {
     e.target.disabled = true;
     try {
       const res = await resendCodeAction();
       setRes(res);
-      router.replace("/verify-code?sent=true");
+      if (res?.success == true) {
+        router.replace("/verify-code?sent=true");
+      }
     } catch (e) {
       toast({
         title: "Error",

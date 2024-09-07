@@ -47,6 +47,7 @@ export async function GET(req) {
         maxAge: 60 * 60 * 24,
         httpOnly: true,
         secure: true,
+        sameSite: "strict",
       });
       cookies().delete("vd");
       return Response.json({
