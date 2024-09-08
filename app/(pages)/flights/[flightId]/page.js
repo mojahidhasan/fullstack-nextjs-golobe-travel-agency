@@ -3,9 +3,12 @@ import { FlightData } from "@/components/pages/flights.[flightId]/sections/Fligh
 import { EconomyFeatures } from "@/components/pages/flights.[flightId]/sections/EconomyFeatures";
 import { FlightsSchedule } from "@/components/pages/flights.[flightId]/sections/FlightsSchedule";
 import { getFlightById, getFlightReviews } from "@/lib/db/getOperationDB";
+import { substractTimeInMins, minToHour } from "@/lib/utils";
 import Image from "next/image";
 
 import { auth } from "@/lib/auth";
+
+import { subMilliseconds, format, get } from "date-fns";
 import { airlines } from "@/data/airlinesLogos";
 import stopwatch from "@/public/icons/stopwatch.svg";
 import { reviews } from "@/data/reviews";
@@ -17,10 +20,15 @@ export default async function FlightDetailsPage({ params }) {
   const flightInfo = {
     id: flight._id,
     airplaneName: flight.airplane.name,
-    price: Object.values(flight.price).reduce((prev, curr) => +prev + +curr, 0),
+    price: Object.values(flight.price)
+      .reduce((prev, curr) => +prev + +curr, 0)
+      .toFixed(2),
     rating:
       (flightReviews.length &&
-        flightReviews.reduce((prev, curr) => prev + curr, 0).toFixed(1)) ||
+        (
+          flightReviews.reduce((prev, curr) => prev + curr, 0) /
+          flightReviews.length
+        ).toFixed(1)) ||
       "N/A",
     reviews: flightReviews.length,
     imgSrc:
@@ -34,32 +42,30 @@ export default async function FlightDetailsPage({ params }) {
   }
   const flightData = [
     {
-      returns: "Wed, Dec 8",
-      timeLeft: "2h 28m",
-      departureTime: "12:00 pm",
-      departureFrom: "Newark(EWR)",
-      arrivalTime: "12:00 pm",
-      arrivingTo: "Newark(EWR)",
-      details: {
-        logo: airlines[flight.airline.iataCode],
-        name: "Emirates",
-        modelNo: "Airbus A320",
-      },
-    },
-    {
-      returns: "Wed, Dec 8",
-      timeLeft: "2h 28m",
-      departureTime: "12:00 pm",
-      departureFrom: "Newark(EWR)",
-      arrivalTime: "12:00 pm",
-      arrivingTo: "Newark(EWR)",
-      details: {
-        logo: airlines[flight.airline.iataCode],
-        name: "Emirates",
-        modelNo: "Airbus A320",
-      },
+      returns: format(new Date(flight.arrivalDateTime), "eee, MMM d"),
+      timeLeft: minToHour(
+        substractTimeInMins(flight.arrivalDateTime, flight.departureDateTime)
+      ),
+      departureTime: format(new Date(flight.departureDateTime), "h:mm aaa"),
+      originAirport:
+        flight.originAirport.name.split(",")[0] +
+        "(" +
+        flight.originAirport.iataCode +
+        ")",
+      arrivalTime: format(new Date(flight.arrivalDateTime), "h:mm aaa"),
+      destinationAirport:
+        flight.destinationAirport.name.split(",")[0] +
+        "(" +
+        flight.destinationAirport.iataCode +
+        ")",
+      airline: flight.airline,
+      aiplaneName: flight.airplane.name,
     },
   ];
+  const time = minToHour(
+    substractTimeInMins("2024-09-24T21:11:36.957Z", "2024-09-23T14:31:36.957Z")
+  );
+  console.log("time", time);
   return (
     <>
       <main className="mx-auto mt-[40px] w-[90%]">
@@ -97,7 +103,7 @@ export default async function FlightDetailsPage({ params }) {
             </div>
           </div>
         </div>
-        <FlightsSchedule flights={flightData} />
+        <FlightsSchedule flightData={flightData} />
       </main>
     </>
   );
