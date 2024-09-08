@@ -19,9 +19,11 @@ export default async function FlightDetailsPage({ params }) {
     airplaneName: flight.airplane.name,
     price: Object.values(flight.price).reduce((prev, curr) => +prev + +curr, 0),
     rating:
-      (flightReviews.length &&
-        flightReviews.reduce((prev, curr) => prev + curr, 0).toFixed(1)) ||
-      "N/A",
+      (
+        flightReviews.length &&
+        flightReviews.reduce((prev, curr) => prev + curr, 0) /
+          (flightReviews.length || NaN)
+      ).toFixed(1) || "N/A",
     reviews: flightReviews.length,
     imgSrc:
       "https://images.unsplash.com/photo-1551882026-d2525cfc9656?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",

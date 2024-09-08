@@ -1,4 +1,4 @@
-import { BreadcrumbWithCustomSeparator } from "@/components/ui/BreadcrumbWithCustomSeparator";
+import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 
 import Image from "next/image";
@@ -20,7 +20,7 @@ export default function HotelTicketDownloadPagee() {
   return (
     <main className="mx-auto mt-7 mb-[80px] w-[90%] text-secondary">
       <div>
-        <BreadcrumbWithCustomSeparator />
+        <BreadcrumbUI />
       </div>
       <div className="mt-[20px]">
         <div className="mb-[40px] gap-2 flex items-center justify-between">

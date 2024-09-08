@@ -1,4 +1,4 @@
-import { BreadcrumbWithCustomSeparator } from "@/components/ui/BreadcrumbWithCustomSeparator";
+import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
 import { FareCard } from "@/components/FareCard";
 import { FlightDetailsCard } from "@/components/FlightDetailsCard";
 import { AuthenticationCard } from "@/components/AuthenticationCard";
@@ -20,7 +20,7 @@ export default function FlightBookPage() {
   return (
     <>
       <main className="mx-auto mb-[80px] mt-[40px] w-[90%] text-secondary">
-        <BreadcrumbWithCustomSeparator />
+        <BreadcrumbUI />
 
         <div className="mt-[30px] flex gap-[20px] max-lg:flex-col-reverse lg:gap-[30px] xl:gap-[40px]">
           <div>
