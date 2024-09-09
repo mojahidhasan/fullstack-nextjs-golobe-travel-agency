@@ -1,10 +1,10 @@
 import { FlightDetailsCard } from "@/components/FlightDetailsCard";
 
-export function FlightsSchedule({ flights }) {
+export function FlightsSchedule({ flightData }) {
   return (
     <section className="mb-[120px] text-secondary">
-      {flights.map((el, i) => {
-        return <FlightDetailsCard key={i} />;
+      {flightData.map((el, i) => {
+        return <FlightDetailsCard data={el} key={i} />;
       })}
     </section>
   );
