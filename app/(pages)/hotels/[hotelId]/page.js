@@ -1,3 +1,4 @@
+"use client";
 import { Map } from "@/components/pages/hotels.[hotelId]/sections/Map";
 import { ReviewsList } from "@/components/pages/hotels.[hotelId]/sections/ReviewsList";
 import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
@@ -51,7 +52,7 @@ export default function HotelDetailsPage() {
             <span className="text-[2rem]">$240</span>/night
           </p>
           <div className="flex gap-[16px]">
-            <Button variant="outline" onClick={handleClick}>
+            <Button variant="outline">
               <svg
                 width="24"
                 height="24"

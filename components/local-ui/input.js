@@ -33,17 +33,31 @@ export function Input({
           {label}
         </span>
         <div className="h-auto relative">
-          <_Input
-            style={{
-              outline: "none",
-            }}
-            className={cn(
-              "border-2 border-black",
-              error && "border-destructive"
-            )}
-            type={inputType}
-            {...props}
-          />
+          {type !== "textarea" ? (
+            <_Input
+              style={{
+                outline: "none",
+              }}
+              className={cn(
+                "border-2 border-black",
+                error && "border-destructive"
+              )}
+              type={inputType}
+              {...props}
+            />
+          ) : (
+            <textarea
+              style={{
+                outline: "none",
+              }}
+              // wrap
+              className={cn(
+                "border-2 p-2 border-black w-full min-h-[100px] rounded-sm",
+                error && "border-destructive"
+              )}
+              {...props}
+            ></textarea>
+          )}
           <div className="flex gap-[6px] w-auto absolute right-3 top-1/2 -translate-y-1/2">
             {type === "password" && (
               <button

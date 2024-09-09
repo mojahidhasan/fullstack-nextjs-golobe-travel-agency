@@ -2,7 +2,9 @@ import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
 import { FlightData } from "@/components/pages/flights.[flightId]/sections/FlightData";
 import { EconomyFeatures } from "@/components/pages/flights.[flightId]/sections/EconomyFeatures";
 import { FlightsSchedule } from "@/components/pages/flights.[flightId]/sections/FlightsSchedule";
+import { FlightOrHotelReview } from "@/components/sections/FlightOrHotelReview";
 import { getFlightById, getFlightReviews } from "@/lib/db/getOperationDB";
+import { getUserDetailsByUserIdCached } from "@/lib/db/catchedData/getOperationDBCatched";
 import { substractTimeInMins, minToHour } from "@/lib/utils";
 import Image from "next/image";
 
@@ -35,7 +37,8 @@ export default async function FlightDetailsPage({ params }) {
       "https://images.unsplash.com/photo-1551882026-d2525cfc9656?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   };
 
-  const userId = await auth()?.user?.id;
+  const userId = (await auth())?.user?.id;
+  console.log("", userId);
   if (userId) {
     const userDetails = await getUserDetailsByUserIdCached(userId);
     flightInfo.liked = userDetails?.likes?.flights?.includes(flight._id);
@@ -69,7 +72,7 @@ export default async function FlightDetailsPage({ params }) {
   console.log("time", time);
   return (
     <>
-      <main className="mx-auto mt-[40px] w-[90%]">
+      <main className="mx-auto mt-[40px] mb-20 w-[90%]">
         <div className="my-[40px] w-full">
           <BreadcrumbUI />
         </div>
@@ -105,6 +108,10 @@ export default async function FlightDetailsPage({ params }) {
           </div>
         </div>
         <FlightsSchedule flightData={flightData} />
+        <FlightOrHotelReview
+          rating={flightInfo.rating}
+          reviews={flightReviews}
+        />
       </main>
     </>
   );
