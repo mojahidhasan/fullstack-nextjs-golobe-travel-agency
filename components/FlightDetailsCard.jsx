@@ -1,6 +1,5 @@
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
-
 import { airlines } from "@/data/airlinesLogos";
 import plane from "@/public/icons/airplane-filled.svg";
 import wifi from "@/public/icons/wifi.svg";
@@ -19,15 +18,14 @@ export function FlightDetailsCard({ data, variant = "default" }) {
     destinationAirport,
     airplaneName,
     airline,
+    price,
   } = data;
   return (
     <div className="mb-[20px] shadow-lg rounded-[12px] bg-white px-[24px] py-[32px] shadow-small lg:mb-[30px] xl:mb-[40px]">
       {variant === "book" && (
         <div className="mb-[24px] flex justify-between font-bold">
-          <h3 className="font-tradeGothic text-[1.5rem]">
-            Emirates A380 Airbus
-          </h3>
-          <p className="text-[2rem] text-tertiary">$240</p>
+          <h3 className="font-tradeGothic text-[1.5rem]">{airplaneName}</h3>
+          <p className="text-[2rem] text-tertiary">${price}</p>
         </div>
       )}
       <div className="mb-[24px] flex justify-between font-bold">

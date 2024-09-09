@@ -59,7 +59,8 @@ export default async function FlightDetailsPage({ params }) {
         flight.destinationAirport.iataCode +
         ")",
       airline: flight.airline,
-      aiplaneName: flight.airplane.name,
+      airplaneName: flight.airplane.name,
+      price: flightInfo.price,
     },
   ];
   const time = minToHour(
