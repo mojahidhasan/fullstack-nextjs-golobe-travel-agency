@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { LikeButton } from "@/components/local-ui/likeButton";
+import { ratingScale } from "@/data/ratingScale";
 import share from "@/public/icons/share.svg";
 
 export function FlightData({ data }) {
@@ -19,7 +20,7 @@ export function FlightData({ data }) {
             <Button variant={"outline"} size={"sm"}>
               {rating}
             </Button>
-            <span className="font-bold">Very Good</span>
+            <span className="font-bold">{ratingScale[parseInt(rating)]}</span>
             <span>{reviews} reviews</span>
           </div>
         </div>

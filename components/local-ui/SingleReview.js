@@ -1,28 +1,31 @@
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
-
-export function SingleReview() {
+import { getUserById } from "@/lib/db/getOperationDB";
+import { ratingScale } from "@/data/ratingScale";
+export async function SingleReview({ review }) {
+  const user = await getUserById(review.reviewer.toString());
+  function isInt(n) {
+    return n % 1 === 0;
+  }
   return (
     <>
       <div className="flex gap-[16px]">
         <Image
           className="h-[45px] w-[45px] rounded-full object-cover object-center"
-          src="https://images.unsplash.com/flagged/photo-1570612861542-284f4c12e75f?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+          src={user.image}
           width={45}
           height={45}
           alt=""
         />
         <div className="w-full text-[0.875rem]">
           <p className="mb-[8px]">
-            <span className="font-semibold">5.0 Amazing</span> |{" "}
-            <span>Omar Siphron</span>
+            <span className="font-semibold">
+              {isInt(review.rating) ? review.rating + ".0" : review.rating}{" "}
+              {ratingScale[parseInt(review.rating)]}
+            </span>{" "}
+            | <span>{user.name}</span>
           </p>
-          <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Vel
-            quisquam animi quo recusandae itaque enim accusantium ipsa corporis,
-            temporibus cum, unde odit distinctio modi dolores nisi, deserunt
-            quam est numquam!
-          </p>
+          <p>{review.comment}</p>
         </div>
         <svg
           width="16"

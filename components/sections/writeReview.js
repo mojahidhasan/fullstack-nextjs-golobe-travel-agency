@@ -4,11 +4,33 @@ import { Button } from "../ui/button";
 import { X } from "lucide-react";
 import { SubmitBtn } from "../local-ui/SubmitBtn";
 import { LoginForm } from "../pages/login/LoginForm";
-import { useRef } from "react";
-export function WriteReview({ isLoggedIn }) {
-  console.log(isLoggedIn);
+import { SuccessMessage } from "../local-ui/successMessage";
+import { ErrorMessage } from "../local-ui/errorMessage";
+import { RatingStar } from "@/components/local-ui/ratingStar";
+import { useRef, useEffect, useState } from "react";
+import { useFormState } from "react-dom";
+import { useParams } from "next/navigation";
+
+import { writeReviewAction } from "@/lib/actions";
+export function WriteReview({ isLoggedIn, isAlreadyReviewed }) {
+  const params = useParams();
+  const extendedWriteReviewAction = writeReviewAction.bind(
+    null,
+    params.flightId,
+    isAlreadyReviewed
+  );
+  const [state, dispatch] = useFormState(extendedWriteReviewAction, undefined);
   const reviewInput = useRef();
   const reviewBtn = useRef();
+
+  const [shouldMessageShow, setShouldMessageShow] = useState(false);
+
+  useEffect(() => {
+    setShouldMessageShow(true);
+    setTimeout(() => {
+      setShouldMessageShow(false);
+    }, 5000);
+  }, [state]);
 
   async function handleClick(action, e) {
     const delay = async (milli = 10) =>
@@ -37,7 +59,11 @@ export function WriteReview({ isLoggedIn }) {
         onClick={(e) => handleClick("reviewOpen", e)}
         ref={reviewBtn}
       >
-        Write your review
+        {isLoggedIn
+          ? isAlreadyReviewed
+            ? "Edit Your Review"
+            : "Write Your review"
+          : "Sign in to write a review"}
       </Button>
       <div
         ref={reviewInput}
@@ -47,7 +73,11 @@ export function WriteReview({ isLoggedIn }) {
       >
         <div className={"flex justify-between my-4"}>
           <h3 className={"font-bold"}>
-            {isLoggedIn ? "Write a Review" : "Sign in to write a review"}
+            {isLoggedIn
+              ? isAlreadyReviewed
+                ? "Edit Review"
+                : "Write a Review"
+              : "Sign in to write a review"}
           </h3>
           <X
             className={
@@ -58,11 +88,30 @@ export function WriteReview({ isLoggedIn }) {
         </div>
         {isLoggedIn ? (
           <>
-            <div className={"my-4"}>
-              {/* <Input label={"Rating"} type={"range"} /> */}
-              <Input label={"Comment"} type={"textarea"} />
-            </div>
-            <SubmitBtn />
+            {shouldMessageShow && state?.success === true && state?.message && (
+              <SuccessMessage message={state?.message} />
+            )}
+            {shouldMessageShow &&
+              state?.success === false &&
+              state?.message && <ErrorMessage message={state?.message} />}
+            <form id={"flightReview"} action={dispatch}>
+              <div className={"flex mb-5 flex-col gap-4"}>
+                <RatingStar
+                  fill={"hsl(120, 33%, 10%)"}
+                  error={state?.error && state?.error.rating}
+                  defaultRating={0}
+                />
+              </div>
+              <div className={"mb-5"}>
+                <Input
+                  label={"Comment"}
+                  type={"textarea"}
+                  name={"reviewComment"}
+                  error={state?.error && state?.error.reviewComment}
+                />
+              </div>
+              <SubmitBtn formId={"flightReview"} />
+            </form>
           </>
         ) : (
           <LoginForm />

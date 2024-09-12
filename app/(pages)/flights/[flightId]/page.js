@@ -18,27 +18,25 @@ import { reviews } from "@/data/reviews";
 export default async function FlightDetailsPage({ params }) {
   const flight = await getFlightById(params.flightId);
   const flightReviews = await getFlightReviews(params.flightId);
-  console.log("flight", flight);
+  console.log("flight", flightReviews);
   const flightInfo = {
     id: flight._id,
     airplaneName: flight.airplane.name,
     price: Object.values(flight.price)
       .reduce((prev, curr) => +prev + +curr, 0)
       .toFixed(2),
-    rating:
-      (flightReviews.length &&
-        (
-          flightReviews.reduce((prev, curr) => prev + curr, 0) /
+    rating: flightReviews.length
+      ? (
+          flightReviews.reduce((prev, curr) => prev + curr.rating, 0) /
           flightReviews.length
-        ).toFixed(1)) ||
-      "N/A",
+        ).toFixed(1)
+      : "N/A",
     reviews: flightReviews.length,
     imgSrc:
       "https://images.unsplash.com/photo-1551882026-d2525cfc9656?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   };
-
+  console.log("flightInfo", flightInfo);
   const userId = (await auth())?.user?.id;
-  console.log("", userId);
   if (userId) {
     const userDetails = await getUserDetailsByUserIdCached(userId);
     flightInfo.liked = userDetails?.likes?.flights?.includes(flight._id);
@@ -69,7 +67,6 @@ export default async function FlightDetailsPage({ params }) {
   const time = minToHour(
     substractTimeInMins("2024-09-24T21:11:36.957Z", "2024-09-23T14:31:36.957Z")
   );
-  console.log("time", time);
   return (
     <>
       <main className="mx-auto mt-[40px] mb-20 w-[90%]">
