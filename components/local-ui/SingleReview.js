@@ -1,30 +1,56 @@
+"use client";
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
-import { getUserById } from "@/lib/db/getOperationDB";
 import { ratingScale } from "@/data/ratingScale";
-export async function SingleReview({ review }) {
-  const user = await getUserById(review.reviewer.toString());
+import { Suspense, useEffect, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { Skeleton } from "../ui/skeleton";
+export function SingleReview({ review }) {
+  const [user, setUser] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const getUser = async () => {
+      setIsLoading(true);
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${review.reviewer}`
+      );
+      const data = await response.json();
+      setUser(data);
+      setIsLoading(false);
+    };
+    getUser();
+  }, []);
+
   function isInt(n) {
     return n % 1 === 0;
   }
   return (
     <>
       <div className="flex gap-[16px]">
-        <Image
-          className="h-[45px] w-[45px] rounded-full object-cover object-center"
-          src={user.image}
-          width={45}
-          height={45}
-          alt=""
-        />
+        <Avatar className={"h-[45px] rounded-full w-[45px]"}>
+          <AvatarImage
+            className={"rounded-full"}
+            src={user.image}
+            alt={user.name}
+          />
+          <AvatarFallback>
+            <Skeleton className={"h-[45px] w-[45px] rounded-full"} />
+          </AvatarFallback>
+        </Avatar>
         <div className="w-full text-[0.875rem]">
-          <p className="mb-[8px]">
+          <div className="mb-[8px] items-center flex gap-1">
             <span className="font-semibold">
               {isInt(review.rating) ? review.rating + ".0" : review.rating}{" "}
               {ratingScale[parseInt(review.rating)]}
-            </span>{" "}
-            | <span>{user.name}</span>
-          </p>
+            </span>
+            <span>|</span>
+            {isLoading ? (
+              <Skeleton className={"w-[100px] inline-block h-4"} />
+            ) : (
+              <span>{user.name} </span>
+            )}
+          </div>
           <p>{review.comment}</p>
         </div>
         <svg

@@ -4,6 +4,7 @@ import { WriteReview } from "./writeReview";
 
 import { auth } from "@/lib/auth";
 import { ratingScale } from "@/data/ratingScale";
+import { Suspense } from "react";
 export async function FlightOrHotelReview({ rating, reviews }) {
   const session = await auth();
   const isLoggedIn = !!session?.user;

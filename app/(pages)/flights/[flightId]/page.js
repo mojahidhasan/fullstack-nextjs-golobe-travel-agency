@@ -10,15 +10,12 @@ import Image from "next/image";
 
 import { auth } from "@/lib/auth";
 
-import { subMilliseconds, format, get } from "date-fns";
-import { airlines } from "@/data/airlinesLogos";
+import { format } from "date-fns";
 import stopwatch from "@/public/icons/stopwatch.svg";
-import { reviews } from "@/data/reviews";
 
 export default async function FlightDetailsPage({ params }) {
   const flight = await getFlightById(params.flightId);
-  const flightReviews = await getFlightReviews(params.flightId);
-  console.log("flight", flightReviews);
+  const flightReviews = await getFlightReviews({ flightId: params.flightId });
   const flightInfo = {
     id: flight._id,
     airplaneName: flight.airplane.name,
@@ -35,7 +32,6 @@ export default async function FlightDetailsPage({ params }) {
     imgSrc:
       "https://images.unsplash.com/photo-1551882026-d2525cfc9656?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   };
-  console.log("flightInfo", flightInfo);
   const userId = (await auth())?.user?.id;
   if (userId) {
     const userDetails = await getUserDetailsByUserIdCached(userId);
