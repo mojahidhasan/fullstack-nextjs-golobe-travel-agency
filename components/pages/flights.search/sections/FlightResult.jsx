@@ -8,6 +8,8 @@ import {
   getUserDetailsByUserIdCached,
 } from "@/lib/db/catchedData/getOperationDBCatched";
 import { minToHour, substractTimeInMins } from "@/lib/utils";
+import { getFlightReviews } from "@/lib/db/getOperationDB";
+import { ratingScale } from "@/data/ratingScale";
 export async function FLightResult({ searchParams }) {
   const session = await auth();
   let flightResults = await getFlightsByDepartAndArriveAirportIataCodeCatched(
@@ -23,6 +25,24 @@ export async function FLightResult({ searchParams }) {
       };
     });
   }
+
+  flightResults = await Promise.all(
+    flightResults.map(async (flight) => {
+      const reviews = await getFlightReviews({ flightId: flight._id });
+
+      const totalRating = reviews.reduce((acc, review) => {
+        return acc + review.rating;
+      }, 0);
+
+      return {
+        ...flight,
+        reviews: reviews.length,
+        rating: (totalRating / reviews.length).toFixed(1) || "N/A",
+        ratingScale:
+          ratingScale[Math.floor(totalRating / reviews.length)] || "N/A",
+      };
+    })
+  );
 
   if (flightResults?.error) {
     return <div className={"text-center font-bold"}>{flightResults.error}</div>;
