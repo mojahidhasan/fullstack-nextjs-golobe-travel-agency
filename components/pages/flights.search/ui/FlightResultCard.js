@@ -2,23 +2,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { LikeButton } from "@/components/likeButton";
+import { LikeButton } from "@/components/local-ui/likeButton";
 
+import { airlines } from "@/data/airlinesLogos";
 import { format } from "date-fns";
 import { minToHour, substractTimeInMins } from "@/lib/utils";
 
-import EK from "@/public/images/ek.svg";
-import EY from "@/public/images/ey.svg";
-import FZ from "@/public/images/fz.svg";
-import QR from "@/public/images/qr.svg";
-
-export function FlightResultCard({ data, rate = 5, reviews = 233 }) {
-  const airlines = {
-    EK,
-    EY,
-    FZ,
-    QR,
-  };
+export function FlightResultCard({ data }) {
   return (
     <div className="flex shadow-md h-min rounded-l-[8px] rounded-r-[8px] bg-white text-[0.75rem] font-medium text-secondary shadow-small max-md:flex-col">
       <div className="aspect-square h-auto w-full max-md:h-[200px] md:w-[300px]">
@@ -35,10 +25,10 @@ export function FlightResultCard({ data, rate = 5, reviews = 233 }) {
           <div className="mb-[16px] flex items-center justify-between">
             <div className="flex items-center gap-[4px]">
               <Button variant={"outline"} size={"sm"}>
-                {rate}
+                {data.rating}
               </Button>
-              <span className="font-bold">Very Good</span>{" "}
-              <span>{reviews} reviews</span>
+              <span className="font-bold">{data.ratingScale}</span>{" "}
+              <span>{data.reviews} reviews</span>
             </div>
             <div>
               <p className="text-right text-[0.875rem] text-secondary/75">

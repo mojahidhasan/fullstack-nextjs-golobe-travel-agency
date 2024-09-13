@@ -78,6 +78,7 @@ Upload this json file in the database in the collection named "flights".
 
 This project is still in development. Many functionalities have not been implemented yet. Here are some functionalities that are yet to develop:
 
+- Replacing fake flight data with real flight API
 - Implementing hotel data (fake) in the database.
 - Showing hotel data in search results.
 - Search filter working properly.

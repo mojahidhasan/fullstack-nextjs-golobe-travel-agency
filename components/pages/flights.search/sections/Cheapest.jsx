@@ -9,7 +9,9 @@ import emiratesLogo from "@/public/images/ek.svg";
 
 export function Cheapest({ data, resultType = "result(s)" }) {
   const maxResultPerPage = 4;
-  const [shownTill, setShownTill] = useState(data.length < maxResultPerPage ? data.length : maxResultPerPage);
+  const [shownTill, setShownTill] = useState(
+    data.length < maxResultPerPage ? data.length : maxResultPerPage
+  );
 
   return (
     <>
@@ -34,11 +36,7 @@ export function Cheapest({ data, resultType = "result(s)" }) {
         </div>
         <div className="grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2">
           {data.slice(0, shownTill).map((item, i) => (
-            <FlightResultCard
-              key={item._id}
-              liked={false}
-              data={item}
-            />
+            <FlightResultCard key={item._id} data={item} />
           ))}
         </div>
 

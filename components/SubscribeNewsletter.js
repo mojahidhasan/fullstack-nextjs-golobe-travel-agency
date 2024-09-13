@@ -2,10 +2,9 @@
 
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/components/local-ui/input";
 
 import { isEmailValid } from "@/lib/utils";
-import { cn } from "@/lib/utils";
 
 import { useState, useEffect } from "react";
 
@@ -73,32 +72,20 @@ export function SubscribeNewsletter() {
                 action="/api/subscribe"
                 className="flex h-[40px] gap-[16px] lg:h-[56px]"
               >
-                <label className="grow">
-                  <Input
-                    className={cn(
-                      "h-full",
-                      !isValidE &&
-                        isValidE !== null &&
-                        "focus-visible:ring-destructive"
-                    )}
-                    autoComplete="off"
-                    name="subscribe"
-                    type="email"
-                    placeholder="Your email address"
-                    onChange={handleChange}
-                  />
-                  <div
-                    className="leading-3"
-                    style={{
-                      height: "15px",
-                      paddingTop: "5px",
-                      paddingLeft: "10px",
-                      color: "red",
-                    }}
-                  >
-                    {isValidE === false ? "please enter a valid email" : " "}
-                  </div>
-                </label>
+                <Input
+                  label={""}
+                  error={
+                    isValidE === false &&
+                    isValidE !== null &&
+                    "please enter a valid email"
+                  }
+                  autoComplete="off"
+                  name="subscribe"
+                  type="email"
+                  placeholder="Your email address"
+                  onChange={handleChange}
+                  className={"grow"}
+                />
 
                 <Button
                   variant="secondary"

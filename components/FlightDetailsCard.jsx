@@ -1,7 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
-
-import emiratesLogo from "@/public/images/ek.svg";
+import { airlines } from "@/data/airlinesLogos";
 import plane from "@/public/icons/airplane-filled.svg";
 import wifi from "@/public/icons/wifi.svg";
 import stopwatch from "@/public/icons/stopwatch.svg";
@@ -9,34 +8,45 @@ import fastFood from "@/public/icons/fast-food.svg";
 import airLineSeat from "@/public/icons/airline-seat.svg";
 import lineLeft from "@/public/icons/line-left.svg";
 import lineRight from "@/public/icons/line-right.svg";
-export function FlightDetailsCard({ variant = "default" }) {
+export function FlightDetailsCard({ data, variant = "default" }) {
+  const {
+    returns,
+    timeLeft,
+    departureTime,
+    originAirport,
+    arrivalTime,
+    destinationAirport,
+    airplaneName,
+    airline,
+    price,
+  } = data;
   return (
     <div className="mb-[20px] shadow-lg rounded-[12px] bg-white px-[24px] py-[32px] shadow-small lg:mb-[30px] xl:mb-[40px]">
       {variant === "book" && (
         <div className="mb-[24px] flex justify-between font-bold">
-          <h3 className="font-tradeGothic text-[1.5rem]">
-            Emirates A380 Airbus
-          </h3>
-          <p className="text-[2rem] text-tertiary">$240</p>
+          <h3 className="font-tradeGothic text-[1.5rem]">{airplaneName}</h3>
+          <p className="text-[2rem] text-tertiary">${price}</p>
         </div>
       )}
       <div className="mb-[24px] flex justify-between font-bold">
-        <h4 className="font-tradeGothic text-[1.25rem]">Return Wed, Dec 8</h4>
-        <p className="font-medium opacity-75">2h 28m</p>
+        <h4 className="font-tradeGothic text-[1.25rem]">Return {returns}</h4>
+        <p className="font-medium opacity-75">{timeLeft}</p>
       </div>
       <div className="mb-[40px] grid justify-between gap-[20px] md:flex">
         <div className="flex w-fit items-center gap-[24px] rounded-[8px] border border-primary px-[32px] py-[16px]">
           <Image
             height={40}
             width={60}
-            src={emiratesLogo}
+            src={airlines[airline.iataCode]}
             alt="emirates_logo"
             className="h-[40px] w-auto"
           />
           <div>
-            <h3 className="mb-[8px] text-[1.5rem] font-semibold">Emirates</h3>
+            <h3 className="mb-[8px] text-[1.5rem] font-semibold">
+              {airline.name}
+            </h3>
             <p className="text-[0.875rem] font-medium opacity-60">
-              Airbus A320
+              {airplaneName}
             </p>
           </div>
         </div>
@@ -60,9 +70,9 @@ export function FlightDetailsCard({ variant = "default" }) {
       <div className="grid grid-rows-5 items-center gap-[40px] md:flex md:justify-center lg:gap-[80px]">
         <div>
           <span className="text-[1rem] font-semibold lg:text-[1.5rem]">
-            12:00 pm
+            {departureTime}
           </span>{" "}
-          <span className="max-lg:text-[0.75rem]">Newark(EWR)</span>
+          <span className="max-lg:text-[0.75rem]">{originAirport}</span>
         </div>
         <div className="row-span-3 flex h-max w-max items-center gap-[32px] max-md:rotate-90 md:gap-[24px]">
           <Image
@@ -88,8 +98,8 @@ export function FlightDetailsCard({ variant = "default" }) {
           />
         </div>
         <div>
-          <span className="font-semibold lg:text-[1.5rem]">12:00 pm</span>{" "}
-          <span className="max-lg:text-[0.75rem]">Newark (EWR)</span>
+          <span className="font-semibold lg:text-[1.5rem]">{arrivalTime}</span>{" "}
+          <span className="max-lg:text-[0.75rem]">{destinationAirport}</span>
         </div>
       </div>
     </div>

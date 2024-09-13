@@ -1,5 +1,5 @@
 "use client";
-import { Button } from "./ui/button";
+import { Button } from "@/components/ui/button";
 import { addOrRemoveLike } from "@/lib/actions";
 import { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";

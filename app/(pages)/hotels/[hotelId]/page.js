@@ -1,6 +1,7 @@
+"use client";
 import { Map } from "@/components/pages/hotels.[hotelId]/sections/Map";
 import { ReviewsList } from "@/components/pages/hotels.[hotelId]/sections/ReviewsList";
-import { BreadcrumbWithCustomSeparator } from "@/components/ui/BreadcrumbWithCustomSeparator";
+import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -15,7 +16,7 @@ export default function HotelDetailsPage() {
   const isLiked = false;
   return (
     <main className={"mx-auto mt-10 mb-[90px] w-[90%]"}>
-      <BreadcrumbWithCustomSeparator />
+      <BreadcrumbUI />
       <div className="my-[40px] flex gap-5 justify-between">
         <div>
           <div className="mb-[16px] flex items-center gap-[16px]">
@@ -51,7 +52,7 @@ export default function HotelDetailsPage() {
             <span className="text-[2rem]">$240</span>/night
           </p>
           <div className="flex gap-[16px]">
-            <Button variant="outline" onClick={handleClick}>
+            <Button variant="outline">
               <svg
                 width="24"
                 height="24"

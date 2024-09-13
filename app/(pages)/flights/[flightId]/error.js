@@ -11,7 +11,7 @@ export default function Error({ error, reset }) {
 
   return (
     <div className="h-[500px] gap-10 flex flex-col items-center justify-center">
-      <h2 className="font-bold text-7xl">{error.message}</h2>
+      <h2 className="font-bold text-xl">{error.message}</h2>
       <Button
         onClick={
           // Attempt to recover by trying to re-render the segment
