@@ -53,25 +53,29 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 1. Download or clone the repository
 
-    ```sh
-    git clone https://github.com/mojahidhasan/fullstack-nextjs-golobe-travel-agency.git
-    ```
+   ```sh
+   git clone https://github.com/mojahidhasan/fullstack-nextjs-golobe-travel-agency.git
+   ```
+
 2. Navigate to the project directory
-   
+
    ```sh
    cd fullstack-nextjs-golobe-travel-agency
    ```
-2. Install dependencies
+
+3. Install dependencies
 
    ```sh
    npm install
    ```
-3. rename the `.env.example` file from the root directory to `.env` or `.env.local` and set the proper values of keys. The app may get runtime errors if the `.env` file is not set up.
-4. [Generate fake flight data](#generate-fake-flight-data-for-database) and upload it to the database
-5. start the local server
+
+4. rename the `.env.example` file from the root directory to `.env` or `.env.local` and set the proper values of keys. The app may get runtime errors if the `.env` file is not set up.
+5. [Generate fake flight data](#generate-fake-flight-data-for-database) and upload it to the database
+6. start the local server
 
    ```sh
    npm run dev
+   # http://localhost:3000
    ```
 
 ### Generate Fake Flight Data for Database
