@@ -5,8 +5,6 @@ import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-import emiratesLogo from "@/public/images/ek.svg";
-
 export function Cheapest({ data, resultType = "result(s)" }) {
   const maxResultPerPage = 4;
   const [shownTill, setShownTill] = useState(
@@ -23,7 +21,7 @@ export function Cheapest({ data, resultType = "result(s)" }) {
               {data.length} {resultType}
             </span>
           </p>
-          <p>
+          {/* <p>
             <span className="font-normal">Sort by </span>
             <select name="sortby" className="bg-transparent">
               <option value="recommended" defaultChecked>
@@ -32,7 +30,7 @@ export function Cheapest({ data, resultType = "result(s)" }) {
               <option value="lowtohigh">Low to high</option>
               <option value="high to low">High to low</option>
             </select>
-          </p>
+          </p> */}
         </div>
         <div className="grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2">
           {data.slice(0, shownTill).map((item, i) => (

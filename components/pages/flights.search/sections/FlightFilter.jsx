@@ -2,7 +2,6 @@
 
 import { Slider } from "@/components/ui/slider";
 import { Dropdown } from "@/components/ui/Dropdown";
-import { Separator } from "@/components/ui/separator";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,18 +13,16 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  setFilterAirlines,
-  setFilterRate,
-  setFilterTrips,
-  setFilterPrice,
-  setFilterDepartureTime,
+  setFlightFormFilters,
   resetFilters,
 } from "@/reduxStore/features/flightFormSlice";
 
 export function FlightsFilter({ className }) {
-  const [filter, setFilter] = useState(false);
-
   const dispatch = useDispatch();
+  const flightFilterState = useSelector(
+    (selector) => selector.flightForm.value.filters
+  );
+  const [filter, setFilter] = useState(false);
 
   const handleAirplaneFilter = (event) => {
     if (event.currentTarget.dataset.state !== "checked") {
@@ -65,7 +62,7 @@ export function FlightsFilter({ className }) {
         className
       )}
     >
-      <div className="flex items-center justify-between mb-[32px] font-semibold text-secondary">
+      <div className="flex items-center justify-between mb-[24px] font-semibold text-secondary">
         <Button
           className="text-[1.25rem] p-0"
           variant={"link"}
@@ -84,7 +81,7 @@ export function FlightsFilter({ className }) {
       </div>
       <div
         className={cn(
-          "w-full max-lg:absolute max-lg:z-10 max-lg:bg-white max-lg:p-5",
+          "w-full max-lg:rounded-xl max-lg:bg-white max-lg:p-5",
           filter === false && "max-lg:hidden"
         )}
       >
@@ -179,12 +176,11 @@ export function FlightsFilter({ className }) {
               />
             </div>
           </Dropdown>
-          <Button
-            onClick={() => setFilter(!filter)}
-            className={"float-end bg-primary"}
-          >
-            Submit
-          </Button>
+          <div className={"flex justify-end py-4 w-full"}>
+            <Button onClick={() => setFilter(!filter)} className={"bg-primary"}>
+              Apply
+            </Button>
+          </div>
         </form>
       </div>
     </section>
