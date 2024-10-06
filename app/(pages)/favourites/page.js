@@ -6,6 +6,8 @@ import {
   getUserDetailsByUserIdCached,
   getFlightsByFlightIdsCached,
 } from "@/lib/db/catchedData/getOperationDBCatched";
+import { getFlightReviews } from "@/lib/db/getOperationDB";
+import { ratingScale } from "@/data/ratingScale";
 export default async function FavouritesPage() {
   const session = await auth();
   if (!session?.user) {
@@ -22,21 +24,33 @@ export default async function FavouritesPage() {
       userDetails.likes.flights
     );
 
-    favouriteFlights = flights.map((flight) => {
-      return {
-        ...flight,
-        liked: true,
-      };
-    });
+    favouriteFlights = await Promise.all(
+      flights.map(async (flight) => {
+        const reviews = await getFlightReviews({ flightId: flight._id });
+        const totalRating = reviews.reduce((acc, review) => {
+          return acc + review.rating;
+        }, 0);
+        return {
+          ...flight,
+          reviews: reviews.length,
+          rating: reviews.length
+            ? (totalRating / reviews.length).toFixed(1)
+            : "N/A",
+          ratingScale:
+            ratingScale[Math.floor(totalRating / reviews.length)] || "N/A",
+          liked: true,
+        };
+      })
+    );
   }
 
   // will be added later
-  // if (userDetails.likes.flights.length > 0) {
+  // if (userDetails.likes.hotels.length > 0) {
   //   favouriteHotels = await getHotelssByHoteIdsCached(
   //     userDetails.likes.hotels
   //   );
   // }
-  
+
   return (
     <main className={"mx-auto mb-[90px] w-[95%] sm:w-[90%]"}>
       <h1 className={"text-[2rem] my-10 font-bold"}>Favourites</h1>

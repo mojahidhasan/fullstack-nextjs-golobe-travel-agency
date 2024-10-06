@@ -10,6 +10,7 @@ import {
 import { minToHour, substractTimeInMins } from "@/lib/utils";
 import { getFlightReviews } from "@/lib/db/getOperationDB";
 import { ratingScale } from "@/data/ratingScale";
+
 export async function FLightResult({ searchParams }) {
   const session = await auth();
   let flightResults = await getFlightsByDepartAndArriveAirportIataCodeCatched(
@@ -37,7 +38,9 @@ export async function FLightResult({ searchParams }) {
       return {
         ...flight,
         reviews: reviews.length,
-        rating: (totalRating / reviews.length).toFixed(1) || "N/A",
+        rating: reviews.length
+          ? (totalRating / reviews.length).toFixed(1)
+          : "N/A",
         ratingScale:
           ratingScale[Math.floor(totalRating / reviews.length)] || "N/A",
       };
