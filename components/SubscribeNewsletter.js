@@ -1,20 +1,22 @@
 "use client";
 
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import { Input } from "@/components/local-ui/input";
 
 import { isEmailValid } from "@/lib/utils";
 
 import { useState, useEffect } from "react";
-
+import { useFormState } from "react-dom";
 import mailbox from "@/public/images/mailbox.svg";
+import { subscribeAction } from "@/lib/actions";
+import { SubmitBtn } from "./local-ui/SubmitBtn";
 
-export function SubscribeNewsletter() {
+export function SubscribeNewsletter({ isSubscribed }) {
+  const [state, dispatch] = useFormState(subscribeAction);
   const [subscribeNewsletterDom, setSubscribeNewsletterDom] = useState(null);
   const [height, setHeight] = useState(0);
-  const [subscribed, setSubscribed] = useState(false);
-  const [isValidE, setisValidE] = useState(true);
+  const [error, setError] = useState();
+  const [subscribed, setSubscribed] = useState(isSubscribed);
 
   useEffect(() => {
     const getId = document.getElementById("newsletter");
@@ -38,12 +40,32 @@ export function SubscribeNewsletter() {
     };
   }, [subscribeNewsletterDom]);
 
+  useEffect(() => {
+    if (state?.success === true) {
+      setError();
+      setSubscribed(true);
+      localStorage.setItem("subscribed", true);
+    } else {
+      setError(state?.error);
+    }
+  }, [state?.success, state?.error]);
+
+  useEffect(() => {
+    const subscribed = localStorage.getItem("subscribed");
+
+    if (subscribed) {
+      setSubscribed(true);
+    }
+  }, []);
+
   function handleChange(e) {
     const isValid = e.target.value !== "" ? isEmailValid(e.target.value) : null;
 
-    setisValidE(isValid);
+    isValid === false && isValid !== null
+      ? setError("please enter a valid email")
+      : setError();
   }
-
+  console.log(state);
   return (
     <>
       <section
@@ -68,33 +90,32 @@ export function SubscribeNewsletter() {
               </h3>
             ) : (
               <form
-                method="GET"
-                action="/api/subscribe"
+                id={"subscribe"}
+                action={dispatch}
                 className="flex h-[40px] gap-[16px] lg:h-[56px]"
               >
                 <Input
                   label={""}
-                  error={
-                    isValidE === false &&
-                    isValidE !== null &&
-                    "please enter a valid email"
-                  }
+                  error={error}
                   autoComplete="off"
-                  name="subscribe"
+                  name="subscribe-email"
                   type="email"
                   placeholder="Your email address"
                   onChange={handleChange}
                   className={"grow"}
                 />
 
-                <Button
-                  variant="secondary"
+                <SubmitBtn
+                  formId={"subscribe"}
+                  variant={"secondary"}
+                  customTitle={{
+                    default: "Subscribe",
+                    onSubmitting: "Subscibing",
+                  }}
                   className={
-                    "h-full grow-0 disabled:bg-[#D2D1D3] disabled:text-[#8F8C91]"
+                    "h-full grow-0 disabled:bg-[#737373] disabled:text-[#ffffff]"
                   }
-                >
-                  Subscribe
-                </Button>
+                />
               </form>
             )}
           </div>
