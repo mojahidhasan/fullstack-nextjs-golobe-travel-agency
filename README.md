@@ -83,7 +83,6 @@ This project is still in development. Many functionalities have not been impleme
 - Showing hotel data in search results.
 - Search filter working properly.
 - Buying tickets and Booking hotel functionality (demo).
-- Adding a forget password form to recover the password.
 - Add payment method form and make it functional.
 - Adding functionality of changing password, phone number, address, and date of birth from profile
 - Showing histories (i.e. Hotel book, Ticket buy) and added payment methods.
