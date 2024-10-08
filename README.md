@@ -90,4 +90,6 @@ This project is still in development. Many functionalities have not been impleme
 - Download ticket functionality
 - Let users know via email that they have successfully bought a ticket or booked a hotel.
 - Adding Dark mode.
+- Migrating to Typescript.
+- Adding tests cases.
 - And some more small functionalities
