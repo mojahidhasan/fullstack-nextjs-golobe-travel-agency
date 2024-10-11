@@ -4,7 +4,6 @@ function FlightSearchLayout({
   flightResult,
   searchParams,
 }) {
-  console.log(searchParams);
   return (
     <>
       <main className="w-[90%] my-10 mx-auto">

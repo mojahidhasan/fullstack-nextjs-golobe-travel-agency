@@ -37,7 +37,6 @@ const flightFormSlice = createSlice({
       };
     },
     setFlightFormFilters(state, action) {
-      console.log(state);
       state.value.filters = { ...state.value.filters, ...action.payload };
     },
     resetFilters(state, action) {

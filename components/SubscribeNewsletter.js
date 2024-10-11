@@ -65,7 +65,6 @@ export function SubscribeNewsletter({ isSubscribed }) {
       ? setError("please enter a valid email")
       : setError();
   }
-  console.log(state);
   return (
     <>
       <section

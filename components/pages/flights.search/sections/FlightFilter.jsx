@@ -22,7 +22,6 @@ export function FlightsFilter({ className }) {
   const flightFilterState = useSelector(
     (selector) => selector.flightForm.value.filters
   );
-  console.log("", flightFilterState);
   const [filter, setFilter] = useState(false);
 
   function handleCheckboxChange(checked, groupName, name) {
@@ -45,7 +44,6 @@ export function FlightsFilter({ className }) {
 
   function handleFilterApply() {
     const urlComponent = new URLSearchParams(flightFilterState);
-    console.log(urlComponent);
   }
   return (
     <section
@@ -108,7 +106,6 @@ export function FlightsFilter({ className }) {
             <FilterRating
               value={flightFilterState.rate}
               setValue={(rate) => {
-                console.log(rate);
                 dispatch(setFlightFormFilters({ rate }));
               }}
               className="justify-start"
