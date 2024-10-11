@@ -1,12 +1,13 @@
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { cn } from "@/lib/utils";
-export function FilterRating({ className, setRating }) {
+export function FilterRating({ className, value, setValue }) {
   return (
     <ToggleGroup
       type="multiple"
       onValueChange={(value) => {
-        setRating(value);
+        setValue(value);
       }}
+      value={value}
       className={cn(
         "w-full [&_button[data-state=on]]:bg-primary/20 [&_button]:border [&_button[data-state=on]]:border-primary",
         className

@@ -2,7 +2,6 @@
 
 import { Slider } from "@/components/ui/slider";
 import { Dropdown } from "@/components/ui/Dropdown";
-import { Separator } from "@/components/ui/separator";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -14,50 +13,38 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
-  setFilterAirlines,
-  setFilterRate,
-  setFilterTrips,
-  setFilterPrice,
-  setFilterDepartureTime,
+  setFlightFormFilters,
   resetFilters,
 } from "@/reduxStore/features/flightFormSlice";
 
 export function FlightsFilter({ className }) {
+  const dispatch = useDispatch();
+  const flightFilterState = useSelector(
+    (selector) => selector.flightForm.value.filters
+  );
   const [filter, setFilter] = useState(false);
 
-  const dispatch = useDispatch();
-
-  const handleAirplaneFilter = (event) => {
-    if (event.currentTarget.dataset.state !== "checked") {
+  function handleCheckboxChange(checked, groupName, name) {
+    if (checked) {
       dispatch(
-        setFilterAirlines({
-          add: event.currentTarget.labels[0].textContent,
+        setFlightFormFilters({
+          [groupName]: [...flightFilterState[groupName], name],
         })
       );
     } else {
       dispatch(
-        setFilterAirlines({
-          remove: event.currentTarget.labels[0].textContent,
+        setFlightFormFilters({
+          [groupName]: flightFilterState[groupName].filter(
+            (item) => item !== name
+          ),
         })
       );
     }
-  };
-  const handleTripsFilter = (event) => {
-    if (event.currentTarget.dataset.state !== "checked") {
-      dispatch(
-        setFilterTrips({
-          add: event.currentTarget.labels[0].textContent,
-        })
-      );
-    } else {
-      dispatch(
-        setFilterTrips({
-          remove: event.currentTarget.labels[0].textContent,
-        })
-      );
-    }
-  };
+  }
 
+  function handleFilterApply() {
+    const urlComponent = new URLSearchParams(flightFilterState);
+  }
   return (
     <section
       className={cn(
@@ -65,7 +52,7 @@ export function FlightsFilter({ className }) {
         className
       )}
     >
-      <div className="flex items-center justify-between mb-[32px] font-semibold text-secondary">
+      <div className="flex items-center justify-between mb-[24px] font-semibold text-secondary">
         <Button
           className="text-[1.25rem] p-0"
           variant={"link"}
@@ -84,20 +71,20 @@ export function FlightsFilter({ className }) {
       </div>
       <div
         className={cn(
-          "w-full max-lg:absolute max-lg:z-10 max-lg:bg-white max-lg:p-5",
+          "w-full max-lg:rounded-xl max-lg:bg-white max-lg:p-5",
           filter === false && "max-lg:hidden"
         )}
       >
-        <form>
+        <div>
           <Dropdown title={"Price"} open>
             <div className="my-5">
               <Slider
                 name="price-slider"
                 min={50}
                 max={1200}
-                defaultValue={[50, 1200]}
+                value={flightFilterState.priceRange}
                 onValueChange={(value) => {
-                  dispatch(setFilterPrice(value));
+                  dispatch(setFlightFormFilters({ priceRange: value }));
                 }}
               />
             </div>
@@ -108,84 +95,77 @@ export function FlightsFilter({ className }) {
                 name="departure-time-slider"
                 min={50}
                 max={1200}
-                defaultValue={[50, 1200]}
+                value={flightFilterState.departureTime}
                 onValueChange={(value) => {
-                  dispatch(setFilterDepartureTime(value));
+                  dispatch(setFlightFormFilters({ departureTime: value }));
                 }}
               />
             </div>
           </Dropdown>
           <Dropdown title={"Rating"} open>
             <FilterRating
-              setRating={(rate) => {
-                dispatch(setFilterRate(rate));
+              value={flightFilterState.rate}
+              setValue={(rate) => {
+                dispatch(setFlightFormFilters({ rate }));
               }}
               className="justify-start"
             />
           </Dropdown>
           <Dropdown title={"Airlines"} open>
             <div className="flex flex-col gap-3">
-              <Checkbox
-                onClick={handleAirplaneFilter}
-                name={"Emirates"}
-                id="Emirates"
-                label="Emirates"
-              />
-              <Checkbox
-                onClick={handleAirplaneFilter}
-                name={"Fly-Dubai"}
-                id="Fly-Dubai"
-                label="Fly Dubai"
-              />
-              <Checkbox
-                onClick={handleAirplaneFilter}
-                name={"Qatar"}
-                id="Qatar"
-                label="Qatar"
-              />
-              <Checkbox
-                onClick={handleAirplaneFilter}
-                name={"Etihad"}
-                id="Etihad"
-                label="Etihad"
-              />
+              {["Emirates", "Fly-Dubai", "Qatar", "Etihad"].map((name) => {
+                const IDfyName = name.split(" ").join("").toLocaleLowerCase();
+                return (
+                  <Checkbox
+                    key={name}
+                    onCheckedChange={(checked) =>
+                      handleCheckboxChange(checked, "airlines", IDfyName)
+                    }
+                    name={IDfyName}
+                    id={IDfyName}
+                    label={name}
+                    checked={flightFilterState.airlines.includes(IDfyName)}
+                  />
+                );
+              })}
             </div>
           </Dropdown>
           <Dropdown title={"Trips"} open>
             <div className="flex flex-col gap-3">
-              <Checkbox
-                onClick={handleTripsFilter}
-                name={"Round-trip"}
-                id="Round-trip"
-                label="Round trip"
-              />
-              <Checkbox
-                onClick={handleTripsFilter}
-                name={"One-Way"}
-                id="One-Way"
-                label="One Way"
-              />
-              <Checkbox
-                onClick={handleTripsFilter}
-                name={"Multi-City"}
-                id="Multi-City"
-                label="Multi-City"
-              />
-              <Checkbox
-                onClick={handleTripsFilter}
-                name={"My-Dates-Are-Flexible"}
-                id="My-Dates-Are-Flexible"
-                label="My Dates Are Flexible"
-              />
+              {[
+                "Round trip",
+                "One-Way",
+                "Multi-City",
+                "My Dates Are Flexible",
+              ].map((name) => {
+                const IDfyName = name.split(" ").join("").toLocaleLowerCase();
+                return (
+                  <Checkbox
+                    key={name}
+                    onCheckedChange={(checked) =>
+                      handleCheckboxChange(checked, "trips", IDfyName)
+                    }
+                    name={IDfyName}
+                    id={IDfyName}
+                    label={name}
+                    checked={flightFilterState.trips.includes(IDfyName)}
+                  />
+                );
+              })}
             </div>
           </Dropdown>
-          <Button
-            onClick={() => setFilter(!filter)}
-            className={"float-end bg-primary"}
-          >
-            Submit
-          </Button>
-        </form>
+          <div className={"flex justify-end py-4 w-full"}>
+            <Button
+              onClick={() => {
+                setFilter(!filter);
+                handleFilterApply();
+              }}
+              className={"bg-primary"}
+            >
+              Apply
+            </Button>
+          </div>
+        </div>
       </div>
     </section>
   );

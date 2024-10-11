@@ -99,7 +99,6 @@ This project is still in development. All front-end pages have been developed al
 - Showing hotel data in search results.
 - Search filter working properly.
 - Buying tickets and Booking hotel functionality (demo).
-- Adding a forget password form to recover the password.
 - Add payment method form and make it functional.
 - Adding functionality of changing password, phone number, address, and date of birth from profile
 - Showing histories (i.e. Hotel book, Ticket buy) and added payment methods.
@@ -107,4 +106,6 @@ This project is still in development. All front-end pages have been developed al
 - Download ticket functionality
 - Let users know via email that they have successfully bought a ticket or booked a hotel.
 - Adding Dark mode.
+- Migrating to Typescript.
+- Adding tests cases.
 - And some more small functionalities

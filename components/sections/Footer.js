@@ -1,12 +1,18 @@
 import "server-only";
 import { SubscribeNewsletter } from "@/components/SubscribeNewsletter";
 import { QuickLinks } from "@/components/QuickLinks";
-
+import { getSubscriptionByUserId } from "@/lib/db/getOperationDB";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
-export function Footer() {
+export async function Footer() {
+  const user = (await auth())?.user;
+  let isSubscribed;
+  if (user) {
+    isSubscribed = (await getSubscriptionByUserId(user.id))?.subscribed;
+  }
   return (
     <footer className="relative pb-5">
-      <SubscribeNewsletter />
+      <SubscribeNewsletter isSubscribed={isSubscribed} />
       <QuickLinks />
       <div className="relative z-10 text-center font-medium">
         The UI design was taken from &nbsp;

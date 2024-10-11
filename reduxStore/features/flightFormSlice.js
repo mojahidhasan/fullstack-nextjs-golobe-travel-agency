@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { addDays } from "date-fns";
-const value = {
+export const defaultFlightFormValue = {
   from: "",
   to: "",
   originAirportCode: "",
@@ -18,15 +18,15 @@ const value = {
     rate: [],
     airlines: [],
     trips: [],
-    price: [50, 1200],
-    departureTime: [],
+    priceRange: [50, 1200],
+    departureTime: [50, 1200],
   },
 };
 
 const flightFormSlice = createSlice({
   name: "flightForm",
   initialState: {
-    value,
+    value: defaultFlightFormValue,
   },
   reducers: {
     setFlightForm(state, action) {
@@ -37,45 +37,16 @@ const flightFormSlice = createSlice({
       };
     },
     setFlightFormFilters(state, action) {
-      state.filters = { ...state.filters, ...action.payload };
+      state.value.filters = { ...state.value.filters, ...action.payload };
     },
-    setFilterRate: (state, action) => {
-      state.filters.rate = action.payload;
-    },
-    setFilterAirlines: (state, action) => {
-      if (action.payload.add) {
-        state.filters.airlines.push(action.payload.add);
-      } else if (action.payload.remove) {
-        state.filters.airlines = state.filters.airlines.filter((val) => {
-          return val !== action.payload.remove;
-        });
-      }
-    },
-    setFilterTrips: (state, action) => {
-      if (action.payload.add) {
-        state.filters.trips.push(action.payload.add);
-      } else if (action.payload.remove) {
-        state.filters.trips = state.filters.trips.filter((val) => {
-          return val !== action.payload.remove;
-        });
-      }
+    resetFilters(state, action) {
+      state.value.filters = defaultFlightFormValue.filters;
     },
   },
 });
 
-export const {
-  setFlightForm,
-  setFlightFormFilters,
-
-  getFlightForm,
-  setFilterAirlines,
-  setFilterRate,
-  setFilterTrips,
-  setFilterPrice,
-  setFilterDepartureTime,
-
-  resetFilters,
-} = flightFormSlice.actions;
+export const { setFlightForm, setFlightFormFilters, resetFilters } =
+  flightFormSlice.actions;
 export default flightFormSlice.reducer;
 
 // reduxStore\features\flightFormSlice.js

@@ -5,6 +5,7 @@ import "./globals.css";
 import NextTopLoader from "nextjs-toploader";
 import { Toaster } from "@/components/ui/toaster";
 import { StoreProvider } from "@/app/StoreProvider";
+import { SessionProvider } from "next-auth/react";
 import mongoose from "mongoose";
 
 import dynamic from "next/dynamic";
@@ -69,19 +70,23 @@ export default async function RootLayout({ children }) {
     }
   }
 
-
-  const Notification = dynamic(() => import("@/app/_notification").then((mod) => mod.Notification), {
-    ssr: false,
-  });
+  const Notification = dynamic(
+    () => import("@/app/_notification").then((mod) => mod.Notification),
+    {
+      ssr: false,
+    }
+  );
 
   return (
     <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
       <body className={monse.className}>
         <StoreProvider>
-          <div className="max-w-[1440px] mx-auto">
-            <Notification />
-            {children}
-          </div>
+          <SessionProvider>
+            <div className="max-w-[1440px] mx-auto">
+              <Notification />
+              {children}
+            </div>
+          </SessionProvider>
         </StoreProvider>
         <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
         <Toaster className="bg-secondary" />
