@@ -37,29 +37,7 @@ export default async function FlightDetailsPage({ params }) {
     const userDetails = await getUserDetailsByUserIdCached(userId);
     flightInfo.liked = userDetails?.likes?.flights?.includes(flight._id);
   }
-  const flightData = [
-    {
-      returns: format(new Date(flight.arrivalDateTime), "eee, MMM d"),
-      timeLeft: minToHour(
-        substractTimeInMins(flight.arrivalDateTime, flight.departureDateTime)
-      ),
-      departureTime: format(new Date(flight.departureDateTime), "h:mm aaa"),
-      originAirport:
-        flight.originAirport.name.split(",")[0] +
-        "(" +
-        flight.originAirport.iataCode +
-        ")",
-      arrivalTime: format(new Date(flight.arrivalDateTime), "h:mm aaa"),
-      destinationAirport:
-        flight.destinationAirport.name.split(",")[0] +
-        "(" +
-        flight.destinationAirport.iataCode +
-        ")",
-      airline: flight.airline,
-      airplaneName: flight.airplane.name,
-      price: flightInfo.price,
-    },
-  ];
+
   const time = minToHour(
     substractTimeInMins("2024-09-24T21:11:36.957Z", "2024-09-23T14:31:36.957Z")
   );
@@ -100,7 +78,7 @@ export default async function FlightDetailsPage({ params }) {
             </div>
           </div>
         </div>
-        <FlightsSchedule flightData={flightData} />
+        <FlightsSchedule flight={flight} />
         <FlightOrHotelReview
           rating={flightInfo.rating}
           reviews={flightReviews}

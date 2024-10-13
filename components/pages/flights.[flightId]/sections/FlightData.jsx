@@ -40,7 +40,7 @@ export function FlightData({ data }) {
               />
             </Button>
             <Button asChild className={"col-span-2"}>
-              <Link href="/flights/book/2">Book Now</Link>
+              <Link href={"/flights/" + id + "/book"}>Book Now</Link>
             </Button>
           </div>
         </div>

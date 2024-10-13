@@ -8,7 +8,9 @@ import fastFood from "@/public/icons/fast-food.svg";
 import airLineSeat from "@/public/icons/airline-seat.svg";
 import lineLeft from "@/public/icons/line-left.svg";
 import lineRight from "@/public/icons/line-right.svg";
-export function FlightDetailsCard({ data, variant = "default" }) {
+import { minToHour, substractTimeInMins } from "@/lib/utils";
+import { format } from "date-fns";
+export function FlightDetailsCard({ flightDetails, variant = "default" }) {
   const {
     returns,
     timeLeft,
@@ -19,7 +21,7 @@ export function FlightDetailsCard({ data, variant = "default" }) {
     airplaneName,
     airline,
     price,
-  } = data;
+  } = processFlightDetails(flightDetails);
   return (
     <div className="mb-[20px] shadow-lg rounded-[12px] bg-white px-[24px] py-[32px] shadow-small lg:mb-[30px] xl:mb-[40px]">
       {variant === "book" && (
@@ -104,4 +106,29 @@ export function FlightDetailsCard({ data, variant = "default" }) {
       </div>
     </div>
   );
+}
+function processFlightDetails(data) {
+  return {
+    returns: format(new Date(data.arrivalDateTime), "eee, MMM d"),
+    timeLeft: minToHour(
+      substractTimeInMins(data.arrivalDateTime, data.departureDateTime)
+    ),
+    departureTime: format(new Date(data.departureDateTime), "h:mm aaa"),
+    originAirport:
+      data.originAirport.name.split(",")[0] +
+      "(" +
+      data.originAirport.iataCode +
+      ")",
+    arrivalTime: format(new Date(data.arrivalDateTime), "h:mm aaa"),
+    destinationAirport:
+      data.destinationAirport.name.split(",")[0] +
+      "(" +
+      data.destinationAirport.iataCode +
+      ")",
+    airline: data.airline,
+    airplaneName: data.airplane.name,
+    price: Object.values(data.price)
+      .reduce((prev, curr) => +prev + +curr, 0)
+      .toFixed(2),
+  };
 }
