@@ -42,7 +42,6 @@ const nextConfig = {
         port: "3000",
       },
     ],
-    minimumCacheTTL: +process.env.REVALIDATION_TIME,
   },
   async headers() {
     return [
