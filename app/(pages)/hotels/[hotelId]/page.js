@@ -8,7 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
 
-import { generateStars } from "@/lib/utils";
+import { generateStars } from "@/lib/functions_client";
 
 import location from "@/public/icons/location.svg";
 
