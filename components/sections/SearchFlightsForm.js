@@ -23,7 +23,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
 
 import { addDays } from "date-fns";
-import { airports } from "@/data/airports";
+import airports from "@/data/airportsData.json";
 import swap from "@/public/icons/swap.svg";
 
 function SearchFlightsForm({ searchParams = {} }) {

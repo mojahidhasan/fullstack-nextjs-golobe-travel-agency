@@ -56,18 +56,18 @@ export function SearchAirportDropdown({
           placeholder="Search..."
           onChange={handleChange}
         />
-        <div className="h-80 overflow-auto">
-          <div className="">
+        <div className="h-80 overflow-auto golobe-scrollbar">
+          <div>
             {Object.keys(filter).length < 1 ? (
               <div className="p-4 text-center text-sm">No results found</div>
             ) : (
               filter.map((obj) => {
-                if (formData[oppositeCodeName[codeName]] === obj.code) {
+                if (formData[oppositeCodeName[codeName]] === obj.iataCode) {
                   return null;
                 }
                 return (
                   <div
-                    key={obj.code}
+                    key={obj.iataCode}
                     onClick={() => {
                       const data =
                         obj.city + ", " + obj.country === formData[name]
@@ -77,18 +77,21 @@ export function SearchAirportDropdown({
                             }
                           : {
                               [name]: obj?.city + ", " + obj?.country,
-                              [codeName]: obj?.code,
+                              [codeName]: obj?.iataCode,
                             };
 
                       dispatch(setFlightForm(data));
 
                       setOpen(false);
                     }}
-                    className="flex cursor-pointer items-center justify-between p-4 hover:bg-muted"
+                    className="cursor-pointer p-4 hover:bg-muted"
                   >
                     <div className="text-sm">
-                      {obj.city + ", " + obj.country}
+                      {obj.city + ", " + obj.country} {"(" + obj.iataCode + ")"}
                     </div>
+                    <small className="text-xs opacity-40 font-semibold">
+                      {obj.name}
+                    </small>
                   </div>
                 );
               })

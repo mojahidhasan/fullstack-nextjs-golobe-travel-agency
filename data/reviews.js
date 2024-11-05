@@ -1,3 +1,4 @@
+//will be deleted and replaced with db data
 import google from "@/public/icons/google.svg";
 export const reviews = [
   {
