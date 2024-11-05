@@ -1,3 +1,4 @@
+// will be deleted and replaced with db data
 import { faker } from "@faker-js/faker";
 const option = [
   {

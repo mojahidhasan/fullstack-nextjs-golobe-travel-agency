@@ -1,3 +1,4 @@
+//will be deleted and replaced with db data
 export const places = [
   {
     id: 1,
