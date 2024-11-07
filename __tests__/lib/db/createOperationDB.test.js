@@ -1,4 +1,4 @@
-import { createDB } from "../../../lib/db/createOperationDB";
+import { createOneDoc } from "../../../lib/db/createOperationDB";
 import mongoose from "mongoose";
 import dataModels from "../../../lib/db/models";
 import { expect, test, beforeAll, describe } from "vitest";
@@ -12,7 +12,7 @@ describe("Create operation DB tests", () => {
     await mongoose.connection.close();
   });
 
-  describe("Testing if createDB error handling works as expected", () => {
+  describe("Testing if createOneDoc error handling works as expected", () => {
     test("Testing if error is thrown when modelName is not a string", async () => {
       const modelName = {
         modelNameNum: 1,
@@ -24,7 +24,7 @@ describe("Create operation DB tests", () => {
       };
 
       for (const val of Object.values(modelName)) {
-        await expect(createDB(val, {})).rejects.toThrowError(
+        await expect(createOneDoc(val, {})).rejects.toThrowError(
           `${val} is not a string. modelName property must be a string`
         );
       }
@@ -33,7 +33,7 @@ describe("Create operation DB tests", () => {
     test("Testing if error is thrown when modelName is not a valid model name", async () => {
       const modelName = "InvalidModelName";
 
-      await expect(createDB(modelName, {})).rejects.toThrowError(
+      await expect(createOneDoc(modelName, {})).rejects.toThrowError(
         `"${modelName}" is not a valid model`
       );
     });
@@ -52,7 +52,7 @@ describe("Create operation DB tests", () => {
       };
 
       for (const val of Object.values(data)) {
-        await expect(createDB(modelName, val)).rejects.toThrowError(
+        await expect(createOneDoc(modelName, val)).rejects.toThrowError(
           `${val} is not an object. data property must be an object`
         );
       }
@@ -68,7 +68,7 @@ describe("Create operation DB tests", () => {
         gender: "Male", // This key is not in the schema
       };
 
-      await expect(createDB(modelName, data)).rejects.toThrowError(
+      await expect(createOneDoc(modelName, data)).rejects.toThrowError(
         `The following keys are not allowed: age, gender,\n Only email, name, image, emailVerified are allowed`
       );
     });
@@ -83,7 +83,7 @@ describe("Create operation DB tests", () => {
       };
 
       try {
-        await createDB(modelName, data);
+        await createOneDoc(modelName, data);
       } catch (error) {
         expect(error).toBeInstanceOf(mongoose.Error.ValidationError);
       }
@@ -96,19 +96,19 @@ describe("Create operation DB tests", () => {
         name: { name: "John Doe" }, // name should be a string
         image: "https://example.com/image.jpg", // image should be a string
       };
-      await expect(createDB(modelName, data)).rejects.toThrowError();
+      await expect(createOneDoc(modelName, data)).rejects.toThrowError();
     });
   });
 
-  describe("Testing if createDB works as expected", () => {
-    test("Testing if createDB works as expected, Trying to create a user", async () => {
+  describe("Testing if createOneDoc works as expected", () => {
+    test("Testing if createOneDoc works as expected, Trying to create a user", async () => {
       const modelName = "User";
       const data = {
         email: "YkKQV@example.com",
         name: "John Doe",
         image: "https://example.com/image.jpg",
       };
-      const result = await createDB(modelName, data);
+      const result = await createOneDoc(modelName, data);
       expect(result).toHaveProperty("_id");
 
       const findCreatedUser = await dataModels[modelName].findOne({
