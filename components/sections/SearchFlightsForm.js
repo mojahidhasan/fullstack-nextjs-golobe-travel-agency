@@ -42,8 +42,8 @@ function SearchFlightsForm({ searchParams = {} }) {
     searchParamsObj = {
       from: "",
       to: "",
-      originAirportCode: "",
-      destinationAirportCode: "",
+      departureAirportCode: "",
+      arrivalAirportCode: "",
       departDate: new Date().toISOString(),
       returnDate: addDays(new Date(), 7).toISOString(),
       trip: "Round-Trip",
@@ -116,13 +116,13 @@ function SearchFlightsForm({ searchParams = {} }) {
         <input type="hidden" name="to" value={flightFormData.to} />
         <input
           type="hidden"
-          name="originAirportCode"
-          value={flightFormData.originAirportCode}
+          name="departureAirportCode"
+          value={flightFormData.departureAirportCode}
         />
         <input
           type="hidden"
-          name="destinationAirportCode"
-          value={flightFormData.destinationAirportCode}
+          name="arrivalAirportCode"
+          value={flightFormData.arrivalAirportCode}
         />
         <input
           type="hidden"
@@ -157,7 +157,7 @@ function SearchFlightsForm({ searchParams = {} }) {
             <div className="h-full w-[45%]">
               <SearchAirportDropdown
                 name={"from"}
-                codeName={"originAirportCode"}
+                codeName={"departureAirportCode"}
                 airportsName={airports}
                 className="h-full w-full text-start"
               />
@@ -169,8 +169,8 @@ function SearchFlightsForm({ searchParams = {} }) {
                     ...flightFormData,
                     from: flightFormData.to,
                     to: flightFormData.from,
-                    originAirportCode: flightFormData.destinationAirportCode,
-                    destinationAirportCode: flightFormData.originAirportCode,
+                    departureAirportCode: flightFormData.arrivalAirportCode,
+                    arrivalAirportCode: flightFormData.departureAirportCode,
                   })
                 )
               }
@@ -192,7 +192,7 @@ function SearchFlightsForm({ searchParams = {} }) {
                 airportsName={airports}
                 className="h-full w-full text-start"
                 name={"to"}
-                codeName={"destinationAirportCode"}
+                codeName={"arrivalAirportCode"}
               />
             </div>
           </div>

@@ -3,8 +3,8 @@ import { addDays } from "date-fns";
 export const defaultFlightFormValue = {
   from: "",
   to: "",
-  originAirportCode: "",
-  destinationAirportCode: "",
+  departureAirportCode: "",
+  arrivalAirportCode: "",
   trip: "Round-Trip",
   departDate: new Date().toISOString(),
   returnDate: addDays(new Date(), 7).toISOString(),

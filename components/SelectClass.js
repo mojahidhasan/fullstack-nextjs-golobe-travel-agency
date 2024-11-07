@@ -33,10 +33,10 @@ export function SelectClass() {
       </SelectTrigger>
       <SelectContent className={"bg-primary"}>
         <SelectGroup>
-          <SelectItem value="Economy">Economy</SelectItem>
-          <SelectItem value="Premium Economy">Premium Economy</SelectItem>
-          <SelectItem value="Business">Business</SelectItem>
-          <SelectItem value="First class">First class</SelectItem>
+          <SelectItem value="economy">Economy</SelectItem>
+          <SelectItem value="premium_economy">Premium Economy</SelectItem>
+          <SelectItem value="business">Business</SelectItem>
+          <SelectItem value="first">First class</SelectItem>
         </SelectGroup>
       </SelectContent>
     </SelectShadcn>

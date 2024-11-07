@@ -4,9 +4,16 @@ import {
   getFlightsByDepartAndArriveAirportIataCodeCatched,
   getUserDetailsByUserIdCached,
 } from "@/lib/db/catchedData/getOperationDBCatched";
-import { getFlightReviews } from "@/lib/db/getOperationDB";
+import { getFlightReviews, getManyDocs } from "@/lib/db/getOperationDB";
 import { ratingScale } from "@/data/ratingScale";
 async function FLightResultPage({ searchParams }) {
+  const departureAirportId = searchParams.departureAirportCode;
+  const arrivalAirportId = searchParams.arrivalAirportCode;
+
+  const flights = await getManyDocs("Flight", {
+    expireAt: { $gt: new Date() },
+  });
+
   const session = await auth();
   let flightResults = await getFlightsByDepartAndArriveAirportIataCodeCatched(
     searchParams
