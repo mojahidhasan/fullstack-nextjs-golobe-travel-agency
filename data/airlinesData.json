@@ -1,0 +1,5 @@
+[
+  { "name": "Emirates", "iataCode": "EK" },
+  { "name": "Etihad Airways", "iataCode": "EY" },
+  { "name": "Fly Dubai", "iataCode": "FZ" }
+]

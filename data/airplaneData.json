@@ -1,14 +1,15 @@
-const airplane = [
+[
   {
-    airline: "Emirates",
-    model: "Airbus A380",
-    classes: ["first", "business", "premium_economy", "economy"],
-    description: "A380 Four Class Ultra Long Range",
-    seatMap: {
-      total: 484,
-      first: {
-        total: 14,
-        seatNumbers: [
+    "airline": "Emirates",
+    "iataCode": "EK",
+    "model": "Airbus A380",
+    "classes": ["first", "business", "premium_economy", "economy"],
+    "description": "A380 Four Class Ultra Long Range",
+    "total": 484,
+    "seatMap": {
+      "first": {
+        "total": 14,
+        "seatNumbers": [
           "1A",
           "1E",
           "1F",
@@ -22,12 +23,12 @@ const airplane = [
           "3F",
           "3K",
           "4A",
-          "4K",
-        ],
+          "4K"
+        ]
       },
-      business: {
-        total: 76,
-        seatNumbers: [
+      "business": {
+        "total": 76,
+        "seatNumbers": [
           "6D",
           "6G",
           "7A",
@@ -103,12 +104,12 @@ const airplane = [
           "26B",
           "26D",
           "26G",
-          "26J",
-        ],
+          "26J"
+        ]
       },
-      premium_economy: {
-        total: 56,
-        seatNumbers: [
+      "premium_economy": {
+        "total": 56,
+        "seatNumbers": [
           "33A",
           "33B",
           "33J",
@@ -164,12 +165,12 @@ const airplane = [
           "40F",
           "40G",
           "40J",
-          "40K",
-        ],
+          "40K"
+        ]
       },
-      economy: {
-        total: 338,
-        seatNumbers: [
+      "economy": {
+        "total": 338,
+        "seatNumbers": [
           "52H",
           "52J",
           "52K",
@@ -507,25 +508,26 @@ const airplane = [
           "88C",
           "88H",
           "88J",
-          "88K",
-        ],
-      },
-    },
+          "88K"
+        ]
+      }
+    }
   },
   {
-    airline: "Emirates",
-    model: "Boeing 777",
-    classes: ["first", "business", "premium_economy", "economy"],
-    description: "B777 Four Class Ultra Long Range",
-    seatMap: {
-      total: 324,
-      first: {
-        total: 6,
-        seatNumbers: ["1A", "1E", "1K", "2A", "2E", "2K"],
+    "airline": "Emirates",
+    "iataCode": "EK",
+    "model": "Boeing 777",
+    "classes": ["first", "business", "premium_economy", "economy"],
+    "description": "B777 Four Class Ultra Long Range",
+    "total": 324,
+    "seatMap": {
+      "first": {
+        "total": 6,
+        "seatNumbers": ["1A", "1E", "1K", "2A", "2E", "2K"]
       },
-      business: {
-        total: 38,
-        seatNumbers: [
+      "business": {
+        "total": 38,
+        "seatNumbers": [
           "3A",
           "3E",
           "3F",
@@ -563,12 +565,12 @@ const airplane = [
           "12A",
           "12E",
           "12F",
-          "12K",
-        ],
+          "12K"
+        ]
       },
-      premium_economy: {
-        total: 24,
-        seatNumbers: [
+      "premium_economy": {
+        "total": 24,
+        "seatNumbers": [
           "14A",
           "14B",
           "14D",
@@ -592,12 +594,12 @@ const airplane = [
           "16F",
           "16G",
           "16J",
-          "16K",
-        ],
+          "16K"
+        ]
       },
-      economy: {
-        total: 256,
-        seatNumbers: [
+      "economy": {
+        "total": 256,
+        "seatNumbers": [
           "23D",
           "23E",
           "23F",
@@ -853,25 +855,26 @@ const airplane = [
           "50A",
           "50B",
           "50J",
-          "50K",
-        ],
-      },
-    },
+          "50K"
+        ]
+      }
+    }
   },
   {
-    airline: "Etihad",
-    model: "Airbus A330",
-    classes: ["first", "business", "economy"],
-    description: "A330 three Class",
-    seatMap: {
-      total: 231,
-      first: {
-        total: 8,
-        seatNumbers: ["1A", "1D", "1G", "1K", "2A", "2D", "2G", "2K"],
+    "airline": "Etihad",
+    "iataCode": "EY",
+    "model": "Airbus A330",
+    "classes": ["first", "business", "economy"],
+    "description": "A330 three Class",
+    "total": 231,
+    "seatMap": {
+      "first": {
+        "total": 8,
+        "seatNumbers": ["1A", "1D", "1G", "1K", "2A", "2D", "2G", "2K"]
       },
-      business: {
-        total: 32,
-        seatNumbers: [
+      "business": {
+        "total": 32,
+        "seatNumbers": [
           "5C",
           "5E",
           "5F",
@@ -903,12 +906,12 @@ const airplane = [
           "12C",
           "12D",
           "12G",
-          "12H",
-        ],
+          "12H"
+        ]
       },
-      economy: {
-        total: 191,
-        seatNumbers: [
+      "economy": {
+        "total": 191,
+        "seatNumbers": [
           "15A",
           "15C",
           "15D",
@@ -1099,25 +1102,26 @@ const airplane = [
           "38K",
           "39D",
           "39E",
-          "39F",
-        ],
-      },
-    },
+          "39F"
+        ]
+      }
+    }
   },
   {
-    airline: "Etihad",
-    model: "Boeing 787",
-    classes: ["first", "business", "economy"],
-    description: "Boeing 787-9 (789) Layout 1",
-    seatMap: {
-      total: 231,
-      first: {
-        total: 8,
-        seatNumbers: ["1A", "1D", "1G", "1K", "2A", "2D", "2G", "2K"],
+    "airline": "Etihad",
+    "iataCode": "EY",
+    "model": "Boeing 787",
+    "classes": ["first", "business", "economy"],
+    "description": "Boeing 787-9 (789) Layout 1",
+    "total": 231,
+    "seatMap": {
+      "first": {
+        "total": 8,
+        "seatNumbers": ["1A", "1D", "1G", "1K", "2A", "2D", "2G", "2K"]
       },
-      business: {
-        total: 28,
-        seatNumbers: [
+      "business": {
+        "total": 28,
+        "seatNumbers": [
           "5C",
           "5D",
           "5G",
@@ -1145,12 +1149,12 @@ const airplane = [
           "11A",
           "11E",
           "11F",
-          "11K",
-        ],
+          "11K"
+        ]
       },
-      economy: {
-        total: 195,
-        seatNumbers: [
+      "economy": {
+        "total": 195,
+        "seatNumbers": [
           "15A",
           "15B",
           "15C",
@@ -1345,21 +1349,22 @@ const airplane = [
           "36K",
           "37D",
           "37E",
-          "37G",
-        ],
-      },
-    },
+          "37G"
+        ]
+      }
+    }
   },
   {
-    airline: "FlyDubai",
-    model: "Boeing 737",
-    classes: ["business", "economy"],
-    description: "Boeing 737-800",
-    seatMap: {
-      total: 174,
-      business: {
-        total: 12,
-        seatNumbers: [
+    "airline": "FlyDubai",
+    "iataCode": "FZ",
+    "model": "Boeing 737",
+    "classes": ["business", "economy"],
+    "description": "Boeing 737-800",
+    "total": 174,
+    "seatMap": {
+      "business": {
+        "total": 12,
+        "seatNumbers": [
           "1A",
           "1C",
           "1D",
@@ -1371,12 +1376,12 @@ const airplane = [
           "3A",
           "3C",
           "3D",
-          "3F",
-        ],
+          "3F"
+        ]
       },
-      economy: {
-        total: 162,
-        seatNumbers: [
+      "economy": {
+        "total": 162,
+        "seatNumbers": [
           "6A",
           "6B",
           "6C",
@@ -1539,32 +1544,9 @@ const airplane = [
           "32C",
           "32D",
           "32E",
-          "32F",
-        ],
-      },
-    },
-  },
-];
-const air = airplane[4];
-
-// const firstClassSeats = air.seatMap.first.seatNumbers.length;
-const businessClassSeats = air.seatMap.business.seatNumbers.length;
-// const premiumEconomyClassSeats =
-// air.seatMap.premium_economy.seatNumbers.length;
-const economyClassSeats = air.seatMap.economy.seatNumbers.length;
-
-const total =
-  // firstClassSeats +
-  businessClassSeats +
-  // premiumEconomyClassSeats +
-  economyClassSeats;
-const totalSeats = air.seatMap.total;
-
-console.log(totalSeats, total);
-// console.log(firstClassSeats, air.seatMap.first.total);
-console.log(businessClassSeats, air.seatMap.business.total);
-// console.log(
-//   premiumEconomyClassSeats,
-//   air.seatMap.premium_economy.total
-// );
-console.log(economyClassSeats, air.seatMap.economy.total);
+          "32F"
+        ]
+      }
+    }
+  }
+]
