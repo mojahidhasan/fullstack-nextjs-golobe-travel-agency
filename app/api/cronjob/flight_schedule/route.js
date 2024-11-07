@@ -2,7 +2,6 @@ import { getManyDocs } from "@/lib/db/getOperationDB";
 import generateOneDayFlightSchedule from "@/lib/db/generateForDB/generateFlight";
 import { Flight } from "@/lib/db/models";
 import mongoose from "mongoose";
-import { subDays, fromUnixTime, getUnixTime } from "date-fns";
 export async function GET(req) {
   if (
     req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
@@ -22,11 +21,24 @@ export async function GET(req) {
 
   const airports = await getManyDocs("Airport");
   const airlines = await getManyDocs("Airline");
+  const airplanes = await getManyDocs("Airplane");
+  const seats = await getManyDocs("Seat");
+
+  const lastFlightDate = (
+    await Flight.find({})
+      .sort({
+        departureDateTime: -1,
+      })
+      .limit(1)
+      .select("departureDateTime")
+  )[0].departureDateTime;
+
   const flights = await generateOneDayFlightSchedule(
     airlines,
     airports,
-    undefined,
-    fromUnixTime(getUnixTime(subDays(new Date(), 1)))
+    airplanes,
+    seats,
+    new Date(lastFlightDate)
   );
 
   try {
