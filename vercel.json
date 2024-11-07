@@ -1,0 +1,8 @@
+{
+  "crons": [
+    {
+      "path": "/api/cronjob/flight_schedule",
+      "schedule": "0 0 * * *"
+    }
+  ]
+}
