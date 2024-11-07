@@ -6,8 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "generateDB": "vitest --testNamePattern generateDB --run",
     "lint": "next lint",
-    "test": "vitest"
+    "test": "vitest --testNamePattern Testing"
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.4.2",
