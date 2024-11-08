@@ -1,50 +1,79 @@
 import { FLightResult } from "@/components/pages/flights.search/sections/FlightResult";
 import { auth } from "@/lib/auth";
-import {
-  getFlightsByDepartAndArriveAirportIataCodeCatched,
-  getUserDetailsByUserIdCached,
-} from "@/lib/db/catchedData/getOperationDBCatched";
-import { getFlightReviews, getManyDocs } from "@/lib/db/getOperationDB";
+import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import { ratingScale } from "@/data/ratingScale";
+import { getUnixTime, fromUnixTime } from "date-fns";
+import _ from "lodash";
+
 async function FLightResultPage({ searchParams }) {
-  const departureAirportId = searchParams.departureAirportCode;
-  const arrivalAirportId = searchParams.arrivalAirportCode;
-
-  const flights = await getManyDocs("Flight", {
-    expireAt: { $gt: new Date() },
-  });
-
+  let flightResults = [];
   const session = await auth();
-  let flightResults = await getFlightsByDepartAndArriveAirportIataCodeCatched(
-    searchParams
-  );
+  if (Object.keys(searchParams).length > 0) {
+    const departureAirportId = searchParams.departureAirportCode;
+    const arrivalAirportId = searchParams.arrivalAirportCode;
+    const totalPassengers = Object.values(
+      JSON.parse(searchParams.passenger)
+    ).reduce((acc, passenger) => acc + passenger, 0);
+    const flightClass = searchParams.class;
+
+    flightResults = (
+      await getManyDocs("Flight", {
+        expireAt: { $gt: fromUnixTime(getUnixTime(new Date())) },
+        departureAirportId,
+        arrivalAirportId,
+      })
+    ).filter((flight) => {
+      const seats = flight.seats;
+      const availableSeats = seats.filter(
+        (seat) => seat.class === flightClass && seat.availability === true
+      );
+      return availableSeats.length >= totalPassengers;
+    });
+
+    // console.log({ ...flightResults[0].arrivalAirportId });
+  }
+
   if (session?.user?.id) {
-    const userDetails = await getUserDetailsByUserIdCached(session?.user?.id);
+    const likedFlights = (await getOneDoc("User", { _id: session?.user?.id }))
+      .likes.flights;
 
     flightResults = flightResults.map((flight) => {
+      const flightFilterQuery = {
+        airlineId: flight.airlineId,
+        departureAirportId: flight.departureAirportId,
+        arrivalAirportId: flight.arrivalAirportId,
+      };
       return {
         ...flight,
-        liked: userDetails?.likes?.flights?.includes(flight._id),
+        liked: likedFlights.some((el) => _.isEqual(flightFilterQuery, el)),
       };
     });
   }
 
   flightResults = await Promise.all(
     flightResults.map(async (flight) => {
-      const reviews = await getFlightReviews({ flightId: flight._id });
+      const currentFlightReviews = await getManyDocs("FlightReview", {
+        airlineId: flight.airlineId,
+        departAirportId: flight.departureAirportId,
+        returnAirportId: flight.arrivalAirportId,
+      });
 
-      const totalRating = reviews.reduce((acc, review) => {
-        return acc + review.rating;
-      }, 0);
+      const currentFlightRatingsSum = currentFlightReviews.reduce(
+        (acc, review) => {
+          return acc + review.rating;
+        },
+        0
+      );
+
+      const rating = currentFlightRatingsSum / currentFlightReviews.length;
 
       return {
         ...flight,
-        reviews: reviews.length,
-        rating: reviews.length
-          ? (totalRating / reviews.length).toFixed(1)
-          : "N/A",
-        ratingScale:
-          ratingScale[Math.floor(totalRating / reviews.length)] || "N/A",
+        reviews: currentFlightReviews,
+        totalReviews: currentFlightReviews.length,
+        rating: currentFlightReviews.length ? rating.toFixed(1) : "N/A",
+        ratingScale: ratingScale[Math.floor(rating)] || "N/A",
+        class: searchParams.class,
       };
     })
   );

@@ -12,22 +12,17 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
 
-export function SearchAirportDropdown({
-  className,
-  airportsName,
-  name,
-  codeName,
-}) {
+export function SearchAirportDropdown({ className, airports, name, codeName }) {
   const dispatch = useDispatch();
-  const formData = useSelector((state) => state.flightForm.value);
+  const flightFormData = useSelector((state) => state.flightForm.value);
 
   const oppositeCodeName = {
-    arriveAirportCode: "departureAirportCode",
-    departureAirportCode: "arriveAirportCode",
+    arrivalAirportCode: "departureAirportCode",
+    departureAirportCode: "arrivalAirportCode",
   };
 
   const [open, setOpen] = useState(false);
-  const [items, setItems] = useState(airportsName);
+  const [items, setItems] = useState(airports);
   const [filter, setFilter] = useState(items);
 
   function handleChange(e) {
@@ -47,7 +42,9 @@ export function SearchAirportDropdown({
           variant="ghost"
           className="justify-start line-clamp-1 font-normal"
         >
-          {formData[name] === "" ? "Select airport" : formData[name]}
+          {flightFormData[name] === ""
+            ? "Select airport"
+            : flightFormData[name]}
         </Button>
       </PopoverTrigger>
       <PopoverContent className="w-80" align="center">
@@ -62,15 +59,21 @@ export function SearchAirportDropdown({
               <div className="p-4 text-center text-sm">No results found</div>
             ) : (
               filter.map((obj) => {
-                if (formData[oppositeCodeName[codeName]] === obj.iataCode) {
-                  return null;
+                console.log(
+                  flightFormData[oppositeCodeName[codeName]],
+                  obj.iataCode
+                );
+                if (
+                  flightFormData[oppositeCodeName[codeName]] === obj.iataCode
+                ) {
+                  return;
                 }
                 return (
                   <div
                     key={obj.iataCode}
                     onClick={() => {
                       const data =
-                        obj.city + ", " + obj.country === formData[name]
+                        obj.city + ", " + obj.country === flightFormData[name]
                           ? {
                               [name]: "",
                               [codeName]: "",

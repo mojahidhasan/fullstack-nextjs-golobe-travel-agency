@@ -14,21 +14,27 @@ import { useDispatch, useSelector } from "react-redux";
 import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
 
 export function SelectClass() {
+  const classPlaceholders = {
+    economy: "Economy",
+    premium_economy: "Premium Economy",
+    business: "Business",
+    first: "First class",
+  };
   const dispatch = useDispatch();
 
-  const trip = useSelector((state) => state.flightForm.value.class);
+  const flightClass = useSelector((state) => state.flightForm.value.class);
   return (
     <SelectShadcn
       onValueChange={(value) => {
         dispatch(setFlightForm({ class: value }));
       }}
     >
-      <input value={trip} name="trip" type="hidden" />
+      <input value={flightClass} name="flightClass" type="hidden" />
       <SelectTrigger className="focus:ring-transparent focus:ring-offset-0 bg-white hover:bg-slate-500/10 w-full h-full border-0 ">
         <SelectValue
           className="h-full"
-          defaultValue={trip}
-          placeholder={trip}
+          defaultValue={flightClass}
+          placeholder={classPlaceholders[flightClass]}
         />
       </SelectTrigger>
       <SelectContent className={"bg-primary"}>

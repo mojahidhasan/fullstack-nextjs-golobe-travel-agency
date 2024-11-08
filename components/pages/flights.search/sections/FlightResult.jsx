@@ -3,9 +3,10 @@ import { Best } from "@/components/pages/flights.search/sections/Best";
 import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { minToHour, substractTimeInMins } from "@/lib/utils";
+
 export async function FLightResult({ flightResults }) {
   const sortByCheapest = flightResults.slice(0).sort((a, b) => {
-    return +a.price.base - +b.price.base;
+    return +a.price[flightResults[0].class].base - +b.price[flightResults[0].class].base;
   });
 
   const sortByBest = flightResults.slice(0).sort((a, b) => {
@@ -18,9 +19,9 @@ export async function FLightResult({ flightResults }) {
       b.departureDateTime
     );
     return (
-      parseFloat(a.price.base) +
+      parseFloat(a.price[flightResults[0].class].base) +
       aMinutes -
-      (parseFloat(b.price.base) + bMinutes)
+      (parseFloat(b.price[flightResults[0].class].base) + bMinutes)
     );
   });
   const sortByQuickest = [...flightResults].sort((a, b) => {
@@ -44,7 +45,7 @@ export async function FLightResult({ flightResults }) {
           >
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Cheapest</p>
-              <p>${sortByCheapest[0].price.base}</p>
+              <p>${ sortByCheapest[0].price[flightResults[0].class].base }</p>
             </div>
           </TabsTrigger>
           <TabsTrigger
@@ -54,13 +55,13 @@ export async function FLightResult({ flightResults }) {
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Best</p>
               <p>
-                ${sortByBest[0].price.base} .{" "}
-                {minToHour(
+                ${ sortByBest[0].price[flightResults[0].class].base } .{ " " }
+                { minToHour(
                   substractTimeInMins(
                     sortByBest[0].arrivalDateTime,
                     sortByBest[0].departureDateTime
                   )
-                )}
+                ) }
               </p>
             </div>
           </TabsTrigger>
@@ -71,24 +72,24 @@ export async function FLightResult({ flightResults }) {
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Quickest</p>
               <p>
-                {minToHour(
+                { minToHour(
                   substractTimeInMins(
                     sortByQuickest[0].arrivalDateTime,
                     sortByQuickest[0].departureDateTime
                   )
-                )}
+                ) }
               </p>
             </div>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="cheapest">
-          <Cheapest data={sortByCheapest} />
+          <Cheapest data={ sortByCheapest } />
         </TabsContent>
         <TabsContent value="best">
-          <Best data={sortByBest} />
+          <Best data={ sortByBest } />
         </TabsContent>
         <TabsContent value="quickest">
-          <Quickest data={sortByQuickest} />
+          <Quickest data={ sortByQuickest } />
         </TabsContent>
       </Tabs>
     </div>

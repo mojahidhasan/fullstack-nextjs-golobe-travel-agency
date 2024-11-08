@@ -27,6 +27,12 @@ import airports from "@/data/airportsData.json";
 import swap from "@/public/icons/swap.svg";
 
 function SearchFlightsForm({ searchParams = {} }) {
+  const classPlaceholders = {
+    economy: "Economy",
+    premium_economy: "Premium Economy",
+    business: "Business",
+    first: "First class",
+  };
   const dispatch = useDispatch();
 
   let searchParamsObj = {};
@@ -51,7 +57,7 @@ function SearchFlightsForm({ searchParams = {} }) {
         adult: 1,
         children: 0,
       },
-      class: "Economy",
+      class: "economy",
       promocode: "",
     };
   }
@@ -158,7 +164,7 @@ function SearchFlightsForm({ searchParams = {} }) {
               <SearchAirportDropdown
                 name={"from"}
                 codeName={"departureAirportCode"}
-                airportsName={airports}
+                airports={airports}
                 className="h-full w-full text-start"
               />
             </div>
@@ -189,7 +195,7 @@ function SearchFlightsForm({ searchParams = {} }) {
 
             <div className="h-full w-[45%]">
               <SearchAirportDropdown
-                airportsName={airports}
+                airports={airports}
                 className="h-full w-full text-start"
                 name={"to"}
                 codeName={"arrivalAirportCode"}
@@ -236,7 +242,7 @@ function SearchFlightsForm({ searchParams = {} }) {
                     totalPassenger(flightFormData.passenger) > 1
                       ? "people"
                       : "person"
-                  }, ${flightFormData.class}`}
+                  }, ${classPlaceholders[flightFormData.class]}`}
                 </Button>
               </PopoverTrigger>
               <PopoverContent>
@@ -281,7 +287,7 @@ function SearchFlightsForm({ searchParams = {} }) {
                         defaultValue={flightFormData.passenger.children}
                         label="Children"
                         type="number"
-                        min={1}
+                        min={0}
                         max={5}
                         onChange={(e) => {
                           dispatch(

@@ -16,8 +16,8 @@ export function FlightResultCard({ data }) {
           width={300}
           height={300}
           className="h-full p-5 w-full rounded-l-[12px] object-contain max-md:rounded-r-[8px]"
-          src={airlines[data?.airline?.iataCode]}
-          alt={data?.airline?.name}
+          src={airlines[data?.airlineId.iataCode]}
+          alt={data?.airlineId?.name}
         />
       </div>
       <div className="h-min w-full p-[24px]">
@@ -28,14 +28,14 @@ export function FlightResultCard({ data }) {
                 {data.rating}
               </Button>
               <span className="font-bold">{data.ratingScale}</span>{" "}
-              <span>{data.reviews} reviews</span>
+              <span>{data.totalReviews} reviews</span>
             </div>
             <div>
               <p className="text-right text-[0.875rem] text-secondary/75">
                 starting from
               </p>
               <p className="text-right text-[1.5rem] font-bold text-tertiary">
-                ${parseInt(data?.price?.base)}
+                ${parseInt(data?.price[data?.class]?.base)}
               </p>
             </div>
           </div>
@@ -48,12 +48,16 @@ export function FlightResultCard({ data }) {
                   {format(data?.arrivalDateTime, "hh:mm aaa")}
                 </p>
                 <p className="text-[0.875rem] text-secondary/40">
-                  {data?.airline?.name}
+                  {data?.airlineId?.name}
                 </p>
               </div>
             </div>
             <div>
-              <p className="font-semibold text-secondary/75">non stop</p>
+              <p className="font-semibold text-secondary/75">
+                {data?.stopovers.length > 0
+                  ? data?.stopovers.length + " stop"
+                  : "non stop"}
+              </p>
             </div>
             <div>
               <p className="text-secondary/75">
@@ -65,8 +69,8 @@ export function FlightResultCard({ data }) {
                 )}
               </p>
               <p className="text-[0.875rem] text-secondary/40">
-                {data?.originAirport.iataCode}-
-                {data?.destinationAirport.iataCode}
+                {data?.departureAirportId.iataCode}-
+                {data?.arrivalAirportId.iataCode}
               </p>
             </div>
           </div>
@@ -79,7 +83,7 @@ export function FlightResultCard({ data }) {
             flightsOrHotels={"flights"}
           />
           <Button asChild className={"w-full"}>
-            <Link href={"/flights/" + data._id}>View Deals</Link>
+            <Link href={"/flights/" + data.flightNumber}>View Deals</Link>
           </Button>
         </div>
       </div>
