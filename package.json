@@ -44,6 +44,7 @@
     "mailersend": "^2.2.0",
     "mongodb": "^6.8.0",
     "mongoose": "^8.3.2",
+    "mongoose-autopopulate": "^1.1.0",
     "next": "14.2.13",
     "next-auth": "^5.0.0-beta.20",
     "nextjs-toploader": "^1.6.12",
