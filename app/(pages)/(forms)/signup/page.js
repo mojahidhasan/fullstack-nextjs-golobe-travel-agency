@@ -2,16 +2,16 @@ import { SignupForm } from "@/components/pages/signup/SignupForm";
 
 export default function SignupPage() {
   return (
-    <div className="grow text-left">
-      <div className="mb-[24px]">
-        <h2 className="mb-[16px] font-tradeGothic text-[2rem] font-bold text-black xl:text-[2.5rem]">
-          Sign up
+    <div className="flex flex-col items-center justify-center h-screen  p-6">
+      <div className="bg-white shadow-lg rounded-lg p-10 max-w-md w-full text-center">
+        <h2 className="mb-6  text-4xl font-extrabold  bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-500 tracking-wide">
+          Sign Up
         </h2>
-        <p className="text-[0.875rem] text-secondary/75 xl:text-[1rem]">
-          Let’s get you all st up so you can access your personal account.
+        <p className="text-base bg-clip-text text-transparent bg-gradient-to-r from-black to-gray-300/60  mb-8">
+          Let's get you set up so you can access your personal account  {"   "} ✨.
         </p>
+        <SignupForm />
       </div>
-      <SignupForm />
     </div>
   );
 }
