@@ -1,6 +1,6 @@
 "use client";
 import React from 'react';
-import { Input } from '@/components/ui/input';
+import { Input } from '@/components/local-ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { SignupBtn } from '@/components/pages/signup/signup-button';
 import Link from 'next/link';
@@ -46,7 +46,7 @@ export function SignupForm() {
         aria-live="polite"
         aria-atomic="true"
       >
-        { state?.error === "signup_error" && (
+        { state?.success === false && (
           <>
             <AlertCircle className="h-5 w-5" />
             <p>{ state?.message }</p>
@@ -61,14 +61,14 @@ export function SignupForm() {
       </div>
       <form action={ dispatch } className="space-y-4">
         <input type="hidden" name={ 'action' } value={ 'signup' } />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid md:grid-cols-2 gap-4">
           <Input
             placeholder={ "Enter your first name" }
             name={ "firstname" }
             label={ "First Name" }
             error={ errors?.firstname }
             required
-            className={ "max-xsm:col-span-2" }
+            className={ "max-sm:col-span-2" }
           />
           <Input
             placeholder={ "Enter your last name" }
@@ -76,7 +76,7 @@ export function SignupForm() {
             label={ "Last Name" }
             error={ errors?.lastname }
             required
-            className={ "max-xsm:col-span-2" }
+            className={ "max-sm:col-span-2" }
           />
           <Input
             type="email"
@@ -123,7 +123,7 @@ export function SignupForm() {
             name={ "acceptTerms" }
             error={ errors?.acceptTerms }
             label={
-              <span className={ `text-[0.875rem] font-medium text-secondary` }>
+              <span className={ `text-xs text-secondary` }>
                 I agree to all the{ " " }
                 <Link href={ "/terms" } target="_blank" className="text-tertiary">
                   Terms
