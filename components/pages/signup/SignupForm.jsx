@@ -149,6 +149,6 @@ export function SignupForm() {
         </Link>
       </div>
       <AuthenticateWith message={ "Or signup with" } />
-    </>
+    </div>
   );
 }
