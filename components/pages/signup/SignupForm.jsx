@@ -36,12 +36,12 @@ export function SignupForm() {
   }
 
   return (
-    <div className="bg-white p-8 rounded-lg shadow-lg">
+    <div className="bg-white p-5 rounded-lg shadow-lg">
       <div
         className={ cn(
-          "flex text-destructive-foreground text-sm rounded-lg p-3 h-[48px] mb-5 items-center bg-transparent space-x-1",
-          state?.error === "signup_error" && "bg-destructive",
-          state?.success && "bg-primary/80 text-black"
+          "flex text-destructive-foreground text-sm rounded-lg h-auto items-center bg-transparent space-x-1",
+          state?.error === "signup_error" && "bg-destructive mb-5 p-3",
+          state?.success && "bg-primary/80 text-black mb-5 p-3"
         ) }
         aria-live="polite"
         aria-atomic="true"
