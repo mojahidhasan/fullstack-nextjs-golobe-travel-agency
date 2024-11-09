@@ -1,21 +1,17 @@
 "use client";
+import React from 'react';
+import { Input } from '@/components/ui/input';
+import { Checkbox } from '@/components/ui/checkbox';
+import { SignupBtn } from '@/components/pages/signup/signup-button';
+import Link from 'next/link';
+import { AlertCircle, UserRoundPlus } from 'lucide-react';
+import { AuthenticateWith } from '@/components/local-ui/authenticateWith';
+import { signUpAction } from '@/lib/actions';
+import { useFormState } from 'react-dom';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
-import { Input } from "@/components/local-ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { SignupBtn } from "@/components/pages/signup/signup-button";
-import Link from "next/link";
-
-import { AlertCircle } from "lucide-react";
-import { UserRoundPlus } from "lucide-react";
-import { AuthenticateWith } from "@/components/local-ui/authenticateWith";
-
-import { signUpAction } from "@/lib/actions";
-
-import { useFormState } from "react-dom";
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-
-import { cn } from "@/lib/utils";
 export function SignupForm() {
   const router = useRouter();
   const [state, dispatch] = useFormState(signUpAction, undefined);
@@ -28,7 +24,7 @@ export function SignupForm() {
 
     if (state?.success === true && state?.error === undefined) {
       setTimeout(() => {
-        router.push("/login?s=true");
+        router.push('/login?s=true');
       }, 1000);
     }
   }, [state]);
@@ -38,8 +34,9 @@ export function SignupForm() {
       errors[state?.message[key].path[0]] = state?.message[key].message;
     }
   }
+
   return (
-    <>
+    <div className="bg-white p-8 rounded-lg shadow-lg">
       <div
         className={ cn(
           "flex text-destructive-foreground text-sm rounded-lg p-3 h-[48px] mb-5 items-center bg-transparent space-x-1",
@@ -62,9 +59,9 @@ export function SignupForm() {
           </>
         ) }
       </div>
-      <form action={ dispatch }>
-        <div className="grid gap-[16px] md:grid-cols-2">
-          <input type="hidden" name={ "action" } value={ "signup" } />
+      <form action={ dispatch } className="space-y-4">
+        <input type="hidden" name={ 'action' } value={ 'signup' } />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Input
             placeholder={ "Enter your first name" }
             name={ "firstname" }
@@ -88,9 +85,7 @@ export function SignupForm() {
             label={ "Email" }
             error={ errors?.email }
             required
-            className={
-              "max-sm:col-span-2 md:col-span-2 sm:col-span-1 lg:col-span-1 "
-            }
+            className="max-sm:col-span-2 md:col-span-2 sm:col-span-1 lg:col-span-1"
           />
           <Input
             type="tel"
@@ -122,7 +117,7 @@ export function SignupForm() {
             required
           />
         </div>
-        <div className="mt-[24px] flex items-center gap-[8px] text-secondary">
+        <div className="flex items-center gap-2 text-secondary">
           <Checkbox
             id={ "acceptTerms" }
             name={ "acceptTerms" }

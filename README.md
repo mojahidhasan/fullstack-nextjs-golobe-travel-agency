@@ -52,19 +52,35 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 ## Work locally
 
 1. Download or clone the repository
-2. Install dependencies by running `npm install`
-3. setup `.env` file
-4. run `npm run dev` to start the server
 
-### .env file keys setup
+   ```sh
+   git clone https://github.com/mojahidhasan/fullstack-nextjs-golobe-travel-agency.git
+   ```
 
-App may get runtime errors if .env file is not setup.
+2. Navigate to the project directory
 
-See `.env.example` file
+   ```sh
+   cd fullstack-nextjs-golobe-travel-agency
+   ```
+
+3. Install dependencies
+
+   ```sh
+   npm install
+   ```
+
+4. rename the `.env.example` file from the root directory to `.env` or `.env.local` and set the proper values of keys. The app may get runtime errors if the `.env` file is not set up.
+5. [Generate fake flight data](#generate-fake-flight-data-for-database) and upload it to the database
+6. start the local server
+
+   ```sh
+   npm run dev
+   # http://localhost:3000
+   ```
 
 ### Generate Fake Flight Data for Database
 
-After cloning the project, from the root directory `/golob-travel-agency-nextjs` run:
+From the root directory `/fullstack-nextjs-golobe-travel-agency`, run:
 
 ```bash
 node lib/db/generateFakeFlightData.mjs
@@ -72,11 +88,11 @@ node lib/db/generateFakeFlightData.mjs
 
 It will generate a file called `flights.json` in the root directory.
 
-Upload this json file in the database in the collection named "flights".
+Upload this JSON file in the database in the collection named "flights".
 
 ## TODO
 
-This project is still in development. Many functionalities have not been implemented yet. Here are some functionalities that are yet to develop:
+This project is still in development. All front-end pages have been developed already but many functionalities especially the backend have not been implemented yet. Here are some functionalities that are yet to develop:
 
 - Replacing fake flight data with real flight API
 - Implementing hotel data (fake) in the database.
