@@ -11,14 +11,14 @@ export function SubmitBtn({
   const { pending } = useFormStatus();
   return (
     <Button
-      form={formId}
-      disabled={pending}
+      form={ formId }
+      disabled={ pending }
       size="lg"
       type="submit"
-      className={cn(className)}
-      variant={variant}
+      className={ cn(className) }
+      variant={ variant }
     >
-      {pending ? customTitle.onSubmitting : customTitle.default}
+      { pending ? customTitle.onSubmitting : customTitle.default }
     </Button>
   );
 }

@@ -2,7 +2,7 @@
 import React from 'react';
 import { Input } from '@/components/local-ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
-import { SignupBtn } from '@/components/pages/signup/signup-button';
+import { SubmitBtn } from "@/components/local-ui/SubmitBtn";
 import Link from 'next/link';
 import { AlertCircle, UserRoundPlus } from 'lucide-react';
 import { AuthenticateWith } from '@/components/local-ui/authenticateWith';
@@ -59,7 +59,7 @@ export function SignupForm() {
           </>
         ) }
       </div>
-      <form action={ dispatch } className="space-y-4">
+      <form id="signup-form" action={ dispatch } className="space-y-4">
         <input type="hidden" name={ 'action' } value={ 'signup' } />
         <div className="grid md:grid-cols-2 gap-4">
           <Input
@@ -140,7 +140,11 @@ export function SignupForm() {
             }
           />
         </div>
-        <SignupBtn />
+        <SubmitBtn formId="signup-form" className="!mt-[24px] w-full" customTitle={ {
+          default: "Create Account",
+          onSubmitting: "Creating account...",
+        } }
+        />
       </form>
       <div className="mt-[16px] text-center text-[0.875rem] font-medium text-secondary">
         Already have an account?{ " " }
