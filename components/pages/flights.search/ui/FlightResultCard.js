@@ -1,12 +1,14 @@
 import Image from "next/image";
-import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { LikeButton } from "@/components/local-ui/likeButton";
 
 import { airlines } from "@/data/airlinesLogos";
 import { format } from "date-fns";
-import { minToHour, substractTimeInMins } from "@/lib/utils";
+import { minutesToHMFormat, substractTimeInMins } from "@/lib/utils";
+import { trackUserFlightClass } from "@/lib/actions";
+import { redirect } from "next/navigation";
+import { RatingShow } from "@/components/local-ui/ratingShow";
 
 export function FlightResultCard({ data }) {
   return (
@@ -24,9 +26,7 @@ export function FlightResultCard({ data }) {
         <div>
           <div className="mb-[16px] flex items-center justify-between">
             <div className="flex items-center gap-[4px]">
-              <Button variant={"outline"} size={"sm"}>
-                {data.rating}
-              </Button>
+              <RatingShow rating={data.rating} />
               <span className="font-bold">{data.ratingScale}</span>{" "}
               <span>{data.totalReviews} reviews</span>
             </div>
@@ -61,7 +61,7 @@ export function FlightResultCard({ data }) {
             </div>
             <div>
               <p className="text-secondary/75">
-                {minToHour(
+                {minutesToHMFormat(
                   substractTimeInMins(
                     data?.arrivalDateTime,
                     data?.departureDateTime
@@ -82,9 +82,17 @@ export function FlightResultCard({ data }) {
             cardId={data?._id}
             flightsOrHotels={"flights"}
           />
-          <Button asChild className={"w-full"}>
-            <Link href={"/flights/" + data.flightNumber}>View Deals</Link>
-          </Button>
+          <form
+            action={async () => {
+              await trackUserFlightClass(undefined, {
+                flightClass: data?.class,
+              });
+              redirect(`/flights/${data.flightNumber}`);
+            }}
+            className={"w-full"}
+          >
+            <Button className={"w-full"}>View Deals</Button>
+          </form>
         </div>
       </div>
     </div>

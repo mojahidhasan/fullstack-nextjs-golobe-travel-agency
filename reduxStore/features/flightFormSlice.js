@@ -1,18 +1,17 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addDays } from "date-fns";
 export const defaultFlightFormValue = {
   from: "",
   to: "",
   departureAirportCode: "",
   arrivalAirportCode: "",
-  trip: "Round-Trip",
-  departDate: new Date().toISOString(),
-  returnDate: addDays(new Date(), 7).toISOString(),
+  trip: "oneway",
+  departDate: new Date().toString(),
+  returnDate: "",
   passenger: {
     adult: 1,
     children: 0,
   },
-  class: "Economy",
+  class: "economy",
   promocode: "",
   filters: {
     rate: [],

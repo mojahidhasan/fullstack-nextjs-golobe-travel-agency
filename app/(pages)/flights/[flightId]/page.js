@@ -3,25 +3,29 @@ import { FlightData } from "@/components/pages/flights.[flightId]/sections/Fligh
 import { EconomyFeatures } from "@/components/pages/flights.[flightId]/sections/EconomyFeatures";
 import { FlightsSchedule } from "@/components/pages/flights.[flightId]/sections/FlightsSchedule";
 import { FlightOrHotelReview } from "@/components/sections/FlightOrHotelReview";
-import { getFlightById, getFlightReviews } from "@/lib/db/getOperationDB";
+import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import { getUserDetailsByUserIdCached } from "@/lib/db/catchedData/getOperationDBCatched";
-import { substractTimeInMins, minToHour } from "@/lib/utils";
 import Image from "next/image";
 
 import { auth } from "@/lib/auth";
-
-import { format } from "date-fns";
 import stopwatch from "@/public/icons/stopwatch.svg";
+import { cookies } from "next/headers";
 
 export default async function FlightDetailsPage({ params }) {
-  const flight = await getFlightById(params.flightId);
-  const flightReviews = await getFlightReviews({ flightId: params.flightId });
+  const flight = await getOneDoc("Flight", { flightNumber: params.flightId });
+  const flightReviews = await getManyDocs("FlightReview", {
+    airlineId: flight.airlineId._id,
+    departAirportId: flight.departureAirportId._id,
+    returnAirportId: flight.arrivalAirportId._id,
+  });
+  const flightClass = cookies().get("fc").value;
+  const price = Object.values(flight.price[flightClass])
+    .reduce((prev, curr) => +prev + +curr, 0)
+    .toFixed(2);
   const flightInfo = {
-    id: flight._id,
-    airplaneName: flight.airplane.name,
-    price: Object.values(flight.price)
-      .reduce((prev, curr) => +prev + +curr, 0)
-      .toFixed(2),
+    flightNumber: flight.flightNumber,
+    airplaneName: flight.airplaneId.model,
+    price,
     rating: flightReviews.length
       ? (
           flightReviews.reduce((prev, curr) => prev + curr.rating, 0) /
@@ -38,9 +42,6 @@ export default async function FlightDetailsPage({ params }) {
     flightInfo.liked = userDetails?.likes?.flights?.includes(flight._id);
   }
 
-  const time = minToHour(
-    substractTimeInMins("2024-09-24T21:11:36.957Z", "2024-09-23T14:31:36.957Z")
-  );
   return (
     <>
       <main className="mx-auto mt-[40px] mb-20 w-[90%]">
@@ -78,7 +79,7 @@ export default async function FlightDetailsPage({ params }) {
             </div>
           </div>
         </div>
-        <FlightsSchedule flight={flight} />
+        <FlightsSchedule flight={{ ...flight, price }} />
         <FlightOrHotelReview
           rating={flightInfo.rating}
           reviews={flightReviews}

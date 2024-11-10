@@ -1,6 +1,6 @@
 import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
 import { FareCard } from "@/components/FareCard";
-import { FlightDetailsCard } from "@/components/FlightDetailsCard";
+import { FlightScheduleCard } from "@/components/FlightScheduleCard";
 import { AuthenticationCard } from "@/components/AuthenticationCard";
 import { ChoosePaymentCard } from "@/components/pages/flights.book/ChoosePaymentCard";
 
@@ -46,7 +46,7 @@ export default async function FlightBookPage({ params }) {
 
         <div className="mt-[30px] flex gap-[20px] max-lg:flex-col-reverse lg:gap-[30px] xl:gap-[40px]">
           <div>
-            <FlightDetailsCard flightDetails={flightDetails} />
+            <FlightScheduleCard flightDetails={flightDetails} />
             <div className="mb-[20px] rounded-[12px] bg-white p-[16px] shadow-lg lg:mb-[30px] xl:mb-[40px]">
               <RadioGroup defaultValue="Pay_in_full">
                 <Label className="flex rounded-[12px] justify-between p-[16px] has-[[data-state='checked']]:bg-primary grow items-center gap-[32px]">

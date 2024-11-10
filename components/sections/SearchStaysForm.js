@@ -37,8 +37,8 @@ function SearchStaysForm({ searchParams = {} }) {
   } else {
     staySearchParamsObj = {
       destination: "",
-      checkIn: new Date().toISOString(),
-      checkOut: addDays(new Date(), 1).toISOString(),
+      checkIn: new Date().toString(),
+      checkOut: addDays(new Date(), 1).toString(),
       rooms: 1,
       guests: 1,
       promocode: "",
@@ -144,7 +144,7 @@ function SearchStaysForm({ searchParams = {} }) {
               setDate={(date) => {
                 dispatch(
                   setStayForm({
-                    checkIn: date.toISOString(),
+                    checkIn: date.toString(),
                   })
                 );
               }}
@@ -180,7 +180,7 @@ function SearchStaysForm({ searchParams = {} }) {
                 } else {
                   dispatch(
                     setStayForm({
-                      checkOut: date.toISOString(),
+                      checkOut: date.toString(),
                     })
                   );
                 }

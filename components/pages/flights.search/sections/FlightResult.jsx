@@ -2,7 +2,7 @@ import { Cheapest } from "@/components/pages/flights.search/sections/Cheapest";
 import { Best } from "@/components/pages/flights.search/sections/Best";
 import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { minToHour, substractTimeInMins } from "@/lib/utils";
+import { minutesToHMFormat, substractTimeInMins } from "@/lib/utils";
 
 export async function FLightResult({ flightResults }) {
   const sortByCheapest = flightResults.slice(0).sort((a, b) => {
@@ -56,7 +56,7 @@ export async function FLightResult({ flightResults }) {
               <p className="mb-[8px] block font-semibold">Best</p>
               <p>
                 ${ sortByBest[0].price[flightResults[0].class].base } .{ " " }
-                { minToHour(
+                { minutesToHMFormat(
                   substractTimeInMins(
                     sortByBest[0].arrivalDateTime,
                     sortByBest[0].departureDateTime
@@ -72,7 +72,7 @@ export async function FLightResult({ flightResults }) {
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Quickest</p>
               <p>
-                { minToHour(
+                { minutesToHMFormat(
                   substractTimeInMins(
                     sortByQuickest[0].arrivalDateTime,
                     sortByQuickest[0].departureDateTime

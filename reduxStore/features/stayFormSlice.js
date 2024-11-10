@@ -3,8 +3,8 @@ import { addDays } from "date-fns";
 
 const defaultValue = {
   destination: "",
-  checkIn: new Date().toISOString(),
-  checkOut: addDays(new Date(), 1).toISOString(),
+  checkIn: new Date().toString(),
+  checkOut: addDays(new Date(), 1).toString(),
   rooms: 1,
   guests: 1,
   promocode: "",

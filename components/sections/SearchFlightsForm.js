@@ -22,7 +22,6 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
 
-import { addDays } from "date-fns";
 import airports from "@/data/airportsData.json";
 import swap from "@/public/icons/swap.svg";
 
@@ -50,9 +49,9 @@ function SearchFlightsForm({ searchParams = {} }) {
       to: "",
       departureAirportCode: "",
       arrivalAirportCode: "",
-      departDate: new Date().toISOString(),
-      returnDate: addDays(new Date(), 7).toISOString(),
-      trip: "Round-Trip",
+      departDate: new Date().toString(),
+      returnDate: "",
+      trip: "oneway",
       passenger: {
         adult: 1,
         children: 0,
@@ -67,7 +66,6 @@ function SearchFlightsForm({ searchParams = {} }) {
   }, []);
 
   const flightFormData = useSelector((state) => state.flightForm.value);
-
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -98,6 +96,9 @@ function SearchFlightsForm({ searchParams = {} }) {
     for (const [key, value] of Object.entries(obj)) {
       if (optionals.includes(key)) {
         continue;
+      }
+      if (key === "returnDate" && value == "") {
+        if (obj.trip === "oneway") continue;
       }
       if (value === "") {
         return true;
@@ -218,7 +219,9 @@ function SearchFlightsForm({ searchParams = {} }) {
           >
             <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
               Depart <span className={"text-red-600"}>*</span> - Return{" "}
-              <span className={"text-red-600"}>*</span>
+              {flightFormData.trip === "roundtrip" && (
+                <span className={"text-red-600"}>*</span>
+              )}
             </span>
 
             <DatePickerWithRange

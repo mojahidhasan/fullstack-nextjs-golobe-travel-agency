@@ -4,6 +4,7 @@ import Image from "next/image";
 import { LikeButton } from "@/components/local-ui/likeButton";
 import { ratingScale } from "@/data/ratingScale";
 import share from "@/public/icons/share.svg";
+import { RatingShow } from "@/components/local-ui/ratingShow";
 
 export function FlightData({ data }) {
   const { id, airplaneName, price, rating, reviews, liked, imgSrc } = data;
@@ -13,40 +14,38 @@ export function FlightData({ data }) {
       <div className="flex justify-between items-center mb-8 gap-6 sm:flex-row flex-col">
         <div>
           <h2 className="text-2xl font-bold text-gray-800 mb-3">
-            {airplaneName}
+            { airplaneName }
           </h2>
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <Button variant="outline" size="sm" className="rounded-lg px-3 py-1">
-              {rating}
-            </Button>
-            <span className="font-semibold">{ratingScale[parseInt(rating)]}</span>
-            <span className="text-gray-500">{reviews} reviews</span>
+            <RatingShow rating={ rating } />
+            <span className="font-semibold">{ ratingScale[parseInt(rating)] }</span>
+            <span className="text-gray-500">{ reviews } reviews</span>
           </div>
         </div>
         <div className="text-right">
-          <p className="text-3xl font-bold text-primary mb-3">${price}</p>
+          <p className="text-3xl font-bold text-primary mb-3">${ price }</p>
           <div className="flex gap-4">
-            <LikeButton liked={liked} cardId={id} flightsOrHotels="flights" />
+            <LikeButton liked={ liked } cardId={ id } flightsOrHotels="flights" />
             <Button variant="outline" className="p-3 rounded-lg flex items-center justify-center">
               <Image
                 className="h-5 w-5"
-                src={share}
+                src={ share }
                 alt="Share icon"
               />
             </Button>
             <Button variant="solid" asChild className="px-6 py-2 text-white bg-primary rounded-lg transition duration-200 hover:bg-primary-dark">
-              <Link href={`/flights/${id}/book`}>Book Now</Link>
+              <Link href={ `/flights/${id}/book` }>Book Now</Link>
             </Button>
           </div>
         </div>
       </div>
       <div className="rounded-lg overflow-hidden shadow-md">
         <Image
-          src={imgSrc}
-          width={800}
-          height={395}
+          src={ imgSrc }
+          width={ 800 }
+          height={ 395 }
           className="w-full h-full object-cover transition duration-300 transform hover:scale-105"
-          alt={airplaneName}
+          alt={ airplaneName }
         />
       </div>
     </section>

@@ -1,9 +1,9 @@
-import { FlightDetailsCard } from "@/components/FlightDetailsCard";
+import { FlightScheduleCard } from "@/components/FlightScheduleCard";
 
 export function FlightsSchedule({ flight }) {
   return (
     <section className="mb-[120px] text-secondary">
-      <FlightDetailsCard flightDetails={flight} />
+      <FlightScheduleCard flightDetails={ flight } />
     </section>
   );
 }

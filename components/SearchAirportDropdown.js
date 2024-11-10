@@ -59,10 +59,6 @@ export function SearchAirportDropdown({ className, airports, name, codeName }) {
               <div className="p-4 text-center text-sm">No results found</div>
             ) : (
               filter.map((obj) => {
-                console.log(
-                  flightFormData[oppositeCodeName[codeName]],
-                  obj.iataCode
-                );
                 if (
                   flightFormData[oppositeCodeName[codeName]] === obj.iataCode
                 ) {

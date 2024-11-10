@@ -2,7 +2,7 @@ import { FLightResult } from "@/components/pages/flights.search/sections/FlightR
 import { auth } from "@/lib/auth";
 import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import { ratingScale } from "@/data/ratingScale";
-import { getUnixTime, fromUnixTime } from "date-fns";
+import { getUnixTime, fromUnixTime, startOfDay, endOfDay } from "date-fns";
 import _ from "lodash";
 
 async function FLightResultPage({ searchParams }) {
@@ -15,10 +15,18 @@ async function FLightResultPage({ searchParams }) {
       JSON.parse(searchParams.passenger)
     ).reduce((acc, passenger) => acc + passenger, 0);
     const flightClass = searchParams.class;
-
+    const departDateStart = startOfDay(
+      fromUnixTime(getUnixTime(new Date(searchParams.departDate)))
+    );
+    const departDateEnd = endOfDay(
+      fromUnixTime(getUnixTime(new Date(searchParams.departDate)))
+    );
     flightResults = (
       await getManyDocs("Flight", {
-        expireAt: { $gt: fromUnixTime(getUnixTime(new Date())) },
+        departureDateTime: {
+          $gte: departDateStart,
+          $lte: departDateEnd,
+        },
         departureAirportId,
         arrivalAirportId,
       })
@@ -29,8 +37,6 @@ async function FLightResultPage({ searchParams }) {
       );
       return availableSeats.length >= totalPassengers;
     });
-
-    // console.log({ ...flightResults[0].arrivalAirportId });
   }
 
   if (session?.user?.id) {
