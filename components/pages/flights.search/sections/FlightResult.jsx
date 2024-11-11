@@ -11,11 +11,11 @@ export async function FLightResult({ flightResults }) {
 
   const sortByBest = flightResults.slice(0).sort((a, b) => {
     const aMinutes = substractTimeInMins(
-      a.arrivalDateTime,
+      a.destinationArrivalDateTime,
       a.departureDateTime
     );
     const bMinutes = substractTimeInMins(
-      b.arrivalDateTime,
+      b.destinationArrivalDateTime,
       b.departureDateTime
     );
     return (
@@ -26,11 +26,11 @@ export async function FLightResult({ flightResults }) {
   });
   const sortByQuickest = [...flightResults].sort((a, b) => {
     const aMinutes = substractTimeInMins(
-      a.arrivalDateTime,
+      a.destinationArrivalDateTime,
       a.departureDateTime
     );
     const bMinutes = substractTimeInMins(
-      b.arrivalDateTime,
+      b.destinationArrivalDateTime,
       b.departureDateTime
     );
     return aMinutes - bMinutes;
@@ -58,7 +58,7 @@ export async function FLightResult({ flightResults }) {
                 ${ sortByBest[0].price[flightResults[0].class].base } .{ " " }
                 { minutesToHMFormat(
                   substractTimeInMins(
-                    sortByBest[0].arrivalDateTime,
+                    sortByBest[0].destinationArrivalDateTime,
                     sortByBest[0].departureDateTime
                   )
                 ) }
@@ -74,7 +74,7 @@ export async function FLightResult({ flightResults }) {
               <p>
                 { minutesToHMFormat(
                   substractTimeInMins(
-                    sortByQuickest[0].arrivalDateTime,
+                    sortByQuickest[0].destinationArrivalDateTime,
                     sortByQuickest[0].departureDateTime
                   )
                 ) }

@@ -27,8 +27,8 @@ async function FLightResultPage({ searchParams }) {
           $gte: departDateStart,
           $lte: departDateEnd,
         },
-        departureAirportId,
-        arrivalAirportId,
+        originAirportId: departureAirportId,
+        destinationAirportId: arrivalAirportId,
       })
     ).filter((flight) => {
       const seats = flight.seats;
@@ -56,12 +56,13 @@ async function FLightResultPage({ searchParams }) {
     });
   }
 
+  // console.log(flightResults[0].stopovers[0].airlineId);
   flightResults = await Promise.all(
     flightResults.map(async (flight) => {
       const currentFlightReviews = await getManyDocs("FlightReview", {
-        airlineId: flight.airlineId,
-        departAirportId: flight.departureAirportId,
-        returnAirportId: flight.arrivalAirportId,
+        airlineId: flight.stopovers[0].airlineId._id,
+        departureAirportId: flight.departureAirportId,
+        arrivalAirportId: flight.arrivalAirportId,
       });
 
       const currentFlightRatingsSum = currentFlightReviews.reduce(

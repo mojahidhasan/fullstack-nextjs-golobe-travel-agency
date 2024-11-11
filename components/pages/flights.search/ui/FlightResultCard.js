@@ -18,8 +18,8 @@ export function FlightResultCard({ data }) {
           width={300}
           height={300}
           className="h-full p-5 w-full rounded-l-[12px] object-contain max-md:rounded-r-[8px]"
-          src={airlines[data?.airlineId.iataCode]}
-          alt={data?.airlineId?.name}
+          src={airlines[data?.stopovers[0]?.airlineId.iataCode]}
+          alt={data?.stopovers[0]?.airlineId?.name}
         />
       </div>
       <div className="h-min w-full p-[24px]">
@@ -45,17 +45,17 @@ export function FlightResultCard({ data }) {
               <div>
                 <p className="text-[1rem] font-semibold">
                   {format(data?.departureDateTime, "hh:mm aaa")} {"- "}
-                  {format(data?.arrivalDateTime, "hh:mm aaa")}
+                  {format(data?.destinationArrivalDateTime, "hh:mm aaa")}
                 </p>
                 <p className="text-[0.875rem] text-secondary/40">
-                  {data?.airlineId?.name}
+                  {data?.stopovers[0]?.airlineId?.name}
                 </p>
               </div>
             </div>
             <div>
               <p className="font-semibold text-secondary/75">
-                {data?.stopovers.length > 0
-                  ? data?.stopovers.length + " stop"
+                {data?.stopovers.length > 1
+                  ? data?.stopovers.length - 1 + " stop"
                   : "non stop"}
               </p>
             </div>
@@ -63,14 +63,14 @@ export function FlightResultCard({ data }) {
               <p className="text-secondary/75">
                 {minutesToHMFormat(
                   substractTimeInMins(
-                    data?.arrivalDateTime,
+                    data?.destinationArrivalDateTime,
                     data?.departureDateTime
                   )
                 )}
               </p>
               <p className="text-[0.875rem] text-secondary/40">
-                {data?.departureAirportId.iataCode}-
-                {data?.arrivalAirportId.iataCode}
+                {data?.originAirportId.iataCode}-
+                {data?.destinationAirportId.iataCode}
               </p>
             </div>
           </div>

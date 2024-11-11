@@ -8,11 +8,12 @@ import fastFood from "@/public/icons/fast-food.svg";
 import airLineSeat from "@/public/icons/airline-seat.svg";
 import lineLeft from "@/public/icons/line-left.svg";
 import lineRight from "@/public/icons/line-right.svg";
-import { minutesToHMFormat, substractTimeInMins } from "@/lib/utils";
+import { minutesToHMFormat } from "@/lib/utils";
 import { format } from "date-fns";
-export function FlightScheduleCard({ flightDetails, variant = "default" }) {
+import { cn } from "@/lib/utils";
+export function FlightScheduleCard({ flightScheduleDetails, variant = "default", className }) {
   const {
-    returns,
+    departureDate,
     duration,
     departureDateTime,
     departureAirport,
@@ -21,9 +22,9 @@ export function FlightScheduleCard({ flightDetails, variant = "default" }) {
     airplaneName,
     airline,
     price,
-  } = processFlightDetails(flightDetails);
+  } = processFlightDetails(flightScheduleDetails);
   return (
-    <div className="mb-[20px] shadow-lg rounded-[12px] bg-white px-[24px] py-[32px] shadow-small lg:mb-[30px] xl:mb-[40px]">
+    <div className={ cn(" shadow-lg rounded-[12px] bg-white px-[24px] py-[32px] shadow-small", className) }>
       { variant === "book" && (
         <div className="mb-[24px] flex justify-between font-bold">
           <h3 className="font-tradeGothic text-[1.5rem]">{ airplaneName }</h3>
@@ -31,7 +32,7 @@ export function FlightScheduleCard({ flightDetails, variant = "default" }) {
         </div>
       ) }
       <div className="mb-[24px] flex justify-between font-bold">
-        <h4 className="font-tradeGothic text-[1.25rem]">Return { returns }</h4>
+        <h4 className="font-tradeGothic text-[1.25rem]">Depart { departureDate }</h4>
         <p className="font-medium opacity-75">{ duration }</p>
       </div>
       <div className="mb-[40px] grid justify-between gap-[20px] md:flex">
@@ -109,7 +110,7 @@ export function FlightScheduleCard({ flightDetails, variant = "default" }) {
 }
 function processFlightDetails(data) {
   return {
-    returns: format(new Date(data.arrivalDateTime), "eee, MMM d"),
+    departureDate: format(new Date(data.departureDateTime), "eee, MMM d"),
     duration: minutesToHMFormat(
       data.duration
     ),

@@ -14,17 +14,15 @@ import { cookies } from "next/headers";
 export default async function FlightDetailsPage({ params }) {
   const flight = await getOneDoc("Flight", { flightNumber: params.flightId });
   const flightReviews = await getManyDocs("FlightReview", {
-    airlineId: flight.airlineId._id,
-    departAirportId: flight.departureAirportId._id,
-    returnAirportId: flight.arrivalAirportId._id,
+    "stopovers.airlineId": flight.stopovers[0].airlineId._id,
+    departureAirportId: flight.originAirportId._id,
+    arrivalAirportId: flight.destinationAirportId._id,
   });
   const flightClass = cookies().get("fc").value;
-  const price = Object.values(flight.price[flightClass])
-    .reduce((prev, curr) => +prev + +curr, 0)
-    .toFixed(2);
+  const price = flight.price[flightClass].base;
   const flightInfo = {
     flightNumber: flight.flightNumber,
-    airplaneName: flight.airplaneId.model,
+    airplaneName: flight.stopovers[0].airplaneId.model,
     price,
     rating: flightReviews.length
       ? (
