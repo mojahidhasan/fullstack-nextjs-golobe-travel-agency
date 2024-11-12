@@ -22,7 +22,7 @@ export function FlightScheduleCard({ flightScheduleDetails, variant = "default",
     airplaneName,
     airline,
     price,
-  } = processFlightDetails(flightScheduleDetails);
+  } = processFlightScheduleDetails(flightScheduleDetails);
   return (
     <div className={ cn(" shadow-lg rounded-[12px] bg-white px-[24px] py-[32px] shadow-small", className) }>
       { variant === "book" && (
@@ -108,7 +108,7 @@ export function FlightScheduleCard({ flightScheduleDetails, variant = "default",
     </div>
   );
 }
-function processFlightDetails(data) {
+function processFlightScheduleDetails(data) {
   return {
     departureDate: format(new Date(data.departureDateTime), "eee, MMM d"),
     duration: minutesToHMFormat(

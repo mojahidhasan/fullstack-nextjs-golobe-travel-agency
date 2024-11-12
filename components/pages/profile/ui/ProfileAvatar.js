@@ -1,5 +1,3 @@
-import { AvatarFallback, AvatarImage, Avatar } from "@/components/ui/avatar";
-
 import { UploadProfilePicture } from "@/components/pages/profile/ui/UploadProfilePicture";
 import Image from "next/image";
 export function ProfileAvatar({ avatar }) {

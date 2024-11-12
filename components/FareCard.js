@@ -13,7 +13,7 @@ export function FareCard({
   type = "",
   rating = 0,
   reviews = 0,
-  price = {},
+  fare = {},
 }) {
   return (
     <div className="flex w-full min-w-[350px] flex-col gap-4 rounded-[12px] p-3 md:p-6 shadow-lg bg-white">
@@ -56,7 +56,7 @@ export function FareCard({
           <caption className="caption-top text-left font-tradeGothic font-bold">
             Price Details
           </caption>
-          {Object.entries(price).map(([key, val]) => (
+          {Object.entries(fare.price).map(([key, val]) => (
             <tbody className="border-b" key={key}>
               <tr className="h-[48px] text-left">
                 <th className="font-medium">{capitalize(key)}</th>
@@ -70,10 +70,7 @@ export function FareCard({
             <tr className="h-[48px] text-left">
               <th className="font-medium">Total</th>
               <td className="text-right font-semibold">
-                $
-                {Object.values(price)
-                  .reduce((prev, curr) => +prev + +curr, 0)
-                  .toFixed(2)}
+                ${fare.totalPrice.toFixed(2)}
               </td>
             </tr>
           </tfoot>

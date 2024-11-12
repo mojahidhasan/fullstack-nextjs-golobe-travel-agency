@@ -21,13 +21,13 @@ import { useState, useEffect } from "react";
 import { useFormState } from "react-dom";
 import { useToast } from "@/components/ui/use-toast";
 
-import { changeCoverPhotoAction } from "@/lib/actions";
+import { updateCoverPhotoAction } from "@/lib/actions";
 import upload from "@/public/icons/upload.svg";
 
 export function UploadCoverPhoto() {
   const [file, setFile] = useState(null);
   const [opened, setOpened] = useState(false);
-  const [state, dispatch] = useFormState(changeCoverPhotoAction, undefined);
+  const [state, dispatch] = useFormState(updateCoverPhotoAction, undefined);
 
   const { toast } = useToast();
 
@@ -75,6 +75,7 @@ export function UploadCoverPhoto() {
               name="upload-cover-photo-form"
               type="file"
               className="hidden"
+              accept="image/*"
               onChange={(e) => {
                 const img = URL.createObjectURL(e.currentTarget.files[0]);
                 setFile(img);

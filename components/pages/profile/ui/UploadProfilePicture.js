@@ -19,7 +19,7 @@ import { useState, useRef, useEffect } from "react";
 import { useFormState } from "react-dom";
 import { useToast } from "@/components/ui/use-toast";
 
-import { changeProfilePictureAction } from "@/lib/actions";
+import { updateProfilePictureAction } from "@/lib/actions";
 
 import pen from "@/public/icons/pen.svg";
 
@@ -31,7 +31,7 @@ export function UploadProfilePicture() {
 
   const editorRef = useRef(null);
 
-  const [state, dispatch] = useFormState(changeProfilePictureAction, undefined);
+  const [state, dispatch] = useFormState(updateProfilePictureAction, undefined);
 
   const { toast } = useToast();
 

@@ -9,6 +9,7 @@ import google from "@/public/icons/google.svg";
 import facebook from "@/public/icons/facebook.svg";
 import apple from "@/public/icons/apple.svg";
 import mail from "@/public/icons/mail.svg";
+import { LoginForm } from "./pages/login/LoginForm";
 
 export function AuthenticationCard() {
   return (
@@ -17,14 +18,17 @@ export function AuthenticationCard() {
         Login or Sign up to book
       </h3>
       <div>
+        <LoginForm />
+      </div>
+      {/* <div>
         <Input
           type="tel"
           name={"phone"}
           placeholder="Phone Number"
           className={"bg-none"}
         />
-      </div>
-      <p className="text-[0.875rem] font-medium">
+      </div> */}
+      {/* <p className="text-[0.875rem] font-medium">
         We’ll call or text you to confirm your number. Standard message and data
         rates apply.{" "}
         <Link href={"/privacy-policy"} className="font-bold">
@@ -58,7 +62,7 @@ export function AuthenticationCard() {
           <Image width={24} height={24} src={mail} alt="mail_icon" />{" "}
           <span>Continue with email</span>
         </Button>
-      </div>
+      </div> */}
     </div>
   );
 }

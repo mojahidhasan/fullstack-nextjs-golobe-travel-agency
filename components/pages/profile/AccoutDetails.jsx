@@ -5,43 +5,43 @@ import Link from "next/link";
 export function AccoutDetails({ userDetails }) {
   const accountDetails = {
     name: userDetails.firstname + " " + userDetails.lastname,
-    emails: userDetails.email,
-    phone: userDetails.phone,
+    emails: userDetails.emails,
+    phone: userDetails?.phone,
     address: userDetails?.address,
     dateOfBirth: userDetails?.dateOfBirth,
   };
   return (
-    <TabContentMockup title={"Account"}>
+    <TabContentMockup title={ "Account" }>
       <div>
         <h4 className="mb-[8px] opacity-75">Name</h4>
         <div className="flex items-center justify-between">
-          <p className="text-[1.25rem] font-semibold">{accountDetails.name}</p>
+          <p className="text-[1.25rem] font-semibold">{ accountDetails.name }</p>
           <ChangeNamePopup />
         </div>
       </div>
       <div>
         <h4 className="mb-[8px] opacity-75">Email</h4>
         <div>
-          {accountDetails?.emails.map((item) => {
+          { accountDetails?.emails.map((item) => {
             return (
-              <p key={item.email} className="text-[1.25rem] font-semibold">
-                {item.email}{" "}
-                {item.primary === true && (
-                  <span className={"text-sm"}>(primary)</span>
-                )}{" "}
-                {item.emailVerified === null && (
+              <p key={ item.email } className="text-[1.25rem] font-semibold">
+                { item.email }{ " " }
+                { item.primary === true && (
+                  <span className={ "text-sm" }>(primary)</span>
+                ) }{ " " }
+                { item.emailVerified === null && (
                   <Link
-                    href={"/verify/email"}
-                    className={"text-xs font-normal text-blue-500 underline"}
+                    href={ "/verify/email" }
+                    className={ "text-xs font-normal text-blue-500 underline" }
                   >
                     verify
                   </Link>
-                )}
+                ) }
               </p>
             );
-          })}
+          }) }
           <div className="flex mt-3 sm:flex-col md:flex-row items-end md:items-center gap-[8px]">
-            <Button variant={"outline"} className={"gap-1 p-2 h-auto"}>
+            <Button variant={ "outline" } className={ "gap-1 p-2 h-auto" }>
               <svg
                 width="14"
                 height="14"
@@ -58,7 +58,7 @@ export function AccoutDetails({ userDetails }) {
               </svg>
               <span className="sm:inline hidden">Add another account</span>
             </Button>
-            <Button variant={"outline"} className={"gap-1 p-2 h-auto"}>
+            <Button variant={ "outline" } className={ "gap-1 p-2 h-auto" }>
               <svg
                 width="14"
                 height="14"
@@ -87,7 +87,7 @@ export function AccoutDetails({ userDetails }) {
           <h4 className="mb-[8px] opacity-75">Password</h4>
           <p className="font-semibold">✦✦✦✦✦</p>
         </div>
-        <Button variant={"outline"} className={"gap-1 p-2 h-auto"}>
+        <Button variant={ "outline" } className={ "gap-1 p-2 h-auto" }>
           <svg
             width="14"
             height="14"
@@ -113,11 +113,11 @@ export function AccoutDetails({ userDetails }) {
         <div>
           <h4 className="mb-[8px] opacity-75">Phone</h4>
           <p className="text-[1.25rem] font-semibold">
-            {accountDetails.phone?.number ?? "N/A"}
-          </p>{" "}
-        </div>{" "}
+            { accountDetails.phone?.number ?? "N/A" }
+          </p>{ " " }
+        </div>{ " " }
         <div></div>
-        <Button variant={"outline"} className={"gap-1 p-2 h-auto"}>
+        <Button variant={ "outline" } className={ "gap-1 p-2 h-auto" }>
           <svg
             width="14"
             height="14"
@@ -143,10 +143,10 @@ export function AccoutDetails({ userDetails }) {
         <div>
           <h4 className="mb-[8px] opacity-75">Address</h4>
           <p className="text-[1.25rem] font-semibold">
-            {accountDetails.address ?? "N/A"}
+            { accountDetails.address ?? "N/A" }
           </p>
         </div>
-        <Button variant={"outline"} className={"gap-1 p-2 h-auto"}>
+        <Button variant={ "outline" } className={ "gap-1 p-2 h-auto" }>
           <svg
             width="14"
             height="14"
@@ -172,10 +172,10 @@ export function AccoutDetails({ userDetails }) {
         <div>
           <h4 className="mb-[8px] opacity-75">Date of birth</h4>
           <p className="text-[1.25rem] font-semibold">
-            {accountDetails.dateOfBirth ?? "N/A"}
+            { accountDetails.dateOfBirth ?? "N/A" }
           </p>
         </div>
-        <Button variant={"outline"} className={"gap-1 p-2 h-auto"}>
+        <Button variant={ "outline" } className={ "gap-1 p-2 h-auto" }>
           <svg
             width="14"
             height="14"

@@ -51,43 +51,43 @@ export function LoginForm() {
   return (
     <>
       <div
-        className={cn(
-          "flex text-destructive-foreground text-sm rounded-lg p-3 h-[48px] mb-5 items-center bg-transparent space-x-1",
+        className={ cn(
+          "flex text-destructive-foreground text-sm rounded-lg p-3 h-auto mb-5 items-center bg-transparent space-x-1",
           state?.error === "login_error" && "bg-destructive",
           state?.success && "bg-primary/80 text-black"
-        )}
+        ) }
         aria-live="polite"
         aria-atomic="true"
       >
-        {state?.error === "login_error" && (
+        { state?.error === "login_error" && (
           <>
             <AlertCircle className="h-5 w-5" />
-            <p>{state?.message}</p>
+            <p>{ state?.message }</p>
           </>
-        )}
-        {state?.success && (
+        ) }
+        { state?.success && (
           <>
             <UserRoundPlus className="h-5 w-5" />
-            <p>{state?.message}</p>
+            <p>{ state?.message }</p>
           </>
-        )}
+        ) }
       </div>
-      <form action={dispatch}>
+      <form action={ dispatch }>
         <Input
           type="email"
           placeholder="Enter your email"
-          name={"email"}
+          name={ "email" }
           label="Email"
-          error={errors?.email}
-          className={"mb-[24px]"}
+          error={ errors?.email }
+          className={ "mb-[24px]" }
         />
         <Input
           type="password"
           placeholder="Enter your password"
-          name={"password"}
+          name={ "password" }
           label="Password"
-          error={errors?.password}
-          className={"mb-[24px]"}
+          error={ errors?.password }
+          className={ "mb-[24px]" }
         />
         <div className="flex justify-between">
           {/* <div>
@@ -99,7 +99,7 @@ export function LoginForm() {
           </div> */}
           <div className="grow">
             <Link
-              href={"/password-reset"}
+              href={ "/password-reset" }
               className="text-tertiary float-right text-[0.875rem]"
             >
               Forgot Password
@@ -108,13 +108,13 @@ export function LoginForm() {
         </div>
         <LoginBtn />
         <div className="mt-[16px] text-center text-[0.875rem] font-medium text-secondary">
-          Don&apos;t have an account?{" "}
-          <Link href={"/signup"} className="text-tertiary">
+          Don&apos;t have an account?{ " " }
+          <Link href={ "/signup" } className="text-tertiary">
             Sign up
           </Link>
         </div>
       </form>
-      <AuthenticateWith message={"Or Login With"} />
+      <AuthenticateWith message={ "Or Login With" } />
     </>
   );
 }
@@ -122,8 +122,8 @@ export function LoginForm() {
 function LoginBtn() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" className="w-full mt-10" disabled={pending}>
-      {pending ? "Submitting..." : "Login"}
+    <Button type="submit" className="w-full mt-10" disabled={ pending }>
+      { pending ? "Submitting..." : "Login" }
     </Button>
   );
 }
