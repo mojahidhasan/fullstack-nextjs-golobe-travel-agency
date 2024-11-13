@@ -1,9 +1,9 @@
 "use client";
 import { Button } from "@/components/ui/button";
-import { addOrRemoveLike } from "@/lib/actions";
+import { likeOrUnlikeAction } from "@/lib/actions";
 import { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-export const LikeButton = ({ liked, cardId, flightsOrHotels = "flights" }) => {
+export const LikeButton = ({ liked, keys, flightsOrHotels = "flights" }) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const callbackPath = pathname + "?" + searchParams.toString();
@@ -16,9 +16,9 @@ export const LikeButton = ({ liked, cardId, flightsOrHotels = "flights" }) => {
 
   async function handleClick() {
     setIsliked(!isLiked);
-    addOrRemoveLike({
+    likeOrUnlikeAction({
       isLiked,
-      id: cardId,
+      keys,
       flightsOrHotels,
       callbackPath,
     });

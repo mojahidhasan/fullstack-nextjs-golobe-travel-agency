@@ -42,13 +42,14 @@ async function FLightResultPage({ searchParams }) {
   if (session?.user?.id) {
     const likedFlights = (await getOneDoc("User", { _id: session?.user?.id }))
       .likes.flights;
-
     flightResults = flightResults.map((flight) => {
       const flightFilterQuery = {
-        airlineId: flight.airlineId,
-        departureAirportId: flight.departureAirportId,
-        arrivalAirportId: flight.arrivalAirportId,
+        airlineId: flight.stopovers[0].airlineId._id,
+        departureAirportId: flight.originAirportId._id,
+        arrivalAirportId: flight.destinationAirportId._id,
+        flightClass: searchParams?.class,
       };
+      console.log(flightFilterQuery);
       return {
         ...flight,
         liked: likedFlights.some((el) => _.isEqual(flightFilterQuery, el)),
@@ -76,11 +77,12 @@ async function FLightResultPage({ searchParams }) {
 
       return {
         ...flight,
+        price: flight.price[searchParams.class].base,
         reviews: currentFlightReviews,
         totalReviews: currentFlightReviews.length,
         rating: currentFlightReviews.length ? rating.toFixed(1) : "N/A",
         ratingScale: ratingScale[Math.floor(rating)] || "N/A",
-        class: searchParams.class,
+        flightClass: searchParams.class,
       };
     })
   );

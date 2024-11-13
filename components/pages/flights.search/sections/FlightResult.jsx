@@ -6,7 +6,7 @@ import { minutesToHMFormat, substractTimeInMins } from "@/lib/utils";
 
 export async function FLightResult({ flightResults }) {
   const sortByCheapest = flightResults.slice(0).sort((a, b) => {
-    return +a.price[flightResults[0].class].base - +b.price[flightResults[0].class].base;
+    return +a.price - +b.price;
   });
 
   const sortByBest = flightResults.slice(0).sort((a, b) => {
@@ -19,9 +19,9 @@ export async function FLightResult({ flightResults }) {
       b.departureDateTime
     );
     return (
-      parseFloat(a.price[flightResults[0].class].base) +
+      parseFloat(a.price) +
       aMinutes -
-      (parseFloat(b.price[flightResults[0].class].base) + bMinutes)
+      (parseFloat(b.price) + bMinutes)
     );
   });
   const sortByQuickest = [...flightResults].sort((a, b) => {
@@ -38,24 +38,24 @@ export async function FLightResult({ flightResults }) {
   return (
     <div className="flex flex-grow flex-col gap-[32px]">
       <Tabs defaultValue="cheapest" className="w-full">
-        <TabsList className="bg-white p-0 flex h-[80px]">
+        <TabsList className="bg-white p-0 gap-1 flex sm:flex-row flex-col h-auto">
           <TabsTrigger
             value="cheapest"
-            className="h-full justify-start grow py-5 gap-2 data-[state=active]:border-b-4 data-[state=active]:border-primary data-[state=active]:bg-primary/25"
+            className="w-full grow justify-start gap-2"
           >
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Cheapest</p>
-              <p>${ sortByCheapest[0].price[flightResults[0].class].base }</p>
+              <p className={ "text-sm text-gray-500" }>${ sortByCheapest[0].price }</p>
             </div>
           </TabsTrigger>
           <TabsTrigger
             value="best"
-            className="h-full grow justify-start gap-2 data-[state=active]:border-b-4 data-[state=active]:border-primary data-[state=active]:bg-primary/25"
+            className="w-full grow justify-start gap-2"
           >
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Best</p>
-              <p>
-                ${ sortByBest[0].price[flightResults[0].class].base } .{ " " }
+              <p className={ "text-sm text-gray-500" }>
+                ${ sortByBest[0].price } .{ " " }
                 { minutesToHMFormat(
                   substractTimeInMins(
                     sortByBest[0].destinationArrivalDateTime,
@@ -67,11 +67,11 @@ export async function FLightResult({ flightResults }) {
           </TabsTrigger>
           <TabsTrigger
             value="quickest"
-            className="h-full justify-start grow py-5 gap-2 data-[state=active]:border-b-4 data-[state=active]:border-primary data-[state=active]:bg-primary/25"
+            className="w-full grow justify-start gap-2"
           >
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Quickest</p>
-              <p>
+              <p className="text-sm text-gray-500">
                 { minutesToHMFormat(
                   substractTimeInMins(
                     sortByQuickest[0].destinationArrivalDateTime,

@@ -1,6 +1,6 @@
-import { Cheapest } from "@/components/pages/flights.search/sections/Cheapest";
-import { Best } from "@/components/pages/flights.search/sections/Best";
-import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
+// import { Cheapest } from "@/components/pages/flights.search/sections/Cheapest";
+// import { Best } from "@/components/pages/flights.search/sections/Best";
+// import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { HotelResultCard } from "@/components/pages/hotels.search/ui/HotelResultCard";
 export default function HotelResultPage({ searchParams }) {

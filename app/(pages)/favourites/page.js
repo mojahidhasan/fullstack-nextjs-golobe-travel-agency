@@ -2,11 +2,7 @@ import { FavouritesFlightAndPlacesTab } from "@/components/pages/favourites/ui/F
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
-import {
-  getUserDetailsByUserIdCached,
-  getFlightsByFlightIdsCached,
-} from "@/lib/db/catchedData/getOperationDBCatched";
-import { getFlightReviews } from "@/lib/db/getOperationDB";
+import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import { ratingScale } from "@/data/ratingScale";
 export default async function FavouritesPage() {
   const session = await auth();
@@ -14,31 +10,39 @@ export default async function FavouritesPage() {
     redirect("/login?callbackPath=" + encodeURIComponent("/favourites"));
   }
 
-  const userDetails = await getUserDetailsByUserIdCached(session?.user?.id);
+  const userDetails = await getOneDoc("User", { _id: session?.user?.id });
 
   let favouriteFlights = [];
   let favouriteHotels = [];
 
   if (userDetails.likes.flights.length > 0) {
-    const flights = await getFlightsByFlightIdsCached(
-      userDetails.likes.flights
-    );
-
     favouriteFlights = await Promise.all(
-      flights.map(async (flight) => {
-        const reviews = await getFlightReviews({ flightId: flight._id });
-        const totalRating = reviews.reduce((acc, review) => {
+      userDetails.likes.flights.map(async (flight) => {
+        const flightDetails = await getOneDoc("Flight", {
+          "stopovers.airlineId": flight.airlineId,
+          originAirportId: flight.departureAirportId,
+          destinationAirportId: flight.arrivalAirportId,
+        });
+        const flightReviews = await getManyDocs("FlightReview", {
+          airlineId: flight.airlineId,
+          departureAirportId: flight.departureAirportId,
+          arrivalAirportId: flight.arrivalAirportId,
+        });
+        const ratingSum = flightReviews.reduce((acc, review) => {
           return acc + review.rating;
         }, 0);
         return {
-          ...flight,
-          reviews: reviews.length,
-          rating: reviews.length
-            ? (totalRating / reviews.length).toFixed(1)
+          ...flightDetails,
+          price: flightDetails.price[flight.flightClass].base,
+          flightClass: flight.flightClass,
+          totalReviews: flightReviews.length,
+          rating: flightReviews.length
+            ? (ratingSum / flightReviews.length).toFixed(1)
             : "N/A",
           ratingScale:
-            ratingScale[Math.floor(totalRating / reviews.length)] || "N/A",
+            ratingScale[Math.floor(ratingSum / flightReviews.length)] || "N/A",
           liked: true,
+          expired: new Date(flight.expireAt).getTime() < new Date().getTime(),
         };
       })
     );

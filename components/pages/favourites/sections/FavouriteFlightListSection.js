@@ -15,7 +15,13 @@ export function FavouriteFlightListSection({ favouriteFlights }) {
   return (
     <div className={"grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2"}>
       {favouriteFlights.map((flight, i) => {
-        return <FlightResultCard key={flight._id} data={flight} liked={true} />;
+        return (
+          <FlightResultCard
+            key={flight._id}
+            data={flight}
+            liked={flight.liked}
+          />
+        );
       })}
     </div>
   );
