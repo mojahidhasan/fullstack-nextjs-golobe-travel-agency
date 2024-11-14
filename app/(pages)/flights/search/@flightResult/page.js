@@ -44,12 +44,9 @@ async function FLightResultPage({ searchParams }) {
       .likes.flights;
     flightResults = flightResults.map((flight) => {
       const flightFilterQuery = {
-        airlineId: flight.stopovers[0].airlineId._id,
-        departureAirportId: flight.originAirportId._id,
-        arrivalAirportId: flight.destinationAirportId._id,
-        flightClass: searchParams?.class,
+        flightNumber: flight.flightNumber,
+        flightClass: searchParams.class,
       };
-      console.log(flightFilterQuery);
       return {
         ...flight,
         liked: likedFlights.some((el) => _.isEqual(flightFilterQuery, el)),

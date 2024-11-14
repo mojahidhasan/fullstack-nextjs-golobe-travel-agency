@@ -13,7 +13,6 @@ import { RatingShow } from "@/components/local-ui/ratingShow";
 import { cn } from "@/lib/utils";
 export function FlightResultCard({ data }) {
   const router = useRouter();
-  console.log(data);
   async function handleClick() {
     await trackUserFlightClass(undefined, {
       flightClass: data.flightClass,
@@ -105,10 +104,8 @@ export function FlightResultCard({ data }) {
           <LikeButton
             liked={data?.liked}
             keys={{
-              airlineId: data?.stopovers[0]?.airlineId._id,
-              departureAirportId: data?.originAirportId._id,
-              arrivalAirportId: data?.destinationAirportId._id,
-              flightClass: data?.class,
+              flightNumber: data?.flightNumber,
+              flightClass: data?.flightClass,
             }}
             flightsOrHotels={"flights"}
           />

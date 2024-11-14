@@ -109,7 +109,7 @@ export function SubscribeNewsletter({ isSubscribed }) {
                   variant={"secondary"}
                   customTitle={{
                     default: "Subscribe",
-                    onSubmitting: "Subscibing",
+                    onSubmitting: "Subscibing...",
                   }}
                   className={
                     "h-full grow-0 disabled:bg-[#737373] disabled:text-[#ffffff]"

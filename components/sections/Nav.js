@@ -7,15 +7,15 @@ import Link from "next/link";
 import { SideBar } from "@/components/local-ui/nav/SideBar";
 import { cn, validateURL } from "@/lib/utils";
 
-import { getUserByIdCatched } from "@/lib/db/catchedData/getOperationDBCatched";
+import { getOneDoc } from "@/lib/db/getOperationDB";
 
 export async function Nav({ className, type = "default", session, ...props }) {
   const isLoggedIn = !!session?.user;
   let nameOfUser, avatar;
   if (isLoggedIn) {
-    const userData = await getUserByIdCatched(session.user.id);
-    avatar = userData.image;
-    nameOfUser = userData.name;
+    const userData = await getOneDoc("User", { _id: session.user.id });
+    avatar = userData.profileImage;
+    nameOfUser = userData.firstname + " " + userData.lastname;
   }
   const types = {
     home: {

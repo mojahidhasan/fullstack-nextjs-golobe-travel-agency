@@ -4,7 +4,7 @@ import { WriteReview } from "./writeReview";
 
 import { auth } from "@/lib/auth";
 import { ratingScale } from "@/data/ratingScale";
-export async function FlightOrHotelReview({ rating, reviews }) {
+export async function FlightOrHotelReview({ rating, reviews, flightKeys }) {
   const session = await auth();
   const isLoggedIn = !!session?.user;
   const isAlreadyReviewed = reviews.some(
@@ -19,6 +19,7 @@ export async function FlightOrHotelReview({ rating, reviews }) {
         <WriteReview
           isLoggedIn={isLoggedIn}
           isAlreadyReviewed={isAlreadyReviewed}
+          flightKeys={flightKeys}
         />
       </div>
       <div className="flex items-center gap-[16px]">

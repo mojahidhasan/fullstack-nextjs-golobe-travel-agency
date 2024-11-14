@@ -12,7 +12,7 @@ import {
 import { Input } from "@/components/local-ui/input";
 import { Button } from "@/components/ui/button";
 
-import { changeName } from "@/lib/actions";
+import { updateNameAction } from "@/lib/actions";
 import { useFormState } from "react-dom";
 import { useState, useEffect } from "react";
 import { useToast } from "@/components/ui/use-toast";
@@ -20,7 +20,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { ErrorMessage } from "@/components/local-ui/errorMessage";
 import { SubmitBtn } from "@/components/local-ui/SubmitBtn";
 export function ChangeNamePopup({ firstname, lastname }) {
-  const [state, dispatch] = useFormState(changeName, null);
+  const [state, dispatch] = useFormState(updateNameAction, null);
   const [opened, setOpened] = useState(false);
   const { toast } = useToast();
   let errors = {};
@@ -45,9 +45,9 @@ export function ChangeNamePopup({ firstname, lastname }) {
   }, [state]);
 
   return (
-    <Dialog open={opened} onOpenChange={setOpened}>
+    <Dialog open={ opened } onOpenChange={ setOpened }>
       <DialogTrigger asChild>
-        <Button variant={"outline"} className={"gap-1 p-2 h-auto"}>
+        <Button variant={ "outline" } className={ "gap-1 p-2 h-auto" }>
           <svg
             width="14"
             height="14"
@@ -75,29 +75,29 @@ export function ChangeNamePopup({ firstname, lastname }) {
           <DialogDescription>
             Make changes to your profile here. Click save when you&apos;re done.
           </DialogDescription>
-          {state?.error === "change_name_error" && (
-            <ErrorMessage message={state?.message} />
-          )}
+          { state?.error === "change_name_error" && (
+            <ErrorMessage message={ state?.message } />
+          ) }
         </DialogHeader>
-        <form id="change-name-form" action={dispatch}>
+        <form id="change-name-form" action={ dispatch }>
           <div className="grid gap-4 py-4">
             <Input
               id="firstname-hsviuxwv"
               name="firstname"
               label="First name"
-              defaultValue={firstname}
-              error={errors?.firstname}
+              defaultValue={ firstname }
+              error={ errors?.firstname }
             />
             <Input
               id="lastname-sjvch"
               label="Last name"
               name="lastname"
-              defaultValue={lastname}
-              error={errors?.lastname}
+              defaultValue={ lastname }
+              error={ errors?.lastname }
             />
           </div>
           <DialogFooter>
-            <SubmitBtn formId={"change-name-form"} />
+            <SubmitBtn formId={ "change-name-form" } />
           </DialogFooter>
         </form>
       </DialogContent>

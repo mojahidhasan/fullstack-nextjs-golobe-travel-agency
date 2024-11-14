@@ -12,11 +12,11 @@ import { useFormState } from "react-dom";
 import { useParams } from "next/navigation";
 
 import { writeReviewAction } from "@/lib/actions";
-export function WriteReview({ isLoggedIn, isAlreadyReviewed }) {
+export function WriteReview({ isLoggedIn, isAlreadyReviewed, flightKeys }) {
   const params = useParams();
   const extendedWriteReviewAction = writeReviewAction.bind(
     null,
-    params.flightId,
+    flightKeys,
     isAlreadyReviewed
   );
   const [state, dispatch] = useFormState(extendedWriteReviewAction, undefined);

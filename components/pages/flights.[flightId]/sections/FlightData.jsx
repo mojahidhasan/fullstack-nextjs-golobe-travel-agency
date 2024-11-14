@@ -7,7 +7,7 @@ import share from "@/public/icons/share.svg";
 import { RatingShow } from "@/components/local-ui/ratingShow";
 
 export function FlightData({ data }) {
-  const { flightNumber, airplaneName, price, rating, reviews, liked, imgSrc } = data;
+  const { flightNumber, airplaneName, price, rating, reviews, liked, imgSrc, flightClass } = data;
 
   return (
     <section className="mb-10 text-secondary bg-white p-6 rounded-lg shadow-sm transition duration-300 ease-in-out hover:shadow-md">
@@ -25,7 +25,10 @@ export function FlightData({ data }) {
         <div className="text-right">
           <p className="text-3xl font-bold text-primary mb-3">${ price }</p>
           <div className="flex gap-4">
-            <LikeButton liked={ liked } cardId={ flightNumber } flightsOrHotels="flights" />
+            <LikeButton liked={ liked } keys={ {
+              flightNumber,
+              flightClass
+            } } flightsOrHotels="flights" />
             <Button variant="outline" className="p-3 rounded-lg flex items-center justify-center">
               <Image
                 className="h-5 w-5"

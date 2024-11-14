@@ -19,9 +19,7 @@ export default async function FavouritesPage() {
     favouriteFlights = await Promise.all(
       userDetails.likes.flights.map(async (flight) => {
         const flightDetails = await getOneDoc("Flight", {
-          "stopovers.airlineId": flight.airlineId,
-          originAirportId: flight.departureAirportId,
-          destinationAirportId: flight.arrivalAirportId,
+          flightNumber: flight.flightNumber,
         });
         const flightReviews = await getManyDocs("FlightReview", {
           airlineId: flight.airlineId,

@@ -4,28 +4,28 @@ import { EconomyFeatures } from "@/components/pages/flights.[flightId]/sections/
 import { FlightsSchedule } from "@/components/pages/flights.[flightId]/sections/FlightsSchedule";
 import { FlightOrHotelReview } from "@/components/sections/FlightOrHotelReview";
 import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
-import { getUserDetailsByUserIdCached } from "@/lib/db/catchedData/getOperationDBCatched";
 import Image from "next/image";
 
 import { auth } from "@/lib/auth";
 import stopwatch from "@/public/icons/stopwatch.svg";
 import { cookies } from "next/headers";
-
+import _ from "lodash";
 export default async function FlightDetailsPage({ params }) {
   const flight = await getOneDoc("Flight", { flightNumber: params.flightId });
-  // console.log(params.flightId);
-  // console.log(flight);
   const flightReviews = await getManyDocs("FlightReview", {
     "stopovers.airlineId": flight.stopovers[0].airlineId._id,
     departureAirportId: flight.originAirportId._id,
     arrivalAirportId: flight.destinationAirportId._id,
   });
   const flightClass = cookies().get("fc").value;
-  console.log(flightClass);
   const price = flight.price[flightClass]?.base;
   const flightInfo = {
     flightNumber: flight.flightNumber,
     airplaneName: flight.stopovers[0].airplaneId.model,
+    flightClass,
+    airlineId: flight.stopovers[0].airlineId._id,
+    departureAirportId: flight?.originAirportId._id,
+    arrivalAirportId: flight?.destinationAirportId._id,
     price,
     rating: flightReviews.length
       ? (
@@ -39,10 +39,15 @@ export default async function FlightDetailsPage({ params }) {
   };
   const userId = (await auth())?.user?.id;
   if (userId) {
-    const userDetails = await getUserDetailsByUserIdCached(userId);
-    flightInfo.liked = userDetails?.likes?.flights?.includes(flight._id);
+    const userDetails = await getOneDoc("User", { _id: userId });
+    const flightFilterQuery = {
+      flightNumber: flight.flightNumber,
+      flightClass,
+    };
+    flightInfo.liked = userDetails?.likes?.flights?.some((el) =>
+      _.isEqual(flightFilterQuery, el)
+    );
   }
-
   return (
     <>
       <main className="mx-auto mt-[40px] mb-20 w-[90%]">
@@ -84,6 +89,11 @@ export default async function FlightDetailsPage({ params }) {
         <FlightOrHotelReview
           rating={flightInfo.rating}
           reviews={flightReviews}
+          flightKeys={{
+            airlineId: flightInfo.airlineId,
+            departureAirportId: flightInfo.departureAirportId,
+            arrivalAirportId: flightInfo.arrivalAirportId,
+          }}
         />
       </main>
     </>

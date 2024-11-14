@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
-import { setReviewFlagedAction } from "@/lib/actions";
+import { flagReviewAction } from "@/lib/actions";
 import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { useToast } from "../ui/use-toast";
@@ -35,7 +35,7 @@ export function SingleReview({ review }) {
   async function handleFlaged() {
     let data;
     if (session?.user) {
-      data = await setReviewFlagedAction(
+      data = await flagReviewAction(
         pathname,
         review._id,
         session?.user.id,

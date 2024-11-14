@@ -4,7 +4,7 @@ import { Input } from "@/components/local-ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AuthenticateWith } from "@/components/local-ui/authenticateWith";
-import { authenticate } from "@/lib/actions";
+import { authenticateAction } from "@/lib/actions";
 
 import { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
@@ -17,7 +17,7 @@ import { cn } from "@/lib/utils";
 import { AlertCircle } from "lucide-react";
 import { UserRoundPlus } from "lucide-react";
 export function LoginForm() {
-  const [state, dispatch] = useFormState(authenticate, null);
+  const [state, dispatch] = useFormState(authenticateAction, null);
   const router = useRouter();
   const { toast } = useToast();
   const searchParams = useSearchParams();
