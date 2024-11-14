@@ -19,17 +19,17 @@ export function SearchFlightsAndStaysFormShortcut({ className }) {
       )}
     >
       <Tabs defaultValue="flights" className="w-full">
-        <TabsList className="bg-transparent flex justify-start md:h-[60px]">
+        <TabsList className="bg-transparent flex justify-start gap-1 md:h-[60px]">
           <TabsTrigger
             value="flights"
-            className="h-full max-md:grow py-5 gap-2 data-[state=active]:border-b-4 data-[state=active]:border-primary data-[state=active]:bg-primary/25"
+            className="h-full max-md:grow py-5 gap-2 font-bold"
           >
             <Image src={airplane} alt="airplane_icon" width={24} height={24} />
             <span>Flights</span>
           </TabsTrigger>
           <TabsTrigger
             value="hotels"
-            className="h-full max-md:grow py-5 gap-2 data-[state=active]:border-b-4 data-[state=active]:border-primary data-[state=active]:bg-primary/25"
+            className="h-full max-md:grow py-5 gap-2 font-bold"
           >
             <Image src={bed} alt="bed_icon" width={24} height={24} />
             <span>Stays</span>

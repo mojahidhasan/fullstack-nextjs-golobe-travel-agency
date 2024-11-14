@@ -57,34 +57,34 @@ export function TicketsOrBookings() {
           <TabsList className="bg-white h-auto shadow-md xsm:flex-row flex-col mb-4 p-0 flex justify-start">
             <TabsTrigger
               value="flights"
-              className="md:h-[60px] h-[48px] w-full grow py-5 gap-2 data-[state=active]:border-b-4 data-[state=active]:border-primary data-[state=active]:bg-primary/25"
+              className="md:h-[60px] font-bold h-[48px] w-full grow py-5 gap-2"
             >
               <Image
-                width={24}
-                height={24}
-                src={"/icons/airplane-filled.svg"}
+                width={ 24 }
+                height={ 24 }
+                src={ "/icons/airplane-filled.svg" }
                 alt="airplane_icon"
               />
               <span>Flights</span>
             </TabsTrigger>
             <TabsTrigger
               value="stays"
-              className="md:h-[60px] h-[48px] w-full grow py-5 gap-2 data-[state=active]:border-b-4 data-[state=active]:border-primary data-[state=active]:bg-primary/25"
+              className="md:h-[60px] font-bold h-[48px] w-full grow py-5 gap-2"
             >
               <Image
-                width={24}
-                height={24}
-                src={"/icons/bed-filled.svg"}
+                width={ 24 }
+                height={ 24 }
+                src={ "/icons/bed-filled.svg" }
                 alt="airplane_icon"
               />
               <span>Stays</span>
             </TabsTrigger>
           </TabsList>
           <TabsContent value="flights">
-            <FlightTicketDownloadCard ticketData={ticketFlight} />
+            <FlightTicketDownloadCard ticketData={ ticketFlight } />
           </TabsContent>
           <TabsContent value="stays">
-            <HotelTicketDownloadCard ticketData={ticketHotel} />
+            <HotelTicketDownloadCard ticketData={ ticketHotel } />
           </TabsContent>
         </Tabs>
       </div>
