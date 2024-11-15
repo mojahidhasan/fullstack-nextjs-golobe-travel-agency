@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "generateDB": "vitest --testNamePattern generateDB --run",
+    "generateDBFiles": "vitest --testNamePattern generateDBFiles --run",
+    "generateAndUploadDB": "vitest --testNamePattern generateDB --run",
     "lint": "next lint",
     "test": "vitest --testNamePattern Testing"
   },
