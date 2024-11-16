@@ -9,7 +9,7 @@ import Image from "next/image";
 import { auth } from "@/lib/auth";
 import stopwatch from "@/public/icons/stopwatch.svg";
 import _ from "lodash";
-import { timezone, flightClass } from "@/lib/variables";
+import { cookies } from "next/headers";
 export default async function FlightDetailsPage({ params }) {
   const flight = await getOneDoc("Flight", { flightNumber: params.flightId });
   const flightReviews = await getManyDocs("FlightReview", {
@@ -17,6 +17,10 @@ export default async function FlightDetailsPage({ params }) {
     departureAirportId: flight.originAirportId._id,
     arrivalAirportId: flight.destinationAirportId._id,
   });
+
+  const flightClass = cookies().get("fc")?.value || null;
+  const timezone = cookies().get("timezone")?.value || "UTC";
+
   const price = flight.price[flightClass]?.base;
   const flightInfo = {
     flightNumber: flight.flightNumber,

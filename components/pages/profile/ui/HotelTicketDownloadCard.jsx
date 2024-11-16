@@ -7,9 +7,9 @@ import { cn } from "@/lib/utils";
 import timer from "@/public/icons/timer-mint.svg";
 import gate from "@/public/icons/door-closed-mint.svg";
 import { formatInTimeZone } from "date-fns-tz";
-import { timezone } from "@/lib/variables";
+import { cookies } from "next/headers";
 export function HotelTicketDownloadCard({ className, ticketData }) {
-
+  const timezone = cookies().get("timezone")?.value || "UTC";
   function dateFormat(dateObject) {
     return formatInTimeZone(dateObject, timezone, "EEE, LLL d");
   }

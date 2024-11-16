@@ -4,6 +4,7 @@ import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import { RATING_SCALE } from "@/lib/constants";
 import { startOfDay, endOfDay } from "date-fns";
 import _ from "lodash";
+import { cookies } from "next/headers";
 async function FLightResultPage({ searchParams }) {
   let flightResults = [];
   const session = await auth();
@@ -14,6 +15,8 @@ async function FLightResultPage({ searchParams }) {
       JSON.parse(searchParams.passenger)
     ).reduce((acc, passenger) => acc + passenger, 0);
     const flightClass = searchParams.class;
+    const timezone = cookies().get("timezone")?.value || "UTC";
+
     const departDateStart = startOfDay(new Date(searchParams.departDate));
     const departDateEnd = endOfDay(new Date(searchParams.departDate));
     flightResults = (
@@ -70,6 +73,7 @@ async function FLightResultPage({ searchParams }) {
       return {
         ...flight,
         price: flight.price[searchParams.class].base,
+        timezone,
         reviews: currentFlightReviews,
         totalReviews: currentFlightReviews.length,
         rating: currentFlightReviews.length ? rating.toFixed(1) : "N/A",

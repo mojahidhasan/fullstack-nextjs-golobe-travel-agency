@@ -7,8 +7,9 @@ import Image from "next/image";
 import CVKHotel from "@/public/images/CVK-hotel.jpg";
 import emiratesLogo from "@/public/images/ek.svg";
 import { formatInTimeZone } from "date-fns-tz";
-import { timezone } from "@/lib/variables";
+import { cookies } from "next/headers";
 export function TicketsOrBookings() {
+  const timezone = cookies().get("timezone").value;
   const ticketFlight = {
     id: 1,
     time: {

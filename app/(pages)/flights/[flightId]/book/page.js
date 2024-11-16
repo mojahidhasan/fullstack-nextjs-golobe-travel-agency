@@ -13,9 +13,12 @@ import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import { auth } from "@/lib/auth";
 import { capitalize } from "@/lib/utils";
 import { FLIGHT_CLASS_PLACEHOLDERS } from "@/lib/constants";
-import { timezone, flightClass } from "@/lib/variables";
+import { cookies } from "next/headers";
 import { formatInTimeZone } from "date-fns-tz";
 export default async function FlightBookPage({ params }) {
+  const flightClass = cookies().get("fc")?.value || null;
+  const timezone = cookies().get("timezone")?.value || "UTC";
+
   const flight = await getOneDoc("Flight", {
     flightNumber: params.flightId,
   });
