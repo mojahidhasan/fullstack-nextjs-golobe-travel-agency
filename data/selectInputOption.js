@@ -1,24 +1,8 @@
 // will be deleted and replaced with db data
 import { faker } from "@faker-js/faker";
-const option = [
-  {
-    label: "Dhaka, Bangladesh",
-  },
-  {
-    label: "Chittagong, Bangladesh",
-  },
-  {
-    label: "Sylhet, Bangladesh",
-  },
-  {
-    label: "Rajshahi, Bangladesh",
-  },
-  {
-    label: "Kolkata, India",
-  },
-];
+const option = [];
 
-for (let i = 0; i < 100; i++) {
+for (let i = 0; i < 10; i++) {
   option.push({
     label: faker.location.city() + ", " + faker.location.country(),
   });

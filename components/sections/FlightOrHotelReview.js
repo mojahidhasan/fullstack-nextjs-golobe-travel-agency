@@ -3,7 +3,7 @@ import { FlightOrHotelReviewList } from "./FlightOrHotelReviewList";
 import { WriteReview } from "./writeReview";
 
 import { auth } from "@/lib/auth";
-import { ratingScale } from "@/data/ratingScale";
+import { RATING_SCALE } from "@/lib/constants";
 export async function FlightOrHotelReview({ rating, reviews, flightKeys }) {
   const session = await auth();
   const isLoggedIn = !!session?.user;
@@ -26,7 +26,7 @@ export async function FlightOrHotelReview({ rating, reviews, flightKeys }) {
         <p className="font-tradeGothic text-[2.8125rem] font-bold">{rating}</p>
         <p className={"inline-flex gap-3 items-center"}>
           <span className="text-[1.25rem] font-semibold">
-            {ratingScale[parseInt(rating)]}
+            {RATING_SCALE[parseInt(rating)]}
           </span>
           <span className="text-[0.875rem]">
             {reviews.length} verified reviews

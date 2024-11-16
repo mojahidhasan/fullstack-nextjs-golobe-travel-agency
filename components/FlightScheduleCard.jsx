@@ -9,8 +9,8 @@ import airLineSeat from "@/public/icons/airline-seat.svg";
 import lineLeft from "@/public/icons/line-left.svg";
 import lineRight from "@/public/icons/line-right.svg";
 import { minutesToHMFormat } from "@/lib/utils";
-import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { formatInTimeZone } from "date-fns-tz";
 export function FlightScheduleCard({ flightScheduleDetails, variant = "default", className }) {
   const {
     departureDate,
@@ -110,17 +110,17 @@ export function FlightScheduleCard({ flightScheduleDetails, variant = "default",
 }
 function processFlightScheduleDetails(data) {
   return {
-    departureDate: format(new Date(data.departureDateTime), "eee, MMM d"),
+    departureDate: formatInTimeZone(new Date(data.departureDateTime), data.timezone, "eee, MMM d"),
     duration: minutesToHMFormat(
       data.duration
     ),
-    departureDateTime: format(new Date(data.departureDateTime), "h:mm aaa"),
+    departureDateTime: formatInTimeZone(new Date(data.departureDateTime), data.timezone, "h:mm aaa"),
     departureAirport:
       data.departureAirportId.name.split(",")[0] +
       "(" +
       data.departureAirportId.iataCode +
       ")",
-    arrivalDateTime: format(new Date(data.arrivalDateTime), "h:mm aaa"),
+    arrivalDateTime: formatInTimeZone(new Date(data.arrivalDateTime), data.timezone, "h:mm aaa"),
     arrivalAirport:
       data.arrivalAirportId.name.split(",")[0] +
       "(" +

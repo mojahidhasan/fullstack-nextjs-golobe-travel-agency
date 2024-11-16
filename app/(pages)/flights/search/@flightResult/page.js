@@ -1,10 +1,9 @@
 import { FLightResult } from "@/components/pages/flights.search/sections/FlightResult";
 import { auth } from "@/lib/auth";
 import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
-import { ratingScale } from "@/data/ratingScale";
-import { getUnixTime, fromUnixTime, startOfDay, endOfDay } from "date-fns";
+import { RATING_SCALE } from "@/lib/constants";
+import { startOfDay, endOfDay } from "date-fns";
 import _ from "lodash";
-
 async function FLightResultPage({ searchParams }) {
   let flightResults = [];
   const session = await auth();
@@ -15,12 +14,8 @@ async function FLightResultPage({ searchParams }) {
       JSON.parse(searchParams.passenger)
     ).reduce((acc, passenger) => acc + passenger, 0);
     const flightClass = searchParams.class;
-    const departDateStart = startOfDay(
-      fromUnixTime(getUnixTime(new Date(searchParams.departDate)))
-    );
-    const departDateEnd = endOfDay(
-      fromUnixTime(getUnixTime(new Date(searchParams.departDate)))
-    );
+    const departDateStart = startOfDay(new Date(searchParams.departDate));
+    const departDateEnd = endOfDay(new Date(searchParams.departDate));
     flightResults = (
       await getManyDocs("Flight", {
         departureDateTime: {
@@ -78,7 +73,7 @@ async function FLightResultPage({ searchParams }) {
         reviews: currentFlightReviews,
         totalReviews: currentFlightReviews.length,
         rating: currentFlightReviews.length ? rating.toFixed(1) : "N/A",
-        ratingScale: ratingScale[Math.floor(rating)] || "N/A",
+        ratingScale: RATING_SCALE[Math.floor(rating)] || "N/A",
         flightClass: searchParams.class,
       };
     })

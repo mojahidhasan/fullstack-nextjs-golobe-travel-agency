@@ -6,7 +6,8 @@ import Image from "next/image";
 
 import CVKHotel from "@/public/images/CVK-hotel.jpg";
 import emiratesLogo from "@/public/images/ek.svg";
-
+import { formatInTimeZone } from "date-fns-tz";
+import { timezone } from "@/lib/variables";
 export function TicketsOrBookings() {
   const ticketFlight = {
     id: 1,
@@ -18,13 +19,7 @@ export function TicketsOrBookings() {
       flight: "Newark (EWR)",
       landing: "Newark (EWR)",
     },
-    date: new Intl.DateTimeFormat("en-US", {
-      year: "2-digit",
-      month: "2-digit",
-      day: "2-digit",
-    })
-      .format(new Date(2023, 1, 1))
-      .replaceAll("/", "-"),
+    date: formatInTimeZone(new Date(2023, 0, 30), timezone, "dd-MM-yy"),
     flightTime: "Newark (EWR)",
     gate: "A12",
     seatNo: 128,

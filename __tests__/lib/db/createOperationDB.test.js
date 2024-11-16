@@ -62,14 +62,15 @@ describe("Create operation DB tests", () => {
       const modelName = "User";
       const data = {
         email: "YkKQV@example.com",
-        name: "John Doe",
-        image: "https://example.com/image.jpg",
+        firstname: "John Doe",
+        lastname: "Doe",
+        profileImage: "https://example.com/image.jpg",
         age: 30, // This key is not in the schema
         gender: "Male", // This key is not in the schema
       };
 
       await expect(createOneDoc(modelName, data)).rejects.toThrowError(
-        `The following keys are not allowed: age, gender,\n Only email, name, image, emailVerified are allowed`
+        `The following keys are not allowed: age, gender,\n Only firstname, lastname, email, emails, profileImage, coverImage, emailVerifiedAt, phone, address, dateOfBirth, likes, searchHistory are allowed`
       );
     });
 
@@ -77,8 +78,9 @@ describe("Create operation DB tests", () => {
       const modelName = "User";
       const data = {
         // email: "YkKQV@example.com", required and not have default value
-        name: "John Doe", // required and not have default value
-        image: "https://example.com/image.jpg",
+        firstname: "John", // required and not have default value
+        lastname: "Doe",
+        profileImage: "https://example.com/image.jpg",
         // emailVerified: Date.now(), not required
       };
 
@@ -93,8 +95,9 @@ describe("Create operation DB tests", () => {
       const modelName = "User";
       const data = {
         email: "YkKQV@example.com",
-        name: { name: "John Doe" }, // name should be a string
-        image: "https://example.com/image.jpg", // image should be a string
+        firstname: { name: "John Doe" }, // name should be a string
+        lastname: "Doe",
+        profileImage: "https://example.com/image.jpg", // image should be a string
       };
       await expect(createOneDoc(modelName, data)).rejects.toThrowError();
     });
@@ -105,8 +108,9 @@ describe("Create operation DB tests", () => {
       const modelName = "User";
       const data = {
         email: "YkKQV@example.com",
-        name: "John Doe",
-        image: "https://example.com/image.jpg",
+        firstname: "John",
+        lastname: "Doe",
+        profileImage: "https://example.com/image.jpg",
       };
       const result = await createOneDoc(modelName, data);
       expect(result).toHaveProperty("_id");

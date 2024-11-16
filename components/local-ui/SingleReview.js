@@ -1,6 +1,5 @@
 "use client";
 import { Separator } from "@/components/ui/separator";
-import { ratingScale } from "@/data/ratingScale";
 import { useEffect, useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { Skeleton } from "../ui/skeleton";
@@ -11,6 +10,7 @@ import { useSession } from "next-auth/react";
 import { useToast } from "../ui/use-toast";
 
 import avatarDefault from "@/public/icons/avatar-default.svg";
+import { RATING_SCALE } from "@/lib/constants";
 
 export function SingleReview({ review }) {
   const pathname = usePathname();
@@ -70,7 +70,7 @@ export function SingleReview({ review }) {
           <div className="mb-[8px] items-center flex gap-1">
             <span className="font-semibold">
               {isInt(review.rating) ? review.rating + ".0" : review.rating}{" "}
-              {ratingScale[parseInt(review.rating)]}
+              {RATING_SCALE[parseInt(review.rating)]}
             </span>
             <span>|</span>
             {isLoading ? (

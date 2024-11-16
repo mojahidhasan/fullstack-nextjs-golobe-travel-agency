@@ -2,9 +2,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
 import { LikeButton } from "@/components/local-ui/likeButton";
-import { ratingScale } from "@/data/ratingScale";
 import share from "@/public/icons/share.svg";
 import { RatingShow } from "@/components/local-ui/ratingShow";
+import { RATING_SCALE } from "@/lib/constants";
 
 export function FlightData({ data }) {
   const { flightNumber, airplaneName, price, rating, reviews, liked, imgSrc, flightClass } = data;
@@ -18,7 +18,7 @@ export function FlightData({ data }) {
           </h2>
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <RatingShow rating={ rating } />
-            <span className="font-semibold">{ ratingScale[parseInt(rating)] }</span>
+            <span className="font-semibold">{ RATING_SCALE[parseInt(rating)] }</span>
             <span className="text-gray-500">{ reviews } reviews</span>
           </div>
         </div>

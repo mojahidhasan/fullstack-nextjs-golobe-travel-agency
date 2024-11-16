@@ -11,16 +11,15 @@ import Link from "next/link";
 
 import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import { auth } from "@/lib/auth";
-import { subDays, format } from "date-fns";
-import { cookies } from "next/headers";
 import { capitalize } from "@/lib/utils";
 import { FLIGHT_CLASS_PLACEHOLDERS } from "@/lib/constants";
+import { timezone, flightClass } from "@/lib/variables";
+import { formatInTimeZone } from "date-fns-tz";
 export default async function FlightBookPage({ params }) {
   const flight = await getOneDoc("Flight", {
     flightNumber: params.flightId,
   });
 
-  const flightClass = cookies().get("fc").value;
   const price = flight.price[flightClass];
 
   const flightReviews = await getManyDocs("FlightReview", {
@@ -48,7 +47,11 @@ export default async function FlightBookPage({ params }) {
       "https://images.unsplash.com/photo-1551882026-d2525cfc9656?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   };
 
-  const halfPaymentChargingDate = format(flight.expireAt, "MMM d, yyyy");
+  const halfPaymentChargingDate = formatInTimeZone(
+    flight.expireAt,
+    timezone,
+    "MMM d, yyyy"
+  );
 
   return (
     <>

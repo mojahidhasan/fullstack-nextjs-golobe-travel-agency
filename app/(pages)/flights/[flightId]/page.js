@@ -8,8 +8,8 @@ import Image from "next/image";
 
 import { auth } from "@/lib/auth";
 import stopwatch from "@/public/icons/stopwatch.svg";
-import { cookies } from "next/headers";
 import _ from "lodash";
+import { timezone, flightClass } from "@/lib/variables";
 export default async function FlightDetailsPage({ params }) {
   const flight = await getOneDoc("Flight", { flightNumber: params.flightId });
   const flightReviews = await getManyDocs("FlightReview", {
@@ -17,12 +17,12 @@ export default async function FlightDetailsPage({ params }) {
     departureAirportId: flight.originAirportId._id,
     arrivalAirportId: flight.destinationAirportId._id,
   });
-  const flightClass = cookies().get("fc").value;
   const price = flight.price[flightClass]?.base;
   const flightInfo = {
     flightNumber: flight.flightNumber,
     airplaneName: flight.stopovers[0].airplaneId.model,
     flightClass,
+    timezone,
     airlineId: flight.stopovers[0].airlineId._id,
     departureAirportId: flight?.originAirportId._id,
     arrivalAirportId: flight?.destinationAirportId._id,

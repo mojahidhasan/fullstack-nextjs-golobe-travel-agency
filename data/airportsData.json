@@ -7,7 +7,7 @@
     "country": "United States",
     "latitude": 33.6366996,
     "longitude": -84.427864,
-    "timezone": "GMT -5:00",
+    "timezone": "America/New_York",
     "facilities": [
       "Wi-Fi",
       "Lounges",
@@ -25,7 +25,7 @@
     "country": "United Arab Emirates",
     "latitude": 25.2528,
     "longitude": 55.364399,
-    "timezone": "GMT +4:00",
+    "timezone": "Asia/Dubai",
     "facilities": [
       "Free Wi-Fi",
       "Sleep Pods",
@@ -43,7 +43,7 @@
     "country": "United Kingdom",
     "latitude": 51.4706001,
     "longitude": -0.461941,
-    "timezone": "GMT +0:00",
+    "timezone": "Europe/London",
     "facilities": [
       "Wi-Fi",
       "Lounges",
@@ -61,7 +61,7 @@
     "country": "Japan",
     "latitude": 35.5522995,
     "longitude": 139.7799988,
-    "timezone": "GMT +9:00",
+    "timezone": "Asia/Tokyo",
     "facilities": [
       "Wi-Fi",
       "Lounges",
@@ -79,7 +79,7 @@
     "country": "Turkey",
     "latitude": 41.275001,
     "longitude": 28.751699,
-    "timezone": "GMT +3:00",
+    "timezone": "Europe/Istanbul",
     "facilities": [
       "Free Wi-Fi",
       "Lounges",
@@ -97,7 +97,7 @@
     "country": "India",
     "latitude": 28.55616,
     "longitude": 77.100281,
-    "timezone": "GMT +5:30",
+    "timezone": "Asia/Kolkata",
     "facilities": [
       "Free Wi-Fi",
       "Lounges",
@@ -115,7 +115,7 @@
     "country": "China",
     "latitude": 23.3924007,
     "longitude": 113.2990036,
-    "timezone": "GMT +8:00",
+    "timezone": "Asia/Shanghai",
     "facilities": [
       "Free Wi-Fi",
       "Lounges",
@@ -133,7 +133,7 @@
     "country": "Indonesia",
     "latitude": -6.1255698,
     "longitude": 106.6559982,
-    "timezone": "GMT +7:00",
+    "timezone": "Asia/Jakarta",
     "facilities": [
       "Free Wi-Fi",
       "Lounges",
@@ -151,7 +151,7 @@
     "country": "Canada",
     "latitude": 43.6772003,
     "longitude": -79.6306,
-    "timezone": "GMT -5:00",
+    "timezone": "America/Toronto",
     "facilities": [
       "Free Wi-Fi",
       "Lounges",
@@ -169,7 +169,7 @@
     "country": "Brazil",
     "latitude": -23.435556,
     "longitude": -46.473056,
-    "timezone": "GMT -3:00",
+    "timezone": "America/Sao_Paulo",
     "facilities": [
       "Free Wi-Fi",
       "Lounges",

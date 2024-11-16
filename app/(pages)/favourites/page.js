@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
 import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
-import { ratingScale } from "@/data/ratingScale";
+import { RATING_SCALE } from "@/lib/constants";
 export default async function FavouritesPage() {
   const session = await auth();
   if (!session?.user) {
@@ -38,7 +38,7 @@ export default async function FavouritesPage() {
             ? (ratingSum / flightReviews.length).toFixed(1)
             : "N/A",
           ratingScale:
-            ratingScale[Math.floor(ratingSum / flightReviews.length)] || "N/A",
+            RATING_SCALE[Math.floor(ratingSum / flightReviews.length)] || "N/A",
           liked: true,
           expired: new Date(flight.expireAt).getTime() < new Date().getTime(),
         };

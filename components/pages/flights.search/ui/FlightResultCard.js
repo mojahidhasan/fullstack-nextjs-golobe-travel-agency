@@ -11,8 +11,11 @@ import { trackUserFlightClass } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { RatingShow } from "@/components/local-ui/ratingShow";
 import { cn } from "@/lib/utils";
+import { cookies } from "next/headers";
+import { formatInTimeZone } from "date-fns-tz";
 export function FlightResultCard({ data }) {
   const router = useRouter();
+  const timezone = cookies().get("timezone").value || "UTC";
   async function handleClick() {
     await trackUserFlightClass(undefined, {
       flightClass: data.flightClass,
@@ -66,8 +69,17 @@ export function FlightResultCard({ data }) {
                   <div className="min-h-[18px] mt-1 h-[18px] w-[18px] min-w-[18px] rounded-sm border-2 border-secondary/25"></div>
                   <div>
                     <p className="text-[1rem] font-semibold">
-                      {format(stopover?.departureDateTime, "hh:mm aaa")} {"- "}
-                      {format(stopover?.arrivalDateTime, "hh:mm aaa")}
+                      {formatInTimeZone(
+                        stopover?.departureDateTime,
+                        timezone,
+                        "hh:mm aaa"
+                      )}{" "}
+                      {"- "}
+                      {formatInTimeZone(
+                        stopover?.arrivalDateTime,
+                        timezone,
+                        "hh:mm aaa"
+                      )}
                     </p>
                     <p className="text-[0.875rem] text-secondary/40">
                       {stopover?.airlineId?.name}

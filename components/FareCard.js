@@ -4,8 +4,8 @@ import Link from "next/link";
 import Image from "next/image";
 
 import airportWithPlane from "@/public/images/airport-with-plane.jpeg";
-import { ratingScale } from "@/data/ratingScale";
 import { capitalize } from "@/lib/utils";
+import { RATING_SCALE } from "@/lib/constants";
 
 export function FareCard({
   imgSrc = "",
@@ -37,7 +37,9 @@ export function FareCard({
               {rating}
             </Button>
             <p className=" text-[0.75rem]">
-              <span className="font-bold">{ratingScale[parseInt(rating)]}</span>{" "}
+              <span className="font-bold">
+                {RATING_SCALE[parseInt(rating)]}
+              </span>{" "}
               <span>{reviews} reviews</span>
             </p>
           </div>
