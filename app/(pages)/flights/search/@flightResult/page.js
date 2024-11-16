@@ -8,6 +8,7 @@ import { cookies } from "next/headers";
 async function FLightResultPage({ searchParams }) {
   let flightResults = [];
   const session = await auth();
+  const timezone = cookies().get("timezone")?.value || "UTC";
   if (Object.keys(searchParams).length > 0) {
     const departureAirportId = searchParams.departureAirportCode;
     const arrivalAirportId = searchParams.arrivalAirportCode;
@@ -15,7 +16,6 @@ async function FLightResultPage({ searchParams }) {
       JSON.parse(searchParams.passenger)
     ).reduce((acc, passenger) => acc + passenger, 0);
     const flightClass = searchParams.class;
-    const timezone = cookies().get("timezone")?.value || "UTC";
 
     const departDateStart = startOfDay(new Date(searchParams.departDate));
     const departDateEnd = endOfDay(new Date(searchParams.departDate));
