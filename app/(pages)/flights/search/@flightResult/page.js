@@ -84,10 +84,12 @@ async function FLightResultPage({ searchParams }) {
   );
 
   if (flightResults?.error) {
-    return <div className={"text-center font-bold"}>{flightResults.error}</div>;
+    return (
+      <div className={"text-center grow font-bold"}>{flightResults.error}</div>
+    );
   }
   if (flightResults?.length < 1) {
-    return <div className={"text-center font-bold"}>No data found</div>;
+    return <div className={"text-center grow font-bold"}>No data found</div>;
   }
 
   return <FLightResult flightResults={flightResults} />;

@@ -36,7 +36,7 @@ export async function FLightResult({ flightResults }) {
     return aMinutes - bMinutes;
   });
   return (
-    <div className="flex flex-grow flex-col gap-[32px]">
+    <div className="flex grow flex-col gap-[32px]">
       <Tabs defaultValue="cheapest" className="w-full">
         <TabsList className="bg-white p-0 gap-1 flex sm:flex-row flex-col h-auto">
           <TabsTrigger
