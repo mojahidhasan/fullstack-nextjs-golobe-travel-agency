@@ -12,8 +12,12 @@ import { useFormState } from "react-dom";
 import { useParams } from "next/navigation";
 
 import { writeReviewAction } from "@/lib/actions";
-export function WriteReview({ isLoggedIn, isAlreadyReviewed, flightKeys }) {
-  const params = useParams();
+export function WriteReview({
+  isLoggedIn,
+  isAlreadyReviewed,
+  flightKeys,
+  currentUserReview,
+}) {
   const extendedWriteReviewAction = writeReviewAction.bind(
     null,
     flightKeys,
@@ -99,7 +103,7 @@ export function WriteReview({ isLoggedIn, isAlreadyReviewed, flightKeys }) {
                 <RatingStar
                   fill={"hsl(120, 33%, 10%)"}
                   error={state?.error && state?.error.rating}
-                  defaultRating={0}
+                  defaultRating={+currentUserReview?.rating ?? 0}
                 />
               </div>
               <div className={"mb-5"}>
@@ -107,6 +111,7 @@ export function WriteReview({ isLoggedIn, isAlreadyReviewed, flightKeys }) {
                   label={"Comment"}
                   type={"textarea"}
                   name={"reviewComment"}
+                  defaultValue={currentUserReview?.comment ?? ""}
                   error={state?.error && state?.error.reviewComment}
                 />
               </div>

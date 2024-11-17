@@ -59,7 +59,7 @@ export function SingleReview({ review }) {
         <Avatar className={"h-[45px] rounded-full w-[45px]"}>
           <AvatarImage
             className={"rounded-full"}
-            src={user.image ?? avatarDefault.src}
+            src={user.profileImage ?? avatarDefault.src}
             alt={user.name}
           />
           <AvatarFallback>

@@ -10,6 +10,9 @@ export async function FlightOrHotelReview({ rating, reviews, flightKeys }) {
   const isAlreadyReviewed = reviews.some(
     (review) => review.reviewer.toString() === session?.user.id
   );
+  const currentUserReview = reviews.find(
+    (review) => review.reviewer === session?.user.id
+  );
   return (
     <div>
       <div className="mb-[32px]">
@@ -17,6 +20,7 @@ export async function FlightOrHotelReview({ rating, reviews, flightKeys }) {
           Reviews
         </h2>
         <WriteReview
+          currentUserReview={currentUserReview}
           isLoggedIn={isLoggedIn}
           isAlreadyReviewed={isAlreadyReviewed}
           flightKeys={flightKeys}

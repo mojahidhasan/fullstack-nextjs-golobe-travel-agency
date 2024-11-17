@@ -13,14 +13,12 @@ import { cookies } from "next/headers";
 export default async function FlightDetailsPage({ params }) {
   const flight = await getOneDoc("Flight", { flightNumber: params.flightId });
   const flightReviews = await getManyDocs("FlightReview", {
-    "stopovers.airlineId": flight.stopovers[0].airlineId._id,
+    airlineId: flight.stopovers[0].airlineId._id,
     departureAirportId: flight.originAirportId._id,
     arrivalAirportId: flight.destinationAirportId._id,
   });
-
   const flightClass = cookies().get("fc")?.value || "economy";
   const timezone = cookies().get("timezone")?.value || "UTC";
-  console.log(timezone);
   const price = flight.price[flightClass]?.base;
   const flightInfo = {
     flightNumber: flight.flightNumber,
@@ -94,6 +92,7 @@ export default async function FlightDetailsPage({ params }) {
           rating={flightInfo.rating}
           reviews={flightReviews}
           flightKeys={{
+            flightNumber: flightInfo.flightNumber,
             airlineId: flightInfo.airlineId,
             departureAirportId: flightInfo.departureAirportId,
             arrivalAirportId: flightInfo.arrivalAirportId,
