@@ -2,7 +2,7 @@ import { getManyDocs } from "@/lib/db/getOperationDB";
 import generateOneDayFlightSchedule from "@/lib/db/generateForDB/generateFlight";
 import { Flight } from "@/lib/db/models";
 import mongoose from "mongoose";
-export async function POST(req) {
+export async function GET(req) {
   if (
     req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
   ) {
