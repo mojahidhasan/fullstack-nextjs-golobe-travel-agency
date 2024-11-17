@@ -73,7 +73,11 @@ export default async function FlightBookPage({ params }) {
                   <FlightScheduleCard
                     className={order[index]}
                     key={index}
-                    flightScheduleDetails={{ ...stopover, price: price.base }}
+                    flightScheduleDetails={{
+                      ...stopover,
+                      timezone,
+                      price: price.base,
+                    }}
                     variant={"book"}
                   />
                 );
