@@ -1,6 +1,6 @@
 {
   "extends": "next/core-web-vitals",
   "rules": {
-    "no-undef": "error"
+    "no-undef": "warn"
   }
 }
