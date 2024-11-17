@@ -10,7 +10,7 @@ export function FlightsSchedule({ flight }) {
             0: "order-1",
             1: "order-3"
           };
-          return <FlightScheduleCard className={ order[index] } key={ index } flightScheduleDetails={ { ...stopover, price: flight.price } } />;
+          return <FlightScheduleCard className={ order[index] } key={ index } flightScheduleDetails={ { ...stopover, price: flight.price, timezone: flight.timezone } } />;
         }
         )
       }{

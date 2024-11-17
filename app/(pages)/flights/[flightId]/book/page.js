@@ -16,7 +16,7 @@ import { FLIGHT_CLASS_PLACEHOLDERS } from "@/lib/constants";
 import { cookies } from "next/headers";
 import { formatInTimeZone } from "date-fns-tz";
 export default async function FlightBookPage({ params }) {
-  const flightClass = cookies().get("fc")?.value || null;
+  const flightClass = cookies().get("fc")?.value || "economy";
   const timezone = cookies().get("timezone")?.value || "UTC";
 
   const flight = await getOneDoc("Flight", {

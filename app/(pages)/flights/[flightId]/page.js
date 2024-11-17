@@ -18,9 +18,9 @@ export default async function FlightDetailsPage({ params }) {
     arrivalAirportId: flight.destinationAirportId._id,
   });
 
-  const flightClass = cookies().get("fc")?.value || null;
+  const flightClass = cookies().get("fc")?.value || "economy";
   const timezone = cookies().get("timezone")?.value || "UTC";
-
+  console.log(timezone);
   const price = flight.price[flightClass]?.base;
   const flightInfo = {
     flightNumber: flight.flightNumber,
@@ -89,7 +89,7 @@ export default async function FlightDetailsPage({ params }) {
             </div>
           </div>
         </div>
-        <FlightsSchedule flight={{ ...flight, price }} />
+        <FlightsSchedule flight={{ ...flight, timezone, price }} />
         <FlightOrHotelReview
           rating={flightInfo.rating}
           reviews={flightReviews}

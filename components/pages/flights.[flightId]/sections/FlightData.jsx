@@ -4,7 +4,7 @@ import Image from "next/image";
 import { LikeButton } from "@/components/local-ui/likeButton";
 import share from "@/public/icons/share.svg";
 import { RatingShow } from "@/components/local-ui/ratingShow";
-import { RATING_SCALE } from "@/lib/constants";
+import { FLIGHT_CLASS_PLACEHOLDERS, RATING_SCALE } from "@/lib/constants";
 
 export function FlightData({ data }) {
   const { flightNumber, airplaneName, price, rating, reviews, liked, imgSrc, flightClass } = data;
@@ -23,7 +23,10 @@ export function FlightData({ data }) {
           </div>
         </div>
         <div className="text-right">
-          <p className="text-3xl font-bold text-primary mb-3">${ price }</p>
+          <div>
+            <p className="text-xs font-bold text-primary">{ FLIGHT_CLASS_PLACEHOLDERS[flightClass] }</p>
+            <p className="text-3xl font-bold text-primary mb-3">${ price }</p>
+          </div>
           <div className="flex gap-4">
             <LikeButton liked={ liked } keys={ {
               flightNumber,
