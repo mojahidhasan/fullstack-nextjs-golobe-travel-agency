@@ -1,4 +1,3 @@
-import { getManyDocs } from "@/lib/db/getOperationDB";
 import { Flight } from "@/lib/db/models";
 const validSearchParams = [
   "lastAvailableFlightDate",
@@ -28,7 +27,7 @@ export async function GET(req) {
 
     if (key === "firstAvailableFlightDate") {
       const date = (
-        await Flight.find({})
+        await Flight.find({ expireAt: { $gte: new Date() } })
           .sort({
             departureDateTime: 1,
           })
