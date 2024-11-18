@@ -70,7 +70,7 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
    ```
 
 4. rename the `.env.example` file from the root directory to `.env` or `.env.local` and set the proper values of keys. The app may get runtime errors if the `.env` file is not set up.
-5. [Generate fake flight data](#generate-fake-flight-data-for-database) and upload it to the database
+5. [Generate fake flight and related data](#generate-fake-flight-data-for-database)
 6. start the local server
 
    ```sh
@@ -78,17 +78,21 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
    # http://localhost:3000
    ```
 
-### Generate Fake Flight Data for Database
+### Generate Fake Flight and Related Data for Database
 
-From the root directory `/fullstack-nextjs-golobe-travel-agency`, run:
+1: To upload it to the database directly after generating it, run the following command:
 
 ```bash
-node lib/db/generateFakeFlightData.mjs
+npm run generateAndUploadDB
 ```
 
-It will generate a file called `flights.json` in the root directory.
+2: To generate fake flight and related data and save it in JSON file, run the following command:
 
-Upload this JSON file in the database in the collection named "flights".
+```bash
+npm run generateDBFiles
+```
+
+It should create files in the `generated` directory.
 
 ## TODO
 
