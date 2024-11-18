@@ -1,4 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
+import { addDays } from "date-fns";
 export const defaultFlightFormValue = {
   from: "",
   to: "",
@@ -13,6 +14,8 @@ export const defaultFlightFormValue = {
   },
   class: "economy",
   promocode: "",
+  firstAvailableFlightDate: new Date().toString(),
+  lastAvailableFlightDate: addDays(new Date(), 9).toString(),
   filters: {
     rate: [],
     airlines: [],

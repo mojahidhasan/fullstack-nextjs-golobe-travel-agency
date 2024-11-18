@@ -1,5 +1,5 @@
 "use client";
-import { format } from "date-fns";
+import { format, addDays } from "date-fns";
 
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -13,6 +13,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 
 import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
+import { useEffect } from "react";
 
 
 export function DatePickerWithRange({ name, className }) {
@@ -24,6 +25,19 @@ export function DatePickerWithRange({ name, className }) {
     from: flightForm.departDate ? new Date(flightForm.departDate) : "",
     to: flightForm.returnDate ? new Date(flightForm.returnDate) : "",
   };
+
+  useEffect(() => {
+    async function getFlightDate() {
+      const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/flights?lastAvailableFlightDate=&firstAvailableFlightDate=", {
+        next: { revalidate: 300 },
+      });
+      const data = await res.json();
+      dispatch(setFlightForm({ firstAvailableFlightDate: new Date(data.firstAvailableFlightDate).toString(), lastAvailableFlightDate: new Date(data.lastAvailableFlightDate).toString() }));
+    }
+
+    getFlightDate();
+  }, []);
+
   const date = (flightForm.departDate ? new Date(flightForm.departDate) : "");
 
   function setDate(date) {
@@ -83,12 +97,12 @@ export function DatePickerWithRange({ name, className }) {
             selected={ flightForm.trip === "roundtrip" ? rangeDate : date }
             onSelect={ flightForm.trip === "roundtrip" ? setRangeDate : setDate }
             numberOfMonths={ 1 }
-          // disabled={
-          //   {
-          //     before: new Date(),
-          //     after: addDays(new Date(), 7)
-          //   }
-          // }
+            disabled={
+              {
+                before: new Date(flightForm.firstAvailableFlightDate),
+                after: new Date(flightForm.lastAvailableFlightDate),
+              }
+            }
           />
         </PopoverContent>
       </Popover>
