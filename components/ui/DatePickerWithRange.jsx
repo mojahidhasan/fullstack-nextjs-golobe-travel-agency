@@ -30,6 +30,7 @@ export function DatePickerWithRange({ name, className }) {
     async function getFlightDate() {
       const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/flights?lastAvailableFlightDate=&firstAvailableFlightDate=", {
         next: { revalidate: 300 },
+        cache: "force-cache"
       });
       const data = await res.json();
       dispatch(setFlightForm({ firstAvailableFlightDate: new Date(data.firstAvailableFlightDate).toString(), lastAvailableFlightDate: new Date(data.lastAvailableFlightDate).toString() }));
@@ -41,8 +42,6 @@ export function DatePickerWithRange({ name, className }) {
   const date = (flightForm.departDate ? new Date(flightForm.departDate) : "");
 
   function setDate(date) {
-    console.log(date?.toString());
-    console.log(new Date(date?.toString()).toJSON());
     dispatch(
       setFlightForm({
         departDate: date instanceof Date ? date.toString() : "",

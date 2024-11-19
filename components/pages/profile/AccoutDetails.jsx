@@ -1,8 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { TabContentMockup } from "@/components/pages/profile/ui/TabContentMockup";
 import { ChangeNamePopup } from "@/components/pages/profile/ui/changeNamePopup";
-import Link from "next/link";
+import { VerifyEmailBtn } from "./ui/VerifyEmailBtn";
+import { cookies } from "next/headers";
 export function AccoutDetails({ userDetails }) {
+  const sendAgainAt = cookies().get("sai")?.expires?.toISOString();
   const accountDetails = {
     name: userDetails.firstname + " " + userDetails.lastname,
     emails: userDetails.emails,
@@ -24,20 +26,15 @@ export function AccoutDetails({ userDetails }) {
         <div>
           { accountDetails?.emails.map((item) => {
             return (
-              <p key={ item.email } className="text-[1.25rem] font-semibold">
+              <div key={ item.email } className="text-[1.25rem] font-semibold">
                 { item.email }{ " " }
                 { item.primary === true && (
                   <span className={ "text-sm" }>(primary)</span>
                 ) }{ " " }
-                { item.emailVerified === null && (
-                  <Link
-                    href={ "/verify/email" }
-                    className={ "text-xs font-normal text-blue-500 underline" }
-                  >
-                    verify
-                  </Link>
+                { item.emailVerifiedAt === null && (
+                  <VerifyEmailBtn email={ item.email } sendAgainAt={ sendAgainAt } />
                 ) }
-              </p>
+              </div>
             );
           }) }
           <div className="flex mt-3 sm:flex-col md:flex-row items-end md:items-center gap-[8px]">

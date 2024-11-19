@@ -6,7 +6,6 @@ const validSearchParams = [
 
 export async function GET(req) {
   const searchParams = Object.fromEntries(new URL(req.url).searchParams);
-  console.log(searchParams);
   const data = {};
   for (const [key, value] of Object.entries(searchParams)) {
     if (!validSearchParams.includes(key)) {

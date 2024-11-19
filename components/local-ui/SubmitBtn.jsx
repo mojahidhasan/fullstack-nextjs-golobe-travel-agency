@@ -7,16 +7,19 @@ export function SubmitBtn({
   customTitle = { default: "Submit", onSubmitting: "Submitting..." },
   className,
   variant,
+  disabled,
+  ...props
 }) {
   const { pending } = useFormStatus();
   return (
     <Button
       form={ formId }
-      disabled={ pending }
+      disabled={ disabled || pending }
       size="lg"
       type="submit"
       className={ cn(className) }
       variant={ variant }
+      { ...props }
     >
       { pending ? customTitle.onSubmitting : customTitle.default }
     </Button>

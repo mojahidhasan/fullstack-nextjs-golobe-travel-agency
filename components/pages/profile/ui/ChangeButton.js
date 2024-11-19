@@ -1,8 +1,18 @@
 "use client";
+import React from "react";
 import { Button } from "@/components/ui/button";
-export function ChangeButton({ ...props }) {
+import { cn } from "@/lib/utils";
+export const ChangeButton = React.forwardRef(function ChangeButton(
+  { className, ...props },
+  ref
+) {
   return (
-    <Button variant={"outline"} className={"gap-1 p-2 h-auto"} {...props}>
+    <Button
+      variant={"outline"}
+      className={cn("gap-1 p-2 h-auto", className)}
+      ref={ref}
+      {...props}
+    >
       <svg
         width="14"
         height="14"
@@ -24,4 +34,4 @@ export function ChangeButton({ ...props }) {
       <span className="sm:inline hidden">Change</span>
     </Button>
   );
-}
+});
