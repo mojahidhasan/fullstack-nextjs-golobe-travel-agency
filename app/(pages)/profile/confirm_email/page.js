@@ -71,7 +71,9 @@ export default async function ConfirmEmailPage({ searchParams }) {
         "flex flex-col justify-center items-center text-5xl font-bold h-screen"
       }
     >
-      <h1>Somthing went wrong</h1>
+      <h1>No email to confirm</h1>
+      <h1>This page is meant for email confirmation</h1>
+      <h1>You may close this tab</h1>
     </div>
   );
 }
