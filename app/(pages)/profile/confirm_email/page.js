@@ -24,6 +24,8 @@ export default async function ConfirmEmailPage({ searchParams }) {
     (e) => e.inVerification === true
   );
 
+  let succesfullyVerifiedEmail;
+
   for (const email of inVerificationEmail) {
     //eslint-disable-next-line react-hooks/rules-of-hooks
     const isVerified = await MongoDBAdapter.useVerificationToken({
@@ -44,17 +46,32 @@ export default async function ConfirmEmailPage({ searchParams }) {
         }
       );
       revalidatePath("/profile");
-      return (
-        <div
-          className={
-            "flex flex-col justify-center items-center text-5xl font-bold h-screen"
-          }
-        >
-          <DeleteLocalStorageAndCookies email={email.email} />
-          <h1>Email Verified</h1>
-          <h1>You may close this tab</h1>
-        </div>
-      );
+
+      succesfullyVerifiedEmail = email.email;
     }
   }
+
+  if (succesfullyVerifiedEmail) {
+    return (
+      <div
+        className={
+          "flex flex-col justify-center items-center text-5xl font-bold h-screen"
+        }
+      >
+        <DeleteLocalStorageAndCookies email={succesfullyVerifiedEmail} />
+        <h1>Email Verified</h1>
+        <h1>You may close this tab</h1>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className={
+        "flex flex-col justify-center items-center text-5xl font-bold h-screen"
+      }
+    >
+      <h1>Somthing went wrong</h1>
+    </div>
+  );
 }
