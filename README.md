@@ -29,7 +29,7 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 <img src="https://www.gstatic.com/mobilesdk/240501_mobilesdk/firebase_96dp.png" width="16" height="16"> Firebase Cloud Storage
 
-<img src="https://www.mailersend.com/favicon/favicon.svg" width="16" height="16"> MailerSend
+<img src="https://assets.mailjet.com/lib/images/mailjetLogo/mj_logo_only_icon_color.png" width="16" height="16"> Mailjet
 
 ## Features
 
