@@ -24,6 +24,7 @@ import support from "@/public/icons/support.svg";
 import logout from "@/public/icons/logout.svg";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
+import { usePathname } from "next/navigation";
 export function SideBar({ isLoggedIn }) {
   const afterLoggedinOptions = [
     {
@@ -50,7 +51,8 @@ export function SideBar({ isLoggedIn }) {
       link: "/support",
     },
   ];
-
+  const pathname = encodeURIComponent(usePathname());
+  console.log(pathname);
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [state, dispatch] = useFormState(signOutAction, undefined);
@@ -123,7 +125,7 @@ export function SideBar({ isLoggedIn }) {
               <li>
                 <SheetClose asChild>
                   <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
-                    <Link href="/login">
+                    <Link href={"/login?callbackPath=" + pathname}>
                       <LogIn width={20} />
                       <span>Login</span>
                     </Link>
