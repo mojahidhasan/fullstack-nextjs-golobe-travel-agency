@@ -36,7 +36,7 @@ export function SignupForm() {
   }
 
   return (
-    <div className="bg-white p-5 rounded-lg shadow-lg">
+    <div className="bg-white p-7 rounded-lg shadow-lg">
       <div
         className={ cn(
           "flex text-destructive-foreground text-sm rounded-lg h-auto items-center bg-transparent space-x-1",

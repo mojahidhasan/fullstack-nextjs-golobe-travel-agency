@@ -18,7 +18,7 @@ export function SetNewPasswordForm() {
     }
   }, [state?.success]);
   return (
-    <div>
+    <div className={"bg-white p-7 rounded-lg shadow-lg"}>
       <div className={"mb-5"}>
         {state?.success === false && state?.message && (
           <ErrorMessage message={state?.message} />

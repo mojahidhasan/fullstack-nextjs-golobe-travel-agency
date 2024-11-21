@@ -1,3 +1,4 @@
+"use client";
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -9,6 +10,7 @@ import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
 
+import { useFormState } from "react-dom";
 import { signOutAction } from "@/lib/actions";
 
 import { LogIn } from "lucide-react";
@@ -20,6 +22,8 @@ import card from "@/public/icons/card.svg";
 import settings from "@/public/icons/settings.svg";
 import support from "@/public/icons/support.svg";
 import logout from "@/public/icons/logout.svg";
+import { useEffect, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 export function SideBar({ isLoggedIn }) {
   const afterLoggedinOptions = [
     {
@@ -47,8 +51,31 @@ export function SideBar({ isLoggedIn }) {
     },
   ];
 
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
+  const [state, dispatch] = useFormState(signOutAction, undefined);
+
+  useEffect(() => {
+    if (state?.success === true) {
+      toast({
+        title: "Logout Successful",
+        description: state?.message,
+        variant: "default",
+      });
+      setOpen(false);
+    }
+
+    if (state?.success === false) {
+      toast({
+        title: "Logout Failed",
+        description: state?.message,
+        variant: "destructive",
+      });
+    }
+  }, [state]);
+
   return (
-    <Sheet>
+    <Sheet open={open} onOpenChange={() => setOpen(!open)}>
       <SheetTrigger asChild>
         <Button variant="ghost" className="p-2 hover:bg-transparent h-auto">
           <svg
@@ -188,14 +215,26 @@ export function SideBar({ isLoggedIn }) {
                 );
               })}
               <li>
-                <SheetClose asChild>
-                  <form action={signOutAction}>
-                    <Button className={"p-0 h-auto gap-2"} variant="link">
-                      <Image src={logout} alt="logout_icon" width={20} />
-                      <span>Logout</span>
-                    </Button>
-                  </form>
-                </SheetClose>
+                <form
+                  onSubmit={async (e) => {
+                    e.preventDefault();
+                    toast({
+                      title: "Logging out",
+                      description: "Please wait...",
+                      variant: "info",
+                    });
+                    dispatch();
+                  }}
+                >
+                  <Button
+                    type="submit"
+                    className={"p-0 h-auto gap-2"}
+                    variant="link"
+                  >
+                    <Image src={logout} alt="logout_icon" width={20} />
+                    <span>Logout</span>
+                  </Button>
+                </form>
               </li>
             </>
           )}

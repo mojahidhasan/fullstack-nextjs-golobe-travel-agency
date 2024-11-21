@@ -14,8 +14,8 @@ export default async function FormsLayout({ children }) {
   }
   return (
     <section className="my-20 mx-auto flex h-full w-[90%] items-stretch justify-between gap-[40px]">
-      <div className="hidden h-screen max-w-[40%] min-w-[320px] xl:max-w-[490px] md:block">
-        <Carousel className={"w-full h-full rounded-[30px]"}>
+      <div className="absolute -z-10 opacity-10 h-screen max-w-full top-0 left-0 lg:max-w-[40%] min-w-[320px] xl:max-w-[490px] lg:opacity-100 lg:static lg:block">
+        <Carousel className={"w-full h-full rounded-0 lg:rounded-[30px]"}>
           <CarouselContent>
             <CarouselItem>
               <Image
@@ -48,7 +48,7 @@ export default async function FormsLayout({ children }) {
         </Carousel>
       </div>
       <div className="grow text-left">
-        <div className="mb-[20px] lg:mb-[64px]">
+        <div className="mb-[20px] w-fit lg:mb-[64px]">
           <Logo otherFill={"black"} />
         </div>
 

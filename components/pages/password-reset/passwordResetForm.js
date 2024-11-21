@@ -7,7 +7,7 @@ import { useFormState } from "react-dom";
 export function PasswordResetForm() {
   const [state, dispatch] = useFormState(sendPassResetCodeAction, undefined);
   return (
-    <div>
+    <div className={"bg-white p-7 rounded-lg shadow-lg"}>
       <form id={"password-reset-form"} action={dispatch}>
         <Input
           label={"Email"}

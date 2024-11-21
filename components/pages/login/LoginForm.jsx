@@ -49,12 +49,12 @@ export function LoginForm() {
   }
 
   return (
-    <>
+    <div className={ "bg-white p-7 rounded-lg shadow-lg" }>
       <div
         className={ cn(
-          "flex text-destructive-foreground text-sm rounded-lg p-3 h-auto mb-5 items-center bg-transparent space-x-1",
-          state?.error === "login_error" && "bg-destructive",
-          state?.success && "bg-primary/80 text-black"
+          "flex text-destructive-foreground text-sm rounded-lg h-auto items-center bg-transparent space-x-1",
+          state?.error === "login_error" && "bg-destructive p-3 mb-5",
+          state?.success && "bg-primary/80 text-black p-3 mb-5"
         ) }
         aria-live="polite"
         aria-atomic="true"
@@ -115,7 +115,7 @@ export function LoginForm() {
         </div>
       </form>
       <AuthenticateWith message={ "Or Login With" } />
-    </>
+    </div>
   );
 }
 

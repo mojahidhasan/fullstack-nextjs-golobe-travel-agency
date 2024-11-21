@@ -11,7 +11,7 @@ export function AuthenticateWith({ message }) {
     <>
       <div className="relative h-auto">
         {message && (
-          <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400 text-sm inline-block bg-white px-3 py-1">
+          <span className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 text-gray-400 text-sm inline-block bg-white rounded-lg px-3 py-1">
             {message}
           </span>
         )}

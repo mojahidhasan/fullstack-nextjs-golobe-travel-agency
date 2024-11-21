@@ -61,7 +61,7 @@ export function VerifyCodeForm() {
     submitBtnRef.current.disabled = false;
   }
   return (
-    <div>
+    <div className={"bg-white p-7 rounded-lg shadow-lg"}>
       <div className={"mb-5"}>
         {res?.success == true && (
           <SuccessMessage
