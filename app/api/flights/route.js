@@ -1,4 +1,5 @@
 import { Flight } from "@/lib/db/models";
+import { startOfDay } from "date-fns";
 const validSearchParams = [
   "lastAvailableFlightDate",
   "firstAvailableFlightDate",
@@ -21,19 +22,20 @@ export async function GET(req) {
           .limit(1)
           .select("departureDateTime")
       )[0].departureDateTime;
-      data[key] = new Date(date).toISOString();
+      data[key] = new Date(date).toString();
     }
-
     if (key === "firstAvailableFlightDate") {
       const date = (
-        await Flight.find({ expireAt: { $gte: new Date() } })
+        await Flight.find({
+          expireAt: { $gte: startOfDay(new Date()) },
+        })
           .sort({
             departureDateTime: 1,
           })
           .limit(1)
           .select("departureDateTime")
       )[0].departureDateTime;
-      data[key] = new Date(date).toISOString();
+      data[key] = new Date(date).toString();
     }
   }
 

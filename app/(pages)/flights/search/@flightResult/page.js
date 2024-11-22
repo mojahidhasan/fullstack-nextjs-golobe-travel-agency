@@ -2,14 +2,7 @@ import { FLightResult } from "@/components/pages/flights.search/sections/FlightR
 import { auth } from "@/lib/auth";
 import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import { RATING_SCALE } from "@/lib/constants";
-import {
-  startOfDay,
-  addHours,
-  addMinutes,
-  endOfDay,
-  getUnixTime,
-  fromUnixTime,
-} from "date-fns";
+import { endOfDay, startOfDay } from "date-fns";
 import _ from "lodash";
 import { cookies } from "next/headers";
 async function FLightResultPage({ searchParams }) {
@@ -26,12 +19,17 @@ async function FLightResultPage({ searchParams }) {
 
     const d = new Date();
 
-    const departDateStart = new Date(searchParams.departDate);
+    let departDateStart = new Date(searchParams.departDate);
     departDateStart.setHours(d.getHours(), d.getMinutes());
+
+    if (d.getDate() !== departDateStart.getDate()) {
+      departDateStart = startOfDay(departDateStart);
+    }
 
     const returnDate = searchParams.returnDate
       ? searchParams.returnDate
       : departDateStart;
+
     const departDateEnd = endOfDay(new Date(returnDate));
     flightResults = (
       await getManyDocs("Flight", {
