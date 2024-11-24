@@ -10,7 +10,9 @@ export default async function FavouritesPage() {
     redirect("/login?callbackPath=" + encodeURIComponent("/favourites"));
   }
 
-  const userDetails = await getOneDoc("User", { _id: session?.user?.id });
+  const userDetails = await getOneDoc("User", { _id: session?.user?.id }, [
+    "userDetails",
+  ]);
 
   let favouriteFlights = [];
   let favouriteHotels = [];
@@ -18,14 +20,23 @@ export default async function FavouritesPage() {
   if (userDetails.likes.flights.length > 0) {
     favouriteFlights = await Promise.all(
       userDetails.likes.flights.map(async (flight) => {
-        const flightDetails = await getOneDoc("Flight", {
-          flightNumber: flight.flightNumber,
-        });
-        const flightReviews = await getManyDocs("FlightReview", {
-          airlineId: flight.airlineId,
-          departureAirportId: flight.departureAirportId,
-          arrivalAirportId: flight.arrivalAirportId,
-        });
+        const flightDetails = await getOneDoc(
+          "Flight",
+          {
+            flightNumber: flight.flightNumber,
+          },
+          [flight.flightNumber]
+        );
+        if (Object.keys(flightDetails).length === 0) return;
+        const flightReviews = await getManyDocs(
+          "FlightReview",
+          {
+            airlineId: flight.airlineId,
+            departureAirportId: flight.departureAirportId,
+            arrivalAirportId: flight.arrivalAirportId,
+          },
+          [flight.flightNumber + "_reviews", "flightReviews"]
+        );
         const ratingSum = flightReviews.reduce((acc, review) => {
           return acc + review.rating;
         }, 0);
@@ -45,6 +56,8 @@ export default async function FavouritesPage() {
       })
     );
   }
+
+  favouriteFlights = favouriteFlights.filter(Boolean);
 
   // will be added later
   // if (userDetails.likes.hotels.length > 0) {

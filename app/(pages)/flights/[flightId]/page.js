@@ -10,13 +10,23 @@ import { auth } from "@/lib/auth";
 import stopwatch from "@/public/icons/stopwatch.svg";
 import _ from "lodash";
 import { cookies } from "next/headers";
+import { notFound } from "next/navigation";
 export default async function FlightDetailsPage({ params }) {
-  const flight = await getOneDoc("Flight", { flightNumber: params.flightId });
-  const flightReviews = await getManyDocs("FlightReview", {
-    airlineId: flight.stopovers[0].airlineId._id,
-    departureAirportId: flight.originAirportId._id,
-    arrivalAirportId: flight.destinationAirportId._id,
-  });
+  const flight = await getOneDoc("Flight", { flightNumber: params.flightId }, [
+    params.flightId,
+  ]);
+  if (Object.keys(flight).length === 0) {
+    notFound();
+  }
+  const flightReviews = await getManyDocs(
+    "FlightReview",
+    {
+      airlineId: flight.stopovers[0].airlineId._id,
+      departureAirportId: flight.originAirportId._id,
+      arrivalAirportId: flight.destinationAirportId._id,
+    },
+    [params.flightId + "_reviews", "flightReviews"]
+  );
   const flightClass = cookies().get("fc")?.value || "economy";
   const timezone = cookies().get("timezone")?.value || "UTC";
   const price = flight.price[flightClass]?.base;
@@ -41,7 +51,10 @@ export default async function FlightDetailsPage({ params }) {
   };
   const userId = (await auth())?.user?.id;
   if (userId) {
-    const userDetails = await getOneDoc("User", { _id: userId });
+    const userDetails = await getOneDoc("User", { _id: userId }, [
+      "userDetails",
+    ]);
+
     const flightFilterQuery = {
       flightNumber: flight.flightNumber,
       flightClass,

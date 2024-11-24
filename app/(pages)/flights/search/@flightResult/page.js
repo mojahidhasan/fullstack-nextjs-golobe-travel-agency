@@ -32,14 +32,18 @@ async function FLightResultPage({ searchParams }) {
 
     const departDateEnd = endOfDay(new Date(returnDate));
     flightResults = (
-      await getManyDocs("Flight", {
-        expireAt: {
-          $gte: departDateStart,
-          $lte: departDateEnd,
+      await getManyDocs(
+        "Flight",
+        {
+          expireAt: {
+            $gte: departDateStart,
+            $lte: departDateEnd,
+          },
+          originAirportId: departureAirportId,
+          destinationAirportId: arrivalAirportId,
         },
-        originAirportId: departureAirportId,
-        destinationAirportId: arrivalAirportId,
-      })
+        ["flights"]
+      )
     ).filter((flight) => {
       const seats = flight.seats;
       const availableSeats = seats.filter(
@@ -50,8 +54,9 @@ async function FLightResultPage({ searchParams }) {
   }
 
   if (session?.user?.id) {
-    const likedFlights = (await getOneDoc("User", { _id: session?.user?.id }))
-      .likes.flights;
+    const likedFlights = (
+      await getOneDoc("User", { _id: session?.user?.id }, ["userDetails"])
+    ).likes.flights;
     flightResults = flightResults.map((flight) => {
       const flightFilterQuery = {
         flightNumber: flight.flightNumber,

@@ -13,7 +13,9 @@ export async function Nav({ className, type = "default", session, ...props }) {
   const isLoggedIn = !!session?.user;
   let nameOfUser, avatar;
   if (isLoggedIn) {
-    const userData = await getOneDoc("User", { _id: session.user.id });
+    const userData = await getOneDoc("User", { _id: session.user.id }, [
+      "userDetails",
+    ]);
     avatar = userData.profileImage;
     nameOfUser = userData.firstname + " " + userData.lastname;
   }

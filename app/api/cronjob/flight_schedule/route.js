@@ -19,10 +19,10 @@ export async function GET(req) {
     }
   }
 
-  const airports = await getManyDocs("Airport");
-  const airlines = await getManyDocs("Airline");
-  const airplanes = await getManyDocs("Airplane");
-  const seats = await getManyDocs("Seat");
+  const airports = await getManyDocs("Airport", {}, ["airports"]);
+  const airlines = await getManyDocs("Airline", {}, ["airlines"]);
+  const airplanes = await getManyDocs("Airplane", {}, ["airplanes"]);
+  const seats = await getManyDocs("Seat", {}, ["seats"]);
 
   const lastFlightDate = (
     await Flight.find({})

@@ -11,7 +11,9 @@ export default async function ProfilePage({ searchParams }) {
   }
 
   if (isloggedIn) {
-    const userDetails = await getOneDoc("User", { _id: sessionUser?.id });
+    const userDetails = await getOneDoc("User", { _id: sessionUser?.id }, [
+      "userDetails",
+    ]);
 
     return (
       <main className={"mx-auto mb-[90px] w-[95%] sm:w-[90%]"}>

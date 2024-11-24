@@ -15,21 +15,35 @@ import { capitalize } from "@/lib/utils";
 import { FLIGHT_CLASS_PLACEHOLDERS } from "@/lib/constants";
 import { cookies } from "next/headers";
 import { formatInTimeZone } from "date-fns-tz";
+import { FlightsSchedule } from "@/components/pages/flights.[flightId]/sections/FlightsSchedule";
+import { notFound } from "next/navigation";
 export default async function FlightBookPage({ params }) {
   const flightClass = cookies().get("fc")?.value || "economy";
   const timezone = cookies().get("timezone")?.value || "UTC";
 
-  const flight = await getOneDoc("Flight", {
-    flightNumber: params.flightId,
-  });
+  const flight = await getOneDoc(
+    "Flight",
+    {
+      flightNumber: params.flightId,
+    },
+    [params.flightId]
+  );
+
+  if (Object.keys(flight).length === 0) {
+    notFound();
+  }
 
   const price = flight.price[flightClass];
 
-  const flightReviews = await getManyDocs("FlightReview", {
-    airlineId: flight.stopovers[0].airlineId._id,
-    departureAirportId: flight.originAirportId._id,
-    arrivalAirportId: flight.destinationAirportId._id,
-  });
+  const flightReviews = await getManyDocs(
+    "FlightReview",
+    {
+      airlineId: flight.stopovers[0].airlineId._id,
+      departureAirportId: flight.originAirportId._id,
+      arrivalAirportId: flight.destinationAirportId._id,
+    },
+    [params.flightId + "_reviews", "flightReviews"]
+  );
   const isLoggedIn = !!(await auth())?.user;
 
   const flightInfo = {
@@ -63,41 +77,7 @@ export default async function FlightBookPage({ params }) {
 
         <div className="mt-[30px] flex gap-[20px] max-lg:flex-col-reverse lg:gap-[30px] xl:gap-[40px]">
           <div>
-            <div className={"mb-5"}>
-              {flight.stopovers.map((stopover, index) => {
-                const order = {
-                  0: "order-1",
-                  1: "order-3",
-                };
-                return (
-                  <FlightScheduleCard
-                    className={order[index]}
-                    key={index}
-                    flightScheduleDetails={{
-                      ...stopover,
-                      timezone,
-                      price: price.base,
-                    }}
-                    variant={"book"}
-                  />
-                );
-              })}
-              {flight.stopovers.length > 1 && (
-                <div
-                  className={
-                    "order-2 text-center bg-tertiary rounded-md text-white font-bold w-fit px-5 py-1 self-center"
-                  }
-                >
-                  Layover{" "}
-                  {minutesToHMFormat(
-                    substractTimeInMins(
-                      flight.stopovers[1].departureDateTime,
-                      flight.stopovers[0].arrivalDateTime
-                    )
-                  )}
-                </div>
-              )}
-            </div>
+            <FlightsSchedule flight={flight} />
             <div className="mb-[20px] rounded-[12px] bg-white p-[16px] shadow-lg lg:mb-[30px] xl:mb-[40px]">
               <RadioGroup defaultValue="Pay_in_full">
                 <Label className="flex rounded-[12px] justify-between p-[16px] has-[[data-state='checked']]:bg-primary grow items-center gap-[32px]">

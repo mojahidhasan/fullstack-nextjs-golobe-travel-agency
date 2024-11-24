@@ -52,7 +52,6 @@ export function SideBar({ isLoggedIn }) {
     },
   ];
   const pathname = encodeURIComponent(usePathname());
-  console.log(pathname);
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [state, dispatch] = useFormState(signOutAction, undefined);

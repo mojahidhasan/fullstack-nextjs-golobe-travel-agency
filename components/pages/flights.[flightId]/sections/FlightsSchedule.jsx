@@ -3,7 +3,7 @@ import { minutesToHMFormat, substractTimeInMins } from "@/lib/utils";
 export function FlightsSchedule({ flight }) {
 
   return (
-    <section className="mb-[120px] text-secondary flex flex-col gap-3">
+    <section className="mb-[120px] p-0 text-secondary flex flex-col gap-3">
       {
         flight.stopovers.map((stopover, index) => {
           const order = {

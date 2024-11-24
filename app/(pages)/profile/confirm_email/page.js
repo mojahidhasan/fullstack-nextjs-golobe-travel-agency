@@ -19,7 +19,9 @@ export default async function ConfirmEmailPage({ searchParams }) {
 
   const token = searchParams?.token;
 
-  const user = await getOneDoc("User", { _id: session?.user?.id });
+  const user = await getOneDoc("User", { _id: session?.user?.id }, [
+    "userDetails",
+  ]);
   const inVerificationEmail = user.emails.filter(
     (e) => e.inVerification === true
   );
