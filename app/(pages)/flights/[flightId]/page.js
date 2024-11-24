@@ -25,7 +25,7 @@ export default async function FlightDetailsPage({ params }) {
       departureAirportId: flight.originAirportId._id,
       arrivalAirportId: flight.destinationAirportId._id,
     },
-    [params.flightId + "_reviews", "flightReviews"]
+    [params.flightId + "_review", flight._id + "_review", "flightReviews"]
   );
   const flightClass = cookies().get("fc")?.value || "economy";
   const timezone = cookies().get("timezone")?.value || "UTC";

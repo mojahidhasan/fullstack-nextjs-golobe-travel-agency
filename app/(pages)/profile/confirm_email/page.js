@@ -4,7 +4,7 @@ import MongoDBAdapter from "@/lib/db/MongoDBAdapter";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
 import DeleteLocalStorageAndCookies from "./_deleteLocalStorageAndCookies";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 export default async function ConfirmEmailPage({ searchParams }) {
   const session = await auth();
   const isLoggedIn = !!session?.user;
@@ -47,6 +47,7 @@ export default async function ConfirmEmailPage({ searchParams }) {
           },
         }
       );
+      revalidateTag("userDetails");
       revalidatePath("/profile");
 
       succesfullyVerifiedEmail = email.email;

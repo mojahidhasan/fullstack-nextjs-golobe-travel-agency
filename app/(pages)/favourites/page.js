@@ -35,7 +35,11 @@ export default async function FavouritesPage() {
             departureAirportId: flight.departureAirportId,
             arrivalAirportId: flight.arrivalAirportId,
           },
-          [flight.flightNumber + "_reviews", "flightReviews"]
+          [
+            flight.flightNumber + "_review",
+            "flightReviews",
+            flight._id + "_review",
+          ]
         );
         const ratingSum = flightReviews.reduce((acc, review) => {
           return acc + review.rating;

@@ -72,11 +72,19 @@ async function FLightResultPage({ searchParams }) {
   // console.log(flightResults[0].stopovers[0].airlineId);
   flightResults = await Promise.all(
     flightResults.map(async (flight) => {
-      const currentFlightReviews = await getManyDocs("FlightReview", {
-        airlineId: flight.stopovers[0].airlineId._id,
-        departureAirportId: flight.departureAirportId,
-        arrivalAirportId: flight.arrivalAirportId,
-      });
+      const currentFlightReviews = await getManyDocs(
+        "FlightReview",
+        {
+          airlineId: flight.stopovers[0].airlineId._id,
+          departureAirportId: flight.departureAirportId,
+          arrivalAirportId: flight.arrivalAirportId,
+        },
+        [
+          flight.flightNumber + "_review",
+          flight._id + "_review",
+          "flightReviews",
+        ]
+      );
 
       const currentFlightRatingsSum = currentFlightReviews.reduce(
         (acc, review) => {

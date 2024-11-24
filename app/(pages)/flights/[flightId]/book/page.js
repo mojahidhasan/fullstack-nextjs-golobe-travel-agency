@@ -42,7 +42,7 @@ export default async function FlightBookPage({ params }) {
       departureAirportId: flight.originAirportId._id,
       arrivalAirportId: flight.destinationAirportId._id,
     },
-    [params.flightId + "_reviews", "flightReviews"]
+    [params.flightId + "_review", flight._id + "_review", "flightReviews"]
   );
   const isLoggedIn = !!(await auth())?.user;
 
