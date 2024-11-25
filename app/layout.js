@@ -12,6 +12,7 @@ import dynamic from "next/dynamic";
 
 import openGraph from "./opengraph-image.jpg";
 import SetCookies from "./_setCookies";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const monse = Montserrat({
   subsets: ["latin"],
@@ -92,6 +93,7 @@ export default async function RootLayout({ children }) {
         <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
         <Toaster className="bg-secondary" />
         <SetCookies />
+        <SpeedInsights />
       </body>
     </html>
   );

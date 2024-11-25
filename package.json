@@ -34,6 +34,7 @@
     "@radix-ui/react-toggle": "^1.0.3",
     "@radix-ui/react-toggle-group": "^1.0.4",
     "@reduxjs/toolkit": "^2.2.3",
+    "@vercel/speed-insights": "^1.1.0",
     "bcrypt": "^5.1.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
