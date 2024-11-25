@@ -2,7 +2,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 export function Logo({ worldFill, otherFill, className }) {
   return (
-    <Link href={"/"}>
+    <Link aria-label={"Golob logo. Click to go to home page"} href={"/"}>
       <svg
         width="120"
         height="40"

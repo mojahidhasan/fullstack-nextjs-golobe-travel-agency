@@ -78,7 +78,11 @@ export function SideBar({ isLoggedIn }) {
   return (
     <Sheet open={open} onOpenChange={() => setOpen(!open)}>
       <SheetTrigger asChild>
-        <Button variant="ghost" className="p-2 hover:bg-transparent h-auto">
+        <Button
+          variant="ghost"
+          aria-label="Sidebar Toggle"
+          className="p-2 hover:bg-transparent h-auto"
+        >
           <svg
             width="18"
             height="12"

@@ -17,6 +17,7 @@ export async function Footer() {
       <div className="relative z-10 text-center font-medium">
         The UI design was taken from &nbsp;
         <Link
+          aria-label={"Link to Figma Community"}
           className="inline text-white"
           href="https://www.figma.com/community/file/1182308758714734501/golobe-travel-agency-website"
           target="_blank"

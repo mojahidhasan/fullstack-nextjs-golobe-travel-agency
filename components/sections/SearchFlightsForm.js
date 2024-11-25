@@ -181,6 +181,7 @@ function SearchFlightsForm({ searchParams = {} }) {
                   })
                 )
               }
+              aria-label={"swap airport names"}
               role={"button"}
               type={"button"}
               className="flex h-full items-center justify-center w-[10%] rounded-lg hover:bg-slate-400/20 transition-all transition-[duration:.4s]"

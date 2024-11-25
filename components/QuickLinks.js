@@ -79,7 +79,11 @@ export function QuickLinks() {
           otherFill={"black"}
         />
         <div className="flex gap-[12px] text-secondary">
-          <Link href={"https://www.facebook.com"} target="_blank">
+          <Link
+            aria-label={"Link to Facebook.com"}
+            href={"https://www.facebook.com"}
+            target="_blank"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -95,7 +99,11 @@ export function QuickLinks() {
               />
             </svg>
           </Link>
-          <Link href={"https://www.twitter.com"} target="_blank">
+          <Link
+            aria-label={"Link to Twitter.com"}
+            href={"https://www.twitter.com"}
+            target="_blank"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -109,7 +117,11 @@ export function QuickLinks() {
               />
             </svg>
           </Link>
-          <Link href={"https://www.youtube.com"} target="_blank">
+          <Link
+            aria-label={"Link to Youtube.com"}
+            href={"https://www.youtube.com"}
+            target="_blank"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -135,7 +147,11 @@ export function QuickLinks() {
               </defs>
             </svg>
           </Link>
-          <Link href={"https://www.instagram.com"} target="_blank">
+          <Link
+            aria-label={"Link to Instagram.com"}
+            href={"https://www.instagram.com"}
+            target="_blank"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="20"
@@ -166,6 +182,7 @@ export function QuickLinks() {
                   return (
                     <div key={item.name}>
                       <Link
+                        aria-label={"Link to " + item.name}
                         href={item.href}
                         className="text-[0.875rem] hover:underline inline font-medium text-secondary/70"
                       >

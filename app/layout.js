@@ -12,7 +12,6 @@ import dynamic from "next/dynamic";
 
 import openGraph from "./opengraph-image.jpg";
 import SetCookies from "./_setCookies";
-import { SpeedInsights } from "@vercel/speed-insights/next";
 
 const monse = Montserrat({
   subsets: ["latin"],
@@ -78,7 +77,13 @@ export default async function RootLayout({ children }) {
       ssr: false,
     }
   );
-
+  const SpeedInsights = dynamic(
+    () =>
+      import("@vercel/speed-insights/next").then((mod) => mod.SpeedInsights),
+    {
+      ssr: false,
+    }
+  );
   return (
     <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
       <body className={monse.className}>

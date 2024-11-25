@@ -28,7 +28,7 @@ export function SelectTrip() {
       } }
     >
       <input value={ flightForm.trip } name="trip" type="hidden" />
-      <SelectTrigger className="focus:ring-transparent focus:ring-offset-0 bg-white hover:bg-slate-500/10 w-full h-full border-0 ">
+      <SelectTrigger aria-label="Select Trip Type" className="focus:ring-transparent focus:ring-offset-0 bg-white hover:bg-slate-500/10 w-full h-full border-0 ">
         <SelectValue
           className="h-full"
           defaultValue={ flightForm.trip }
