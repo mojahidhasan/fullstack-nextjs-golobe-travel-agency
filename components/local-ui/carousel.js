@@ -61,7 +61,7 @@ function CarouselContent({
       <div
         ref={contentRef}
         className={cn(
-          "scroll-smooth sna w-full flex snap-x snap-mandatory overflow-hidden h-full",
+          "scroll-smooth w-full flex snap-x snap-mandatory overflow-hidden h-full",
           className
         )}
       >
@@ -69,7 +69,7 @@ function CarouselContent({
       </div>
       {indicator && (
         <div
-          className="absolute bottom-4 -translate-x-1/2 left-1/2 flex gap-2"
+          className="absolute bottom-4 -translate-x-1/2 left-1/2 flex sm:gap-2 2xsm:gap-1 gap-0"
           ref={dotRef}
         >
           {Array.from({ length: items }).map((_, i) => {
@@ -77,7 +77,7 @@ function CarouselContent({
               <div
                 key={i}
                 className={cn(
-                  "transition-all duration-500 w-[10px] h-[10px] rounded-full",
+                  "transition-all scale-50 2xsm:scale-75 sm:scale-100 duration-500 w-[10px] h-[10px] rounded-full",
                   activeDot === i ? "bg-primary w-[30px]" : `bg-white`
                 )}
               ></div>

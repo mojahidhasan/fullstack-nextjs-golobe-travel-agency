@@ -10,7 +10,7 @@ export function RatingStar({
   defaultRating = 0,
   ...props
 }) {
-  const [ratingVal, setRatingVal] = useState(defaultRating);
+  const [ratingVal, setRatingVal] = useState(defaultRating || 0);
 
   function handleClick(currentRating) {
     setRatingVal(currentRating);

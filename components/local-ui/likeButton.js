@@ -3,7 +3,13 @@ import { Button } from "@/components/ui/button";
 import { likeOrUnlikeAction } from "@/lib/actions";
 import { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
-export const LikeButton = ({ liked, keys, flightsOrHotels = "flights" }) => {
+import { cn } from "@/lib/utils";
+export const LikeButton = ({
+  liked,
+  keys,
+  flightsOrHotels = "flights",
+  className,
+}) => {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const callbackPath = pathname + "?" + searchParams.toString();
@@ -24,8 +30,12 @@ export const LikeButton = ({ liked, keys, flightsOrHotels = "flights" }) => {
     });
   }
   return (
-    <form action={handleClick}>
-      <Button onClick={handleClick} variant={"outline"}>
+    <form className={"w-auto"} action={handleClick}>
+      <Button
+        className={cn(className)}
+        onClick={handleClick}
+        variant={"outline"}
+      >
         <svg
           xmlns="http://www.w3.org/2000/svg"
           width="24"

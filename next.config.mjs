@@ -37,6 +37,10 @@ const nextConfig = {
         hostname: "i.pravatar.cc",
       },
       {
+        protocol: "https",
+        hostname: "www.airplane-pictures.net",
+      },
+      {
         protocol: "http",
         hostname: "localhost",
         port: "3000",

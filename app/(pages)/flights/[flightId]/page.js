@@ -46,8 +46,7 @@ export default async function FlightDetailsPage({ params }) {
         ).toFixed(1)
       : "N/A",
     reviews: flightReviews.length,
-    imgSrc:
-      "https://images.unsplash.com/photo-1551882026-d2525cfc9656?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    airplaneImages: flight.stopovers[0].airplaneId.images,
   };
   const userId = (await auth())?.user?.id;
   if (userId) {
@@ -71,7 +70,7 @@ export default async function FlightDetailsPage({ params }) {
         </div>
         <FlightData data={flightInfo} />
         {/* <EconomyFeatures /> */}
-        <div className="mb-[40px] rounded-[8px] bg-primary/60 p-[16px]">
+        {/* <div className="mb-[40px] rounded-[8px] bg-primary/60 p-[16px]">
           <h3 className="mb-[16px] font-tradeGothic text-[1.5rem] font-bold">
             Emirates Airlines Policies
           </h3>
@@ -99,7 +98,7 @@ export default async function FlightDetailsPage({ params }) {
               </p>
             </div>
           </div>
-        </div>
+        </div> */}
         <FlightsSchedule flight={{ ...flight, timezone, price }} />
         <FlightOrHotelReview
           rating={flightInfo.rating}

@@ -14,7 +14,7 @@ export function SearchFlightsAndStaysFormShortcut({ className }) {
   return (
     <div
       className={cn(
-        "rounded-[8px] bg-white px-3 xs:px-[32px] py-[16px] shadow-lg md:rounded-[16px]",
+        "rounded-[8px] bg-white px-3 2xsm:px-[32px] py-[16px] shadow-lg md:rounded-[16px]",
         className
       )}
     >

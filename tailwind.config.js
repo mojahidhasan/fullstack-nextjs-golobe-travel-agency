@@ -20,7 +20,7 @@ module.exports = {
     extend: {
       screens: {
         xsm: "450px",
-        xs: "350px",
+        "2xsm": "350px",
       },
       fontFamily: {
         tradeGothic: ["var(--font-tradegothic)"],
