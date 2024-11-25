@@ -12,7 +12,7 @@ import dynamic from "next/dynamic";
 
 import openGraph from "./opengraph-image.jpg";
 import SetCookies from "./_setCookies";
-
+import { SpeedInsights } from "@vercel/speed-insights/next";
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",
@@ -73,13 +73,6 @@ export default async function RootLayout({ children }) {
 
   const Notification = dynamic(
     () => import("@/app/_notification").then((mod) => mod.Notification),
-    {
-      ssr: false,
-    }
-  );
-  const SpeedInsights = dynamic(
-    () =>
-      import("@vercel/speed-insights/next").then((mod) => mod.SpeedInsights),
     {
       ssr: false,
     }
