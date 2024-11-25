@@ -1,12 +1,12 @@
 /** @type {import('next').NextConfig} */
 const cspHeader = `
-    default-src 'self' https://vercel.live;
-    script-src 'self' 'unsafe-eval' 'unsafe-inline' https://vercel.live;
-    connect-src 'self' https://vercel.live wss://ws-us3.pusher.com;
-    style-src 'self' 'unsafe-inline' https://vercel.live;
-    img-src 'self' blob: data: https://images.unsplash.com/ https://platform-lookaside.fbsbx.com/ https://vercel.live https://vercel.com;
-    frame-src 'self' https://vercel.live;
-    font-src 'self' https://vercel.live https://assets.vercel.com;
+    default-src 'self';
+    script-src 'self' 'unsafe-eval' 'unsafe-inline';
+    connect-src 'self';
+    style-src 'self' 'unsafe-inline';
+    img-src 'self' blob: data: https://images.unsplash.com/ https://www.airplane-pictures.net/;
+    frame-src 'self';
+    font-src 'self';
     object-src 'self';
     base-uri 'self';
     form-action 'self';
