@@ -24,6 +24,7 @@ export default async function FlightDetailsPage({ params }) {
       airlineId: flight.stopovers[0].airlineId._id,
       departureAirportId: flight.originAirportId._id,
       arrivalAirportId: flight.destinationAirportId._id,
+      airplaneModelName: flight.stopovers[0].airplaneId.model,
     },
     [params.flightId + "_review", flight._id + "_review", "flightReviews"]
   );
@@ -31,6 +32,7 @@ export default async function FlightDetailsPage({ params }) {
   const timezone = cookies().get("timezone")?.value || "UTC";
   const price = flight.price[flightClass]?.base;
   const flightInfo = {
+    flightId: flight._id,
     flightNumber: flight.flightNumber,
     airplaneName: flight.stopovers[0].airplaneId.model,
     flightClass,
@@ -41,11 +43,11 @@ export default async function FlightDetailsPage({ params }) {
     price,
     rating: flightReviews.length
       ? (
-          flightReviews.reduce((prev, curr) => prev + curr.rating, 0) /
+          flightReviews.reduce((prev, curr) => +prev + +curr.rating, 0) /
           flightReviews.length
         ).toFixed(1)
       : "N/A",
-    reviews: flightReviews.length,
+    totalReviews: flightReviews.length,
     airplaneImages: flight.stopovers[0].airplaneId.images,
   };
   const userId = (await auth())?.user?.id;
@@ -55,6 +57,7 @@ export default async function FlightDetailsPage({ params }) {
     ]);
 
     const flightFilterQuery = {
+      flightId: flight._id,
       flightNumber: flight.flightNumber,
       flightClass,
     };
@@ -108,6 +111,7 @@ export default async function FlightDetailsPage({ params }) {
             airlineId: flightInfo.airlineId,
             departureAirportId: flightInfo.departureAirportId,
             arrivalAirportId: flightInfo.arrivalAirportId,
+            airplaneModelName: flightInfo.airplaneName,
           }}
         />
       </main>

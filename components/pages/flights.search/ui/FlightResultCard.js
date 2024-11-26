@@ -113,6 +113,7 @@ export function FlightResultCard({ data }) {
           <LikeButton
             liked={data?.liked}
             keys={{
+              flightId: data?._id,
               flightNumber: data?.flightNumber,
               flightClass: data?.flightClass,
             }}

@@ -59,6 +59,7 @@ async function FLightResultPage({ searchParams }) {
     ).likes.flights;
     flightResults = flightResults.map((flight) => {
       const flightFilterQuery = {
+        flightId: flight._id,
         flightNumber: flight.flightNumber,
         flightClass: searchParams.class,
       };
@@ -76,8 +77,9 @@ async function FLightResultPage({ searchParams }) {
         "FlightReview",
         {
           airlineId: flight.stopovers[0].airlineId._id,
-          departureAirportId: flight.departureAirportId,
-          arrivalAirportId: flight.arrivalAirportId,
+          departureAirportId: flight.originAirportId._id,
+          arrivalAirportId: flight.destinationAirportId._id,
+          airplaneModelName: flight.stopovers[0].airplaneId.model,
         },
         [
           flight.flightNumber + "_review",
@@ -85,15 +87,14 @@ async function FLightResultPage({ searchParams }) {
           "flightReviews",
         ]
       );
-
       const currentFlightRatingsSum = currentFlightReviews.reduce(
         (acc, review) => {
-          return acc + review.rating;
+          return +acc + +review.rating;
         },
         0
       );
 
-      const rating = currentFlightRatingsSum / currentFlightReviews.length;
+      const rating = +currentFlightRatingsSum / currentFlightReviews.length;
 
       return {
         ...flight,

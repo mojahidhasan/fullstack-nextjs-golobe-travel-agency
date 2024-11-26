@@ -8,7 +8,7 @@ import { FLIGHT_CLASS_PLACEHOLDERS, RATING_SCALE } from "@/lib/constants";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/local-ui/carousel";
 import dummyAirplane from "@/public/images/dummy-plane.webp";
 export function FlightData({ data }) {
-  const { flightNumber, airplaneName, price, rating, reviews, liked, flightClass, airplaneImages } = data;
+  const { flightNumber, airplaneName, price, rating, totalReviews, liked, flightClass, airplaneImages, flightId } = data;
 
   return (
     <section className="mb-10 text-secondary bg-white p-6 rounded-lg shadow-sm transition duration-300 ease-in-out hover:shadow-md">
@@ -20,7 +20,7 @@ export function FlightData({ data }) {
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <RatingShow rating={ rating } />
             <span className="font-semibold">{ RATING_SCALE[parseInt(rating)] }</span>
-            <span className="text-gray-500">{ reviews } reviews</span>
+            <span className="text-gray-500">{ totalReviews } reviews</span>
           </div>
         </div>
         <div className="text-right flex flex-col gap-2">
@@ -31,6 +31,7 @@ export function FlightData({ data }) {
           </div>
           <div className="flex gap-4 flex-wrap">
             <LikeButton liked={ liked } keys={ {
+              flightId,
               flightNumber,
               flightClass
             } } flightsOrHotels="flights" className={ "p-3" } />

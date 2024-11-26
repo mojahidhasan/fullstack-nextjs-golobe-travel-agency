@@ -1,9 +1,4 @@
-function FlightSearchLayout({
-  children,
-  flightFilter,
-  flightResult,
-  searchParams,
-}) {
+function FlightSearchLayout({ children, flightFilter, flightResult }) {
   return (
     <>
       <main className="w-[90%] my-10 mx-auto">

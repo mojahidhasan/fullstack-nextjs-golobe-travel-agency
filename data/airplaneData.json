@@ -6,6 +6,14 @@
     "classes": ["first", "business", "premium_economy", "economy"],
     "description": "A380 Four Class Ultra Long Range",
     "total": 484,
+    "images": [
+      "https://images.unsplash.com/photo-1693704986678-9438caf252e8?q=80&w=1242&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/11/21/1613607.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/11/17/1612873.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/11/2/1609712.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/10/31/1609372.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/10/31/1609208.jpg"
+    ],
     "seatMap": {
       "first": {
         "total": 14,
@@ -520,6 +528,14 @@
     "classes": ["first", "business", "premium_economy", "economy"],
     "description": "B777 Four Class Ultra Long Range",
     "total": 324,
+    "images": [
+      "https://images.unsplash.com/photo-1720463698294-7acd5f27112c?q=80&w=1171&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/10/29/1608783.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/10/27/1608365.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/10/26/1608301.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/10/21/1607212.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/10/15/1605963.jpg"
+    ],
     "seatMap": {
       "first": {
         "total": 6,
@@ -867,6 +883,15 @@
     "classes": ["first", "business", "economy"],
     "description": "A330 three Class",
     "total": 231,
+    "images": [
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/11/9/1611145.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/9/19/1600030.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/7/30/1595863.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/5/2/1580614.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/5/16/1582977.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/4/2/1575611.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2023/12/16/1556747.jpg"
+    ],
     "seatMap": {
       "first": {
         "total": 8,
@@ -1114,6 +1139,13 @@
     "classes": ["first", "business", "economy"],
     "description": "Boeing 787-9 (789) Layout 1",
     "total": 231,
+    "images": [
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/4/20/1578708.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/4/28/1580131.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/5/4/1580926.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/5/13/1582413.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/5/4/1580927.jpg"
+    ],
     "seatMap": {
       "first": {
         "total": 8,
@@ -1361,6 +1393,13 @@
     "classes": ["business", "economy"],
     "description": "Boeing 737-800",
     "total": 174,
+    "images": [
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/11/4/1610156.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/11/20/1613398.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/10/22/1607421.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/10/12/1605166.jpg",
+      "https://www.airplane-pictures.net/images/uploaded-images/2024/9/30/1602286.jpg"
+    ],
     "seatMap": {
       "business": {
         "total": 12,

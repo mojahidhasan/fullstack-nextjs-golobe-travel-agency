@@ -15,7 +15,6 @@ export function VerifyEmailBtn({ email, sendAgainAt }) {
   const [emailsSent, setEmailsSent] = useState({});
   const [countdown, setCountdown] = useState();
   const interval = useRef();
-  console.log(countdown);
   function countdownTimer() {
     const canSendAgainAt = localStorage.getItem("sendAgainAt") || sendAgainAt;
     if (canSendAgainAt) {

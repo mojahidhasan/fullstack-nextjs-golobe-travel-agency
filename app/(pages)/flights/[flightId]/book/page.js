@@ -26,7 +26,7 @@ export default async function FlightBookPage({ params }) {
     {
       flightNumber: params.flightId,
     },
-    [params.flightId]
+    [params.flightId, "flights"]
   );
 
   if (Object.keys(flight).length === 0) {
@@ -41,6 +41,7 @@ export default async function FlightBookPage({ params }) {
       airlineId: flight.stopovers[0].airlineId._id,
       departureAirportId: flight.originAirportId._id,
       arrivalAirportId: flight.destinationAirportId._id,
+      airplaneModelName: flight.stopovers[0].airplaneId.model,
     },
     [params.flightId + "_review", flight._id + "_review", "flightReviews"]
   );

@@ -6,19 +6,17 @@ import { Skeleton } from "../ui/skeleton";
 import { Button } from "../ui/button";
 import { flagReviewAction } from "@/lib/actions";
 import { usePathname } from "next/navigation";
-import { useSession } from "next-auth/react";
 import { useToast } from "../ui/use-toast";
 
 import avatarDefault from "@/public/icons/avatar-default.svg";
 import { RATING_SCALE } from "@/lib/constants";
 
-export function SingleReview({ review }) {
+export function SingleReview({ review, session }) {
   const pathname = usePathname();
   const { toast } = useToast();
-  const { data: session } = useSession();
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-
+  console.log(review.reviewer);
   useEffect(() => {
     const getUser = async () => {
       setIsLoading(true);

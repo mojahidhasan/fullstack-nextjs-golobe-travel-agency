@@ -9,7 +9,6 @@ import { ErrorMessage } from "../local-ui/errorMessage";
 import { RatingStar } from "@/components/local-ui/ratingStar";
 import { useRef, useEffect, useState } from "react";
 import { useFormState } from "react-dom";
-import { useParams } from "next/navigation";
 
 import { writeReviewAction } from "@/lib/actions";
 export function WriteReview({
@@ -98,7 +97,7 @@ export function WriteReview({
             {shouldMessageShow &&
               state?.success === false &&
               state?.message && <ErrorMessage message={state?.message} />}
-            <form id={"flightReview"} action={dispatch}>
+            <form id={"flight-review-form"} action={dispatch}>
               <div className={"flex mb-5 flex-col gap-4"}>
                 <RatingStar
                   fill={"hsl(120, 33%, 10%)"}
@@ -115,7 +114,7 @@ export function WriteReview({
                   error={state?.error && state?.error.reviewComment}
                 />
               </div>
-              <SubmitBtn formId={"flightReview"} />
+              <SubmitBtn formId={"flight-review-form"} />
             </form>
           </>
         ) : (

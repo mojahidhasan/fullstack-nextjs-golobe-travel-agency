@@ -2,10 +2,8 @@
 const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'unsafe-inline';
-    connect-src 'self';
     style-src 'self' 'unsafe-inline';
-    img-src 'self' blob: data: https://images.unsplash.com/ https://www.airplane-pictures.net/;
-    frame-src 'self';
+    img-src 'self' blob: data: https://images.unsplash.com/ https://platform-lookaside.fbsbx.com/;
     font-src 'self';
     object-src 'self';
     base-uri 'self';

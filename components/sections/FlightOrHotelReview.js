@@ -42,7 +42,7 @@ export async function FlightOrHotelReview({ rating, reviews, flightKeys }) {
         {reviews.length === 0 ? (
           <p className={"text-center text-xl font-bold"}>No reviews yet</p>
         ) : (
-          <FlightOrHotelReviewList reviews={reviews} />
+          <FlightOrHotelReviewList session={session} reviews={reviews} />
         )}
       </div>
     </div>

@@ -4,7 +4,7 @@ import { SingleReview } from "../local-ui/SingleReview";
 import { useState, useRef } from "react";
 import leftArrow from "@/public/icons/forward.svg";
 import { Button } from "../ui/button";
-export function FlightOrHotelReviewList({ reviews }) {
+export function FlightOrHotelReviewList({ reviews, session }) {
   const scrollView = useRef(null);
   const [currentPage, setCurrentPage] = useState(1);
   const reviewsPerPage = 5;
@@ -58,7 +58,11 @@ export function FlightOrHotelReviewList({ reviews }) {
               {reviews
                 .slice(index * reviewsPerPage, (index + 1) * reviewsPerPage)
                 .map((review) => (
-                  <SingleReview key={review._id} review={review} />
+                  <SingleReview
+                    key={review._id}
+                    session={session}
+                    review={review}
+                  />
                 ))}
             </div>
           );

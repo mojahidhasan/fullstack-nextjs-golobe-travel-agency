@@ -23,17 +23,18 @@ export default async function FavouritesPage() {
         const flightDetails = await getOneDoc(
           "Flight",
           {
-            flightNumber: flight.flightNumber,
+            _id: flight.flightId,
           },
-          [flight.flightNumber]
+          [flight._id, "flights", flight.flightNumber]
         );
         if (Object.keys(flightDetails).length === 0) return;
         const flightReviews = await getManyDocs(
           "FlightReview",
           {
-            airlineId: flight.airlineId,
-            departureAirportId: flight.departureAirportId,
-            arrivalAirportId: flight.arrivalAirportId,
+            airlineId: flightDetails.stopovers[0].airlineId._id,
+            departureAirportId: flightDetails.originAirportId._id,
+            arrivalAirportId: flightDetails.destinationAirportId._id,
+            airplaneModelName: flightDetails.stopovers[0].airplaneId.model,
           },
           [
             flight.flightNumber + "_review",
@@ -62,7 +63,6 @@ export default async function FavouritesPage() {
   }
 
   favouriteFlights = favouriteFlights.filter(Boolean);
-
   // will be added later
   // if (userDetails.likes.hotels.length > 0) {
   //   favouriteHotels = await getHotelssByHoteIdsCached(
