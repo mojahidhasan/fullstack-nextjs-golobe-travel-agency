@@ -10,6 +10,8 @@ export default function DeleteLocalStorageAndCookies({ email }) {
 
       delete emailsSent[email];
       localStorage.setItem("emailsSent", JSON.stringify(emailsSent));
+
+      setTimeout(() => window.location.replace("/profile"), 2000);
     }
     deletes();
   }, []);
