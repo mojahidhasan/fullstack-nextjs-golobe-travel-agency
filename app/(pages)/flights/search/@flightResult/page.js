@@ -25,8 +25,7 @@ async function FLightResultPage({ searchParams }) {
     if (d.getDate() !== departDateStart.getDate()) {
       departDateStart = startOfDay(departDateStart);
     }
-
-    const returnDate = searchParams.returnDate
+    const returnDate = Boolean(searchParams.returnDate)
       ? searchParams.returnDate
       : departDateStart;
 
