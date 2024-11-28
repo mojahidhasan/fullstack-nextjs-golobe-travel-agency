@@ -16,12 +16,17 @@ export function SingleReview({ review, session }) {
   const { toast } = useToast();
   const [user, setUser] = useState({});
   const [isLoading, setIsLoading] = useState(true);
-  console.log(review.reviewer);
   useEffect(() => {
     const getUser = async () => {
       setIsLoading(true);
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${review.reviewer}`
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${review.reviewer}`,
+        {
+          next: {
+            revalidate: process.env.NEXT_PUBLIC_REVALIDATION_TIME,
+            tags: [review.reviewer, "users"],
+          },
+        }
       );
       const data = await response.json();
       setUser(data);
