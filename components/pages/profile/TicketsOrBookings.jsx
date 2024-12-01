@@ -39,7 +39,7 @@ export function TicketsOrBookings() {
   return (
     <>
       <div className="flex items-center justify-between">
-        <h1 className="mb-[16px] font-tradeGothic text-[2rem] font-bold">
+        <h1 className="mb-[16px] text-[2rem] font-bold">
           Tickets/Bookings
         </h1>
         <select className="h-min bg-transparent p-0 text-[0.875rem] font-semibold">

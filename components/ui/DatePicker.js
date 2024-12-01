@@ -16,6 +16,7 @@ export function DatePicker({
   className,
   date = new Date(),
   setDate = () => {},
+  ...props
 }) {
   return (
     <Popover>
@@ -41,6 +42,7 @@ export function DatePicker({
           selected={new Date(date)}
           onSelect={setDate}
           initialFocus
+          {...props}
         />
       </PopoverContent>
     </Popover>
