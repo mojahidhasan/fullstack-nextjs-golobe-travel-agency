@@ -29,7 +29,6 @@ export function ProfileData({ userDetails, tab }) {
       </TabsList>
       <TabsContent
         value="account"
-        className="bg-white p-4 shadow-md rounded-[8px]"
       >
         <AccoutDetails userDetails={ userDetails } />
       </TabsContent>

@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 
 import { Input } from "@/components/local-ui/input";
-import { Button } from "@/components/ui/button";
 
 import { updateNameAction } from "@/lib/actions";
 import { useFormState } from "react-dom";
@@ -43,6 +42,7 @@ export function ChangeNamePopup({ firstname, lastname }) {
         });
       }, 500);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   return (
@@ -78,7 +78,7 @@ export function ChangeNamePopup({ firstname, lastname }) {
             />
           </div>
           <DialogFooter>
-            <SubmitBtn formId={ "change-name-form" } />
+            <SubmitBtn customTitle={ { default: "Save", onSubmitting: "Saving..." } } formId={ "change-name-form" } />
           </DialogFooter>
         </form>
       </DialogContent>

@@ -3,6 +3,7 @@ import { ProfileData } from "@/components/pages/profile/ProfileData";
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { getOneDoc } from "@/lib/db/getOperationDB";
+import { format } from "date-fns";
 export default async function ProfilePage({ searchParams }) {
   const sessionUser = (await auth())?.user;
   const isloggedIn = !!sessionUser;
@@ -23,7 +24,13 @@ export default async function ProfilePage({ searchParams }) {
           name={userDetails.firstname + " " + userDetails.lastname}
           email={userDetails.email}
         />
-        <ProfileData tab={searchParams?.tab} userDetails={userDetails} />
+        <ProfileData
+          tab={searchParams?.tab}
+          userDetails={{
+            ...userDetails,
+            dateOfBirth: format(userDetails.dateOfBirth, "dd-MM-yyyy"),
+          }}
+        />
       </main>
     );
   }

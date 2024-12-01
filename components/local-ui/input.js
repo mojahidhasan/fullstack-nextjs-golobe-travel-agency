@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
 import { useState } from "react";
 import eye from "@/public/icons/eye.svg";
 import eyeOff from "@/public/icons/eye-closed.svg";
-
+import { SelectCountry } from "../pages/profile/ui/SelectCountry";
 export function Input({
   label = "Label",
   error = null,
@@ -34,17 +34,36 @@ export function Input({
         </span>
         <div className="h-auto relative">
           {type !== "textarea" ? (
-            <_Input
-              style={{
-                outline: "none",
-              }}
-              className={cn(
-                "border-2 border-black",
-                error && "border-destructive"
-              )}
-              type={inputType}
-              {...props}
-            />
+            type === "tel" ? (
+              <div
+                className={cn(
+                  "border-2 h-10 w-full lg:h-14 rounded-md flex border-black",
+                  error && "border-destructive"
+                )}
+              >
+                <SelectCountry name={"callingCode"} />
+                <_Input
+                  style={{
+                    outline: "none",
+                  }}
+                  type={inputType}
+                  className="h-full bg-inherit lg:h-full border-none"
+                  {...props}
+                />
+              </div>
+            ) : (
+              <_Input
+                style={{
+                  outline: "none",
+                }}
+                className={cn(
+                  "border-2 border-black",
+                  error && "border-destructive"
+                )}
+                type={inputType}
+                {...props}
+              />
+            )
           ) : (
             <textarea
               style={{
