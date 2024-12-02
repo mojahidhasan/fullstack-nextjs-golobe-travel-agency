@@ -58,7 +58,7 @@ export function SingleReview({ review, session }) {
   }
   return (
     <>
-      <div className="flex items-center gap-[16px]">
+      <div className="flex items-start gap-[16px]">
         <Avatar className={"h-[45px] rounded-full w-[45px]"}>
           <AvatarImage
             className={"rounded-full"}

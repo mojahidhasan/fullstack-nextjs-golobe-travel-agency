@@ -113,6 +113,7 @@ export function WriteReview({
                   name={"reviewComment"}
                   defaultValue={currentUserReview?.comment ?? ""}
                   error={state?.error && state?.error.reviewComment}
+                  className={"leading-snug"}
                 />
               </div>
               <SubmitBtn formId={"flight-review-form"} />

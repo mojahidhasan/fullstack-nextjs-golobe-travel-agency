@@ -51,7 +51,7 @@ async function FLightResultPage({ searchParams }) {
       return availableSeats.length >= totalPassengers;
     });
   }
-
+  console.log(session?.user?.id);
   if (session?.user?.id) {
     const likedFlights = (
       await getOneDoc("User", { _id: session?.user?.id }, ["userDetails"])
