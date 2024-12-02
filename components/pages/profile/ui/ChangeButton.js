@@ -3,7 +3,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 export const ChangeButton = React.forwardRef(function ChangeButton(
-  { className, ...props },
+  { className, customName = "Change", ...props },
   ref
 ) {
   return (
@@ -14,8 +14,8 @@ export const ChangeButton = React.forwardRef(function ChangeButton(
       {...props}
     >
       <svg
-        width="14"
-        height="14"
+        width="20"
+        height="20"
         viewBox="0 0 14 14"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
@@ -31,7 +31,7 @@ export const ChangeButton = React.forwardRef(function ChangeButton(
           fill="black"
         />
       </svg>
-      <span className="sm:inline hidden">Change</span>
+      <span className="sm:inline hidden">{customName}</span>
     </Button>
   );
 });

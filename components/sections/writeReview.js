@@ -37,6 +37,7 @@ export function WriteReview({
 
   async function handleClick(action, e) {
     const delay = async (milli = 10) =>
+      // eslint-disable-next-line no-undef
       new Promise((resolve) => setTimeout(resolve, milli));
     switch (action) {
       case "reviewOpen":

@@ -80,13 +80,13 @@ export function VerifyEmailBtn({ email, sendAgainAt }) {
   return (
     <form
       id={"verify-email-form"}
-      className={"inline"}
+      className={"inline-block text-base leading-none"}
       action={() => dispatch({ email })}
     >
       <SubmitBtn
         formId={"verify-email-form"}
         className={
-          "text-xs p-0 inline h-auto font-normal text-blue-500 underline disabled:text-gray-500"
+          "text-xs p-0 inline h-min font-normal text-blue-500 underline disabled:text-gray-500"
         }
         disabled={!!countdown ? true : false}
         variant={"link"}
