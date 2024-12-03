@@ -48,11 +48,13 @@ export function VerifyEmailBtn({ email, sendAgainAt }) {
     }
     countdownTimer();
     return () => clearInterval(interval.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     countdownTimer();
     return () => clearInterval(interval.current);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [emailsSent, sendAgainAt]);
 
   useEffect(() => {
@@ -75,6 +77,7 @@ export function VerifyEmailBtn({ email, sendAgainAt }) {
         variant: "destructive",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   return (

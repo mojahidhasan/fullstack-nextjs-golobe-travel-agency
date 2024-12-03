@@ -58,6 +58,7 @@ export function UploadProfilePicture() {
         variant: "destructive",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   return (

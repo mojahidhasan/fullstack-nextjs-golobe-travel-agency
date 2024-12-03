@@ -46,6 +46,7 @@ export function UploadCoverPhoto() {
         variant: "destructive",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
   return (
     <Dialog open={opened} onOpenChange={setOpened}>

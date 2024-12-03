@@ -36,6 +36,7 @@ export function DatePickerWithRange({ name, className }) {
     }
 
     getFlightDate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const date = (flightForm.departDate ? new Date(flightForm.departDate) : "");

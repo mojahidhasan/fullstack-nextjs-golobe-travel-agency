@@ -34,6 +34,7 @@ export function LoginForm() {
       }
     }, 0);
     return () => clearTimeout(timeout);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams]);
 
   if (state?.success === true) {

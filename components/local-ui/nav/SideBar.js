@@ -73,6 +73,7 @@ export function SideBar({ isLoggedIn }) {
         variant: "destructive",
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   return (
