@@ -16,6 +16,7 @@ export function SetNewPasswordForm() {
     if (state?.success === true) {
       setTimeout(() => router.replace("/login"), 1000);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state?.success]);
   return (
     <div className={"bg-white p-7 rounded-lg shadow-lg"}>

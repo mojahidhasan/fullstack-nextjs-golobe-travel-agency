@@ -5,7 +5,10 @@ export async function GET(req, { params }) {
   const url = await getBucketPhotoUrl(fileName, "cp");
 
   return new ImageResponse(
-    <img width={1296} height={350} src={url} alt={"coverPhoto"} />,
+    (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img width={1296} height={350} src={url} alt={"coverPhoto"} />
+    ),
     {
       width: 1296,
       height: 350,

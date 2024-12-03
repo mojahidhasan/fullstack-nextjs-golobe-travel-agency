@@ -44,7 +44,7 @@ export function SelectCountry({ name = "country" }) {
       <ul
         ref={ulRef}
         className={
-          "absolute invisible overflow-y-scroll golobe-scrollbar rounded-md p-2 top-10 lg:top-14 left-0 z-50 w-full bg-white"
+          "absolute invisible overflow-y-scroll golobe-scrollbar rounded-lg p-2 top-10 lg:top-14 left-0 z-50 w-full bg-white shadow-lg border"
         }
       >
         {countryInfo.map((item, i) => (

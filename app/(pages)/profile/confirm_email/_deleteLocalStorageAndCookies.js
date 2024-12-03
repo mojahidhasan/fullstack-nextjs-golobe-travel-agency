@@ -14,5 +14,6 @@ export default function DeleteLocalStorageAndCookies({ email }) {
       setTimeout(() => window.location.replace("/profile"), 2000);
     }
     deletes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 }

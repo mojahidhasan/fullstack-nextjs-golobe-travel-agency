@@ -33,6 +33,7 @@ export function SingleReview({ review, session }) {
       setIsLoading(false);
     };
     getUser();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleFlaged() {

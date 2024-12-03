@@ -27,6 +27,7 @@ export function SignupForm() {
         router.push('/login?s=true');
       }, 1000);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
 
   if (state?.success === false && state?.error !== undefined) {
@@ -123,16 +124,16 @@ export function SignupForm() {
             name={ "acceptTerms" }
             error={ errors?.acceptTerms }
             label={
-              <span className={ `text-xs text-secondary` }>
+              <span className={ `text-xs text-secondary select-none` }>
                 I agree to all the{ " " }
-                <Link href={ "/terms-of-service" } target="_blank" className="text-tertiary">
+                <Link href={ "/terms-of-service" } target="_blank" className="text-tertiary select-text">
                   Terms
                 </Link>{ " " }
                 and{ " " }
                 <Link
                   href={ "/privacy-policy" }
                   target="_blank"
-                  className="text-tertiary"
+                  className="text-tertiary select-text"
                 >
                   Privacy Policies
                 </Link>

@@ -70,6 +70,7 @@ async function FLightResultPage({ searchParams }) {
   }
 
   // console.log(flightResults[0].stopovers[0].airlineId);
+  // eslint-disable-next-line no-undef
   flightResults = await Promise.all(
     flightResults.map(async (flight) => {
       const currentFlightReviews = await getManyDocs(

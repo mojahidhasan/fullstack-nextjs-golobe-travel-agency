@@ -27,6 +27,7 @@ export function VerifyCodeForm() {
     if (res?.success == true) {
       setTimeout(() => router.replace("/set-new-password"), 1000);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.has("sent"), res?.success]);
 
   async function resendCode(e) {

@@ -18,6 +18,7 @@ export default async function FavouritesPage() {
   let favouriteHotels = [];
 
   if (userDetails.likes.flights.length > 0) {
+    // eslint-disable-next-line no-undef
     favouriteFlights = await Promise.all(
       userDetails.likes.flights.map(async (flight) => {
         const flightDetails = await getOneDoc(
