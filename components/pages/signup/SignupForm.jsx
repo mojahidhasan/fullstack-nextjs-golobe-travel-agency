@@ -125,7 +125,7 @@ export function SignupForm() {
             label={
               <span className={ `text-xs text-secondary` }>
                 I agree to all the{ " " }
-                <Link href={ "/terms" } target="_blank" className="text-tertiary">
+                <Link href={ "/terms-of-service" } target="_blank" className="text-tertiary">
                   Terms
                 </Link>{ " " }
                 and{ " " }

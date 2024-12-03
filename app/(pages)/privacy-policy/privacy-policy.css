@@ -1,0 +1,33 @@
+h1,h2,h3{
+  @apply font-bold
+}
+#privacy-policy-container *{
+  @apply py-1
+}
+h1{
+  @apply text-3xl
+}
+h2{
+  @apply text-2xl
+}
+h3{
+  @apply text-lg
+}
+
+h1~h2, h1~* {
+  @apply indent-4
+}
+h2~*{
+  @apply indent-8
+}
+h3~ol{
+  @apply indent-12
+}
+
+li::before{
+  content: "-";
+  margin-right: 8px;
+}
+li>ol{
+  @apply pl-5
+}
