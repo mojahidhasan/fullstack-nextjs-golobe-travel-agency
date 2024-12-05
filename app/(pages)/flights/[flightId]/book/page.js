@@ -56,7 +56,7 @@ export default async function FlightBookPage({ params }) {
       +price.discount,
     rating: flightReviews.length
       ? (
-          flightReviews.reduce((prev, curr) => prev + curr.rating, 0) /
+          flightReviews.reduce((prev, curr) => +prev + +curr.rating, 0) /
           flightReviews.length
         ).toFixed(1)
       : "N/A",
