@@ -8,13 +8,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { FilterRating } from "@/components/local-ui/FilterRating";
 
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
 import {
   setFlightFormFilters,
   resetFilters,
+  defaultFlightFormValue,
+  currentHourMinInMs
 } from "@/reduxStore/features/flightFormSlice";
 
 export function FlightsFilter({ className }) {
@@ -42,125 +44,136 @@ export function FlightsFilter({ className }) {
     }
   }
 
-  function handleFilterApply() {
-    const urlComponent = new URLSearchParams(flightFilterState);
+  function minToHHMM(min, ampm = false) {
+    const hours = (Math.floor(min / 60)) % 24;
+    const minutes = Math.floor(min % 60);
+
+    if (ampm === false) {
+
+      return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+    }
+
+    if (ampm === true) {
+      const hours12 = hours % 12;
+      const hours12String = hours12 === 0 ? 12 : hours12;
+
+      return `${hours12String.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")} ${amOrPm(hours)}`;
+    }
+
   }
+
+  function amOrPm(hour) {
+    if (hour > 12) {
+      return "pm";
+    }
+    return "am";
+  }
+
+
   return (
     <section
-      className={cn(
+      className={ cn(
         "relative lg:w-[400px] w-full border-none lg:border-r-[1px] pr-[12px]",
         className
-      )}
+      ) }
     >
       <div className="flex items-center justify-between mb-[24px] font-semibold text-secondary">
         <Button
-          className="text-[1.25rem] p-0"
-          variant={"link"}
-          onClick={() => {
+          className="text-[1.25rem] p-0 max-lg:bg-primary/30 max-lg:w-full"
+
+          variant={ "link" }
+          onClick={ () => {
             if (document.body.clientWidth < 1024) {
               setFilter(!filter);
             }
-          }}
+          } }
           asChild
         >
           <h2>Fliters</h2>
         </Button>
-        <Button variant={"link"} onClick={() => dispatch(resetFilters())}>
-          reset
+        <Button type="submit" form="flightForm" variant={ "link" } className="max-lg:hidden" onClick={ () => dispatch(resetFilters()) }>
+          reset filter
         </Button>
       </div>
       <div
-        className={cn(
-          "w-full max-lg:rounded-xl max-lg:bg-white max-lg:p-5",
+        className={ cn(
+          "w-full shadow-md max-lg:rounded-xl max-lg:bg-white max-lg:p-5",
           filter === false && "max-lg:hidden"
-        )}
+        ) }
       >
+        <div className={ "flex justify-end" }>
+          <Button type="submit" form="flightForm" variant={ "link" } className="block lg:hidden h-auto px-0" onClick={ () => dispatch(resetFilters()) }>
+            reset filter
+          </Button>
+
+        </div>
         <div>
-          <Dropdown title={"Price"} open>
+          <Dropdown title={ "Price" } open>
             <div className="my-5">
               <Slider
                 name="price-slider"
-                min={50}
-                max={1200}
-                value={flightFilterState.priceRange}
-                onValueChange={(value) => {
+                min={ defaultFlightFormValue.filters.priceRange[0] }
+                max={ defaultFlightFormValue.filters.priceRange[1] }
+                value={ flightFilterState.priceRange }
+                onValueChange={ (value) => {
                   dispatch(setFlightFormFilters({ priceRange: value }));
-                }}
+                } }
               />
+              <div className={ "flex justify-between mt-3" }>
+                <p>${ flightFilterState?.priceRange[0] }</p>
+                <p>${ flightFilterState?.priceRange[1] }</p>
+              </div>
             </div>
           </Dropdown>
-          <Dropdown title={"Departure Time"} open>
+          <Dropdown title={ "Departure Time" } open>
             <div className="my-5">
               <Slider
                 name="departure-time-slider"
-                min={50}
-                max={1200}
-                value={flightFilterState.departureTime}
-                onValueChange={(value) => {
+                min={ defaultFlightFormValue.filters.departureTime[0] }
+                max={ defaultFlightFormValue.filters.departureTime[1] }
+                value={ flightFilterState.departureTime }
+                onValueChange={ (value) => {
                   dispatch(setFlightFormFilters({ departureTime: value }));
-                }}
+                } }
               />
+              <div className={ "flex justify-between mt-3" }>
+                <p>{ minToHHMM(flightFilterState?.departureTime[0] / 1000 / 60, true) }</p>
+                <p>{ minToHHMM(flightFilterState?.departureTime[1] / 1000 / 60, true) }</p>
+              </div>
             </div>
           </Dropdown>
-          <Dropdown title={"Rating"} open>
+          <Dropdown title={ "Rating" } open>
             <FilterRating
-              value={flightFilterState.rate}
-              setValue={(rate) => {
-                dispatch(setFlightFormFilters({ rate }));
-              }}
+              value={ flightFilterState.rates }
+              setValue={ (rates) => {
+                dispatch(setFlightFormFilters({ rates }));
+              } }
               className="justify-start"
             />
           </Dropdown>
-          <Dropdown title={"Airlines"} open>
+          <Dropdown title={ "Airlines" } open>
             <div className="flex flex-col gap-3">
-              {["Emirates", "Fly-Dubai", "Qatar", "Etihad"].map((name) => {
-                const IDfyName = name.split(" ").join("").toLocaleLowerCase();
+              { [["Emirates", "EK"], ["Fly-Dubai", "FZ"], ["Etihad", "EY"]].map((name) => {
                 return (
                   <Checkbox
-                    key={name}
-                    onCheckedChange={(checked) =>
-                      handleCheckboxChange(checked, "airlines", IDfyName)
+                    key={ name[0] }
+                    onCheckedChange={ (checked) =>
+                      handleCheckboxChange(checked, "airlines", name[1])
                     }
-                    name={IDfyName}
-                    id={IDfyName}
-                    label={name}
-                    checked={flightFilterState.airlines.includes(IDfyName)}
+                    name={ name[1] }
+                    id={ name[1] }
+                    label={ name[0] }
+                    checked={ flightFilterState.airlines.includes(name[1]) }
                   />
                 );
-              })}
+              }) }
             </div>
           </Dropdown>
-          <Dropdown title={"Trips"} open>
-            <div className="flex flex-col gap-3">
-              {[
-                "Round trip",
-                "One-Way",
-                "Multi-City",
-                "My Dates Are Flexible",
-              ].map((name) => {
-                const IDfyName = name.split(" ").join("").toLocaleLowerCase();
-                return (
-                  <Checkbox
-                    key={name}
-                    onCheckedChange={(checked) =>
-                      handleCheckboxChange(checked, "trips", IDfyName)
-                    }
-                    name={IDfyName}
-                    id={IDfyName}
-                    label={name}
-                    checked={flightFilterState.trips.includes(IDfyName)}
-                  />
-                );
-              })}
-            </div>
-          </Dropdown>
-          <div className={"flex justify-end py-4 w-full"}>
+          <div className={ "flex justify-end py-4 w-full" }>
             <Button
-              onClick={() => {
-                setFilter(!filter);
-                handleFilterApply();
-              }}
-              className={"bg-primary"}
+              type="submit"
+              form="flightform"
+              className={ "bg-primary" }
             >
               Apply
             </Button>

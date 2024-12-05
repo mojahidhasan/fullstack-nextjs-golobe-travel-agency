@@ -20,7 +20,12 @@ import { AddPromoCode } from "@/components/AddPromoCode";
 
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
+import {
+  currentHourMinInMs,
+  defaultFlightFormValue,
+  setFlightForm,
+  setFlightFormFilters,
+} from "@/reduxStore/features/flightFormSlice";
 
 import airports from "@/data/airportsData.json";
 import swap from "@/public/icons/swap.svg";
@@ -37,35 +42,21 @@ function SearchFlightsForm({ searchParams = {} }) {
   let searchParamsObj = {};
   if (Object.keys(searchParams).length > 0) {
     for (const [key, value] of Object.entries(searchParams)) {
-      if (key === "passenger") {
+      if (key === "passenger" || key === "filters") {
         searchParamsObj[key] = JSON.parse(value);
         continue;
       }
       searchParamsObj[key] = value;
     }
-  } else {
-    searchParamsObj = {
-      from: "",
-      to: "",
-      departureAirportCode: "",
-      arrivalAirportCode: "",
-      departDate: new Date().toString(),
-      returnDate: "",
-      trip: "oneway",
-      passenger: {
-        adult: 1,
-        children: 0,
-      },
-      class: "economy",
-      promocode: "",
-    };
   }
-
   useEffect(() => {
-    dispatch(setFlightForm(searchParamsObj));
+    if (Object.keys(searchParams).length > 0) {
+      dispatch(setFlightForm(searchParamsObj));
+    }
   }, []);
 
   const flightFormData = useSelector((state) => state.flightForm.value);
+
   function handleSubmit(e) {
     e.preventDefault();
 
@@ -152,6 +143,12 @@ function SearchFlightsForm({ searchParams = {} }) {
           value={flightFormData.class}
           form="flightform"
           name="class"
+        />
+        <input
+          type="hidden"
+          value={JSON.stringify(flightFormData.filters)}
+          form="flightform"
+          name="filters"
         />
 
         <div className="my-[20px] grid gap-[24px] lg:grid-cols-2 xl:grid-cols-[2fr_1fr_repeat(2,_2fr)]">

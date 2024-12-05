@@ -2,13 +2,16 @@ import { FLightResult } from "@/components/pages/flights.search/sections/FlightR
 import { auth } from "@/lib/auth";
 import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import { RATING_SCALE } from "@/lib/constants";
-import { endOfDay, startOfDay } from "date-fns";
+import { addMilliseconds, endOfDay, startOfDay } from "date-fns";
 import _ from "lodash";
 import { cookies } from "next/headers";
 async function FLightResultPage({ searchParams }) {
   let flightResults = [];
+  let filters = {};
+
   const session = await auth();
   const timezone = cookies().get("timezone")?.value || "UTC";
+
   if (Object.keys(searchParams).length > 0) {
     const departureAirportId = searchParams.departureAirportCode;
     const arrivalAirportId = searchParams.arrivalAirportCode;
@@ -17,29 +20,47 @@ async function FLightResultPage({ searchParams }) {
     ).reduce((acc, passenger) => acc + passenger, 0);
     const flightClass = searchParams.class;
 
-    const d = new Date();
+    filters = searchParams.filters ? JSON.parse(searchParams.filters) : {};
 
-    let departDateStart = new Date(searchParams.departDate);
-    departDateStart.setHours(d.getHours(), d.getMinutes());
+    const departDate = new Date(searchParams.departDate);
+    const departDateFrom = addMilliseconds(
+      startOfDay(departDate),
+      filters.departureTime[0]
+    );
+    departDateFrom.setSeconds(0, 0);
 
-    if (d.getDate() !== departDateStart.getDate()) {
-      departDateStart = startOfDay(departDateStart);
+    const today = new Date();
+    if (departDate.getDate() === today.getDate()) {
+      departDateFrom.setHours(today.getHours(), today.getMinutes(), 0, 0);
     }
-    const returnDate = Boolean(searchParams.returnDate)
-      ? searchParams.returnDate
-      : departDateStart;
 
-    const departDateEnd = endOfDay(new Date(returnDate));
+    const departDateTo = addMilliseconds(
+      startOfDay(departDate),
+      filters.departureTime[1]
+    );
+    departDateTo.setSeconds(0, 0);
+
     flightResults = (
       await getManyDocs(
         "Flight",
         {
           expireAt: {
-            $gte: departDateStart,
-            $lte: departDateEnd,
+            $gte: departDateFrom,
+            $lte: departDateTo,
           },
           originAirportId: departureAirportId,
           destinationAirportId: arrivalAirportId,
+          ...(filters?.airlines &&
+            Object.keys(filters.airlines).length > 0 && {
+              "stopovers.0.airlineId": { $in: filters.airlines },
+            }),
+          ...(filters?.priceRange &&
+            Object.keys(filters.priceRange).length > 0 && {
+              [`price.${flightClass}.base`]: {
+                $gte: filters?.priceRange[0],
+                $lte: filters?.priceRange[1],
+              },
+            }),
         },
         ["flights"]
       )
@@ -51,7 +72,7 @@ async function FLightResultPage({ searchParams }) {
       return availableSeats.length >= totalPassengers;
     });
   }
-  console.log(session?.user?.id);
+
   if (session?.user?.id) {
     const likedFlights = (
       await getOneDoc("User", { _id: session?.user?.id }, ["userDetails"])
@@ -69,7 +90,6 @@ async function FLightResultPage({ searchParams }) {
     });
   }
 
-  // console.log(flightResults[0].stopovers[0].airlineId);
   // eslint-disable-next-line no-undef
   flightResults = await Promise.all(
     flightResults.map(async (flight) => {
@@ -94,8 +114,13 @@ async function FLightResultPage({ searchParams }) {
         0
       );
 
-      const rating = +currentFlightRatingsSum / currentFlightReviews.length;
-
+      const rating =
+        +currentFlightRatingsSum / currentFlightReviews.length || 0;
+      if (filters?.rates && Object.keys(filters.rates).length > 0) {
+        if (!filters.rates.map(Number).includes(Math.floor(rating))) {
+          return;
+        }
+      }
       return {
         ...flight,
         price: flight.price[searchParams.class].base,
@@ -108,7 +133,7 @@ async function FLightResultPage({ searchParams }) {
       };
     })
   );
-
+  flightResults = flightResults.filter(Boolean); // clearing undefined came due to filters.rates
   if (flightResults?.error) {
     return (
       <div className={"text-center grow font-bold"}>{flightResults.error}</div>

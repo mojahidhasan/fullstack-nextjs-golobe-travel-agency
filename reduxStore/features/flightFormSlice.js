@@ -1,12 +1,14 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { addDays } from "date-fns";
+
+const d = new Date();
 export const defaultFlightFormValue = {
   from: "",
   to: "",
   departureAirportCode: "",
   arrivalAirportCode: "",
   trip: "oneway",
-  departDate: new Date().toString(),
+  departDate: d.toString(),
   returnDate: "",
   passenger: {
     adult: 1,
@@ -14,14 +16,13 @@ export const defaultFlightFormValue = {
   },
   class: "economy",
   promocode: "",
-  firstAvailableFlightDate: new Date().toString(),
-  lastAvailableFlightDate: addDays(new Date(), 9).toString(),
+  firstAvailableFlightDate: d.toString(),
+  lastAvailableFlightDate: addDays(d, 9).toString(),
   filters: {
-    rate: [],
-    airlines: [],
-    trips: [],
-    priceRange: [50, 1200],
-    departureTime: [50, 1200],
+    rates: [], // 1,2,3,4,5
+    airlines: [], // EK, FZ, EY
+    priceRange: [400, 2000], // min, max
+    departureTime: [0, 86340000], // 24 hours in milliseconds , min and max
   },
 };
 
