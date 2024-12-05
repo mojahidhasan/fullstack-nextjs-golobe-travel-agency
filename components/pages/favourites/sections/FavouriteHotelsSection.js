@@ -5,7 +5,7 @@ export function FavouriteHotelsSection({ favouriteHotels }) {
     return (
       <h1
         className={
-          "text-[1.25rem] my-20 font-semibold text-secondary text-center"
+          "text-[1.25rem] py-20 h-full font-semibold text-secondary text-center bg-white rounded-md shadow-md"
         }
       >
         No favourite hotels

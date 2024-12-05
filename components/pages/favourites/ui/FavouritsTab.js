@@ -9,9 +9,7 @@ export function FavouritesFlightAndPlacesTab({
   return (
     <Tabs defaultValue={"flights"} className={"w-full"}>
       <TabsList
-        className={
-          "flex flex-col sm:flex-row gap-4 h-auto mb-6 bg-transparent shadow-sm"
-        }
+        className={"flex flex-col sm:flex-row gap-4 h-auto mb-6 bg-transparent"}
       >
         <TabsTrigger value="flights">
           <div className="text-left">

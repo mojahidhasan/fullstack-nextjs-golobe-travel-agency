@@ -44,7 +44,7 @@ export default async function FavouritesPage() {
           ]
         );
         const ratingSum = flightReviews.reduce((acc, review) => {
-          return acc + review.rating;
+          return +acc + +review.rating;
         }, 0);
         return {
           ...flightDetails,
