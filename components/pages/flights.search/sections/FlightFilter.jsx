@@ -97,7 +97,7 @@ export function FlightsFilter({ className }) {
       </div>
       <div
         className={ cn(
-          "w-full shadow-md max-lg:rounded-xl max-lg:bg-white max-lg:p-5",
+          "w-full max-lg:shadow-md max-lg:rounded-xl max-lg:bg-white max-lg:p-5",
           filter === false && "max-lg:hidden"
         ) }
       >
