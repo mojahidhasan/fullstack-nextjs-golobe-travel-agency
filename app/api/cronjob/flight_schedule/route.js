@@ -24,6 +24,7 @@ export async function GET(req) {
   const airplanes = await getManyDocs("Airplane", {}, ["airplanes"]);
   const seats = await getManyDocs("Seat", {}, ["seats"]);
 
+  console.log(airplanes);
   const lastFlightDate = (
     await Flight.find({})
       .sort({
@@ -42,7 +43,13 @@ export async function GET(req) {
   );
 
   try {
-    await Flight.insertMany(flights);
+    await Flight.bulkWrite(
+      flights.map((flight) => ({
+        insertOne: {
+          document: flight,
+        },
+      }))
+    );
     return new Response(JSON.stringify({ msg: "Success" }), {
       status: 200,
       headers: {

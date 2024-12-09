@@ -72,7 +72,11 @@ async function FLightResultPage({ searchParams }) {
       return availableSeats.length >= totalPassengers;
     });
   }
-
+  const filt = flightResults.filter((flight) => {
+    return flight.stopovers[0].airplaneId == null;
+  });
+  console.log(filt.map((flight) => flight.stopovers));
+  // return;
   if (session?.user?.id) {
     const likedFlights = (
       await getOneDoc("User", { _id: session?.user?.id }, ["userDetails"])
