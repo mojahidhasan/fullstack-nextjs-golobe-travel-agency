@@ -23,7 +23,7 @@ export function SingleReview({ review, session }) {
         `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/${review.reviewer}`,
         {
           next: {
-            revalidate: process.env.NEXT_PUBLIC_REVALIDATION_TIME,
+            revalidate: +process.env.NEXT_PUBLIC_REVALIDATION_TIME,
             tags: [review.reviewer, "users"],
           },
         }

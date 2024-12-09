@@ -75,7 +75,6 @@ async function FLightResultPage({ searchParams }) {
   const filt = flightResults.filter((flight) => {
     return flight.stopovers[0].airplaneId == null;
   });
-  console.log(filt.map((flight) => flight.stopovers));
   // return;
   if (session?.user?.id) {
     const likedFlights = (

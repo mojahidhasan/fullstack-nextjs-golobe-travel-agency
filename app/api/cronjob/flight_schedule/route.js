@@ -24,7 +24,6 @@ export async function GET(req) {
   const airplanes = await getManyDocs("Airplane", {}, ["airplanes"]);
   const seats = await getManyDocs("Seat", {}, ["seats"]);
 
-  console.log(airplanes);
   const lastFlightDate = (
     await Flight.find({})
       .sort({
