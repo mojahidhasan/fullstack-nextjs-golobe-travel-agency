@@ -1,7 +1,14 @@
-import { getManyDocs } from "@/lib/db/getOperationDB";
 import generateOneDayFlightSchedule from "@/lib/db/generateForDB/generateFlight";
-import { Flight } from "@/lib/db/models";
+import {
+  Flight,
+  Airport,
+  Airplane,
+  Seat,
+  Airline,
+  Util,
+} from "@/lib/db/models";
 import mongoose from "mongoose";
+import { addDays } from "date-fns";
 export async function GET(req) {
   if (
     req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
@@ -19,20 +26,12 @@ export async function GET(req) {
     }
   }
 
-  const airports = await getManyDocs("Airport", {}, ["airports"]);
-  const airlines = await getManyDocs("Airline", {}, ["airlines"]);
-  const airplanes = await getManyDocs("Airplane", {}, ["airplanes"]);
-  const seats = await getManyDocs("Seat", {}, ["seats"]);
+  const airports = await Airport.find({});
+  const airlines = await Airline.find({});
+  const airplanes = await Airplane.find({});
+  const seats = await Seat.find({});
 
-  const lastFlightDate = (
-    await Flight.find({})
-      .sort({
-        departureDateTime: -1,
-      })
-      .limit(1)
-      .select("departureDateTime")
-  )[0].departureDateTime;
-
+  const { lastFlightDate } = await Util.findOne({});
   const flights = await generateOneDayFlightSchedule(
     airlines,
     airports,
@@ -48,6 +47,12 @@ export async function GET(req) {
           document: flight,
         },
       }))
+    );
+    await Util.findOneAndUpdate(
+      {},
+      {
+        lastFlightDate: addDays(new Date(lastFlightDate), 1),
+      }
     );
     return new Response(JSON.stringify({ msg: "Success" }), {
       status: 200,
