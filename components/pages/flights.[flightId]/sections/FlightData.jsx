@@ -7,6 +7,8 @@ import { RatingShow } from "@/components/local-ui/ratingShow";
 import { FLIGHT_CLASS_PLACEHOLDERS, RATING_SCALE } from "@/lib/constants";
 import { Carousel, CarouselContent, CarouselItem } from "@/components/local-ui/carousel";
 import dummyAirplane from "@/public/images/dummy-plane.webp";
+
+import routes from "@/data/routes.json";
 export function FlightData({ data }) {
   const { flightNumber, airplaneName, price, rating, totalReviews, liked, flightClass, airplaneImages, flightId } = data;
 
@@ -43,7 +45,7 @@ export function FlightData({ data }) {
               />
             </Button>
             <Button variant="solid" asChild className="px-6 grow py-2 text-white bg-primary rounded-lg transition duration-200 hover:bg-primary-dark">
-              <Link href={ `/flights/${flightNumber}/book` }>Book Now</Link>
+              <Link href={ `${routes.flights.path}/${flightNumber}/book` }>Book Now</Link>
             </Button>
           </div>
         </div>

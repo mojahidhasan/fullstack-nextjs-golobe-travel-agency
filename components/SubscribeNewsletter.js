@@ -72,7 +72,7 @@ export function SubscribeNewsletter({ isSubscribed }) {
         className="relative z-10 mx-auto mb-[80px] flex h-[305px] w-[90%] items-end justify-between gap-[16px] rounded-[20px] bg-[#CDEAE1] px-[24px]"
       >
         <div className="self-center">
-          <h2 className="mb-[10px] font-tradeGothic text-[1.5rem] font-bold leading-[3.375rem] text-secondary lg:text-[2.5rem] xl:text-[2.75rem]">
+          <h2 className="mb-[10px] text-[1.5rem] font-bold leading-[3.375rem] text-secondary lg:text-[2.5rem] xl:text-[2.75rem]">
             Subscribe Newsletter
           </h2>
           <h3 className="mb-[8px] text-[1rem] font-bold text-secondary/80 xl:text-[1.25rem]">

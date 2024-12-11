@@ -47,6 +47,7 @@ function SearchStaysForm({ searchParams = {} }) {
 
   useEffect(() => {
     dispatch(setStayForm(staySearchParamsObj));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const stayFormData = useSelector((state) => state.stayForm.value);
@@ -284,36 +285,4 @@ function SearchStaysForm({ searchParams = {} }) {
   );
 }
 
-// function SearchStaysFormSmall({ className }) {
-//   return (
-//     <>
-//       <div
-//         className={
-//           className + " grid grid-cols-flightsSmall items-center gap-24px"
-//         }
-//       >
-//         <Select
-//           title={"Enter Destination"}
-//           name={"destination"}
-//           options={option}
-//         />
-//         <Select title={"Check In"} name={"checkin"} options={option} />
-//         <Select title={"Check Out"} name={"checkout"} options={option} />
-//         <Select
-//           title={"Rooms & Guests"}
-//           name={"roomsandguests"}
-//           options={option}
-//         />
-//         <Button
-//           className={"min-w-max bg-mint-green"}
-//           title={
-//             <Image alt="" width={14} height={14} src={"/icons/search.svg"} />
-//           }
-//           href="/find-flights/search"
-//         />
-//       </div>
-//     </>
-//   );
-// }
-
-export { SearchStaysForm /*SearchStaysFormSmall*/ };
+export { SearchStaysForm };

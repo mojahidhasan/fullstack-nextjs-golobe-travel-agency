@@ -11,7 +11,7 @@ export function FareCard({
   imgSrc = "",
   name = "",
   type = "",
-  rating = 0,
+  rating = "N/A",
   reviews = 0,
   fare = {},
 }) {

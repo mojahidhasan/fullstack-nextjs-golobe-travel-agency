@@ -16,6 +16,8 @@ import { cn } from "@/lib/utils";
 
 import { AlertCircle } from "lucide-react";
 import { UserRoundPlus } from "lucide-react";
+
+import routes from "@/data/routes.json";
 export function LoginForm() {
   const [state, dispatch] = useFormState(authenticateAction, null);
   const router = useRouter();
@@ -100,18 +102,18 @@ export function LoginForm() {
           </div> */}
           <div className="grow">
             <Link
-              href={ "/password-reset" }
+              href={ routes["forgot-password"].path }
               className="text-tertiary float-right text-[0.875rem]"
             >
-              Forgot Password
+              { routes["forgot-password"].title }
             </Link>
           </div>
         </div>
         <LoginBtn />
         <div className="mt-[16px] text-center text-[0.875rem] font-medium text-secondary">
           Don&apos;t have an account?{ " " }
-          <Link href={ "/signup" } className="text-tertiary">
-            Sign up
+          <Link href={ routes.signup.path } className="text-tertiary">
+            { routes.signup.title }
           </Link>
         </div>
       </form>

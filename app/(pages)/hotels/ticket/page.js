@@ -39,7 +39,7 @@ export default function HotelTicketDownloadPagee() {
             <h3 className="mb-[16px] text-right text-[2rem] font-bold">$240</h3>
             <div className="flex gap-[16px]">
               <Button asChild variant="outline">
-                <Link href={"/"}>
+                <Link href={"#"}>
                   <Image
                     className="min-h-6 min-w-6"
                     src={share}
@@ -50,7 +50,7 @@ export default function HotelTicketDownloadPagee() {
                 </Link>
               </Button>
               <Button>
-                <Link href={"/"}>Download</Link>
+                <Link href={"#"}>Download</Link>
               </Button>
             </div>
           </div>
@@ -260,7 +260,7 @@ export default function HotelTicketDownloadPagee() {
                 variant={"link"}
                 className={"p-0 h-auto text-tertiary"}
               >
-                <Link href={"/help"}>golobe.com/help</Link>
+                <Link href={"/support"}>golobe.com/support</Link>
               </Button>
             </p>
           </address>

@@ -11,7 +11,7 @@ import { useFormState } from 'react-dom';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { cn } from '@/lib/utils';
-
+import routes from '@/data/routes.json';
 export function SignupForm() {
   const router = useRouter();
   const [state, dispatch] = useFormState(signUpAction, undefined);
@@ -126,16 +126,16 @@ export function SignupForm() {
             label={
               <span className={ `text-xs text-secondary select-none` }>
                 I agree to all the{ " " }
-                <Link href={ "/terms-of-service" } target="_blank" className="text-tertiary select-text">
-                  Terms
+                <Link href={ routes["terms-of-service"].path } target="_blank" className="text-tertiary select-text">
+                  { routes["terms-of-service"].title }
                 </Link>{ " " }
                 and{ " " }
                 <Link
-                  href={ "/privacy-policy" }
+                  href={ routes["privacy-policy"].path }
                   target="_blank"
                   className="text-tertiary select-text"
                 >
-                  Privacy Policies
+                  { routes["privacy-policy"].title }
                 </Link>
               </span>
             }
@@ -149,8 +149,8 @@ export function SignupForm() {
       </form>
       <div className="mt-[16px] text-center text-[0.875rem] font-medium text-secondary">
         Already have an account?{ " " }
-        <Link href={ "/login" } className="text-tertiary">
-          Login
+        <Link href={ routes.login.path } className="text-tertiary">
+          { routes.login.title }
         </Link>
       </div>
       <AuthenticateWith message={ "Or signup with" } />

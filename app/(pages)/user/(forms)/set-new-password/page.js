@@ -1,17 +1,20 @@
 import { SetNewPasswordForm } from "@/components/pages/set-new-password/setNewPasswordForm";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import routes from "@/data/routes.json";
 export default async function SetNewPasswordPage() {
   return (
     <div className="grow text-left">
       <div>
         <Link
           replace
-          href={"/verify-code"}
+          href={routes["verify-password-reset-code"].path}
           className={"inline-flex gap-2 items-center hover:underline"}
         >
           <ChevronLeft height={28} width={28} />
-          <span className={"text-sm"}>Back to Password Reset</span>
+          <span className={"text-sm"}>
+            Back to {routes["verify-password-reset-code"].title}
+          </span>
         </Link>
       </div>
       <div className="mb-[24px]">

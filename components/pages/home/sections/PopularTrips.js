@@ -15,7 +15,9 @@ export function PopularTrips() {
           }
         />
         <Button asChild variant={"outline"}>
-          <Link href={"#"}>See more places</Link>
+          <Link scroll={false} href={"#"}>
+            See more places
+          </Link>
         </Button>
       </div>
       <div className="grid gap-[8px]  md:grid-cols-2 lg:gap-[20px] xl:grid-cols-3 xl:gap-[32px]">

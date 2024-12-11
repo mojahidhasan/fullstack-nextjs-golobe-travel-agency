@@ -1,28 +1,32 @@
-import { PasswordResetForm } from "@/components/pages/password-reset/passwordResetForm";
+import { VerifyCodeForm } from "@/components/pages/verify-code/verifyCodeForm";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
-export default async function PasswordResetPage() {
+
+import routes from "@/data/routes.json";
+export default function VerifyCodePage() {
   return (
     <div className="grow text-left">
       <div>
         <Link
-          href={"/login"}
+          replace
+          href={routes["forgot-password"].path}
           className={"inline-flex gap-2 items-center hover:underline"}
         >
           <ChevronLeft height={28} width={28} />
-          <span className={"text-sm"}>Back to login</span>
+          <span className={"text-sm"}>
+            Back to {routes["forgot-password"].title}
+          </span>
         </Link>
       </div>
       <div className="mb-[24px]">
         <h2 className="mb-[16px] text-[2rem] font-bold text-black xl:text-[2.5rem]">
-          Forgot Your Password?
+          Verify Code
         </h2>
         <p className="text-[0.875rem] text-secondary/75 xl:text-[1rem]">
-          You have to enter real email address in order to test this
-          funcionality.
+          An authentication code has been sent to your email.
         </p>
       </div>
-      <PasswordResetForm />
+      <VerifyCodeForm />
     </div>
   );
 }

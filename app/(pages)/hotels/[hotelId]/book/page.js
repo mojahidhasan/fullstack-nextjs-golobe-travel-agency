@@ -9,11 +9,15 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 import Link from "next/link";
 export default function FlightBookPage() {
-  const breadcrumb = [
-    { id: 1, title: "Turkey", link: "/" },
-    { id: 2, title: "Istanbul", link: "/" },
-    { id: 3, title: "CVK Park Bosphorus Hotel Istanbul", link: "/" },
-  ];
+  const fare = {
+    price: {
+      baseFare: 1000,
+      taxes: 200,
+      ServiceFee: 100,
+      discount: 50,
+    },
+    totalPrice: 1250,
+  };
 
   const isLoggedIn = true; // Math.round(Math.random());
 
@@ -55,7 +59,7 @@ export default function FlightBookPage() {
                 </Label>
               </RadioGroup>
               <p className="p-[16px]">
-                <Link href="/" className="underline">
+                <Link scroll={false} href="#" className="underline">
                   More info
                 </Link>
               </p>
@@ -66,7 +70,16 @@ export default function FlightBookPage() {
             </div>
           </div>
           <div className="h-min grow rounded-12px bg-white p-24px shadow-small">
-            <FareCard />
+            <FareCard
+              type={"Hotel"}
+              name={"Superior room - 1 double bed or 2 twin beds"}
+              fare={fare}
+              rating={"N/A"}
+              reviews={0}
+              imgSrc={
+                "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+              }
+            />
           </div>
         </div>
       </main>

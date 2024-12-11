@@ -12,7 +12,7 @@ import { generateStars } from "@/lib/functions_client";
 
 import location from "@/public/icons/location.svg";
 
-export default function HotelDetailsPage() {
+export default function HotelDetailsPage({ params }) {
   const isLiked = false;
   return (
     <main className={"mx-auto mt-10 mb-[90px] w-[90%]"}>
@@ -87,7 +87,7 @@ export default function HotelDetailsPage() {
               </svg>
             </Button>
             <Button asChild>
-              <Link href="/">Book now</Link>
+              <Link href={`/hotels/${params.hotelId}/book`}>Book now</Link>
             </Button>
           </div>
         </div>

@@ -53,6 +53,7 @@ function SearchFlightsForm({ searchParams = {} }) {
     if (Object.keys(searchParams).length > 0) {
       dispatch(setFlightForm(searchParamsObj));
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const flightFormData = useSelector((state) => state.flightForm.value);
@@ -329,35 +330,5 @@ function SearchFlightsForm({ searchParams = {} }) {
     </>
   );
 }
-// function SearchFlightsFormSmall({ className }) {
-//   return (
-//     <>
-//       <div
-//         className={
-//           className + " grid grid-cols-flightsSmall items-center gap-24px"
-//         }
-//       >
-//         <Select title={"From - To"} name={"fromto"} options={option} />
-//         <Select title={"Trip"} name={"trip"} options={option} />
-//         <Select
-//           title={"Depart - Return"}
-//           name={"departreturn"}
-//           options={option}
-//         />
-//         <Select
-//           title={"Passenger - Class"}
-//           name={"passengerclass"}
-//           options={option}
-//         />
-//         <Button
-//           className={"min-w-max bg-mint-green"}
-//           href="/find-flights/search"
-//         >
-//           <Image width={14} height={14} alt="" src={"/icons/search.svg"} />
-//         </Button>
-//       </div>
-//     </>
-//   );
-// }
 
-export { SearchFlightsForm /*SearchFlightsFormSmall*/ };
+export { SearchFlightsForm };

@@ -8,7 +8,7 @@ import { SideBar } from "@/components/local-ui/nav/SideBar";
 import { cn, validateURL } from "@/lib/utils";
 
 import { getOneDoc } from "@/lib/db/getOperationDB";
-
+import routes from "@/data/routes.json";
 export async function Nav({ className, type = "default", session, ...props }) {
   const isLoggedIn = !!session?.user;
   let nameOfUser, avatar;
@@ -65,7 +65,7 @@ export async function Nav({ className, type = "default", session, ...props }) {
             className={cn("text-inherit p-2", types[type].btnFavorite)}
             variant={"link"}
           >
-            <Link href={"/favourites"} className="gap-2 inline-flex">
+            <Link href={routes.favourites.path} className="gap-2 inline-flex">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 max-h-6 w-6 max-w-6"
@@ -80,7 +80,7 @@ export async function Nav({ className, type = "default", session, ...props }) {
                   d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
                 />
               </svg>
-              <span>Favourites</span>
+              <span>{routes.favourites.title}</span>
             </Link>
           </Button>
 
@@ -93,7 +93,7 @@ export async function Nav({ className, type = "default", session, ...props }) {
       ) : (
         <div className="hidden lg:flex lg:items-center lg:gap-[32px]">
           <Button asChild variant="link" className={"text-inherit"}>
-            <Link href={"/login"}>Login</Link>
+            <Link href={routes.login.path}>{routes.login.title}</Link>
           </Button>
           <Button
             className={cn(
@@ -102,7 +102,7 @@ export async function Nav({ className, type = "default", session, ...props }) {
             )}
             asChild
           >
-            <Link href={"/signup"}>Sign up</Link>
+            <Link href={routes.signup.path}>{routes.signup.title}</Link>
           </Button>
         </div>
       )}
