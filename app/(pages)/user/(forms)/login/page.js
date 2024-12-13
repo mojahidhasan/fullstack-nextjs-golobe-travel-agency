@@ -1,5 +1,6 @@
 import { LoginForm } from "@/components/pages/login/LoginForm";
-export default async function LoginPage({ searchParams }) {
+import { AccountCreatedToast } from "@/components/pages/login/ui/AccountCreatedToast";
+export default async function LoginPage() {
   return (
     <div className="grow text-left">
       <div className="mb-[24px]">
@@ -10,7 +11,8 @@ export default async function LoginPage({ searchParams }) {
           Login to access your Golobe account
         </p>
       </div>
-      <LoginForm callbackUrl={searchParams?.callbackUrl} />
+      <LoginForm />
+      <AccountCreatedToast />
     </div>
   );
 }

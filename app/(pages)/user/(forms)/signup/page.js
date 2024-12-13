@@ -1,5 +1,5 @@
 import { SignupForm } from "@/components/pages/signup/SignupForm";
-
+import { AccountDeletedToast } from "@/components/pages/signup/ui/AccountDeletedToast";
 export default function SignupPage() {
   return (
     <div className="grow text-left">
@@ -12,6 +12,7 @@ export default function SignupPage() {
         </p>
       </div>
       <SignupForm />
+      <AccountDeletedToast />
     </div>
   );
 }

@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button";
 import { TabContentMockup } from "@/components/pages/profile/ui/TabContentMockup";
 import { ChangeNamePopup } from "@/components/pages/profile/ui/changeNamePopup";
 import { VerifyEmailBtn } from "./ui/VerifyEmailBtn";
@@ -9,7 +8,7 @@ import { ChangeAddressPopup } from "./ui/ChangeAddressPopup";
 import { ChangeDateOfBirthPopup } from "./ui/ChangeDateOfBirthPopup";
 import { ChangeEmailPopup } from "./ui/ChangeEmailPopup";
 import { AddAnotherEmailPopup } from "./ui/AddAnotherEmailPopup";
-export function AccoutDetails({ userDetails }) {
+export function AccountDetails({ userDetails }) {
   const sendAgainAt = cookies().get("sai")?.expires?.toISOString();
   const accountDetails = {
     name: userDetails.firstname + " " + userDetails.lastname,

@@ -1,6 +1,6 @@
 import MongoDBAdapter from "@/lib/db/MongoDBAdapter";
 import { cookies } from "next/headers";
-
+import routes from "@/data/routes.json";
 export async function GET(req) {
   const searchParams = new URL(req.url).searchParams;
 
@@ -25,8 +25,7 @@ export async function GET(req) {
     if (!vdStr && e_iStr) {
       return Response.json({
         success: false,
-        message:
-          "You have already verified email. Go to '/set-new-password' page to set a password",
+        message: `You have already verified email. Go to '${routes["set-new-password"].path}' page to set a password`,
       });
     }
     if (!vdStr) {

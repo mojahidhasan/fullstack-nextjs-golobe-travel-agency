@@ -8,13 +8,14 @@ import { setNewPasswordAction } from "@/lib/actions";
 import { useFormState, useFormStatus } from "react-dom";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import routes from "@/data/routes.json";
 export function SetNewPasswordForm() {
   const router = useRouter();
   const [state, dispatch] = useFormState(setNewPasswordAction, undefined);
 
   useEffect(() => {
     if (state?.success === true) {
-      setTimeout(() => router.replace("/login"), 1000);
+      setTimeout(() => router.replace(routes.login.path), 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state?.success]);

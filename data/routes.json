@@ -52,7 +52,7 @@
     "path": "/user/signup"
   },
   "forgot-password": {
-    "title": "Forget Password",
+    "title": "Forgot Password",
     "path": "/user/forgot-password"
   },
   "set-new-password": {

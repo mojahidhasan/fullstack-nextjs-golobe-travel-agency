@@ -64,7 +64,7 @@ export function AvatarWithName({
             <Link href={routes.profile.path}>
               <div className="flex items-center gap-2">
                 <Image src={user} alt="user_icon" height={18} width={18} />
-                <span>{routes.profile.name}</span>
+                <span>{routes.profile.title}</span>
               </div>
               <ChevronRight height={16} width={16} />
             </Link>
@@ -73,7 +73,7 @@ export function AvatarWithName({
             <Link href={routes.payments.path}>
               <div className="flex items-center gap-2">
                 <Image src={card} alt="card_icon" height={18} width={18} />
-                <span>{routes.payments.name}</span>
+                <span>{routes.payments.title}</span>
               </div>
               <ChevronRight height={16} width={16} />
             </Link>
@@ -87,7 +87,7 @@ export function AvatarWithName({
                   height={18}
                   width={18}
                 />
-                <span>{routes.settings.name}</span>
+                <span>{routes.settings.title}</span>
               </div>
               <ChevronRight height={16} width={16} />
             </Link>
@@ -104,7 +104,7 @@ export function AvatarWithName({
                   height={18}
                   width={18}
                 />
-                <span>{routes.support.name}</span>
+                <span>{routes.support.title}</span>
               </div>
               <ChevronRight height={16} width={16} />
             </Link>

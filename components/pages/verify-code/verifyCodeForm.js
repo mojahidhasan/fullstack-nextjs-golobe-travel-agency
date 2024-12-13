@@ -8,6 +8,7 @@ import { resendCodeAction } from "@/lib/actions";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import routes from "@/data/routes.json";
 export function VerifyCodeForm() {
   const submitBtnRef = useRef();
   const { toast } = useToast();
@@ -22,10 +23,10 @@ export function VerifyCodeForm() {
         description: "Verification code has been sent to you email",
         variant: "default",
       });
-      router.replace("/verify-code");
+      router.replace(routes["verify-password-reset-code"].path);
     }
     if (res?.success == true) {
-      setTimeout(() => router.replace("/set-new-password"), 1000);
+      setTimeout(() => router.replace(routes["set-new-password"].path), 1000);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchParams.has("sent"), res?.success]);
@@ -36,7 +37,9 @@ export function VerifyCodeForm() {
       const res = await resendCodeAction();
       setRes(res);
       if (res?.success == true) {
-        router.replace("/verify-code?sent=true");
+        router.replace(
+          `${routes["verify-password-reset-code"].path}?sent=true`
+        );
       }
     } catch (e) {
       toast({

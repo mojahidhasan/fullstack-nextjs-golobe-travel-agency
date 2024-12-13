@@ -1,6 +1,7 @@
 "use client";
 import { useEffect } from "react";
 import { deleteCookies } from "@/lib/actions";
+import routes from "@/data/routes.json";
 export default function DeleteLocalStorageAndCookies({ email }) {
   useEffect(() => {
     async function deletes() {
@@ -11,7 +12,7 @@ export default function DeleteLocalStorageAndCookies({ email }) {
       delete emailsSent[email];
       localStorage.setItem("emailsSent", JSON.stringify(emailsSent));
 
-      setTimeout(() => window.location.replace("/profile"), 2000);
+      setTimeout(() => window.location.replace(routes.profile.path), 2000);
     }
     deletes();
     // eslint-disable-next-line react-hooks/exhaustive-deps

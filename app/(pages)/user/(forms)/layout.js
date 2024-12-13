@@ -5,16 +5,20 @@ import {
   CarouselContent,
   CarouselItem,
 } from "@/components/local-ui/carousel";
+
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
+
+import routes from "@/data/routes.json";
 export default async function FormsLayout({ children }) {
   const session = await auth();
-  if (session?.user) {
-    redirect("/");
+
+  if (session?.user?.id) {
+    redirect(routes.profile.path);
   }
   return (
     <section className="my-20 mx-auto flex h-full w-[90%] items-stretch justify-between gap-[40px]">
-      <div className="absolute -z-10 opacity-10 h-screen max-w-full top-0 left-0 lg:max-w-[40%] min-w-[320px] xl:max-w-[490px] lg:opacity-100 lg:static lg:block">
+      <div className="absolute -z-10 opacity-10 lg:max-h-[1000px] max-lg:h-screen min-h-[700px] max-w-full top-0 left-0 lg:max-w-[40%] min-w-[320px] xl:max-w-[490px] lg:opacity-100 lg:static lg:block">
         <Carousel className={"w-full h-full rounded-0 lg:rounded-[30px]"}>
           <CarouselContent>
             <CarouselItem>

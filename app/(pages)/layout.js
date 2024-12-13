@@ -6,10 +6,7 @@ import { headers } from "next/headers";
 
 import routes from "@/data/routes.json";
 export default async function PagesLayout({ children }) {
-  const session = await auth();
-  const currentPathname = headers().get("x-pathname");
-
-  const notAllowedPaths = [
+  const navNotAllowedPaths = [
     routes.login.path,
     routes.signup.path,
     routes["forgot-password"].path,
@@ -17,14 +14,18 @@ export default async function PagesLayout({ children }) {
     routes["set-new-password"].path,
   ];
 
-  const isAllowed = !notAllowedPaths.some((path) =>
+  const session = await auth();
+  const currentPathname = headers().get("x-pathname");
+
+  const isNavAllowed = !navNotAllowedPaths.some((path) =>
     path.startsWith(currentPathname)
   );
+
   return (
     <>
-      {isAllowed && <Nav session={session} type="default" />}
+      {isNavAllowed && <Nav session={session} type="default" />}
       {children}
-      {isAllowed && <Footer />}
+      {isNavAllowed && <Footer />}
     </>
   );
 }

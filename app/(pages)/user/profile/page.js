@@ -1,18 +1,25 @@
 import { ProfileImages } from "@/components/pages/profile/ProfileImages";
 import { ProfileData } from "@/components/pages/profile/ProfileData";
 import { auth } from "@/lib/auth";
-import { redirect } from "next/navigation";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { format } from "date-fns";
+import { redirect } from "next/navigation";
+
+import routes from "@/data/routes.json";
 export default async function ProfilePage({ searchParams }) {
-  const sessionUser = (await auth())?.user;
-  const isloggedIn = !!sessionUser;
-  if (!isloggedIn) {
-    redirect("/login?callbackPath=" + encodeURIComponent("/profile"));
+  const session = await auth();
+  const isLoggedIn = !!session?.user?.id;
+
+  if (!isLoggedIn) {
+    return redirect(
+      routes.login.path +
+        "?callbackPath=" +
+        encodeURIComponent(routes.profile.path)
+    );
   }
 
-  if (isloggedIn) {
-    const userDetails = await getOneDoc("User", { _id: sessionUser?.id }, [
+  if (isLoggedIn) {
+    const userDetails = await getOneDoc("User", { _id: session?.user?.id }, [
       "userDetails",
     ]);
 
