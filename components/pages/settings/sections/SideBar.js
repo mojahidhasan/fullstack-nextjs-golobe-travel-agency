@@ -8,6 +8,14 @@ export function SettingsSideBar() {
   const currentTab = searchParams.get("tab");
   const isActive = (tab) =>
     currentTab === tab ? "font-bold text-primary bg-primary/10" : "";
+
+  const settingTabs = [
+    "profile",
+    "account",
+    "payments",
+    "security",
+    "appearance",
+  ];
   return (
     <div
       className={
@@ -15,42 +23,20 @@ export function SettingsSideBar() {
       }
     >
       <ul className={"flex flex-col gap-2"}>
-        <li className={"w-full hover:bg-slate-100 rounded-md"}>
-          <Link
-            className={cn(
-              "p-2 h-full w-full block ",
-              isActive("profile"),
-              !currentTab && "font-bold text-primary bg-primary/10"
-            )}
-            href={`${routes.settings.path}?tab=profile`}
-          >
-            Profile
-          </Link>
-        </li>
-        <li className={"w-full hover:bg-slate-100 rounded-md"}>
-          <Link
-            className={cn("p-2 h-full w-full block", isActive("account"))}
-            href={`${routes.settings.path}?tab=account`}
-          >
-            Account
-          </Link>
-        </li>
-        <li className={"w-full hover:bg-slate-100 rounded-md"}>
-          <Link
-            className={cn("p-2 h-full w-full block", isActive("payments"))}
-            href={`${routes.settings.path}?tab=payments`}
-          >
-            Payments
-          </Link>
-        </li>
-        <li className={"w-full hover:bg-slate-100 rounded-md"}>
-          <Link
-            className={cn("p-2 h-full w-full block", isActive("security"))}
-            href={`${routes.settings.path}?tab=security`}
-          >
-            Security
-          </Link>
-        </li>
+        {settingTabs.map((tab, i) => (
+          <li key={tab} className={"w-full hover:bg-slate-100 rounded-md"}>
+            <Link
+              className={cn(
+                "p-2 h-full w-full block",
+                isActive(tab),
+                i === 0 && !currentTab && "font-bold text-primary bg-primary/10"
+              )}
+              href={`${routes.settings.path}?tab=${tab}`}
+            >
+              {tab}
+            </Link>
+          </li>
+        ))}
       </ul>
     </div>
   );
