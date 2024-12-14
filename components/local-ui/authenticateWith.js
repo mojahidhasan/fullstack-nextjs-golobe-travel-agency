@@ -18,8 +18,8 @@ export function AuthenticateWith({ message }) {
         <Separator className="my-10" />
       </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-        <form className="w-full" action={authenticateWithFacebook}>
-          <Button className="w-full" variant="outline" type="submit">
+        <form className="w-full" /*action={authenticateWithFacebook}*/>
+          <Button className="w-full" variant="outline" type="button">
             <Image
               src="/icons/facebook.svg"
               alt="facebook_icon"
@@ -28,8 +28,8 @@ export function AuthenticateWith({ message }) {
             />
           </Button>
         </form>
-        <form className="w-full" action={authenticateWithGoogle}>
-          <Button className="w-full" variant="outline" type="submit">
+        <form className="w-full" /*action={authenticateWithGoogle}*/>
+          <Button className="w-full" variant="outline" type="button">
             <Image
               src="/icons/google.svg"
               alt="google_icon"

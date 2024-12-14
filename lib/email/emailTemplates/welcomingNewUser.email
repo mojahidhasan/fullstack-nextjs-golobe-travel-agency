@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html
+  lang="en"
+  xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:o="urn:schemas-microsoft-com:office:office"
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <title>User Welcoming Email</title>
+    <!--[if mso]>
+      <noscript>
+        <xml>
+          <o:OfficeDocumentSettings>
+            <o:PixelsPerInch>96</o:PixelsPerInch>
+          </o:OfficeDocumentSettings>
+        </xml>
+      </noscript>
+    <![endif]-->
+    <style>
+      table,
+      td,
+      div,
+      h1,
+      p {
+        font-family: Arial, sans-serif;
+      }
+      /* *{
+        border: blue 1px solid;
+      } */
+      a{
+        color: grey;
+      }
+    </style>
+  </head>
+  <body style="line-height: 1.7em;">
+    <table
+      role="presentation"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      width="600"
+      align="center"
+      style="padding: 30px 30px 30px 30px; background: #fafafa"
+    >
+      <tr>
+        <td align="center" style="padding: 20px 20px 20px 20px">
+          <a href="https://golob-travel-agency.vercel.app">
+            <img
+              src="https://s68ty.mjt.lu/img2/s68ty/d7f8c281-1cfd-4cb0-96a8-f40bfdcc1ac7/content"
+              width="100"
+              alt="Logo"
+            />
+          </a>
+        </td>
+      </tr>
+      <tr>
+        <td align="center" style="padding: 0 0 20px 0">
+          <hr style="opacity: 0.5" />
+        </td>
+      </tr>
+      <tr>
+        <td align="left">
+          <h2>Welcome</h2>
+          <p>
+            Hi <[{userName}]>, <br />
+            Welcome to Golobe Travel agnecy! Thank you for choosing our service.
+          </p>
+          <p>
+            At Golobe, you can search and book flights and hotels effortlessly.
+            Whether you’re planning a vacation or a business trip, we’ve got you
+            covered.
+          </p>
+          <p>
+            Here’s what you can do:
+            <ul>
+              <li>Search for flights and hotels</li>  
+              <li>Book flights and hotels</li>
+              <li>View flight schedules</li>
+              <li>Manage your bookings and many more</li>
+            </ul>
+          </p>
+        </td>
+      </tr>
+      <tr height="50">&nbsp;</tr>
+      <tr height="50"><td>
+        <h2>
+          Start Exploring
+        </h2>
+      </td></tr>
+      <tr>
+        <td height="500" style="background-image: url(https://images.unsplash.com/photo-1542296332-2e4473faf563?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);border-radius: 10px;background-position: center;background-repeat:no-repeat;">
+          <table height="100%" width="100%">
+            <tr height="80%">
+              <td>
+                &nbsp;
+              </td>
+            </tr>
+            <tr>
+              <td align="center">
+                <a style="display: inline-block; padding:10px 10px 10px 10px;background-color: #8dd3ba;border-radius: 5px;text-decoration: none;font-weight: bold;color: black;" href="https://golob-travel-agency.vercel.app/flights">
+                  Find Flights
+                </a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr height="50">&nbsp;</tr>
+      <tr>
+        <td height="500" style="background-image: url(https://images.unsplash.com/photo-1566073771259-6a8506099945?q=80&w=870&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D);border-radius: 10px;background-position: center;background-repeat:no-repeat;">
+          <table height="100%" width="100%">
+            <tr height="80%">
+              <td>
+                &nbsp;
+              </td>
+            </tr>
+            <tr>
+              <td align="center">
+                <a style="display: inline-block; padding:10px 10px 10px 10px;background-color: #8dd3ba;border-radius: 5px;text-decoration: none;font-weight: bold;color: black;" href="https://golob-travel-agency.vercel.app/hotels">
+                  Find Hotels
+                </a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+      <tr height="50">&nbsp;</tr>
+      <tr>
+        <td align="center" style="padding: 0 0 20px 0">
+          <hr style="opacity: 0.5" />
+        </td>
+      </tr>
+      <tr>
+        <td align="center">
+          <p>
+
+            <a href="https://golob-travel-agency.vercel.app">
+              <img
+              src="https://s68ty.mjt.lu/img2/s68ty/d7f8c281-1cfd-4cb0-96a8-f40bfdcc1ac7/content"
+              width="100"
+              alt="Logo"
+              />
+            </a>
+          </p>
+          <p>
+            <a href="https://facebook.com"><img src="https://s68ty.mjt.lu/img2/s68ty/3e251711-c52b-4997-9e56-6dd9d3419304/content" width="24" height="24" alt="fb_logo" /></a>&nbsp;
+            <a href="https://twitter.com"><img src="https://s68ty.mjt.lu/img2/s68ty/47b060fc-4b2b-41c5-97a8-b93987ab033c/content" width="24" height="24" alt="twitter_logo" /></a>&nbsp;
+            <a href="https://youtube.com"><img src="https://s68ty.mjt.lu/img2/s68ty/403f436f-ade0-4743-97cf-072a84ce40f6/content" width="24" height="24" alt="yt_logo" /></a>&nbsp;
+            <a href="https://instagram.com"><img src="https://s68ty.mjt.lu/img2/s68ty/1dde75ec-9e90-4899-97c4-cb63d50b14c4/content" width="24" height="24" alt="insta_logo" /></a>
+          </p>
+          <p>
+            <a href="https://golob-travel-agency.vercel.app">Home</a>&nbsp;
+            <a href="https://golob-travel-agency.vercel.app/flights">Flights</a>&nbsp;
+            <a href="https://golob-travel-agency.vercel.app/hotels">Hotels</a>&nbsp;
+            <a href="https://golob-travel-agency.vercel.app/support">Support</a>
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td align="center">
+          <p>© 2024 Golobe Travel Agency. All rights reserved.</p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

@@ -20,6 +20,8 @@ import Link from "next/link";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { signOutAction } from "@/lib/actions";
+
+import routes from "@/data/routes.json";
 export function AvatarWithName({
   onlineStatus = "Online",
   profilePic = "",
@@ -59,25 +61,25 @@ export function AvatarWithName({
         <DropdownMenuSeparator className="my-4" />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild className="justify-between cursor-pointer">
-            <Link href="/profile">
+            <Link href={routes.profile.path}>
               <div className="flex items-center gap-2">
                 <Image src={user} alt="user_icon" height={18} width={18} />
-                <span>My Account</span>
+                <span>{routes.profile.title}</span>
               </div>
               <ChevronRight height={16} width={16} />
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="justify-between cursor-pointer">
-            <Link href="/coming-soon">
+            <Link href={routes.payments.path}>
               <div className="flex items-center gap-2">
                 <Image src={card} alt="card_icon" height={18} width={18} />
-                <span>Payments</span>
+                <span>{routes.payments.title}</span>
               </div>
               <ChevronRight height={16} width={16} />
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="justify-between cursor-pointer">
-            <Link href="/coming-soon">
+            <Link href={routes.settings.path}>
               <div className="flex items-center gap-2">
                 <Image
                   src={settings}
@@ -85,7 +87,7 @@ export function AvatarWithName({
                   height={18}
                   width={18}
                 />
-                <span>Settings</span>
+                <span>{routes.settings.title}</span>
               </div>
               <ChevronRight height={16} width={16} />
             </Link>
@@ -94,7 +96,7 @@ export function AvatarWithName({
         <DropdownMenuSeparator className="my-4" />
         <DropdownMenuGroup>
           <DropdownMenuItem asChild className="justify-between cursor-pointer">
-            <Link href="/coming-soon">
+            <Link href={routes.support.path}>
               <div className="flex items-center gap-2">
                 <Image
                   src={support}
@@ -102,7 +104,7 @@ export function AvatarWithName({
                   height={18}
                   width={18}
                 />
-                <span>Support</span>
+                <span>{routes.support.title}</span>
               </div>
               <ChevronRight height={16} width={16} />
             </Link>

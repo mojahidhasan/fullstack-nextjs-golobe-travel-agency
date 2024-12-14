@@ -111,7 +111,7 @@ export default async function FlightBookPage({ params }) {
                 </Label>
               </RadioGroup>
               <p className="p-[16px]">
-                <Link href="#" className="underline">
+                <Link scroll={false} href="#" className="underline">
                   More info
                 </Link>
               </p>

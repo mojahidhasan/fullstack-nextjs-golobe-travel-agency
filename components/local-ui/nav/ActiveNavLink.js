@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 
 import { cn } from "@/lib/utils";
+import routes from "@/data/routes.json";
 export function ActiveNavLink({ className, ...props }) {
   const pathname = usePathname();
 
@@ -15,14 +16,13 @@ export function ActiveNavLink({ className, ...props }) {
   return (
     <div className={cn(className)} {...props}>
       <Button
-        href="/flights"
         asChild
         variant={"link"}
         className={"text-inherit rounded-none h-[inherit]"}
       >
         <Link
-          href={"/flights"}
-          className={cn("inline-flex gap-2", activeLink("/flights"))}
+          href={routes.flights.path}
+          className={cn("inline-flex gap-2", activeLink(routes.flights.path))}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +36,7 @@ export function ActiveNavLink({ className, ...props }) {
               fill="currentColor"
             />
           </svg>
-          <span>Find Flight</span>
+          <span>{routes.flights.title}</span>
         </Link>
       </Button>
       <Button
@@ -45,8 +45,8 @@ export function ActiveNavLink({ className, ...props }) {
         className={"text-inherit rounded-none h-[inherit]"}
       >
         <Link
-          href="/hotels"
-          className={cn("inline-flex gap-2", activeLink("/hotels"))}
+          href={routes.hotels.path}
+          className={cn("inline-flex gap-2", activeLink(routes.hotels.path))}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -60,7 +60,7 @@ export function ActiveNavLink({ className, ...props }) {
               fill="currentColor"
             />
           </svg>
-          <span>Find Stay</span>
+          <span>{routes.hotels.title}</span>
         </Link>
       </Button>
     </div>

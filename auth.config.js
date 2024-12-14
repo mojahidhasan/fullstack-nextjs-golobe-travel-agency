@@ -1,7 +1,8 @@
+import routes from "@/data/routes.json";
 const authConfig = {
   secret: process.env.AUTH_SECRET,
   pages: {
-    signIn: "/login",
+    signIn: routes.login.path,
   },
   providers: [],
 };

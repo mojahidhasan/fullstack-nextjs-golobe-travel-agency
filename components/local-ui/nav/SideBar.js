@@ -25,30 +25,32 @@ import logout from "@/public/icons/logout.svg";
 import { useEffect, useState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 import { usePathname } from "next/navigation";
+
+import routes from "@/data/routes.json";
 export function SideBar({ isLoggedIn }) {
   const afterLoggedinOptions = [
     {
-      title: "My account",
+      title: routes.profile.title,
       icon: user,
-      link: "/profile",
+      path: routes.profile.path,
     },
     {
-      title: "Payments",
+      title: routes.payments.title,
       icon: card,
-      link: "/profile?tab=payments",
+      path: routes.payments.path,
     },
     {
-      title: "Settings",
+      title: routes.settings.title,
       icon: settings,
-      link: "/profile?tab=settings",
+      path: routes.settings.path,
     },
     {
       separator: true,
     },
     {
-      title: "Support",
+      title: routes.support.title,
       icon: support,
-      link: "/support",
+      path: routes.support.path,
     },
   ];
   const pathname = encodeURIComponent(usePathname());
@@ -106,9 +108,9 @@ export function SideBar({ isLoggedIn }) {
           <li>
             <SheetClose asChild>
               <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
-                <Link href="/flights">
+                <Link href={routes.flights.path}>
                   <Image src={plane} alt="plane_icon" width={20} />
-                  <span>Find Flights</span>
+                  <span>{routes.flights.title}</span>
                 </Link>
               </Button>
             </SheetClose>
@@ -116,9 +118,9 @@ export function SideBar({ isLoggedIn }) {
           <li>
             <SheetClose asChild>
               <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
-                <Link href="/hotels">
+                <Link href={routes.hotels.path}>
                   <Image src={hotel} alt="hotel_icon" width={20} />
-                  <span>Find Stays</span>
+                  <span>{routes.hotels.title}</span>
                 </Link>
               </Button>
             </SheetClose>
@@ -129,9 +131,11 @@ export function SideBar({ isLoggedIn }) {
               <li>
                 <SheetClose asChild>
                   <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
-                    <Link href={"/login?callbackPath=" + pathname}>
+                    <Link
+                      href={`${routes.login.path}?callbackPath=${pathname}`}
+                    >
                       <LogIn width={20} />
-                      <span>Login</span>
+                      <span>{routes.login.title}</span>
                     </Link>
                   </Button>
                 </SheetClose>
@@ -139,7 +143,7 @@ export function SideBar({ isLoggedIn }) {
               <li>
                 <SheetClose asChild>
                   <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
-                    <Link href="/signup">
+                    <Link href={routes.signup.path}>
                       <svg
                         width="24"
                         height="24"
@@ -176,7 +180,7 @@ export function SideBar({ isLoggedIn }) {
                         />
                       </svg>
 
-                      <span>Sign up</span>
+                      <span>{routes.signup.title}</span>
                     </Link>
                   </Button>
                 </SheetClose>
@@ -187,9 +191,9 @@ export function SideBar({ isLoggedIn }) {
               <li>
                 <SheetClose asChild>
                   <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
-                    <Link href="/favourites">
+                    <Link href={routes.favourites.path}>
                       <Image src={love} alt="heart_icon" width={20} />
-                      <span>Favourites</span>
+                      <span>{routes.favourites.title}</span>
                     </Link>
                   </Button>
                 </SheetClose>
@@ -207,7 +211,7 @@ export function SideBar({ isLoggedIn }) {
                         variant="link"
                         asChild
                       >
-                        <Link href={option.link}>
+                        <Link href={option.path}>
                           <Image
                             src={option.icon}
                             alt={option.title}

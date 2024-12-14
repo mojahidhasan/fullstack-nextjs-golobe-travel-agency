@@ -13,7 +13,9 @@ export function Reviews() {
           subTitle="What people says about Golobe facilities"
         />
         <Button asChild variant={"outline"}>
-          <Link href={"#"}>See All</Link>
+          <Link scroll={false} href={"#"}>
+            See All
+          </Link>
         </Button>
       </div>
       <div className="flex flex-col h-[600px] gap-[16px] overflow-auto pb-5 md:flex-row md:h-auto md:gap-[30px] lg:gap-[40px] golobe-scrollbar">

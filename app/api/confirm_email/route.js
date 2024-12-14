@@ -3,6 +3,7 @@ import MongoDBAdapter from "@/lib/db/MongoDBAdapter";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
 import { auth } from "@/lib/auth";
+import routes from "@/data/routes.json";
 export async function GET(req) {
   const session = await auth();
   const isLoggedIn = !!session?.user;
@@ -13,8 +14,9 @@ export async function GET(req) {
       JSON.stringify({
         redirectURL:
           req.nextUrl.origin +
-          "/login?callbackPath=" +
-          encodeURIComponent("/profile"),
+          `${routes.login.path}?callbackPath=${encodeURIComponent(
+            routes.profile.path
+          )}`,
       }),
       {
         status: 307,
@@ -28,7 +30,7 @@ export async function GET(req) {
   if (!Boolean(searchParams?.token)) {
     return new Response(
       JSON.stringify({
-        redirectURL: req.nextUrl.origin + "/profile",
+        redirectURL: req.nextUrl.origin + routes.profile.path,
       }),
       {
         status: 307,

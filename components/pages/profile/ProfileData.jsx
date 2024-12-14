@@ -1,6 +1,6 @@
 import { TabsTrigger, Tabs, TabsList, TabsContent } from "@/components/ui/tabs";
 
-import { AccoutDetails } from "@/components/pages/profile/AccoutDetails";
+import { AccountDetails } from "@/components/pages/profile/AccountDetails";
 import { TicketsOrBookings } from "@/components/pages/profile/TicketsOrBookings";
 import { PaymentMethods } from "@/components/pages/profile/PaymentMethods";
 
@@ -30,7 +30,7 @@ export function ProfileData({ userDetails, tab }) {
       <TabsContent
         value="account"
       >
-        <AccoutDetails userDetails={ userDetails } />
+        <AccountDetails userDetails={ userDetails } />
       </TabsContent>
       <TabsContent value="tickets/bookings">
         <TicketsOrBookings />

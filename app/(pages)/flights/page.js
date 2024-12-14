@@ -8,7 +8,7 @@ export default function Flights() {
       <header className={"mb-[20px] md:mb-[40px] lg:mb-[80px]"}>
         <section className="flex h-[600px] items-center bg-flight-header bg-cover bg-no-repeat px-[126px]">
           <div className="max-w-[440px] self-center text-white">
-            <h1 className="mb-[8px] font-tradeGothic text-[2.8125rem] font-bold">
+            <h1 className="mb-[8px] text-[2.8125rem] font-bold">
               Make your travel whishlist, we’ll do the rest
             </h1>
             <p className="text-[1.25rem] font-medium">

@@ -4,73 +4,28 @@ import { Input } from "@/components/local-ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { AuthenticateWith } from "@/components/local-ui/authenticateWith";
+import { SuccessMessage } from "@/components/local-ui/successMessage";
+import { ErrorMessage } from "@/components/local-ui/errorMessage";
 import { authenticateAction } from "@/lib/actions";
 
-import { useEffect } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import { useToast } from "@/components/ui/use-toast";
-import { useSearchParams } from "next/navigation";
-import { useRouter } from "next/navigation";
 
-import { cn } from "@/lib/utils";
-
-import { AlertCircle } from "lucide-react";
-import { UserRoundPlus } from "lucide-react";
+import routes from "@/data/routes.json";
 export function LoginForm() {
   const [state, dispatch] = useFormState(authenticateAction, null);
-  const router = useRouter();
-  const { toast } = useToast();
-  const searchParams = useSearchParams();
-  useEffect(() => {
-    const hasJustSignedUp = searchParams.has("s", "true");
-    const timeout = setTimeout(() => {
-      if (hasJustSignedUp) {
-        toast({
-          title: "Signup Successful",
-          description: "You have successfully signed up",
-          variant: "default",
-        });
-        router.replace("/login");
-      }
-    }, 0);
-    return () => clearTimeout(timeout);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchParams]);
-
-  if (state?.success === true) {
-    router.refresh();
-  }
-
-  const errors = {};
-
-  if (state?.error === "validation_error") {
-    for (let key in state.message) {
-      errors[state.message[key].path[0]] = state.message[key].message;
-    }
-  }
 
   return (
     <div className={ "bg-white p-7 rounded-lg shadow-lg" }>
       <div
-        className={ cn(
-          "flex text-destructive-foreground text-sm rounded-lg h-auto items-center bg-transparent space-x-1",
-          state?.error === "login_error" && "bg-destructive p-3 mb-5",
-          state?.success && "bg-primary/80 text-black p-3 mb-5"
-        ) }
+        className={ "mb-5" }
         aria-live="polite"
         aria-atomic="true"
       >
-        { state?.error === "login_error" && (
-          <>
-            <AlertCircle className="h-5 w-5" />
-            <p>{ state?.message }</p>
-          </>
+        { state?.success === false && state?.message && (
+          <ErrorMessage message={ state?.message } />
         ) }
-        { state?.success && (
-          <>
-            <UserRoundPlus className="h-5 w-5" />
-            <p>{ state?.message }</p>
-          </>
+        { state?.success === true && state?.message && (
+          <SuccessMessage message={ state?.message } />
         ) }
       </div>
       <form action={ dispatch }>
@@ -79,7 +34,7 @@ export function LoginForm() {
           placeholder="Enter your email"
           name={ "email" }
           label="Email"
-          error={ errors?.email }
+          error={ state?.error?.email }
           className={ "mb-[24px]" }
         />
         <Input
@@ -87,7 +42,7 @@ export function LoginForm() {
           placeholder="Enter your password"
           name={ "password" }
           label="Password"
-          error={ errors?.password }
+          error={ state?.error?.password }
           className={ "mb-[24px]" }
         />
         <div className="flex justify-between">
@@ -100,18 +55,18 @@ export function LoginForm() {
           </div> */}
           <div className="grow">
             <Link
-              href={ "/password-reset" }
+              href={ routes["forgot-password"].path }
               className="text-tertiary float-right text-[0.875rem]"
             >
-              Forgot Password
+              { routes["forgot-password"].title }
             </Link>
           </div>
         </div>
         <LoginBtn />
         <div className="mt-[16px] text-center text-[0.875rem] font-medium text-secondary">
           Don&apos;t have an account?{ " " }
-          <Link href={ "/signup" } className="text-tertiary">
-            Sign up
+          <Link href={ routes.signup.path } className="text-tertiary">
+            { routes.signup.title }
           </Link>
         </div>
       </form>
@@ -127,4 +82,4 @@ function LoginBtn() {
       { pending ? "Submitting..." : "Login" }
     </Button>
   );
-}
+};

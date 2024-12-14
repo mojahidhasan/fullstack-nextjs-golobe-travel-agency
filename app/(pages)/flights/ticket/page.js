@@ -28,7 +28,7 @@ export default function FlightTicketDownloadPage() {
       <div className="mt-[20px]">
         <div className="mb-[40px] gap-2 flex items-center justify-between">
           <div>
-            <h2 className="mb-[16px] font-tradeGothic text-[1.5rem] font-bold">
+            <h2 className="mb-[16px] text-[1.5rem] font-bold">
               Emirates A380 Airbus
             </h2>
             <address className="flex gap-[4px]">
@@ -42,7 +42,7 @@ export default function FlightTicketDownloadPage() {
             <h3 className="mb-[16px] text-right text-[2rem] font-bold">$240</h3>
             <div className="flex gap-[16px]">
               <Button asChild>
-                <Link href={"/"}>
+                <Link href={"#"}>
                   <Image
                     className="min-h-6 min-w-6"
                     src={share}
@@ -53,7 +53,7 @@ export default function FlightTicketDownloadPage() {
                 </Link>
               </Button>
               <Button>
-                <Link href={"/"}>Download</Link>
+                <Link href={"#"}>Download</Link>
               </Button>
             </div>
           </div>
@@ -95,15 +95,11 @@ export default function FlightTicketDownloadPage() {
                   alt="avatar"
                 />
                 <div>
-                  <h3 className="font-tradeGothic text-[1.25rem] font-bold">
-                    James Doe
-                  </h3>
+                  <h3 className="text-[1.25rem] font-bold">James Doe</h3>
                   <p className="text-[0.875rem]">Boarding Pass N&apos;123</p>
                 </div>
               </div>
-              <h3 className="font-tradeGothic text-[0.875rem] font-bold">
-                Business Class
-              </h3>
+              <h3 className="text-[0.875rem] font-bold">Business Class</h3>
             </div>
             <div className="mb-[40px] flex gap-[32px] p-[24px] flex-wrap">
               <div className="flex items-center gap-[8px]">
@@ -283,7 +279,7 @@ export default function FlightTicketDownloadPage() {
                 variant={"link"}
                 className={"p-0 h-auto text-tertiary"}
               >
-                <Link href={"/help"}>golobe.com/help</Link>
+                <Link href={"/support"}>golobe.com/support</Link>
               </Button>
             </p>
           </address>

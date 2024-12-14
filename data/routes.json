@@ -1,0 +1,70 @@
+{
+  "home": {
+    "title": "Home",
+    "path": "/"
+  },
+  "flights": {
+    "title": "Find Flights",
+    "path": "/flights"
+  },
+  "flights-search": {
+    "title": "Flights Search",
+    "path": "/flights/search"
+  },
+  "hotels": {
+    "title": "Find Hotels",
+    "path": "/hotels"
+  },
+  "hotels-search": {
+    "title": "Hotels Search",
+    "path": "/hotels/search"
+  },
+  "privacy-policy": {
+    "title": "Privacy Policy",
+    "path": "/privacy-policy"
+  },
+  "terms-of-service": {
+    "title": "Terms of Service",
+    "path": "/terms-of-service"
+  },
+  "favourites": {
+    "title": "Favourites",
+    "path": "/user/favourites"
+  },
+  "payments": {
+    "title": "Payments",
+    "path": "/user/payments"
+  },
+  "profile": {
+    "title": "Profile",
+    "path": "/user/profile"
+  },
+  "settings": {
+    "title": "Settings",
+    "path": "/user/settings"
+  },
+  "login": {
+    "title": "Login",
+    "path": "/user/login"
+  },
+  "signup": {
+    "title": "Signup",
+    "path": "/user/signup"
+  },
+  "forgot-password": {
+    "title": "Forgot Password",
+    "path": "/user/forgot-password"
+  },
+  "set-new-password": {
+    "title": "Set New Password",
+    "path": "/user/set-new-password"
+  },
+  "verify-password-reset-code": {
+    "title": "Verify Password Reset Code",
+    "path": "/user/verify-password-reset-code"
+  },
+  "support": {
+    "title": "Support",
+    "path": "/support"
+  }
+}

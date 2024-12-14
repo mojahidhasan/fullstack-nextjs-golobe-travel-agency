@@ -3,9 +3,10 @@ import Link from "next/link";
 export function BookingCard({
   bgImg,
   placeName,
-  flightCost,
+  cost,
   subTitle,
   btnTitle,
+  btnHref,
 }) {
   return (
     <div
@@ -21,11 +22,11 @@ export function BookingCard({
             <p className="text-[0.875rem]">{subTitle}</p>
           </div>
           <p className="whitespace-nowrap text-[1.5rem] font-semibold">
-            $ {flightCost}
+            $ {cost}
           </p>
         </div>
         <Button asChild className={"mx-auto w-full"}>
-          <Link href={"/"}>{btnTitle}</Link>
+          <Link href={btnHref}>{btnTitle}</Link>
         </Button>
       </div>
     </div>

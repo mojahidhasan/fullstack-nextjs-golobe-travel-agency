@@ -8,7 +8,7 @@ import {
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import Image from "next/image";
-
+import routes from "@/data/routes.json";
 export function FindFlightAndHotelcards() {
   return (
     <section className="mb-5 grid gap-[12px] md:mb-20 md:grid-cols-2 lg:gap-[24px]">
@@ -25,14 +25,14 @@ export function FindFlightAndHotelcards() {
             </CardHeader>
             <CardFooter className="flex justify-center p-0">
               <Button asChild>
-                <Link href="/flights" className="gap-1">
+                <Link href={routes.flights.path} className="gap-1">
                   <Image
                     alt="papar_plane_icon"
                     src={"/icons/paper-plane-filled.svg"}
                     width={14}
                     height={14}
                   />
-                  <span>Show Flights</span>
+                  <span>{routes.flights.title}</span>
                 </Link>
               </Button>
             </CardFooter>
@@ -52,14 +52,14 @@ export function FindFlightAndHotelcards() {
             </CardHeader>
             <CardFooter className="flex justify-center p-0">
               <Button asChild>
-                <Link href="/hotels" className="gap-1">
+                <Link href={routes.hotels.path} className="gap-1">
                   <Image
                     alt="papar_plane_icon"
                     src={"/icons/paper-plane-filled.svg"}
                     width={14}
                     height={14}
                   />
-                  <span>Show Hotels</span>
+                  <span>{routes.hotels.title}</span>
                 </Link>
               </Button>
             </CardFooter>

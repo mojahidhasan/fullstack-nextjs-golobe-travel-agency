@@ -2,6 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { useEffect, useRef, useState } from "react";
 import countryInfo from "@/data/countryInfo.json";
+import { ChevronDown } from "lucide-react";
 export function SelectCountry({ name = "country" }) {
   const [country, setCountry] = useState(countryInfo[0].emoji);
   const [callingCode, setCallingCode] = useState(countryInfo[0].dial_code);
@@ -33,13 +34,14 @@ export function SelectCountry({ name = "country" }) {
       <Button
         variant="icon"
         type="button"
-        className="h-full px-2 bg-inherit text-2xl lg:text-3xl"
+        className="h-full !bg-slate-100 px-2 bg-inherit text-2xl lg:text-3xl"
         onClick={handleTrigger}
       >
         {country}&nbsp;{" "}
         <span className={"text-sm text-disabled-foreground"}>
           {callingCode}
         </span>
+        <ChevronDown className="ml-1 h-4 w-4" />
       </Button>
       <ul
         ref={ulRef}

@@ -9,63 +9,63 @@ export function QuickLinks() {
       },
       {
         name: "Alaska",
-        href: "/",
+        href: "#",
       },
       {
         name: "France",
-        href: "/",
+        href: "#",
       },
       {
         name: "Iceland",
-        href: "/",
+        href: "#",
       },
     ],
     "Our Activity": [
       {
         name: "Northern Lights",
-        href: "/",
+        href: "#",
       },
       {
         name: "Cruising & Sailing",
-        href: "/",
+        href: "#",
       },
       {
         name: "Multi-activities",
-        href: "/",
+        href: "#",
       },
       {
         name: "Kayaing",
-        href: "/",
+        href: "#",
       },
     ],
     "Travel Blogs": [
       {
         name: "Bali Travel Guide",
-        href: "/",
+        href: "#",
       },
       {
         name: "Srilanka Travel Guide",
-        href: "/",
+        href: "#",
       },
       {
         name: "Peru Travel Guide",
-        href: "/",
+        href: "#",
       },
     ],
     "About Us": [
       {
         name: "Our Story",
-        href: "/",
+        href: "#",
       },
       {
         name: "Work with Us",
-        href: "/",
+        href: "#",
       },
     ],
     Contact: [
       {
         name: "Contact Us",
-        href: "/",
+        href: "#",
       },
     ],
   };
@@ -174,9 +174,7 @@ export function QuickLinks() {
               key={link[0]}
               className="text-[0.875rem] font-medium text-secondary/70"
             >
-              <h3 className="mb-[16px] font-tradeGothic font-bold text-secondary">
-                {link[0]}
-              </h3>
+              <h3 className="mb-[16px] font-bold text-secondary">{link[0]}</h3>
               <div className="flex flex-col gap-3">
                 {link[1].map((item) => {
                   return (

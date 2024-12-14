@@ -6,6 +6,7 @@ import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
+import routes from "@/data/routes.json";
 export function HotelResultCard({
   image = "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
   price = 240,
@@ -103,7 +104,7 @@ export function HotelResultCard({
             </svg>
           </Button>
           <Button asChild className={"w-full"}>
-            <Link href={"/flights/" + id}>View Deals</Link>
+            <Link href={`${routes.hotels.path}/${id}`}>View Deals</Link>
           </Button>
         </div>
       </div>
