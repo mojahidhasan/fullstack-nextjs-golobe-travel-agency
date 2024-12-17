@@ -21,13 +21,10 @@ import { AddPromoCode } from "@/components/AddPromoCode";
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
-  currentHourMinInMs,
-  defaultFlightFormValue,
   setFlightForm,
-  setFlightFormFilters,
 } from "@/reduxStore/features/flightFormSlice";
 
-import airports from "@/data/airportsData.json";
+import airports from "@/data/airports.json";
 import swap from "@/public/icons/swap.svg";
 
 function SearchFlightsForm({ searchParams = {} }) {

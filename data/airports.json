@@ -1,0 +1,192 @@
+[
+  {
+    "iataCode": "ATL",
+    "name": "Hartsfield-Jackson Atlanta International Airport",
+    "city": "Atlanta",
+    "state": "Georgia",
+    "country": "United States",
+    "latitude": 33.6366996,
+    "longitude": -84.427864,
+    "timezone": "America/New_York",
+    "facilities": [
+      "Wi-Fi",
+      "Lounges",
+      "Baggage Claim",
+      "Car Rentals",
+      "Duty-Free Shops",
+      "Food Courts"
+    ],
+    "_id": "ATL"
+  },
+  {
+    "iataCode": "DXB",
+    "name": "Dubai International Airport",
+    "city": "Dubai",
+    "state": "Dubai",
+    "country": "United Arab Emirates",
+    "latitude": 25.2528,
+    "longitude": 55.364399,
+    "timezone": "Asia/Dubai",
+    "facilities": [
+      "Free Wi-Fi",
+      "Sleep Pods",
+      "Kids' Zone",
+      "Showers",
+      "Lounges",
+      "Duty-Free Shops"
+    ],
+    "_id": "DXB"
+  },
+  {
+    "iataCode": "LHR",
+    "name": "London Heathrow Airport",
+    "city": "London",
+    "state": "England",
+    "country": "United Kingdom",
+    "latitude": 51.4706001,
+    "longitude": -0.461941,
+    "timezone": "Europe/London",
+    "facilities": [
+      "Wi-Fi",
+      "Lounges",
+      "Baggage Services",
+      "Restaurants",
+      "Shops",
+      "Showers"
+    ],
+    "_id": "LHR"
+  },
+  {
+    "iataCode": "HND",
+    "name": "Tokyo Haneda International Airport",
+    "city": "Tokyo",
+    "state": "Sounthern Kanto",
+    "country": "Japan",
+    "latitude": 35.5522995,
+    "longitude": 139.7799988,
+    "timezone": "Asia/Tokyo",
+    "facilities": [
+      "Wi-Fi",
+      "Lounges",
+      "Baggage Storage",
+      "Duty-Free Shops",
+      "Showers",
+      "Capsule Hotels"
+    ],
+    "_id": "HND"
+  },
+  {
+    "iataCode": "IST",
+    "name": "Istanbul Airport",
+    "city": "Istanbul",
+    "state": "Istanbul",
+    "country": "Turkey",
+    "latitude": 41.275001,
+    "longitude": 28.751699,
+    "timezone": "Europe/Istanbul",
+    "facilities": [
+      "Free Wi-Fi",
+      "Lounges",
+      "Spa",
+      "Shops",
+      "Restaurants",
+      "Duty-Free Stores"
+    ],
+    "_id": "IST"
+  },
+  {
+    "iataCode": "DEL",
+    "name": "Indira Gandhi International Airport",
+    "city": "Delhi",
+    "state": "Union Territory of Delhi",
+    "country": "India",
+    "latitude": 28.55616,
+    "longitude": 77.100281,
+    "timezone": "Asia/Kolkata",
+    "facilities": [
+      "Free Wi-Fi",
+      "Lounges",
+      "Baggage Services",
+      "Spa",
+      "Duty-Free",
+      "Food Courts"
+    ],
+    "_id": "DEL"
+  },
+  {
+    "iataCode": "CAN",
+    "name": "Guangzhou Baiyun International Airport",
+    "city": "Guangzhou",
+    "state": "Guangdong",
+    "country": "China",
+    "latitude": 23.3924007,
+    "longitude": 113.2990036,
+    "timezone": "Asia/Shanghai",
+    "facilities": [
+      "Free Wi-Fi",
+      "Lounges",
+      "Duty-Free",
+      "Baggage Services",
+      "Shops",
+      "Food Courts"
+    ],
+    "_id": "CAN"
+  },
+  {
+    "iataCode": "CGK",
+    "name": "Soekarno-Hatta International Airport",
+    "city": "Jakarta",
+    "state": "Jakarta",
+    "country": "Indonesia",
+    "latitude": -6.1255698,
+    "longitude": 106.6559982,
+    "timezone": "Asia/Jakarta",
+    "facilities": [
+      "Free Wi-Fi",
+      "Lounges",
+      "Baggage Claim",
+      "Duty-Free",
+      "Shops",
+      "Restaurants"
+    ],
+    "_id": "CGK"
+  },
+  {
+    "iataCode": "YYZ",
+    "name": "Lester B. Pearson International Airport",
+    "city": "Toronto",
+    "state": "Ontario",
+    "country": "Canada",
+    "latitude": 43.6772003,
+    "longitude": -79.6306,
+    "timezone": "America/Toronto",
+    "facilities": [
+      "Free Wi-Fi",
+      "Lounges",
+      "Baggage Services",
+      "Duty-Free",
+      "Restaurants",
+      "Car Rentals"
+    ],
+    "_id": "YYZ"
+  },
+  {
+    "iataCode": "GRU",
+    "name": "São Paulo–Guarulhos International Airport",
+    "city": "São Paulo",
+    "state": "São Paulo",
+    "country": "Brazil",
+    "latitude": -23.435556,
+    "longitude": -46.473056,
+    "timezone": "America/Sao_Paulo",
+    "facilities": [
+      "Free Wi-Fi",
+      "Lounges",
+      "Duty-Free",
+      "Baggage Services",
+      "Restaurants",
+      "Car Rentals"
+    ],
+    "_id": "GRU"
+  }
+]
