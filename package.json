@@ -8,6 +8,8 @@
     "start": "next start",
     "generateDBFiles": "vitest --testNamePattern generateDBFiles --run",
     "generateAndUploadDB": "vitest --testNamePattern generateAndUploadDB --run",
+    "uploadHotelsDB": "vitest --testNamePattern uploadHotelsDB --run",
+    "generateHotelsFiles": "vitest --testNamePattern generateHotelsFiles --run",
     "lint": "next lint",
     "test": "vitest --testNamePattern Testing"
   },
