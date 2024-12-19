@@ -12,7 +12,7 @@
     "test": "vitest --testNamePattern Testing"
   },
   "dependencies": {
-    "@auth/mongodb-adapter": "^3.4.2",
+    "@auth/mongodb-adapter": "^3.7.4",
     "@firebase/app": "^0.10.8",
     "@firebase/auth": "^1.7.6",
     "@firebase/storage": "^0.12.6",
@@ -49,7 +49,7 @@
     "mongoose": "^8.3.2",
     "mongoose-autopopulate": "^1.1.0",
     "next": "14.2.20",
-    "next-auth": "^5.0.0-beta.20",
+    "next-auth": "^5.0.0-beta.25",
     "nextjs-toploader": "^1.6.12",
     "node-mailjet": "^6.0.6",
     "react": "^18",
