@@ -34,7 +34,7 @@ export default async function FavouritesPage() {
             {
               _id: flight.flightId,
             },
-            [flight._id, "flights", flight.flightNumber]
+            [flight.flightId, "flights", flight.flightNumber]
           );
           if (Object.keys(flightDetails).length === 0) return;
           const flightReviews = await getManyDocs(
