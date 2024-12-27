@@ -4,7 +4,7 @@ import { option } from "@/data/selectInputOption";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { DatePicker } from "@/components/ui/DatePicker";
-import { Combobox } from "@/components/local-ui/ComboBox";
+import { HotelDestinationAutoCompletePopover } from "@/components/local-ui/HotelDestinationAutoCompletePopover";
 import { AddPromoCode } from "@/components/AddPromoCode";
 import {
   Popover,
@@ -130,7 +130,10 @@ function SearchStaysForm({ searchParams = {} }) {
           </div>
 
           <div className="h-full grow">
-            <Combobox searchResult={option} className={"h-full w-full"} />
+            <HotelDestinationAutoCompletePopover
+              searchResult={option}
+              className={"h-full w-full"}
+            />
           </div>
         </div>
 
