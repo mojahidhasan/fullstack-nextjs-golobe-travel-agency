@@ -14,11 +14,16 @@ export default async function HotelResultPage({ searchParams }) {
     const guests = searchParams.guests;
     const rooms = searchParams.rooms;
 
-    hotels = await getManyDocs("Hotel", {
-      query: {
-        $regex: new RegExp(`${destination.match(/.{1,2}/g).join("+?.*")}`, "i"),
+    hotels = await getManyDocs(
+      "Hotel",
+      {
+        query: {
+          $regex: `${destination.match(/.{1,2}/g).join("+?.*")}`,
+          $options: "i",
+        },
       },
-    });
+      ["hotels"]
+    );
 
     // filter by total available rooms sleeps count is greater than or equal to number of guests
     hotels = hotels.filter((hotel) => {
@@ -68,6 +73,7 @@ export default async function HotelResultPage({ searchParams }) {
     )[0];
     return {
       _id: hotel._id,
+      slug: hotel.slug,
       name: hotel.name,
       address: Object.values(hotel.address).join(", "),
       amenities: hotel.amenities.slice(0, 5),
@@ -80,6 +86,11 @@ export default async function HotelResultPage({ searchParams }) {
       liked: hotel.liked,
     };
   });
+
+  if (hotels?.length < 1) {
+    return <div className={"text-center grow font-bold"}>No data found</div>;
+  }
+
   return (
     <div className="flex flex-grow flex-col gap-[32px]">
       {hotels.map((hotel) => (
