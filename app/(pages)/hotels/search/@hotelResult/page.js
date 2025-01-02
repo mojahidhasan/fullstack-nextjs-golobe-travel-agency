@@ -48,7 +48,9 @@ export default async function HotelResultPage({ searchParams }) {
 
     // show liked hotels if user is logged in
     if (session?.user?.id) {
-      const userDetails = await getOneDoc("User", { _id: session?.user?.id });
+      const userDetails = await getOneDoc("User", { _id: session?.user?.id }, [
+        "userDetails",
+      ]);
 
       hotels = hotels.map((hotel) => {
         const liked = userDetails?.likes?.hotels.includes(hotel._id);
