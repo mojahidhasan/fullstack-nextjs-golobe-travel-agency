@@ -37,7 +37,7 @@ export function HotelDestinationAutoCompletePopover({ className }) {
           <Input
             ref={inputRef}
             defaultValue={hotelsSliceValues.destination}
-            className="w-full h-full bg-transparent outline-none hover:bg-muted transition-all"
+            className="w-full !h-full bg-transparent outline-none hover:bg-muted transition-all"
             placeholder="Search..."
             onChange={debounce(handleInputChange)}
           />
