@@ -20,6 +20,7 @@ export function HotelResultCard({
     name,
     address,
     amenities = [],
+    slug,
     _id,
   },
 }) {
@@ -103,7 +104,7 @@ export function HotelResultCard({
         <div className="flex gap-[16px]">
           <LikeButton liked={liked} keys={{ _id }} flightsOrHotels={"hotels"} />
           <Button asChild className={"w-full"}>
-            <Link href={`${routes.hotels.path}/${_id}`}>View Deals</Link>
+            <Link href={`${routes.hotels.path}/${slug}`}>View Deals</Link>
           </Button>
         </div>
       </div>
