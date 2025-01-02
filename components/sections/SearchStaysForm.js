@@ -1,6 +1,5 @@
 "use client";
 
-import { option } from "@/data/selectInputOption";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { DatePicker } from "@/components/ui/DatePicker";
@@ -130,10 +129,7 @@ function SearchStaysForm({ searchParams = {} }) {
           </div>
 
           <div className="h-full grow">
-            <HotelDestinationAutoCompletePopover
-              searchResult={option}
-              className={"h-full w-full"}
-            />
+            <HotelDestinationAutoCompletePopover className={"h-full w-full"} />
           </div>
         </div>
 
