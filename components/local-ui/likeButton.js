@@ -4,6 +4,12 @@ import { likeOrUnlikeAction } from "@/lib/actions";
 import { useState, useEffect } from "react";
 import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
+
+/**
+ *
+ * @param {{keys: object, liked: boolean, flightsOrHotels: string, className: string}} params keys object should contain data that you want to save or delete from db during like and unlike action
+ * @returns
+ */
 export const LikeButton = ({
   liked,
   keys,
