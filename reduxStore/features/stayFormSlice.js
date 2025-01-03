@@ -9,10 +9,16 @@ const defaultValue = {
   guests: 1,
   promocode: "",
   filters: {
-    priceRange: [50, 1200],
+    priceRange: [0, 0],
     rate: [],
-    freebies: [],
+    features: [],
     amenities: [],
+  },
+  filtersData: {
+    minPrice: 0,
+    maxPrice: 0,
+    amenities: [],
+    features: [],
   },
 };
 
