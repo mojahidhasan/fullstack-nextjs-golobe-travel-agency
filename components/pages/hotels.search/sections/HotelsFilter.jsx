@@ -13,28 +13,50 @@ import { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
   setStayFilter,
+  setStayForm,
   resetStayFilters,
 } from "@/reduxStore/features/stayFormSlice";
 export function HotelsFilter({ className }) {
   const [filter, setFilter] = useState(false);
 
+  const [amenitiesLimit, setAmenitiesLimit] = useState(10);
+  const [featuresLimit, setFeaturesLimit] = useState(10);
+
+  useEffect(() => {
+    fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/hotels/hotel_filter_values", { method: "GET", next: { revalidate: process.env.NEXT_PUBLIC_REVALIDATE } }).then(res => res.json()).then(data => {
+      const minPrice = data.minPrice;
+      const maxPrice = data.maxPrice;
+      dispatch(setStayForm({
+        filtersData: {
+          amenities: data.amenities,
+          features: data.features,
+          minPrice,
+          maxPrice
+        }
+      }));
+      dispatch(setStayFilter({
+        priceRange: [minPrice, maxPrice]
+      }));
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filter]);
+
   const dispatch = useDispatch();
 
-  const stayFilterState = useSelector(
-    (selector) => selector.stayForm.value.filters
+  const stayState = useSelector(
+    (selector) => selector.stayForm.value
   );
-
-  function handleCheckedChange(checked, groupName, name) {
+  function handleCheckboxChange(checked, groupName, name) {
     if (checked) {
       dispatch(
         setStayFilter({
-          [groupName]: [...stayFilterState[groupName], name],
+          [groupName]: [...stayState?.filters[groupName], name],
         })
       );
     } else {
       dispatch(
         setStayFilter({
-          [groupName]: stayFilterState[groupName].filter(
+          [groupName]: stayState?.filters[groupName].filter(
             (item) => item !== name
           ),
         })
@@ -43,134 +65,138 @@ export function HotelsFilter({ className }) {
   }
   return (
     <section
-      className={cn(
+      className={ cn(
         "relative lg:w-[400px] w-full border-none lg:border-r-[1px] pr-[12px]",
         className
-      )}
+      ) }
     >
       <div className="flex items-center justify-between mb-[16px] font-semibold text-secondary">
         <Button
           className="text-[1.25rem] p-0"
-          variant={"link"}
-          onClick={() => {
+          variant={ "link" }
+          onClick={ () => {
             if (document.body.clientWidth < 1024) {
               setFilter(!filter);
             }
-          }}
+          } }
           asChild
         >
           <h2>Fliters</h2>
         </Button>
-        <Button variant={"link"} onClick={() => dispatch(resetStayFilters())}>
+        <Button variant={ "link" } onClick={ () => dispatch(resetStayFilters()) }>
           reset
         </Button>
       </div>
       <div
-        className={cn(
-          "w-full max-lg:bg-white max-lg:p-5 drop-shadow-lg rounded-lg",
+        className={ cn(
+          "w-full max-lg:bg-white max-lg:p-5 rounded-lg  max-lg:shadow-md",
           filter === false && "max-lg:hidden"
-        )}
+        ) }
       >
         <div>
-          <Dropdown title={"Price"} open>
+          <Dropdown title={ "Price" } open>
             <div className="my-5">
               <Slider
-                name="price-slider"
-                min={50}
-                max={1200}
-                value={stayFilterState.priceRange}
-                onValueChange={(value) => {
+                name="hotel-price-slider"
+                min={ +stayState.filtersData?.minPrice }
+                max={ +stayState.filtersData?.maxPrice }
+                value={ stayState.filters.priceRange }
+                onValueChange={ (value) => {
                   dispatch(setStayFilter({ priceRange: value }));
-                }}
+                } }
               />
+              <div className="flex font-semibold mt-2 justify-between">
+                <span>${ stayState.filters.priceRange?.[0] }</span>
+                <span>${ stayState.filters.priceRange?.[1] }</span>
+              </div>
             </div>
           </Dropdown>
-          <Dropdown title={"Rating"} open>
+          <Dropdown title={ "Rating" } open>
             <FilterRating
-              value={stayFilterState.rate}
-              setValue={(rate) => {
+              value={ stayState.rate }
+              setValue={ (rate) => {
                 dispatch(setStayFilter({ rate }));
-              }}
+              } }
               className="justify-start"
             />
           </Dropdown>
-          <Dropdown title={"Freebies"} open>
+          <Dropdown title={ "Features" } open>
             <div className="flex flex-col gap-3">
-              {[
-                "Free breakfast",
-                "Free parking",
-                "Free internet",
-                "Free airport shuttle",
-                "Free cancellation",
-              ].map((name) => {
+              { stayState.filtersData?.features.slice(0, featuresLimit).map((name) => {
                 const IDfyName = name.split(" ").join("").toLocaleLowerCase();
                 return (
                   <Checkbox
-                    key={IDfyName}
-                    onClick={(checked) =>
-                      handleCheckedChange(checked, "freebies", IDfyName)
+                    key={ IDfyName }
+                    onCheckedChange={ (checked) => {
+                      handleCheckboxChange(checked, "features", IDfyName);
                     }
-                    name={IDfyName}
-                    id={IDfyName}
-                    label={name}
-                    checked={stayFilterState.freebies.includes(IDfyName)}
+                    }
+                    name={ IDfyName }
+                    id={ IDfyName }
+                    label={ name }
+                    checked={ stayState.filters.features.includes(IDfyName) }
                   />
                 );
-              })}
+              }) }
+              <Button
+                type={ "button" }
+                variant={ "ghost" }
+                className="w-min h-min p-0 text-tertiary"
+                onClick={ () => {
+                  if (featuresLimit < stayState.filtersData?.features.length) {
+                    setFeaturesLimit(stayState.filtersData?.features.length);
+                  } else {
+                    setFeaturesLimit(10);
+                  }
+                }
+                }
+              >
+                { featuresLimit < stayState.filtersData?.features.length ? `+${Math.abs(stayState.filtersData?.features.length - featuresLimit)} more` : "Show less" }
+              </Button>
             </div>
           </Dropdown>
-          <Dropdown title={"Amenities"} open>
+          <Dropdown title={ "Amenities" } open>
             <div className="flex flex-col gap-3">
-              <Checkbox
-                onClick={(checked) =>
-                  handleCheckedChange(checked, "amenities", "24hr-front-desk")
-                }
-                name={"24hr-front-desk"}
-                id="24hr-front-desk"
-                label="24hr front desk"
-                checked={stayFilterState.amenities.includes("24hr-front-desk")}
-              />
-              <Checkbox
-                onClick={(checked) =>
-                  handleCheckedChange(checked, "amenities", "air-conditioned")
-                }
-                name={"air-conditioned"}
-                id="air-conditioned"
-                label="Air-conditioned"
-                checked={stayFilterState.amenities.includes("air-conditioned")}
-              />
-              <Checkbox
-                onClick={(checked) =>
-                  handleCheckedChange(checked, "amenities", "fitness")
-                }
-                name={"fitness"}
-                id="fitness"
-                label="Fitness"
-                checked={stayFilterState.amenities.includes("fitness")}
-              />
-              <Checkbox
-                onClick={(checked) =>
-                  handleCheckedChange(checked, "amenities", "pool")
-                }
-                name={"pool"}
-                id="pool"
-                label="Pool"
-                checked={stayFilterState.amenities.includes("pool")}
-              />
+              {
+                stayState.filtersData?.amenities.slice(0, amenitiesLimit).map((name) => {
+                  const IDfyName = name.split(" ").join("").toLocaleLowerCase();
+                  return (
+                    <Checkbox
+                      key={ IDfyName }
+                      onCheckedChange={ (checked) => {
+                        handleCheckboxChange(checked, "amenities", IDfyName);
+                      }
+                      }
+                      name={ IDfyName }
+                      id={ IDfyName }
+                      label={ name }
+                      checked={ stayState.filters.amenities.includes(IDfyName) }
+                    />
+                  );
+                })
+              }
               <Button
-                type={"button"}
-                variant={"ghost"}
+                type={ "button" }
+                variant={ "ghost" }
                 className="w-min h-min p-0 text-tertiary"
+                onClick={ () => {
+                  if (amenitiesLimit < stayState.filtersData?.amenities.length) {
+                    setAmenitiesLimit(stayState.filtersData?.amenities.length);
+                  } else {
+                    setAmenitiesLimit(10);
+                  }
+                }
+                }
               >
-                +24 more
+                { amenitiesLimit < stayState.filtersData?.amenities.length ? `+${Math.abs(stayState.filtersData?.amenities.length - amenitiesLimit)} more` : "Show less" }
               </Button>
             </div>
           </Dropdown>
           <div className="flex justify-end">
             <Button
-              type={"submit"}
-              onClick={() => setFilter(!filter)}
-              className={"mt-4 bg-primary"}
+              type={ "submit" }
+              onClick={ () => setFilter(!filter) }
+              className={ "mt-4 bg-primary" }
             >
               Submit
             </Button>
