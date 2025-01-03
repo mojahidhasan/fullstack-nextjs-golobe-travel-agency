@@ -10,7 +10,7 @@ export function Checkbox({ className, error, id, name, label, ...props }) {
     <>
       <div
         className={cn(
-          "flex items-center space-x-2",
+          "flex items-center space-x-2 select-none py-1",
           error && "ring-2 ring-offset-4 rounded-[2px] ring-destructive"
         )}
       >
