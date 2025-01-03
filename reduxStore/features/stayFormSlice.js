@@ -41,7 +41,13 @@ const stayFormSlice = createSlice({
       };
     },
     resetStayFilters(state) {
-      state.value.filters = defaultValue.filters;
+      state.value.filters = {
+        ...defaultValue.filters,
+        priceRange: [
+          state.value.filtersData.minPrice,
+          state.value.filtersData.maxPrice,
+        ],
+      };
     },
   },
 });

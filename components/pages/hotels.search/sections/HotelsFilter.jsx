@@ -23,7 +23,10 @@ export function HotelsFilter({ className }) {
   const [featuresLimit, setFeaturesLimit] = useState(10);
 
   useEffect(() => {
-    fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/hotels/hotel_filter_values", { method: "GET", next: { revalidate: process.env.NEXT_PUBLIC_REVALIDATE } }).then(res => res.json()).then(data => {
+    async function getFilterValues() {
+      const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/api/hotels/hotel_filter_values", { next: { revalidate: process.env.NEXT_PUBLIC_REVALIDATE } });
+
+      const data = await res.json();
       const minPrice = data.minPrice;
       const maxPrice = data.maxPrice;
       dispatch(setStayForm({
@@ -37,7 +40,8 @@ export function HotelsFilter({ className }) {
       dispatch(setStayFilter({
         priceRange: [minPrice, maxPrice]
       }));
-    });
+    }
+    getFilterValues();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [filter]);
 
@@ -113,7 +117,7 @@ export function HotelsFilter({ className }) {
           </Dropdown>
           <Dropdown title={ "Rating" } open>
             <FilterRating
-              value={ stayState.rate }
+              value={ stayState.filters.rate }
               setValue={ (rate) => {
                 dispatch(setStayFilter({ rate }));
               } }
@@ -123,7 +127,7 @@ export function HotelsFilter({ className }) {
           <Dropdown title={ "Features" } open>
             <div className="flex flex-col gap-3">
               { stayState.filtersData?.features.slice(0, featuresLimit).map((name) => {
-                const IDfyName = name.split(" ").join("").toLocaleLowerCase();
+                const IDfyName = "feature-" + name.split(" ").join("").toLocaleLowerCase();
                 return (
                   <Checkbox
                     key={ IDfyName }
@@ -159,7 +163,7 @@ export function HotelsFilter({ className }) {
             <div className="flex flex-col gap-3">
               {
                 stayState.filtersData?.amenities.slice(0, amenitiesLimit).map((name) => {
-                  const IDfyName = name.split(" ").join("").toLocaleLowerCase();
+                  const IDfyName = "amenity-" + name.split(" ").join("").toLocaleLowerCase();
                   return (
                     <Checkbox
                       key={ IDfyName }
@@ -195,10 +199,10 @@ export function HotelsFilter({ className }) {
           <div className="flex justify-end">
             <Button
               type={ "submit" }
-              onClick={ () => setFilter(!filter) }
+              form="stayForm"
               className={ "mt-4 bg-primary" }
             >
-              Submit
+              Apply
             </Button>
           </div>
         </div>

@@ -31,6 +31,10 @@ function SearchStaysForm({ searchParams = {} }) {
   let staySearchParamsObj = {};
   if (Object.keys(searchParams).length > 0) {
     for (const [key, value] of Object.entries(searchParams)) {
+      if (key === "filters") {
+        staySearchParamsObj[key] = JSON.parse(value);
+        continue;
+      }
       staySearchParamsObj[key] = value;
     }
   } else {
@@ -41,6 +45,12 @@ function SearchStaysForm({ searchParams = {} }) {
       rooms: 1,
       guests: 1,
       promocode: "",
+      filters: {
+        priceRange: [0, 0],
+        rate: [],
+        features: [],
+        amenities: [],
+      },
     };
   }
 
@@ -113,6 +123,12 @@ function SearchStaysForm({ searchParams = {} }) {
       <input type="hidden" name="guests" value={stayFormData.guests} />
 
       <input type="hidden" name="promocode" value={stayFormData.promocode} />
+
+      <input
+        type="hidden"
+        name="filters"
+        value={JSON.stringify(stayFormData.filters)}
+      />
 
       <div className="my-[20px] grid gap-[24px] lg:grid-cols-2 xl:grid-cols-[2fr_repeat(3,_1fr)]">
         <div className="relative flex h-[48px] w-full items-center gap-[4px] rounded-[8px] border-2 border-primary">
