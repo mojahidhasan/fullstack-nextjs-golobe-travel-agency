@@ -9,7 +9,7 @@ const defaultValue = {
   guests: 1,
   promocode: "",
   filters: {
-    priceRange: [0, 0],
+    priceRange: [0, Infinity],
     rate: [],
     features: [],
     amenities: [],
