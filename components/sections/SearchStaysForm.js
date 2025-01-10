@@ -25,6 +25,19 @@ import { setStayForm } from "@/reduxStore/features/stayFormSlice";
 
 import { addDays } from "date-fns";
 
+export function searchForEmptyValuesInStaySearchForm(obj) {
+  const optionals = ["promocode"];
+  for (const [key, value] of Object.entries(obj)) {
+    if (optionals.includes(key)) {
+      continue;
+    }
+    if (value === "") {
+      return true;
+    }
+  }
+  return false;
+}
+
 function SearchStaysForm({ searchParams = {} }) {
   const dispatch = useDispatch();
 
@@ -45,12 +58,6 @@ function SearchStaysForm({ searchParams = {} }) {
       rooms: 1,
       guests: 1,
       promocode: "",
-      filters: {
-        priceRange: [0, 0],
-        rate: [],
-        features: [],
-        amenities: [],
-      },
     };
   }
 
@@ -64,7 +71,7 @@ function SearchStaysForm({ searchParams = {} }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (searchForEmptyValues(stayFormData)) {
+    if (searchForEmptyValuesInStaySearchForm(stayFormData)) {
       alert(
         "Please fill all the required fields. Asterisk (*) indicates 'required'"
       );
@@ -86,19 +93,6 @@ function SearchStaysForm({ searchParams = {} }) {
     }
 
     e.target.submit();
-  }
-
-  function searchForEmptyValues(obj) {
-    const optionals = ["promocode"];
-    for (const [key, value] of Object.entries(obj)) {
-      if (optionals.includes(key)) {
-        continue;
-      }
-      if (value === "") {
-        return true;
-      }
-    }
-    return false;
   }
 
   return (
@@ -123,12 +117,6 @@ function SearchStaysForm({ searchParams = {} }) {
       <input type="hidden" name="guests" value={stayFormData.guests} />
 
       <input type="hidden" name="promocode" value={stayFormData.promocode} />
-
-      <input
-        type="hidden"
-        name="filters"
-        value={JSON.stringify(stayFormData.filters)}
-      />
 
       <div className="my-[20px] grid gap-[24px] lg:grid-cols-2 xl:grid-cols-[2fr_repeat(3,_1fr)]">
         <div className="relative flex h-[48px] w-full items-center gap-[4px] rounded-[8px] border-2 border-primary">
