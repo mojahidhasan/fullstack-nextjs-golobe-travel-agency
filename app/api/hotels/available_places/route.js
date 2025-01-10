@@ -42,6 +42,7 @@ export async function GET(req) {
       })
       .flat();
 
+    // eslint-disable-next-line no-undef
     const filterDuplicates = Array.from(new Set(stringified), (x) =>
       JSON.parse(x)
     );
