@@ -23,12 +23,22 @@ export default async function HotelResultPage({ searchParams }) {
             $regex: `${destination.match(/.{1,2}/g).join("+?.*")}`,
             $options: "i",
           },
-          ...((filters?.features && filters?.features.length > 0) ?? {
-            features: { $in: filters.features },
-          }),
-          ...((filters?.amenities && filters?.amenities.length > 0) ?? {
-            amenities: { $in: filters.amenities },
-          }),
+          ...(filters?.features &&
+            filters?.features.length > 0 && {
+              features: {
+                $in: filters.features.map(
+                  (feature) => feature.split("feature-")[1]
+                ),
+              },
+            }),
+          ...(filters?.amenities &&
+            filters?.amenities.length > 0 && {
+              amenities: {
+                $in: filters.amenities.map(
+                  (amenity) => amenity.split("amenity-")[1]
+                ),
+              },
+            }),
         },
         ["hotels"]
       );
@@ -44,7 +54,7 @@ export default async function HotelResultPage({ searchParams }) {
         ["hotels"]
       );
     }
-
+    console.log(hotels, hotels.length);
     // filter by total available rooms sleeps count is greater than or equal to number of guests
     hotels = hotels.filter((hotel) => {
       const availableHotelRoomsByDate = hotel.rooms.filter((room) => {

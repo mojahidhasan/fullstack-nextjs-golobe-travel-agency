@@ -182,8 +182,7 @@ export function HotelsFilter({ className }) {
               {stayState.filtersData?.features
                 .slice(0, featuresLimit)
                 .map((name) => {
-                  const IDfyName =
-                    "feature-" + name.split(" ").join("").toLocaleLowerCase();
+                  const IDfyName = "feature-" + name.trim();
                   return (
                     <Checkbox
                       key={IDfyName}
@@ -222,8 +221,7 @@ export function HotelsFilter({ className }) {
               {stayState.filtersData?.amenities
                 .slice(0, amenitiesLimit)
                 .map((name) => {
-                  const IDfyName =
-                    "amenity-" + name.split(" ").join("").toLocaleLowerCase();
+                  const IDfyName = "amenity-" + name.trim();
                   return (
                     <Checkbox
                       key={IDfyName}
