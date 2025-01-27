@@ -54,6 +54,9 @@ export function HotelResultCard({
                   </p>
                 );
               })}
+              <p className="text-xs text-tertiary font-bold px-2 py-1 rounded-xl">
+                + more
+              </p>
             </div>
             <div className="flex items-center justify-between">
               <div className="flex mt-2 items-center gap-[4px]">
