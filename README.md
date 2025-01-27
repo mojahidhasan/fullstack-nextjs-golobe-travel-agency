@@ -101,9 +101,6 @@ It should create files in the `generated` directory.
 This project is still in development. All front-end pages have been developed already but many functionalities especially the backend have not been implemented yet. Here are some functionalities that are yet to develop:
 
 - Replacing fake flight data with real flight API
-- Implementing hotel data (fake) in the database.
-- Showing hotel data in search results.
-- Search filter for hotels working properly.
 - Buying tickets and Booking hotel functionality (demo).
 - Add payment method form and make it functional.
 - Adding functionality of changing password, phone number, address, and date of birth from profile
