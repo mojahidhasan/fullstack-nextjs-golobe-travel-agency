@@ -1,10 +1,9 @@
 "use client";
 
-import { option } from "@/data/selectInputOption";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { DatePicker } from "@/components/ui/DatePicker";
-import { Combobox } from "@/components/local-ui/ComboBox";
+import { HotelDestinationAutoCompletePopover } from "@/components/local-ui/HotelDestinationAutoCompletePopover";
 import { AddPromoCode } from "@/components/AddPromoCode";
 import {
   Popover,
@@ -26,12 +25,29 @@ import { setStayForm } from "@/reduxStore/features/stayFormSlice";
 
 import { addDays } from "date-fns";
 
+export function searchForEmptyValuesInStaySearchForm(obj) {
+  const optionals = ["promocode"];
+  for (const [key, value] of Object.entries(obj)) {
+    if (optionals.includes(key)) {
+      continue;
+    }
+    if (value === "") {
+      return true;
+    }
+  }
+  return false;
+}
+
 function SearchStaysForm({ searchParams = {} }) {
   const dispatch = useDispatch();
 
   let staySearchParamsObj = {};
   if (Object.keys(searchParams).length > 0) {
     for (const [key, value] of Object.entries(searchParams)) {
+      if (key === "filters") {
+        staySearchParamsObj[key] = JSON.parse(value);
+        continue;
+      }
       staySearchParamsObj[key] = value;
     }
   } else {
@@ -55,7 +71,7 @@ function SearchStaysForm({ searchParams = {} }) {
   function handleSubmit(e) {
     e.preventDefault();
 
-    if (searchForEmptyValues(stayFormData)) {
+    if (searchForEmptyValuesInStaySearchForm(stayFormData)) {
       alert(
         "Please fill all the required fields. Asterisk (*) indicates 'required'"
       );
@@ -77,19 +93,6 @@ function SearchStaysForm({ searchParams = {} }) {
     }
 
     e.target.submit();
-  }
-
-  function searchForEmptyValues(obj) {
-    const optionals = ["promocode"];
-    for (const [key, value] of Object.entries(obj)) {
-      if (optionals.includes(key)) {
-        continue;
-      }
-      if (value === "") {
-        return true;
-      }
-    }
-    return false;
   }
 
   return (
@@ -130,7 +133,7 @@ function SearchStaysForm({ searchParams = {} }) {
           </div>
 
           <div className="h-full grow">
-            <Combobox searchResult={option} className={"h-full w-full"} />
+            <HotelDestinationAutoCompletePopover className={"h-full w-full"} />
           </div>
         </div>
 

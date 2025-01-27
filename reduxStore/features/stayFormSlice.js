@@ -9,10 +9,16 @@ const defaultValue = {
   guests: 1,
   promocode: "",
   filters: {
-    priceRange: [50, 1200],
+    priceRange: [0, Infinity],
     rate: [],
-    freebies: [],
+    features: [],
     amenities: [],
+  },
+  filtersData: {
+    minPrice: 0,
+    maxPrice: 0,
+    amenities: [],
+    features: [],
   },
 };
 
@@ -35,7 +41,13 @@ const stayFormSlice = createSlice({
       };
     },
     resetStayFilters(state) {
-      state.value.filters = defaultValue.filters;
+      state.value.filters = {
+        ...defaultValue.filters,
+        priceRange: [
+          state.value.filtersData.minPrice,
+          state.value.filtersData.maxPrice,
+        ],
+      };
     },
   },
 });
