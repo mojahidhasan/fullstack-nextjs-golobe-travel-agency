@@ -1,3 +1,4 @@
+"use client";
 import Image from "next/image";
 
 import location from "@/public/icons/location.svg";
