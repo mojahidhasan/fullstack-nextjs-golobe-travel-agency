@@ -1,5 +1,4 @@
 import { Map } from "@/components/pages/hotels.[slug]/sections/Map";
-import { ReviewsList } from "@/components/pages/hotels.[slug]/sections/ReviewsList";
 import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -12,7 +11,6 @@ import { RATING_SCALE } from "@/lib/constants";
 import { RatingShow } from "@/components/local-ui/ratingShow";
 import { LikeButton } from "@/components/local-ui/likeButton";
 import { auth } from "@/lib/auth";
-import { WriteReview } from "@/components/sections/writeReview";
 import { FlightOrHotelReview } from "@/components/sections/FlightOrHotelReview";
 export default async function HotelDetailsPage({ params }) {
   const session = await auth();
@@ -22,7 +20,7 @@ export default async function HotelDetailsPage({ params }) {
   const reviews = await getManyDocs(
     "HotelReview",
     { hotelId: hotelDetails._id, slug },
-    [hotelDetails._id + "_review", params.slug + "_review" + "hotelReviews"]
+    [hotelDetails._id + "_review", params.slug + "_review", "hotelReviews"]
   );
 
   const totalRatingsSum = reviews.reduce(
