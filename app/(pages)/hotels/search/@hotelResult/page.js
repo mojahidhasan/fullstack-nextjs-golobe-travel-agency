@@ -89,68 +89,75 @@ export default async function HotelResultPage({ searchParams }) {
   }
 
   // rating and reviews
-  hotels = hotels
-    .map((hotel) => {
-      const totalRatingsSum = hotel.reviews.reduce(
-        (acc, review) => acc + +review.rating,
-        0
-      );
-      const totalReviewsCount = hotel.reviews.length;
+  hotels = await Promise.all(
+    hotels
+      .map(async (hotel) => {
+        const reviews = await getManyDocs(
+          "HotelReview",
+          { hotelId: hotel._id, slug: hotel.slug },
+          [hotel._id + "_review", hotel.slug + "_review", "hotelReviews"]
+        );
+        const totalRatingsSum = reviews.reduce(
+          (acc, review) => acc + +review.rating,
+          0
+        );
+        const totalReviewsCount = reviews.length;
 
-      const rating = totalRatingsSum / totalReviewsCount;
-      const ratingScale = RATING_SCALE[Math.floor(rating)];
+        const rating = totalRatingsSum / totalReviewsCount;
+        const ratingScale = RATING_SCALE[Math.floor(rating)];
 
-      const cheapestRoom = [...hotel.rooms].sort((a, b) => {
-        const aPrice =
-          +a.price.base +
-          +a.price.tax -
-          +a.price.discount +
-          +a.price.serviceFee;
-        const bPrice =
-          +b.price.base +
-          +b.price.tax -
-          +b.price.discount +
-          +b.price.serviceFee;
-        return aPrice - bPrice;
-      })[0];
-      return {
-        _id: hotel._id,
-        slug: hotel.slug,
-        name: hotel.name,
-        address: Object.values(hotel.address).join(", "),
-        amenities: hotel.amenities.slice(0, 5),
-        price: cheapestRoom.price,
-        availableRooms: hotel.rooms.length,
-        rating: totalReviewsCount ? rating.toFixed(1) : "N/A",
-        totalReviews: totalReviewsCount,
-        ratingScale: ratingScale || "N/A",
-        image: hotel.images[0],
-        liked: hotel.liked,
-      };
-    })
-    .filter((hotel) => {
-      let rateFilter = true;
-      let priceFilter = true;
-      if (filters?.rate && filters?.rate.length > 0) {
-        const rating = hotel.rating === "N/A" ? 0 : +hotel.rating;
-        rateFilter = filters?.rate.map(Number).includes(Math.floor(rating));
-      }
-
-      if (filters?.priceRange?.length > 1) {
-        const price =
-          +hotel.price.base +
-          +hotel.price.tax -
-          +hotel.price.discount +
-          +hotel.price.serviceFee;
-        if (
-          price <= +filters?.priceRange[0] ||
-          price >= +filters?.priceRange[1]
-        ) {
-          priceFilter = false;
+        const cheapestRoom = [...hotel.rooms].sort((a, b) => {
+          const aPrice =
+            +a.price.base +
+            +a.price.tax -
+            +a.price.discount +
+            +a.price.serviceFee;
+          const bPrice =
+            +b.price.base +
+            +b.price.tax -
+            +b.price.discount +
+            +b.price.serviceFee;
+          return aPrice - bPrice;
+        })[0];
+        return {
+          _id: hotel._id,
+          slug: hotel.slug,
+          name: hotel.name,
+          address: Object.values(hotel.address).join(", "),
+          amenities: hotel.amenities.slice(0, 5),
+          price: cheapestRoom.price,
+          availableRooms: hotel.rooms.length,
+          rating: totalReviewsCount ? rating.toFixed(1) : "N/A",
+          totalReviews: totalReviewsCount,
+          ratingScale: ratingScale || "N/A",
+          image: hotel.images[0],
+          liked: hotel.liked,
+        };
+      })
+      .filter((hotel) => {
+        let rateFilter = true;
+        let priceFilter = true;
+        if (filters?.rate && filters?.rate.length > 0) {
+          const rating = hotel.rating === "N/A" ? 0 : +hotel.rating;
+          rateFilter = filters?.rate.map(Number).includes(Math.floor(rating));
         }
-      }
-      return rateFilter && priceFilter;
-    });
+
+        if (filters?.priceRange?.length > 1) {
+          const price =
+            +hotel.price.base +
+            +hotel.price.tax -
+            +hotel.price.discount +
+            +hotel.price.serviceFee;
+          if (
+            price <= +filters?.priceRange[0] ||
+            price >= +filters?.priceRange[1]
+          ) {
+            priceFilter = false;
+          }
+        }
+        return rateFilter && priceFilter;
+      })
+  );
 
   if (hotels?.length < 1) {
     return <div className={"text-center grow font-bold"}>No data found</div>;
