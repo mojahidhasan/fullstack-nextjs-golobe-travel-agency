@@ -14,13 +14,15 @@ import { writeReviewAction } from "@/lib/actions";
 export function WriteReview({
   isLoggedIn,
   isAlreadyReviewed,
-  flightKeys,
-  currentUserReview,
+  reviewKeys,
+  userReviewObj,
+  flightOrHotel = "flights",
 }) {
   const extendedWriteReviewAction = writeReviewAction.bind(
     null,
-    flightKeys,
-    isAlreadyReviewed
+    reviewKeys,
+    isAlreadyReviewed,
+    flightOrHotel
   );
   const [state, dispatch] = useFormState(extendedWriteReviewAction, undefined);
   const reviewInput = useRef();
@@ -98,12 +100,12 @@ export function WriteReview({
             {shouldMessageShow &&
               state?.success === false &&
               state?.message && <ErrorMessage message={state?.message} />}
-            <form id={"flight-review-form"} action={dispatch}>
+            <form id={"review-form"} action={dispatch}>
               <div className={"flex mb-5 flex-col gap-4"}>
                 <RatingStar
                   fill={"hsl(120, 33%, 10%)"}
                   error={state?.error && state?.error.rating}
-                  defaultRating={+currentUserReview?.rating ?? 0}
+                  defaultRating={+userReviewObj?.rating ?? 0}
                 />
               </div>
               <div className={"mb-5"}>
@@ -111,12 +113,12 @@ export function WriteReview({
                   label={"Comment"}
                   type={"textarea"}
                   name={"reviewComment"}
-                  defaultValue={currentUserReview?.comment ?? ""}
+                  defaultValue={userReviewObj?.comment ?? ""}
                   error={state?.error && state?.error.reviewComment}
                   className={"leading-snug"}
                 />
               </div>
-              <SubmitBtn formId={"flight-review-form"} />
+              <SubmitBtn formId={"review-form"} />
             </form>
           </>
         ) : (
