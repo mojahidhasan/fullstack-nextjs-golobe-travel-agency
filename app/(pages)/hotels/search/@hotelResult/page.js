@@ -54,7 +54,6 @@ export default async function HotelResultPage({ searchParams }) {
         ["hotels"]
       );
     }
-    console.log(hotels, hotels.length);
     // filter by total available rooms sleeps count is greater than or equal to number of guests
     hotels = hotels.filter((hotel) => {
       const availableHotelRoomsByDate = hotel.rooms.filter((room) => {
@@ -104,12 +103,12 @@ export default async function HotelResultPage({ searchParams }) {
       const cheapestRoom = [...hotel.rooms].sort((a, b) => {
         const aPrice =
           +a.price.base +
-          +a.price.taxe -
+          +a.price.tax -
           +a.price.discount +
           +a.price.serviceFee;
         const bPrice =
           +b.price.base +
-          +b.price.taxe -
+          +b.price.tax -
           +b.price.discount +
           +b.price.serviceFee;
         return aPrice - bPrice;
