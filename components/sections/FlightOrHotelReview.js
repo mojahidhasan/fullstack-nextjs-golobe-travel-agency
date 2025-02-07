@@ -4,13 +4,18 @@ import { WriteReview } from "./writeReview";
 
 import { auth } from "@/lib/auth";
 import { RATING_SCALE } from "@/lib/constants";
-export async function FlightOrHotelReview({ rating, reviews, flightKeys }) {
+export async function FlightOrHotelReview({
+  rating,
+  reviews,
+  reviewKeys,
+  flightOrHotel,
+}) {
   const session = await auth();
   const isLoggedIn = !!session?.user;
   const isAlreadyReviewed = reviews.some(
     (review) => review.reviewer.toString() === session?.user.id
   );
-  const currentUserReview = reviews.find(
+  const userReviewObj = reviews.find(
     (review) => review.reviewer === session?.user.id
   );
   return (
@@ -20,10 +25,11 @@ export async function FlightOrHotelReview({ rating, reviews, flightKeys }) {
           Reviews
         </h2>
         <WriteReview
-          currentUserReview={currentUserReview}
+          userReviewObj={userReviewObj}
           isLoggedIn={isLoggedIn}
           isAlreadyReviewed={isAlreadyReviewed}
-          flightKeys={flightKeys}
+          reviewKeys={reviewKeys}
+          flightOrHotel={flightOrHotel}
         />
       </div>
       <div className="flex items-center gap-[16px]">
