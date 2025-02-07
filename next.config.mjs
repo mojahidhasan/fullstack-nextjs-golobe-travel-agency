@@ -6,6 +6,7 @@ const cspHeader = `
     img-src 'self' blob: data: https://images.unsplash.com/ https://images.pexels.com/ https://platform-lookaside.fbsbx.com/;
     font-src 'self';
     object-src 'self';
+    frame-src 'self' https://www.openstreetmap.org/;
     base-uri 'self';
     form-action 'self';
     frame-ancestors 'none';
