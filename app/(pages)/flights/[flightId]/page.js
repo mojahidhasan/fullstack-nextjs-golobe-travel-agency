@@ -106,7 +106,8 @@ export default async function FlightDetailsPage({ params }) {
         <FlightOrHotelReview
           rating={flightInfo.rating}
           reviews={flightReviews}
-          flightKeys={{
+          flightOrHotel="flights"
+          reviewKeys={{
             flightNumber: flightInfo.flightNumber,
             airlineId: flightInfo.airlineId,
             departureAirportId: flightInfo.departureAirportId,
