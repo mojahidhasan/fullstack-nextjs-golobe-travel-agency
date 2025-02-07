@@ -88,7 +88,7 @@ export function HotelResultCard({
                   </p>
                 )}
                 <p className="text-right text-[0.875rem] text-secondary/75">
-                  / night per person
+                  / night
                 </p>
               </div>
               <div className="text-right text-[12px] text-secondary/75">
