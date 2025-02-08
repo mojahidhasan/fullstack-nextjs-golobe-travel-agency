@@ -50,7 +50,7 @@
     "mongodb": "^6.8.0",
     "mongoose": "^8.9.1",
     "mongoose-autopopulate": "^1.1.0",
-    "next": "14.2.20",
+    "next": "14.2.23",
     "next-auth": "^5.0.0-beta.25",
     "nextjs-toploader": "^1.6.12",
     "node-mailjet": "^6.0.6",
