@@ -1,4 +1,4 @@
-import generateOneDayFlightSchedule from "@/lib/db/generateForDB/generateFlight";
+import generateOneDayFlightSchedule from "@/lib/db/generateForDB/flights/generateOneDayFlight";
 import {
   Flight,
   Airport,
