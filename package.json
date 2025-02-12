@@ -6,9 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "generateDBFiles": "vitest --testNamePattern generateDBFiles --run",
-    "generateAndUploadDB": "vitest --testNamePattern generateAndUploadDB --run",
-    "uploadHotelsDB": "vitest --testNamePattern uploadHotelsDB --run",
+    "generateAndUploadFlightsDB": "vitest --testNamePattern generateAndUploadFlightsDB --run",
+    "generateFlightsFiles": "vitest --testNamePattern generateFlightsFiles --run",
+    "generateAnduploadHotelsDB": "vitest --testNamePattern generateAndUploadHotelsDB --run",
     "generateHotelsFiles": "vitest --testNamePattern generateHotelsFiles --run",
     "lint": "next lint",
     "test": "vitest --testNamePattern Testing"
