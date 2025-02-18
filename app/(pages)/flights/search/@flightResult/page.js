@@ -3,7 +3,7 @@ import { auth } from "@/lib/auth";
 import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import { RATING_SCALE } from "@/lib/constants";
 import { addMilliseconds, endOfDay, startOfDay } from "date-fns";
-import _ from "lodash";
+import { objDeepCompare } from "@/lib/utils";
 import { cookies } from "next/headers";
 async function FLightResultPage({ searchParams }) {
   let flightResults = [];
@@ -88,7 +88,7 @@ async function FLightResultPage({ searchParams }) {
       };
       return {
         ...flight,
-        liked: likedFlights.some((el) => _.isEqual(flightFilterQuery, el)),
+        liked: likedFlights.some((el) => objDeepCompare(flightFilterQuery, el)),
       };
     });
   }

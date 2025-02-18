@@ -8,7 +8,7 @@ import Image from "next/image";
 
 import { auth } from "@/lib/auth";
 import stopwatch from "@/public/icons/stopwatch.svg";
-import _ from "lodash";
+import { objDeepCompare } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 export default async function FlightDetailsPage({ params }) {
@@ -62,7 +62,7 @@ export default async function FlightDetailsPage({ params }) {
       flightClass,
     };
     flightInfo.liked = userDetails?.likes?.flights?.some((el) =>
-      _.isEqual(flightFilterQuery, el)
+      objDeepCompare(flightFilterQuery, el)
     );
   }
   return (
