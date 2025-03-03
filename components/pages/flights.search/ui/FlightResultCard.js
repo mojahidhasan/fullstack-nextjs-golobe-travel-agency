@@ -7,7 +7,6 @@ import { LikeButton } from "@/components/local-ui/likeButton";
 import { airlines } from "@/data/airlinesLogos";
 import { substractTimeInMins } from "@/lib/utils";
 import { minutesToHMFormat } from "@/lib/helpers";
-import { trackUserFlightClass } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { RatingShow } from "@/components/local-ui/ratingShow";
 import { cn } from "@/lib/utils";
@@ -15,9 +14,6 @@ import { formatInTimeZone } from "date-fns-tz";
 export function FlightResultCard({ data }) {
   const router = useRouter();
   async function handleClick() {
-    await trackUserFlightClass(undefined, {
-      flightClass: data.flightClass,
-    });
     router.push(`/flights/${data.flightNumber}`);
   }
   return (
