@@ -5,7 +5,7 @@ import { useState } from "react";
 
 import { cn } from "@/lib/utils";
 
-export function Cheapest({ data, resultType = "result(s)" }) {
+export function FlightResultList({ data, resultType = "result(s)" }) {
   const maxResultPerPage = 4;
   const [shownTill, setShownTill] = useState(
     data.length < maxResultPerPage ? data.length : maxResultPerPage
@@ -16,9 +16,9 @@ export function Cheapest({ data, resultType = "result(s)" }) {
       <div className="my-10">
         <div className="flex my-5 justify-between text-[0.875rem] font-semibold">
           <p>
-            Showing {shownTill} of{" "}
+            Showing { shownTill } of{ " " }
             <span className="text-destructive">
-              {data.length} {resultType}
+              { data.length } { resultType }
             </span>
           </p>
           {/* <p>
@@ -33,18 +33,18 @@ export function Cheapest({ data, resultType = "result(s)" }) {
           </p> */}
         </div>
         <div className="grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2">
-          {data.slice(0, shownTill).map((item, i) => (
-            <FlightResultCard key={item._id} data={item} />
-          ))}
+          { data.slice(0, shownTill).map((item, i) => (
+            <FlightResultCard key={ item._id } data={ item } />
+          )) }
         </div>
 
         <div>
           <Button
-            className={cn(
+            className={ cn(
               "w-full hover:bg-secondary/90 bg-secondary focus:bg-secondary !font-semibold text-white",
               shownTill >= data.length && "hidden"
-            )}
-            onClick={() =>
+            ) }
+            onClick={ () =>
               setShownTill(Math.min(shownTill + maxResultPerPage, data.length))
             }
           >
