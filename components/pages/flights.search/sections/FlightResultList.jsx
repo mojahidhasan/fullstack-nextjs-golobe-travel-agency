@@ -17,7 +17,7 @@ export function FlightResultList({ data, resultType = "result(s)" }) {
         <div className="flex my-5 justify-between text-[0.875rem] font-semibold">
           <p>
             Showing { shownTill } of{ " " }
-            <span className="text-destructive">
+            <span className="text-tertiary">
               { data.length } { resultType }
             </span>
           </p>
