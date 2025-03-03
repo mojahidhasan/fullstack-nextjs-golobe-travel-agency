@@ -5,7 +5,8 @@ import { Separator } from "@/components/ui/separator";
 import { LikeButton } from "@/components/local-ui/likeButton";
 
 import { airlines } from "@/data/airlinesLogos";
-import { minutesToHMFormat, substractTimeInMins } from "@/lib/utils";
+import { substractTimeInMins } from "@/lib/utils";
+import { minutesToHMFormat } from "@/lib/helpers";
 import { trackUserFlightClass } from "@/lib/actions";
 import { useRouter } from "next/navigation";
 import { RatingShow } from "@/components/local-ui/ratingShow";
