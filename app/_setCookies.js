@@ -1,6 +1,9 @@
 "use client";
 
-import { setNecessaryCookiesAction } from "@/lib/actions";
+import {
+  setNecessaryCookiesAction,
+  anonymousUserSignUpAction,
+} from "@/lib/actions";
 import { useEffect } from "react";
 
 const cookies = {
@@ -12,6 +15,7 @@ const cookies = {
 export default function SetCookies() {
   useEffect(() => {
     setNecessaryCookiesAction(cookies);
+    anonymousUserSignUpAction();
   }, []);
   return null;
 }
