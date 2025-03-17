@@ -9,31 +9,31 @@ import { Carousel, CarouselContent, CarouselItem } from "@/components/local-ui/c
 import dummyAirplane from "@/public/images/dummy-plane.webp";
 
 import routes from "@/data/routes.json";
-export function FlightData({ data }) {
-  const { flightNumber, airplaneName, price, rating, totalReviews, liked, flightClass, airplaneImages, flightId } = data;
-
+export function FlightData({ data, metaData }) {
+  const { flightNumber, airplaneId, price, ratingReviews, _id } = data;
+  const { flightClass, isBookmarked } = metaData;
   return (
     <section className="mb-10 text-secondary bg-white p-6 rounded-lg shadow-sm transition duration-300 ease-in-out hover:shadow-md">
       <div className="flex justify-between items-center mb-8 gap-6 sm:flex-row flex-col">
         <div>
           <h2 className="text-2xl font-bold text-gray-800 mb-3">
-            { airplaneName }
+            { airplaneId.model }
           </h2>
           <div className="flex items-center gap-2 text-sm text-gray-600">
-            <RatingShow rating={ rating } />
-            <span className="font-semibold">{ RATING_SCALE[parseInt(rating)] }</span>
-            <span className="text-gray-500">{ totalReviews } reviews</span>
+            <RatingShow rating={ ratingReviews.rating } />
+            <span className="font-semibold">{ RATING_SCALE[parseInt(ratingReviews.rating)] }</span>
+            <span className="text-gray-500">{ ratingReviews.totalReviews } reviews</span>
           </div>
         </div>
         <div className="text-right flex flex-col gap-2">
           <div className="flex flex-row sm:flex-col justify-between sm:justify-end max-2xsm:flex-col max-xsm:items-start sm:items-end items-center gap-2">
             <p className="text-xl sm:text-xs font-bold text-primary">{ FLIGHT_CLASS_PLACEHOLDERS[flightClass] }</p>
 
-            <p className="text-3xl font-bold text-primary">${ price }</p>
+            <p className="text-3xl font-bold text-primary">${ price.total.toFixed(2) }</p>
           </div>
           <div className="flex gap-4 flex-wrap">
-            <LikeButton liked={ liked } keys={ {
-              flightId,
+            <LikeButton isBookmarked={ isBookmarked } keys={ {
+              _id,
               flightNumber,
               flightClass
             } } flightsOrHotels="flights" className={ "p-3" } />
@@ -52,10 +52,10 @@ export function FlightData({ data }) {
       </div>
       <div className={ "rounded-lg" }>
         {
-          Array.isArray(airplaneImages) && airplaneImages.length > 1 ? <Carousel className={ "rounded-lg w-full h-auto max-h-[700px]" }>
+          Array.isArray(airplaneId.images) && airplaneId.images.length > 1 ? <Carousel className={ "rounded-lg w-full h-auto max-h-[700px]" }>
             <CarouselContent indicator={ false }>
               {
-                airplaneImages.map((image, index) => (
+                airplaneId.images.map((image, index) => (
                   <CarouselItem key={ index }>
                     <Image
                       className="h-full w-full object-cover object-center"
