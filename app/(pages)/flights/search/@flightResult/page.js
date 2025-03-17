@@ -7,38 +7,58 @@ import { objDeepCompare } from "@/lib/utils";
 import { cookies } from "next/headers";
 async function FLightResultPage({ searchParams }) {
   let flightResults = [];
-  let filters = {};
+  let searchParamsObj = {};
 
-  const session = await auth();
-  const timezone = cookies().get("timezone")?.value || "UTC";
+  const searchParamsSchema = z
+    .object({
+      departureAirportCode: z
+        .string()
+        .trim()
+        .min(3, "Invalid airport code")
+        .max(3, "Invalid airport code"),
+      arrivalAirportCode: z.string().trim().min(3).max(3),
+      tripType: z.enum(["one_way", "round_trip", "multi_city"]),
+      desiredDepartureDate: z
+        .string("Date is required")
+        .datetime("Invalid date string"),
+      desiredReturnDate: z.string("Date is required").optional(),
+      class: z.enum(["economy", "premium_economy", "business", "first"]),
+      passengers: z
+        .string()
+        .trim()
+        .regex(/adult-\d+_child-\d+_infant-\d+/, "Invalid passengers format"),
+    })
+    .safeParse(searchParams);
 
-  if (Object.keys(searchParams).length > 0) {
-    const departureAirportId = searchParams.departureAirportCode;
-    const arrivalAirportId = searchParams.arrivalAirportCode;
-    const totalPassengers = Object.values(
-      JSON.parse(searchParams.passenger)
-    ).reduce((acc, passenger) => acc + passenger, 0);
-    const flightClass = searchParams.class;
-
-    filters = searchParams.filters ? JSON.parse(searchParams.filters) : {};
-
-    const departDate = new Date(searchParams.departDate);
-    const departDateFrom = addMilliseconds(
-      startOfDay(departDate),
-      filters.departureTime[0]
-    );
-    departDateFrom.setSeconds(0, 0);
-
-    const today = new Date();
-    if (departDate.getDate() === today.getDate()) {
-      departDateFrom.setHours(today.getHours(), today.getMinutes(), 0, 0);
+  if (searchParamsSchema.success) {
+    if (searchParamsSchema.success.tripType !== "one_way") {
+      const desiredReturnDateValidation = z
+        .object({
+          desiredReturnDate: z
+            .string("Date is required")
+            .datetime("Invalid date string"),
+        })
+        .safeParse(searchParams.desiredReturnDate);
+      if (desiredReturnDateValidation.success) {
+        searchParamsSchema.data.desiredReturnDate =
+          desiredReturnDateValidation.data.desiredReturnDate;
+      }
     }
+    searchParamsObj = searchParamsSchema.data;
+  }
 
-    const departDateTo = addMilliseconds(
-      startOfDay(departDate),
-      filters.departureTime[1]
-    );
-    departDateTo.setSeconds(0, 0);
+  const {
+    departureAirportCode,
+    arrivalAirportCode,
+    tripType,
+    desiredDepartureDate,
+    desiredReturnDate,
+    class: flightClass,
+    passengers,
+  } = searchParamsObj;
+
+  const departureDate = new Date(desiredDepartureDate);
+  const returnDate = new Date(desiredReturnDate);
 
     flightResults = (
       await getManyDocs(
