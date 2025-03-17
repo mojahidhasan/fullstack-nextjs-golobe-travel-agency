@@ -1,39 +1,15 @@
-import { Cheapest } from "@/components/pages/flights.search/sections/Cheapest";
-import { Best } from "@/components/pages/flights.search/sections/Best";
-import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
+import { FlightResultList } from "./FlightResultList";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { minutesToHMFormat, substractTimeInMins } from "@/lib/utils";
-
-export async function FLightResult({ flightResults }) {
+import { minutesToHMFormat } from "@/lib/utils";
+export async function FlightResult({ flightResults, metaData }) {
+  console.log(flightResults[0].price);
   const sortByCheapest = flightResults.slice(0).sort((a, b) => {
-    return +a.price - +b.price;
-  });
-
-  const sortByBest = flightResults.slice(0).sort((a, b) => {
-    const aMinutes = substractTimeInMins(
-      a.destinationArrivalDateTime,
-      a.departureDateTime
-    );
-    const bMinutes = substractTimeInMins(
-      b.destinationArrivalDateTime,
-      b.departureDateTime
-    );
-    return (
-      parseFloat(a.price) +
-      aMinutes -
-      (parseFloat(b.price) + bMinutes)
-    );
+    const aTotalPrice = a.price.total;
+    const bTotalPrice = b.price.total;
+    return +aTotalPrice - +bTotalPrice;
   });
   const sortByQuickest = [...flightResults].sort((a, b) => {
-    const aMinutes = substractTimeInMins(
-      a.destinationArrivalDateTime,
-      a.departureDateTime
-    );
-    const bMinutes = substractTimeInMins(
-      b.destinationArrivalDateTime,
-      b.departureDateTime
-    );
-    return aMinutes - bMinutes;
+    return +a.totalDuration - b.totalDuration;
   });
   return (
     <div className="flex grow flex-col gap-[32px]">
@@ -45,24 +21,7 @@ export async function FLightResult({ flightResults }) {
           >
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Cheapest</p>
-              <p className={ "text-sm text-gray-500" }>${ sortByCheapest[0].price }</p>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger
-            value="best"
-            className="w-full grow justify-start gap-2"
-          >
-            <div className="text-left">
-              <p className="mb-[8px] block font-semibold">Best</p>
-              <p className={ "text-sm text-gray-500" }>
-                ${ sortByBest[0].price } .{ " " }
-                { minutesToHMFormat(
-                  substractTimeInMins(
-                    sortByBest[0].destinationArrivalDateTime,
-                    sortByBest[0].departureDateTime
-                  )
-                ) }
-              </p>
+              <p className={ "text-sm text-gray-500" }>${ sortByCheapest[0]?.price.total.toFixed(2) }</p>
             </div>
           </TabsTrigger>
           <TabsTrigger
@@ -73,23 +32,17 @@ export async function FLightResult({ flightResults }) {
               <p className="mb-[8px] block font-semibold">Quickest</p>
               <p className="text-sm text-gray-500">
                 { minutesToHMFormat(
-                  substractTimeInMins(
-                    sortByQuickest[0].destinationArrivalDateTime,
-                    sortByQuickest[0].departureDateTime
-                  )
+                  sortByQuickest[0]?.totalDuration || 0
                 ) }
               </p>
             </div>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="cheapest">
-          <Cheapest data={ sortByCheapest } />
-        </TabsContent>
-        <TabsContent value="best">
-          <Best data={ sortByBest } />
+          <FlightResultList data={ sortByCheapest } metaData={ metaData } />
         </TabsContent>
         <TabsContent value="quickest">
-          <Quickest data={ sortByQuickest } />
+          <FlightResultList data={ sortByQuickest } metaData={ metaData } />
         </TabsContent>
       </Tabs>
     </div>
