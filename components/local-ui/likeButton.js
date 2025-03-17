@@ -12,7 +12,7 @@ import { useToast } from "../ui/use-toast";
  * @returns
  */
 export const LikeButton = ({
-  liked,
+  isBookmarked,
   keys,
   flightsOrHotels = "flights",
   className,
@@ -22,12 +22,12 @@ export const LikeButton = ({
   const searchParams = useSearchParams();
   const callbackPath = pathname + "?" + searchParams.toString();
 
-  const [isLiked, setIsliked] = useState(liked);
+  const [bookmarked, setBookmarked] = useState(isBookmarked);
   const [likeLoading, setLikeLoading] = useState(false);
 
   useEffect(() => {
-    setIsliked(liked);
-  }, [liked]);
+    setBookmarked(isBookmarked);
+  }, [isBookmarked]);
 
   async function handleClick(e) {
     setLikeLoading(true);
@@ -44,7 +44,7 @@ export const LikeButton = ({
         variant: "destructive",
       });
     } else {
-      setIsliked(!isLiked);
+      setBookmarked(!bookmarked);
     }
     setLikeLoading(false);
   }
@@ -73,7 +73,7 @@ export const LikeButton = ({
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              fill={isLiked ? "black" : "none"}
+              fill={bookmarked ? "black" : "none"}
             />
           </svg>
         </Button>
