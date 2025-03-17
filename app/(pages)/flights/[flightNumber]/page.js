@@ -15,7 +15,7 @@ import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalcu
 import { objDeepCompare } from "@/lib/utils";
 
 export default async function FlightDetailsPage({ params }) {
-  let flight = await getOneDoc(
+  const flight = await getOneDoc(
     "Flight",
     { flightNumber: params.flightNumber },
     [params.flightNumber]
