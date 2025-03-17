@@ -2,10 +2,9 @@
 import { FlightResultCard } from "@/components/pages/flights.search/ui/FlightResultCard";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-
 import { cn } from "@/lib/utils";
 
-export function FlightResultList({ data, resultType = "result(s)" }) {
+export function FlightResultList({ data, metaData, resultType = "result(s)" }) {
   const maxResultPerPage = 4;
   const [shownTill, setShownTill] = useState(
     data.length < maxResultPerPage ? data.length : maxResultPerPage
@@ -32,9 +31,9 @@ export function FlightResultList({ data, resultType = "result(s)" }) {
             </select>
           </p> */}
         </div>
-        <div className="grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2">
+        <div className="grid grid-cols-1 mb-5 gap-[16px]">
           { data.slice(0, shownTill).map((item, i) => (
-            <FlightResultCard key={ item._id } data={ item } />
+            <FlightResultCard key={ item._id } data={ item } metaData={ metaData } />
           )) }
         </div>
 
