@@ -1,11 +1,17 @@
-import { FLightResult } from "@/components/pages/flights.search/sections/FlightResult";
-import { auth } from "@/lib/auth";
-import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
-import { RATING_SCALE } from "@/lib/constants";
-import { addMilliseconds, endOfDay, startOfDay } from "date-fns";
-import { objDeepCompare } from "@/lib/utils";
+import { FlightResult } from "@/components/pages/flights.search/sections/FlightResult";
+import { SetSessionStorage } from "@/components/helpers/setSessionStorage";
+import { getManyDocs } from "@/lib/db/getOperationDB";
+import { addMinutes, endOfDay, startOfDay } from "date-fns";
 import { cookies } from "next/headers";
-async function FLightResultPage({ searchParams }) {
+import { getSession } from "@/lib/auth";
+import { z } from "zod";
+import { updateOneDoc } from "@/lib/db/updateOperationDB";
+import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalculation";
+import { extractFlightPriceFromAirline } from "@/lib/helpers/flights/priceCalculations";
+import { getUserDetails } from "@/lib/controllers/user";
+import { getFlights, passengerStrToObject } from "@/lib/controllers/flights";
+
+async function FlightResultPage({ searchParams }) {
   let flightResults = [];
   let searchParamsObj = {};
 
@@ -60,113 +66,131 @@ async function FLightResultPage({ searchParams }) {
   const departureDate = new Date(desiredDepartureDate);
   const returnDate = new Date(desiredReturnDate);
 
-    flightResults = (
-      await getManyDocs(
-        "Flight",
-        {
-          expireAt: {
-            $gte: departDateFrom,
-            $lte: departDateTo,
-          },
-          originAirportId: departureAirportId,
-          destinationAirportId: arrivalAirportId,
-          ...(filters?.airlines &&
-            Object.keys(filters.airlines).length > 0 && {
-              "stopovers.0.airlineId": { $in: filters.airlines },
-            }),
-          ...(filters?.priceRange &&
-            Object.keys(filters.priceRange).length > 0 && {
-              [`price.${flightClass}.base`]: {
-                $gte: filters?.priceRange[0],
-                $lte: filters?.priceRange[1],
-              },
-            }),
-        },
-        ["flights"]
-      )
-    ).filter((flight) => {
-      const seats = flight.seats;
-      const availableSeats = seats.filter(
-        (seat) => seat.class === flightClass && seat.availability === true
-      );
-      return availableSeats.length >= totalPassengers;
-    });
-  }
-  const filt = flightResults.filter((flight) => {
-    return flight.stopovers[0].airplaneId == null;
+  flightResults = await getFlights({
+    departureAirportCode,
+    arrivalAirportCode,
+    departureDate,
+    returnDate,
+    tripType,
+    flightClass,
+    passengers,
   });
-  // return;
-  if (session?.user?.id) {
-    const likedFlights = (
-      await getOneDoc("User", { _id: session?.user?.id }, ["userDetails"])
-    ).likes.flights;
-    flightResults = flightResults.map((flight) => {
-      const flightFilterQuery = {
-        flightId: flight._id,
-        flightNumber: flight.flightNumber,
-        flightClass: searchParams.class,
-      };
-      return {
-        ...flight,
-        liked: likedFlights.some((el) => objDeepCompare(flightFilterQuery, el)),
-      };
-    });
-  }
 
+  const session = await getSession();
+  const sessionTimeoutAt = addMinutes(Date.now(), 20).getTime();
+
+  const airlines = await getManyDocs("Airline", {}, ["airlines"], false);
+
+  const modelName =
+    session !== null && session.user.type === "credentials"
+      ? "User"
+      : "AnonymousUser";
+  const filter =
+    modelName === "User"
+      ? { _id: session.user.id }
+      : { sessionId: session.user.sessionId };
+
+  const passengersObject = passengerStrToObject(passengers);
+
+  await updateOneDoc(modelName, filter, {
+    flights: {
+      latestFlightSearchState: {
+        departureAirport: {
+          code: departureAirportCode,
+        },
+        arrivalAirport: {
+          code: arrivalAirportCode,
+        },
+        tripType,
+        desiredDepartureDate,
+        desiredReturnDate: Boolean(desiredReturnDate)
+          ? new Date(desiredReturnDate)
+          : null,
+        class: flightClass,
+        passengers: passengersObject,
+      },
+      airlines,
+      sessionTimeoutAt,
+    },
+  });
+
+  const userDetails = await getUserDetails();
+  const cachedAirlines = userDetails.flights.airlines;
+  const metaData = {
+    flightClass: userDetails.flights.latestFlightSearchState.class,
+    timeZone: cookies().get("timezone").value,
+  };
+  //add price and rating reviews and other neccesary data
   // eslint-disable-next-line no-undef
   flightResults = await Promise.all(
     flightResults.map(async (flight) => {
-      const currentFlightReviews = await getManyDocs(
-        "FlightReview",
-        {
-          airlineId: flight.stopovers[0].airlineId._id,
-          departureAirportId: flight.originAirportId._id,
-          arrivalAirportId: flight.destinationAirportId._id,
-          airplaneModelName: flight.stopovers[0].airplaneId.model,
-        },
-        [
-          flight.flightNumber + "_review",
-          flight._id + "_review",
-          "flightReviews",
-        ]
+      let price = {};
+
+      const airlineId = {};
+      const flightAirline = cachedAirlines.find(
+        (el) => el.iataCode === flight.airlineId
       );
-      const currentFlightRatingsSum = currentFlightReviews.reduce(
-        (acc, review) => {
-          return +acc + +review.rating;
-        },
-        0
+      airlineId._id = flightAirline._id;
+      airlineId.iataCode = flightAirline.iataCode;
+      airlineId.name = flightAirline.name;
+      airlineId.logo = flightAirline.logo;
+      airlineId.contact = flightAirline.contact;
+
+      const flightClass = metaData.flightClass;
+
+      let currentDepartureAirport = flight.departure.airport.iataCode,
+        currentArrivalAirport = flight.arrival.airport.iataCode,
+        currentDepartureAirline = flight.airlineId;
+
+      price = extractFlightPriceFromAirline(
+        currentDepartureAirport,
+        currentArrivalAirport,
+        currentDepartureAirline,
+        flight.priceReductionMultiplierPecentage,
+        flightClass,
+        cachedAirlines
       );
 
-      const rating =
-        +currentFlightRatingsSum / currentFlightReviews.length || 0;
-      if (filters?.rates && Object.keys(filters.rates).length > 0) {
-        if (!filters.rates.map(Number).includes(Math.floor(rating))) {
-          return;
-        }
-      }
+      const flightReviews = await getManyDocs("FlightReview", {
+        airlineId: currentDepartureAirline,
+        departureAirportId: currentDepartureAirport,
+        arrivalAirportId: currentArrivalAirport,
+        airplaneModelName: flight.airplaneId.model,
+      });
+
+      let ratingReviews = {
+        totalReviews: 0,
+        rating: 0.0,
+      };
+      const rating = flightRatingCalculation(flightReviews);
+
+      ratingReviews.rating = rating;
+      ratingReviews.totalReviews = flightReviews.length;
+
       return {
         ...flight,
-        price: flight.price[searchParams.class].base,
-        timezone,
-        reviews: currentFlightReviews,
-        totalReviews: currentFlightReviews.length,
-        rating: currentFlightReviews.length ? rating.toFixed(1) : "N/A",
-        ratingScale: RATING_SCALE[Math.floor(rating)] || "N/A",
-        flightClass: searchParams.class,
+        price,
+        ratingReviews,
+        airlineId,
       };
+
+      /**
+       * price = {
+       *    basePrice: 100,
+       *    discount: 10,
+       *    serviceFee: 5,
+       *    taxes: 5,
+       *    total: 105
+       *  }
+       */
     })
   );
-  flightResults = flightResults.filter(Boolean); // clearing undefined came due to filters.rates
-  if (flightResults?.error) {
-    return (
-      <div className={"text-center grow font-bold"}>{flightResults.error}</div>
-    );
-  }
-  if (flightResults?.length < 1) {
-    return <div className={"text-center grow font-bold"}>No data found</div>;
-  }
-
-  return <FLightResult flightResults={flightResults} />;
+  return (
+    <>
+      <SetSessionStorage obj={{ sessionTimeoutAt: sessionTimeoutAt }} />
+      <FlightResult flightResults={flightResults} metaData={metaData} />;
+    </>
+  );
 }
 
-export default FLightResultPage;
+export default FlightResultPage;
