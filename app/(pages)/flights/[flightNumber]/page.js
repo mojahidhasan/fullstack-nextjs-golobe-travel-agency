@@ -6,72 +6,83 @@ import { FlightOrHotelReview } from "@/components/sections/FlightOrHotelReview";
 import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import Image from "next/image";
 
-import { auth } from "@/lib/auth";
 import stopwatch from "@/public/icons/stopwatch.svg";
-import { objDeepCompare } from "@/lib/utils";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
+import { extractFlightPriceFromAirline } from "@/lib/helpers/flights/priceCalculations";
+import { getUserDetails } from "@/lib/controllers/user";
+import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalculation";
+import { objDeepCompare } from "@/lib/utils";
+
 export default async function FlightDetailsPage({ params }) {
-  const flight = await getOneDoc("Flight", { flightNumber: params.flightId }, [
-    params.flightId,
-  ]);
+  let flight = await getOneDoc(
+    "Flight",
+    { flightNumber: params.flightNumber },
+    [params.flightNumber]
+  );
+
   if (Object.keys(flight).length === 0) {
     notFound();
   }
+
+  const userDetails = await getUserDetails();
+  const timezone = cookies().get("timezone")?.value || "UTC";
+  const flightClass = userDetails.flights.latestFlightSearchState.class;
+
+  const metaData = { timezone, flightClass, isBookmarked: false };
+
   const flightReviews = await getManyDocs(
     "FlightReview",
     {
-      airlineId: flight.stopovers[0].airlineId._id,
-      departureAirportId: flight.originAirportId._id,
-      arrivalAirportId: flight.destinationAirportId._id,
-      airplaneModelName: flight.stopovers[0].airplaneId.model,
+      airlineId: flight.airlineId,
+      departureAirportId: flight.departure.airport,
+      arrivalAirportId: flight.arrival.airport,
+      airplaneModelName: flight.airplaneId.model,
     },
-    [params.flightId + "_review", flight._id + "_review", "flightReviews"]
+    [params.flightNumber + "_review", flight._id + "_review", "flightReviews"]
   );
-  const flightClass = cookies().get("fc")?.value || "economy";
-  const timezone = cookies().get("timezone")?.value || "UTC";
-  const price = flight.price[flightClass]?.base;
-  const flightInfo = {
-    flightId: flight._id,
-    flightNumber: flight.flightNumber,
-    airplaneName: flight.stopovers[0].airplaneId.model,
-    flightClass,
-    timezone,
-    airlineId: flight.stopovers[0].airlineId._id,
-    departureAirportId: flight?.originAirportId._id,
-    arrivalAirportId: flight?.destinationAirportId._id,
-    price,
-    rating: flightReviews.length
-      ? (
-          flightReviews.reduce((prev, curr) => +prev + +curr.rating, 0) /
-          flightReviews.length
-        ).toFixed(1)
-      : "N/A",
-    totalReviews: flightReviews.length,
-    airplaneImages: flight.stopovers[0].airplaneId.images,
-  };
-  const userId = (await auth())?.user?.id;
-  if (userId) {
-    const userDetails = await getOneDoc("User", { _id: userId }, [
-      "userDetails",
-    ]);
 
-    const flightFilterQuery = {
+  const cachedAirlines = userDetails.flights?.airlines || [];
+
+  const airlineId = {};
+  const flightAirline = cachedAirlines.find(
+    (el) => el.iataCode === flight.airlineId
+  );
+  airlineId._id = flightAirline._id;
+  airlineId.iataCode = flightAirline.iataCode;
+  airlineId.name = flightAirline.name;
+  airlineId.logo = flightAirline.logo;
+  airlineId.contact = flightAirline.contact;
+
+  flight.airlineId = airlineId;
+  flight.price = extractFlightPriceFromAirline(
+    flight.departure.airport.iataCode,
+    flight.arrival.airport.iataCode,
+    flight.airlineId,
+    flight.priceReductionMultiplierPecentage,
+    flightClass,
+    cachedAirlines
+  );
+  flight.ratingReviews = {
+    rating: flightRatingCalculation(flightReviews),
+    totalReviews: flightReviews.length,
+  };
+
+  metaData.isBookmarked = userDetails.flights.bookmarked.some((el) => {
+    return objDeepCompare(el, {
       flightId: flight._id,
       flightNumber: flight.flightNumber,
-      flightClass,
-    };
-    flightInfo.liked = userDetails?.likes?.flights?.some((el) =>
-      objDeepCompare(flightFilterQuery, el)
-    );
-  }
+      flightClass: metaData.flightClass,
+    });
+  });
+
   return (
     <>
       <main className="mx-auto mt-[40px] mb-20 w-[90%]">
         <div className="my-[40px] w-full">
           <BreadcrumbUI />
         </div>
-        <FlightData data={flightInfo} />
+        <FlightData data={flight} metaData={metaData} />
         {/* <EconomyFeatures /> */}
         {/* <div className="mb-[40px] rounded-[8px] bg-primary/60 p-[16px]">
           <h3 className="mb-[16px] font-tradeGothic text-[1.5rem] font-bold">
@@ -102,17 +113,17 @@ export default async function FlightDetailsPage({ params }) {
             </div>
           </div>
         </div> */}
-        <FlightsSchedule flight={{ ...flight, timezone, price }} />
+        <FlightsSchedule flight={flight} metaData={metaData} />
         <FlightOrHotelReview
-          rating={flightInfo.rating}
+          rating={flight.ratingReviews.rating}
           reviews={flightReviews}
           flightOrHotel="flights"
           reviewKeys={{
-            flightNumber: flightInfo.flightNumber,
-            airlineId: flightInfo.airlineId,
-            departureAirportId: flightInfo.departureAirportId,
-            arrivalAirportId: flightInfo.arrivalAirportId,
-            airplaneModelName: flightInfo.airplaneName,
+            flightNumber: flight.flightNumber,
+            airlineId: flight.airlineId._id,
+            departureAirportId: flight.departure.airport._id,
+            arrivalAirportId: flight.arrival.airport._id,
+            airplaneModelName: flight.airplaneId.model,
           }}
         />
       </main>
