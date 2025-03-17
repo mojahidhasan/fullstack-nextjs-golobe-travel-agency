@@ -14,28 +14,32 @@ export async function GET(req) {
     }
 
     if (key === "lastAvailableFlightDate") {
-      const date = (
-        await Flight.find({})
-          .sort({
-            departureDateTime: -1,
-          })
-          .limit(1)
-          .select("departureDateTime")
-      )[0].departureDateTime;
-      data[key] = new Date(date).toString();
+      const lastFlight = await Flight.find({})
+        .sort({ "departure.scheduled": -1 })
+        .limit(1)
+        .select("departure.scheduled");
+
+      if (lastFlight.length > 0) {
+        const milliseconds = lastFlight[0].departure.scheduled;
+        data[key] = milliseconds;
+      } else {
+        return new Response("No flights available", { status: 404 });
+      }
     }
     if (key === "firstAvailableFlightDate") {
-      const date = (
-        await Flight.find({
-          expireAt: { $gte: startOfDay(new Date()) },
-        })
-          .sort({
-            departureDateTime: 1,
-          })
-          .limit(1)
-          .select("departureDateTime")
-      )[0].departureDateTime;
-      data[key] = new Date(date).toString();
+      const firstFlight = await Flight.find({
+        expireAt: { $gte: startOfDay(new Date()) },
+      })
+        .sort({ "departure.scheduled": 1 })
+        .limit(1)
+        .select("departure.scheduled");
+
+      if (firstFlight.length > 0) {
+        const milliseconds = firstFlight[0].departure.scheduled;
+        data[key] = milliseconds;
+      } else {
+        return new Response("No flights available", { status: 404 });
+      }
     }
   }
 
