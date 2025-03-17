@@ -20,25 +20,24 @@ export function SelectTrip() {
   return (
     <SelectShadcn
       onValueChange={ (value) => {
-        dispatch(setFlightForm({ trip: value }));
-        if (value === "roundtrip") dispatch(setFlightForm({ returnDate: addDays(new Date(flightForm.departDate), 1).toString() }));
+        dispatch(setFlightForm({ tripType: value }));
+        if (value === "round_trip") dispatch(setFlightForm({ desiredReturnDate: addDays(new Date(flightForm.desiredDepartureDate), 1).toString() }));
 
-        if (value === "oneway") dispatch(setFlightForm({ returnDate: "" }));
+        if (value === "one_way") dispatch(setFlightForm({ desiredReturnDate: "" }));
 
       } }
     >
-      <input value={ flightForm.trip } name="trip" type="hidden" />
       <SelectTrigger aria-label="Select Trip Type" className="focus:ring-transparent focus:ring-offset-0 bg-white hover:bg-slate-500/10 w-full h-full border-0 ">
         <SelectValue
           className="h-full"
-          defaultValue={ flightForm.trip }
+          defaultValue={ flightForm.tripType }
           placeholder={ "One Way" }
         />
       </SelectTrigger>
       <SelectContent className={ "bg-primary" }>
         <SelectGroup>
-          <SelectItem value="oneway">One Way</SelectItem>
-          <SelectItem value="roundtrip">Round-Trip</SelectItem>
+          <SelectItem value="one_way">One Way</SelectItem>
+          <SelectItem value="round_trip">Round-Trip</SelectItem>
         </SelectGroup>
       </SelectContent>
     </SelectShadcn>

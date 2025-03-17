@@ -7,17 +7,18 @@ export const defaultFlightFormValue = {
   to: "",
   departureAirportCode: "",
   arrivalAirportCode: "",
-  trip: "oneway",
-  departDate: d.toString(),
-  returnDate: "",
-  passenger: {
+  tripType: "one_way",
+  desiredDepartureDate: d.toISOString(),
+  desiredReturnDate: "",
+  passengers: {
     adult: 1,
-    children: 0,
+    child: 0,
+    infant: 0,
   },
   class: "economy",
-  promocode: "",
-  firstAvailableFlightDate: d.toString(),
-  lastAvailableFlightDate: addDays(d, 9).toString(),
+  promoCode: "",
+  firstAvailableFlightDate: d.toISOString(),
+  lastAvailableFlightDate: addDays(d, 9).toISOString(),
   filters: {
     rates: [], // 1,2,3,4,5
     airlines: [], // EK, FZ, EY

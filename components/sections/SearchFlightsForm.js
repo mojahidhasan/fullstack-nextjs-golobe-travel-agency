@@ -20,9 +20,7 @@ import { AddPromoCode } from "@/components/AddPromoCode";
 
 import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  setFlightForm,
-} from "@/reduxStore/features/flightFormSlice";
+import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
 
 import airports from "@/data/airports.json";
 import swap from "@/public/icons/swap.svg";
@@ -39,8 +37,17 @@ function SearchFlightsForm({ searchParams = {} }) {
   let searchParamsObj = {};
   if (Object.keys(searchParams).length > 0) {
     for (const [key, value] of Object.entries(searchParams)) {
-      if (key === "passenger" || key === "filters") {
+      if (key === "filters") {
         searchParamsObj[key] = JSON.parse(value);
+        continue;
+      }
+      if (key === "passengers") {
+        const passangerObj = {};
+        searchParams.passengers.split("_").forEach((el) => {
+          const [key, val] = el.split("-");
+          passangerObj[key] = +val;
+        });
+        searchParamsObj[key] = passangerObj;
         continue;
       }
       searchParamsObj[key] = value;
@@ -64,15 +71,15 @@ function SearchFlightsForm({ searchParams = {} }) {
       );
       return;
     }
-    if (flightFormData.passenger.adult <= 0) {
-      alert("Please select at least one passenger");
+    if (flightFormData.passengers.adult <= 0) {
+      alert("Please select at least one passengers");
       return;
     }
-    if (flightFormData.passenger.adult > 10) {
+    if (flightFormData.passengers.adult > 10) {
       alert("Maximum number for adults is 10");
       return;
     }
-    if (flightFormData.passenger.children > 5) {
+    if (flightFormData.passengers.child > 5) {
       alert("Maximum number for children is 5");
       return;
     }
@@ -81,13 +88,14 @@ function SearchFlightsForm({ searchParams = {} }) {
   }
 
   function searchForEmptyValues(obj) {
-    const optionals = ["promocode"];
+    console.log(obj);
+    const optionals = ["promoCode"];
     for (const [key, value] of Object.entries(obj)) {
       if (optionals.includes(key)) {
         continue;
       }
-      if (key === "returnDate" && value == "") {
-        if (obj.trip === "oneway") continue;
+      if (key === "desiredReturnDate" && value == "") {
+        if (obj.tripType === "one_way") continue;
       }
       if (value === "") {
         return true;
@@ -97,7 +105,10 @@ function SearchFlightsForm({ searchParams = {} }) {
   }
 
   function totalPassenger() {
-    return Object.values(flightFormData.passenger).reduce((a, b) => +a + +b, 0);
+    return Object.values(flightFormData.passengers).reduce(
+      (a, b) => +a + +b,
+      0
+    );
   }
 
   return (
@@ -108,8 +119,6 @@ function SearchFlightsForm({ searchParams = {} }) {
         action="/flights/search"
         onSubmit={handleSubmit}
       >
-        <input type="hidden" name="from" value={flightFormData.from} />
-        <input type="hidden" name="to" value={flightFormData.to} />
         <input
           type="hidden"
           name="departureAirportCode"
@@ -122,25 +131,31 @@ function SearchFlightsForm({ searchParams = {} }) {
         />
         <input
           type="hidden"
-          name="departDate"
-          value={flightFormData.departDate}
+          name="desiredDepartureDate"
+          value={flightFormData.desiredDepartureDate}
         />
         <input
           type="hidden"
-          name="returnDate"
-          value={flightFormData.returnDate}
+          name="desiredReturnDate"
+          value={flightFormData.desiredReturnDate}
         />
         <input
           type="hidden"
-          value={JSON.stringify(flightFormData.passenger)}
+          value={`adult-${flightFormData.passengers.adult}_child-${flightFormData.passengers.child}_infant-${flightFormData.passengers.infant}`}
           form="flightform"
-          name="passenger"
+          name="passengers"
         />
         <input
           type="hidden"
           value={flightFormData.class}
           form="flightform"
           name="class"
+        />
+        <input
+          type="hidden"
+          value={flightFormData.tripType}
+          form="flightform"
+          name="tripType"
         />
         <input
           type="hidden"
@@ -215,7 +230,7 @@ function SearchFlightsForm({ searchParams = {} }) {
           >
             <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
               Depart <span className={"text-red-600"}>*</span> - Return{" "}
-              {flightFormData.trip === "roundtrip" && (
+              {flightFormData.tripType === "round_trip" && (
                 <span className={"text-red-600"}>*</span>
               )}
             </span>
@@ -228,7 +243,7 @@ function SearchFlightsForm({ searchParams = {} }) {
 
           <div className="relative flex h-[48px] items-center gap-[4px] rounded-[8px] border-2 border-primary">
             <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
-              Passenger <span className={"text-red-600"}>*</span> - Class{" "}
+              passengers <span className={"text-red-600"}>*</span> - Class{" "}
               <span className={"text-red-600"}>*</span>
             </span>
             <Popover>
@@ -237,8 +252,8 @@ function SearchFlightsForm({ searchParams = {} }) {
                 className="h-full w-full justify-start rounded-lg"
               >
                 <Button className="font-normal" variant={"ghost"}>
-                  {`${totalPassenger(flightFormData.passenger)} ${
-                    totalPassenger(flightFormData.passenger) > 1
+                  {`${totalPassenger(flightFormData.passengers)} ${
+                    totalPassenger(flightFormData.passengers) > 1
                       ? "people"
                       : "person"
                   }, ${classPlaceholders[flightFormData.class]}`}
@@ -257,13 +272,13 @@ function SearchFlightsForm({ searchParams = {} }) {
                 </Card>
                 <Card className="p-3 bg-primary/30 border-primary border-2">
                   <CardHeader className="p-0 mb-4">
-                    <CardTitle>Passenger</CardTitle>
+                    <CardTitle>passengers</CardTitle>
                   </CardHeader>
                   <CardContent className="p-0 flex-col flex gap-3">
                     <Label>
                       Adult (max 10):
                       <Input
-                        defaultValue={+flightFormData.passenger.adult}
+                        defaultValue={+flightFormData.passengers.adult}
                         label="Adult"
                         type="number"
                         min={1}
@@ -271,8 +286,8 @@ function SearchFlightsForm({ searchParams = {} }) {
                         onChange={(e) => {
                           dispatch(
                             setFlightForm({
-                              passenger: {
-                                ...flightFormData.passenger,
+                              passengers: {
+                                ...flightFormData.passengers,
                                 adult: +e.currentTarget.value,
                               },
                             })
@@ -283,7 +298,7 @@ function SearchFlightsForm({ searchParams = {} }) {
                     <Label>
                       Children (max 5):
                       <Input
-                        defaultValue={flightFormData.passenger.children}
+                        defaultValue={flightFormData.passengers.child}
                         label="Children"
                         type="number"
                         min={0}
@@ -291,9 +306,9 @@ function SearchFlightsForm({ searchParams = {} }) {
                         onChange={(e) => {
                           dispatch(
                             setFlightForm({
-                              passenger: {
-                                ...flightFormData.passenger,
-                                children: +e.currentTarget.value,
+                              passengers: {
+                                ...flightFormData.passengers,
+                                child: +e.currentTarget.value,
                               },
                             })
                           );
