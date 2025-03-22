@@ -3,8 +3,8 @@
 import Image from "next/image";
 
 import { Button } from "@/components/ui/button";
-import { DatePickerWithRange } from "@/components/ui/DatePickerWithRange";
-import { SearchAirportDropdown } from "@/components/SearchAirportDropdown";
+import { DatePicker } from "../local-ui/DatePicker";
+import { FlightFromToPopover } from "../local-ui/FlightFromToPopover";
 import {
   Popover,
   PopoverTrigger,
@@ -13,17 +13,26 @@ import {
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { SelectTrip } from "@/components/SelectTrip";
-import { SelectClass } from "@/components/SelectClass";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+
 import { AddPromoCode } from "@/components/AddPromoCode";
 
-import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
-
+import {
+  isDateObjValid,
+  passengerObjectToStr,
+  cn,
+  isObject,
+} from "@/lib/utils";
+import validateFlightSearchParams from "@/lib/zodSchemas/flightSearchParams";
+import { addDays } from "date-fns";
 import airports from "@/data/airports.json";
 import swap from "@/public/icons/swap.svg";
+import { validateFlightSearchFormAction } from "@/lib/actions/validateFlightSearchFormAction";
+import Counter from "../local-ui/Counter";
+import { ErrorMessage } from "../local-ui/errorMessage";
 
 function SearchFlightsForm({ searchParams = {} }) {
   const classPlaceholders = {
@@ -33,75 +42,42 @@ function SearchFlightsForm({ searchParams = {} }) {
     first: "First class",
   };
   const dispatch = useDispatch();
-
+  const router = useRouter();
   let searchParamsObj = {};
   if (Object.keys(searchParams).length > 0) {
-    for (const [key, value] of Object.entries(searchParams)) {
-      if (key === "filters") {
-        searchParamsObj[key] = JSON.parse(value);
-        continue;
-      }
-      if (key === "passengers") {
-        const passangerObj = {};
-        searchParams.passengers.split("_").forEach((el) => {
-          const [key, val] = el.split("-");
-          passangerObj[key] = +val;
-        });
-        searchParamsObj[key] = passangerObj;
-        continue;
-      }
-      searchParamsObj[key] = value;
-    }
+    // for (const [key, value] of Object.entries(searchParams)) {
+    //   if (key === "filters") {
+    //     // searchParamsObj[key] = JSON.parse(value);
+    //     continue;
+    //   }
+    //   if (key === "passengers") {
+    //     const passangerObj = passengerStrToObject(searchParams.passengers);
+    //     searchParamsObj[key] = passangerObj;
+    //     continue;
+    //   }
+    //   searchParamsObj[key] = value;
+    // }
   }
-  useEffect(() => {
-    if (Object.keys(searchParams).length > 0) {
-      dispatch(setFlightForm(searchParamsObj));
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const flightFormData = useSelector((state) => state.flightForm.value);
+  const errors = flightFormData.errors;
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-
-    if (searchForEmptyValues(flightFormData)) {
-      alert(
-        "Please fill all the required fields. Asterisk (*) indicates 'required'"
-      );
-      return;
-    }
-    if (flightFormData.passengers.adult <= 0) {
-      alert("Please select at least one passengers");
-      return;
-    }
-    if (flightFormData.passengers.adult > 10) {
-      alert("Maximum number for adults is 10");
-      return;
-    }
-    if (flightFormData.passengers.child > 5) {
-      alert("Maximum number for children is 5");
-      return;
-    }
-
-    e.target.submit();
-  }
-
-  function searchForEmptyValues(obj) {
-    console.log(obj);
-    const optionals = ["promoCode"];
-    for (const [key, value] of Object.entries(obj)) {
-      if (optionals.includes(key)) {
-        continue;
+    const formData = new FormData();
+    Object.entries(flightFormData).forEach(([key, value]) => {
+      if (isObject(value)) {
+        value = JSON.stringify(value);
       }
-      if (key === "desiredReturnDate" && value == "") {
-        if (obj.tripType === "one_way") continue;
-      }
-      if (value === "") {
-        return true;
-      }
-    }
-    return false;
+      formData.set(key, value);
+    });
+    const searchParams = new URLSearchParams(flightFormData);
+    searchParams.set(
+      "passengers",
+      passengerObjectToStr(flightFormData.passengers)
+    );
+    const res = await validateFlightSearchFormAction(undefined, formData);
+    // router.push("/flights/search?" + searchParams.toString());
   }
 
   function totalPassenger() {
@@ -113,74 +89,89 @@ function SearchFlightsForm({ searchParams = {} }) {
 
   return (
     <>
-      <form
-        id="flightform"
-        method={"get"}
-        action="/flights/search"
-        onSubmit={handleSubmit}
-      >
-        <input
-          type="hidden"
-          name="departureAirportCode"
-          value={flightFormData.departureAirportCode}
-        />
-        <input
-          type="hidden"
-          name="arrivalAirportCode"
-          value={flightFormData.arrivalAirportCode}
-        />
-        <input
-          type="hidden"
-          name="desiredDepartureDate"
-          value={flightFormData.desiredDepartureDate}
-        />
-        <input
-          type="hidden"
-          name="desiredReturnDate"
-          value={flightFormData.desiredReturnDate}
-        />
-        <input
-          type="hidden"
-          value={`adult-${flightFormData.passengers.adult}_child-${flightFormData.passengers.child}_infant-${flightFormData.passengers.infant}`}
-          form="flightform"
-          name="passengers"
-        />
-        <input
-          type="hidden"
-          value={flightFormData.class}
-          form="flightform"
-          name="class"
-        />
-        <input
-          type="hidden"
-          value={flightFormData.tripType}
-          form="flightform"
-          name="tripType"
-        />
-        <input
-          type="hidden"
-          value={JSON.stringify(flightFormData.filters)}
-          form="flightform"
-          name="filters"
-        />
-
-        <div className="my-[20px] grid gap-[24px] lg:grid-cols-2 xl:grid-cols-[2fr_1fr_repeat(2,_2fr)]">
-          <div className="relative justify-between flex h-[48px] w-full items-center gap-[4px] rounded-[8px] border-2 border-primary">
-            <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
-              From <span className={"text-red-600"}>*</span> - to{" "}
-              <span className={"text-red-600"}>*</span>
-            </span>
-
-            <div className="h-full w-[45%]">
-              <SearchAirportDropdown
-                name={"from"}
-                codeName={"departureAirportCode"}
-                airports={airports}
-                className="h-full w-full text-start"
+      <form id="flightform" method={"get"} onSubmit={handleSubmit}>
+        <div className="my-[20px] grid grid-cols-4 xl:grid-cols-5 gap-4">
+          <div className={"col-span-full"}>
+            {Object.keys(errors).length > 0 && (
+              <ErrorMessage
+                message={
+                  <ol className={"list-[lower-roman] list-inside"}>
+                    {Object.entries(errors).map((err) => {
+                      return <li key={err[0]}>{err[1]}</li>;
+                    })}
+                  </ol>
+                }
+                className={"text-xs"}
               />
-            </div>
+            )}
+          </div>
+          <div className={"col-span-full flex flex-col gap-2 mb-2 ml-2"}>
+            <span className={"font-bold"}>Trip Type</span>
+            <TripTypeRadioGroup
+              defaultValue={flightFormData.tripType}
+              getValue={(value) => {
+                if (value === "round_trip") {
+                  dispatch(
+                    setFlightForm({
+                      ...flightFormData,
+                      tripType: value,
+                      desiredReturnDate: addDays(
+                        new Date(flightFormData.desiredDepartureDate),
+                        1
+                      ).toISOString(),
+                    })
+                  );
+                } else {
+                  dispatch(
+                    setFlightForm({
+                      ...flightFormData,
+                      tripType: value,
+                      desiredReturnDate: "",
+                    })
+                  );
+                }
+              }}
+            />
+          </div>
+          <div
+            className={cn(
+              "relative col-span-full lg:col-span-2 flex flex-col md:flex-row gap-2 h-auto rounded-[8px] border-2 border-primary",
+              (errors.departureAirportCode || errors.arrivalAirportCode) &&
+                "border-destructive"
+            )}
+          >
+            <InputLabel
+              label={
+                <>
+                  From <span className={"text-red-600"}>*</span> - to{" "}
+                  <span className={"text-red-600"}>*</span>
+                </>
+              }
+            />
+            <FlightFromToPopover
+              className={cn(
+                "h-auto min-h-[100px] max-h-[100px] p-4 max-w-full md:w-1/2 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-b-2 md:border-r-2 border-primary",
+                errors.departureAirportCode && "border-destructive"
+              )}
+              fetchInputs={{
+                url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_airports`,
+                method: "GET",
+                searchParamsName: "searchQuery",
+              }}
+              excludeVals={[flightFormData.to]}
+              defaultSelected={flightFormData.from}
+              getSelected={(obj) =>
+                dispatch(
+                  setFlightForm({
+                    ...flightFormData,
+                    from: obj,
+                    departureAirportCode: obj.iataCode,
+                  })
+                )
+              }
+            />
             <button
-              onClick={() =>
+              onClick={() => {
                 dispatch(
                   setFlightForm({
                     ...flightFormData,
@@ -189,132 +180,232 @@ function SearchFlightsForm({ searchParams = {} }) {
                     departureAirportCode: flightFormData.arrivalAirportCode,
                     arrivalAirportCode: flightFormData.departureAirportCode,
                   })
-                )
-              }
+                );
+              }}
               aria-label={"swap airport names"}
               role={"button"}
               type={"button"}
-              className="flex h-full items-center justify-center w-[10%] rounded-lg hover:bg-slate-400/20 transition-all transition-[duration:.4s]"
+              className="flex absolute w-10 h-10 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-2 bg-primary items-center justify-center rounded-full hover:bg-secondary-foreground hover:border-primary hover:border-2 transition-all"
             >
               <Image
                 alt=""
-                className="min-h-[16px] min-w-[16px]"
+                className="min-h-[16px] min-w-[16px] max-md:rotate-90"
                 width={18}
                 height={22}
                 src={swap}
               />
             </button>
-
-            <div className="h-full w-[45%]">
-              <SearchAirportDropdown
-                airports={airports}
-                className="h-full w-full text-start"
-                name={"to"}
-                codeName={"arrivalAirportCode"}
+            <FlightFromToPopover
+              className={cn(
+                "h-auto min-h-[100px] max-h-[100px] max-w-full md:w-1/2 p-4 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-t-2 md:border-l-2 border-primary",
+                errors.arrivalAirportCode && "border-destructive"
+              )}
+              fetchInputs={{
+                url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_airports`,
+                method: "GET",
+                searchParamsName: "searchQuery",
+              }}
+              excludeVals={[flightFormData.from]}
+              defaultSelected={flightFormData.to}
+              getSelected={(obj) =>
+                dispatch(
+                  setFlightForm({
+                    ...flightFormData,
+                    to: obj,
+                    arrivalAirportCode: obj.iataCode,
+                  })
+                )
+              }
+            />
+          </div>
+          <div
+            className={cn(
+              "relative col-span-full lg:col-span-2 flex flex-col md:flex-row gap-2 h-auto rounded-[8px] border-2 border-primary",
+              (errors.desiredDepartureDate || errors.desiredReturnDate) &&
+                "border-destructive"
+            )}
+          >
+            <InputLabel
+              label={
+                <>
+                  Depart <span className={"text-red-600"}>*</span> - Return{" "}
+                  {flightFormData.tripType === "round_trip" && (
+                    <span className={"text-red-600"}>*</span>
+                  )}
+                </>
+              }
+            />
+            <div
+              className={cn(
+                "h-auto min-h-[100px] max-h-[100px] max-w-full md:w-1/2 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-b-2 md:border-r-2 border-primary",
+                errors.desiredDepartureDate && "border-destructive"
+              )}
+            >
+              <DatePicker
+                date={new Date(flightFormData.desiredDepartureDate)}
+                getDate={(date) => {
+                  dispatch(
+                    setFlightForm({
+                      ...flightFormData,
+                      desiredDepartureDate: date.toISOString(),
+                    })
+                  );
+                }}
+              />
+            </div>
+            <div
+              className={cn(
+                "h-auto min-h-[100px] max-h-[100px] max-w-full md:w-1/2 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-t-2 md:border-l-2 border-primary",
+                errors.desiredReturnDate && "border-destructive"
+              )}
+            >
+              <DatePicker
+                date={new Date(flightFormData.desiredReturnDate)}
+                required={false}
+                getDate={(date) => {
+                  if (isDateObjValid(date)) {
+                    dispatch(
+                      setFlightForm({
+                        ...flightFormData,
+                        tripType: "round_trip",
+                        desiredReturnDate: date.toISOString(),
+                      })
+                    );
+                  } else {
+                    dispatch(
+                      setFlightForm({
+                        ...flightFormData,
+                        tripType: "one_way",
+                        desiredReturnDate: "",
+                      })
+                    );
+                  }
+                }}
               />
             </div>
           </div>
 
-          <div className="relative rounded-[8px] border-2 border-primary">
-            <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
-              Trip <span className={"text-red-600"}>*</span>
-            </span>
-            <div className="h-full">
-              <SelectTrip />
-            </div>
-          </div>
           <div
-            className={
-              "relative flex h-[48px] w-full items-center gap-[4px] rounded-[8px] border-2 border-primary"
-            }
+            className={cn(
+              "relative col-span-4 xl:col-span-1 flex h-auto items-center gap-[4px] rounded-[8px] border-2 border-primary",
+              (errors?.passengers || errors?.class) && "border-destructive"
+            )}
           >
-            <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
-              Depart <span className={"text-red-600"}>*</span> - Return{" "}
-              {flightFormData.tripType === "round_trip" && (
-                <span className={"text-red-600"}>*</span>
-              )}
-            </span>
-
-            <DatePickerWithRange
-              name={"depart&return"}
-              className={"h-full w-full border-0"}
+            <InputLabel
+              label={
+                <>
+                  Passengers <span className={"text-red-600"}>*</span> - Class{" "}
+                  <span className={"text-red-600"}>*</span>
+                </>
+              }
             />
-          </div>
-
-          <div className="relative flex h-[48px] items-center gap-[4px] rounded-[8px] border-2 border-primary">
-            <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
-              passengers <span className={"text-red-600"}>*</span> - Class{" "}
-              <span className={"text-red-600"}>*</span>
-            </span>
             <Popover>
               <PopoverTrigger
                 asChild
-                className="h-full w-full justify-start rounded-lg"
+                className="h-full w-full justify-start rounded-lg p-4"
               >
-                <Button className="font-normal" variant={"ghost"}>
-                  {`${totalPassenger(flightFormData.passengers)} ${
-                    totalPassenger(flightFormData.passengers) > 1
-                      ? "people"
-                      : "person"
-                  }, ${classPlaceholders[flightFormData.class]}`}
-                </Button>
+                <div>
+                  <div className={"text-xl font-bold"}>
+                    {`${totalPassenger(flightFormData.passengers)} ${
+                      totalPassenger(flightFormData.passengers) > 1
+                        ? "people"
+                        : "person"
+                    }`}
+                  </div>
+                  <div className={"text-md font-medium"}>
+                    {classPlaceholders[flightFormData.class]}
+                  </div>
+                </div>
               </PopoverTrigger>
-              <PopoverContent>
-                <Card className="p-3 bg-primary/30 border-primary border-2 mb-3">
+              <PopoverContent className="w-[300px] sm:w-[400px] p-3">
+                <Card
+                  className={cn(
+                    "p-3 border-primary border-2 mb-3",
+                    errors?.class && "border-destructive"
+                  )}
+                >
                   <CardHeader className="p-0 mb-4">
                     <CardTitle>Class</CardTitle>
                   </CardHeader>
                   <CardContent className="p-0">
-                    <div className="border-2 border-primary rounded-lg">
-                      <SelectClass />
-                    </div>
+                    <FlightClassRadioGroup
+                      defaultValue={flightFormData.class}
+                      getValue={(value) => {
+                        dispatch(
+                          setFlightForm({
+                            ...flightFormData,
+                            class: value,
+                          })
+                        );
+                      }}
+                    />
+                    {errors?.class && <ErrorMessage message={errors?.class} />}
                   </CardContent>
                 </Card>
-                <Card className="p-3 bg-primary/30 border-primary border-2">
+                <Card
+                  className={cn(
+                    "p-3 border-primary border-2",
+                    errors?.passengers && "border-destructive"
+                  )}
+                >
                   <CardHeader className="p-0 mb-4">
-                    <CardTitle>passengers</CardTitle>
+                    <CardTitle>Travelers</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-0 flex-col flex gap-3">
-                    <Label>
-                      Adult (max 10):
-                      <Input
-                        defaultValue={+flightFormData.passengers.adult}
-                        label="Adult"
-                        type="number"
-                        min={1}
-                        max={10}
-                        onChange={(e) => {
-                          dispatch(
-                            setFlightForm({
-                              passengers: {
-                                ...flightFormData.passengers,
-                                adult: +e.currentTarget.value,
-                              },
-                            })
-                          );
-                        }}
-                      />
-                    </Label>
-                    <Label>
-                      Children (max 5):
-                      <Input
-                        defaultValue={flightFormData.passengers.child}
-                        label="Children"
-                        type="number"
-                        min={0}
-                        max={5}
-                        onChange={(e) => {
-                          dispatch(
-                            setFlightForm({
-                              passengers: {
-                                ...flightFormData.passengers,
-                                child: +e.currentTarget.value,
-                              },
-                            })
-                          );
-                        }}
-                      />
-                    </Label>
+                  <CardContent className="p-0 flex-col flex gap-4">
+                    <TravelersCounts
+                      travelerType={"Adults"}
+                      defaultCount={flightFormData.passengers.adults}
+                      description={"12 years and older"}
+                      minCount={1}
+                      maxCount={9}
+                      getTravelersCount={(count) =>
+                        dispatch(
+                          setFlightForm({
+                            passengers: {
+                              ...flightFormData.passengers,
+                              adults: count,
+                            },
+                          })
+                        )
+                      }
+                    />
+                    <TravelersCounts
+                      travelerType={"Children"}
+                      description={"2 - 11 years"}
+                      defaultCount={flightFormData.passengers.children}
+                      minCount={0}
+                      maxCount={8}
+                      getTravelersCount={(count) =>
+                        dispatch(
+                          setFlightForm({
+                            passengers: {
+                              ...flightFormData.passengers,
+                              children: count,
+                            },
+                          })
+                        )
+                      }
+                    />
+                    <TravelersCounts
+                      defaultCount={flightFormData.passengers.infants}
+                      travelerType={"Infants"}
+                      description={"Under 2 years"}
+                      minCount={0}
+                      maxCount={4}
+                      getTravelersCount={(count) =>
+                        dispatch(
+                          setFlightForm({
+                            passengers: {
+                              ...flightFormData.passengers,
+                              infants: count,
+                            },
+                          })
+                        )
+                      }
+                    />
+                    {errors?.passengers && (
+                      <ErrorMessage message={errors?.passengers} />
+                    )}
                   </CardContent>
                 </Card>
               </PopoverContent>
@@ -340,6 +431,97 @@ function SearchFlightsForm({ searchParams = {} }) {
         </div>
       </form>
     </>
+  );
+}
+
+function InputLabel({ label, className }) {
+  return (
+    <span
+      className={cn(
+        "absolute -top-[10px] left-[10px] z-10 inline-block bg-white px-[4px] leading-none text-sm font-medium rounded-md",
+        className
+      )}
+    >
+      {label}
+    </span>
+  );
+}
+function TravelersCounts({
+  travelerType = "adult",
+  description = "12 years and older",
+  defaultCount = 0,
+  minCount = 0,
+  maxCount = 9,
+  getTravelersCount = () => {},
+}) {
+  return (
+    <div className={"flex justify-between items-center flex-wrap"}>
+      <div>
+        <p className={"text-sm font-bold"}>{travelerType}</p>
+        <p className={"text-xs"}>{description}</p>
+      </div>
+      <Counter
+        defaultCount={defaultCount}
+        maxCount={maxCount}
+        minCount={minCount}
+        getCount={getTravelersCount}
+      />
+    </div>
+  );
+}
+function FlightClassRadioGroup({
+  defaultValue = "economy",
+  getValue = () => {},
+}) {
+  return (
+    <RadioGroup
+      onValueChange={(value) => getValue(value)}
+      className="flex flex-wrap gap-3"
+      defaultValue={defaultValue}
+      value={defaultValue}
+    >
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="economy" id="economy" />
+        <Label htmlFor="economy">Economy</Label>
+      </div>
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="premium_economy" id="premium_economy" />
+        <Label htmlFor="premium_economy">Premium Economy</Label>
+      </div>
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="business" id="business" />
+        <Label htmlFor="business">Business</Label>
+      </div>
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="first" id="first" />
+        <Label htmlFor="first">First Class</Label>
+      </div>
+    </RadioGroup>
+  );
+}
+function TripTypeRadioGroup({ defaultValue = "one_way", getValue = () => {} }) {
+  return (
+    <RadioGroup
+      onValueChange={(value) => getValue(value)}
+      className="flex flex-wrap gap-3"
+      defaultValue={defaultValue}
+      value={defaultValue}
+    >
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="one_way" id="one_way" />
+        <Label htmlFor="one_way">One Way</Label>
+      </div>
+      <div className="flex items-center space-x-2">
+        <RadioGroupItem value="round_trip" id="round_trip" />
+        <Label htmlFor="round_trip">Round Trip</Label>
+      </div>
+      <div className="flex items-center space-x-2 text-disabled">
+        <RadioGroupItem value="multi_city" id="multi_city" disabled />
+        <Label className="cursor-not-allowed" htmlFor="multi_city">
+          Multi City
+        </Label>
+      </div>
+    </RadioGroup>
   );
 }
 
