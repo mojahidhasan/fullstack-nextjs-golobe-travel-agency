@@ -68,7 +68,9 @@ export function DatePicker({
           }}
           {...(isDateObjValid(date) && {
             selected: date,
-            month: new Date(),
+            ...(month.getDate() === date.getDate() && {
+              month: date,
+            }),
           })}
           onSelect={setDateState}
           onMonthChange={setMonth}
