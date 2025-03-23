@@ -1,6 +1,6 @@
 import { FlightResultSkeleton } from "@/components/local-ui/skeleton/flightResultSkeleton";
 import { Skeleton } from "@/components/ui/skeleton";
-export function FlightResultLoading() {
+export function FlightResultLoadingSkeleton() {
   return (
     <>
       <div className={ "w-full" }>
