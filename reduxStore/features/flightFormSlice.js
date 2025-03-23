@@ -3,20 +3,22 @@ import { addDays } from "date-fns";
 
 const d = new Date();
 export const defaultFlightFormValue = {
-  from: "",
-  to: "",
+  // main props
   departureAirportCode: "",
   arrivalAirportCode: "",
   tripType: "one_way",
   desiredDepartureDate: d.toISOString(),
   desiredReturnDate: "",
   passengers: {
-    adult: 1,
-    child: 0,
-    infant: 0,
+    adults: 1,
+    children: 0,
+    infants: 0,
   },
   class: "economy",
   promoCode: "",
+  // helper props
+  from: {},
+  to: {},
   firstAvailableFlightDate: d.toISOString(),
   lastAvailableFlightDate: addDays(d, 9).toISOString(),
   filters: {
@@ -25,6 +27,7 @@ export const defaultFlightFormValue = {
     priceRange: [400, 2000], // min, max
     departureTime: [0, 86340000], // 24 hours in milliseconds , min and max
   },
+  errors: {},
 };
 
 const flightFormSlice = createSlice({
@@ -34,11 +37,26 @@ const flightFormSlice = createSlice({
   },
   reducers: {
     setFlightForm(state, action) {
-      state.value = {
-        ...state.value,
-        filters: { ...state.value.filters },
-        ...action.payload,
-      };
+      const newValue = { ...state.value, ...action.payload };
+      const passengerObj = newValue.passengers;
+      const totalPassengers = Object.values(passengerObj).reduce(
+        (acc, value) => +acc + +value,
+        0
+      );
+      if (+totalPassengers > 9) {
+        newValue.errors = {
+          ...state.value.errors,
+          passengers: "Total passengers cannot be more than 9",
+        };
+      } else if (+passengerObj.adults < +passengerObj.infants) {
+        newValue.errors = {
+          ...state.value.errors,
+          passengers: "Infants cannot be more than adults",
+        };
+      } else {
+        delete newValue.errors.passengers;
+      }
+      state.value = newValue;
     },
     setFlightFormFilters(state, action) {
       state.value.filters = { ...state.value.filters, ...action.payload };
