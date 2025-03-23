@@ -14,6 +14,7 @@ import {
 export function DatePicker({
   className,
   getDate = () => {},
+  getPopoverOpenState = () => {},
   date,
   disabledDates = [],
   ...props
@@ -39,7 +40,7 @@ export function DatePicker({
   }, [date?.toString()]);
 
   return (
-    <Popover>
+    <Popover onOpenChange={(open) => getPopoverOpenState(open)}>
       <PopoverTrigger asChild>
         {isDateObjValid(value) ? (
           <div className={"w-full h-full p-4"}>
