@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { DatePicker } from "@/components/ui/DatePicker";
-import { HotelDestinationAutoCompletePopover } from "@/components/local-ui/HotelDestinationAutoCompletePopover";
+import { DatePicker } from "@/components/local-ui/DatePicker";
+import { HotelDestinationPopover } from "@/components/local-ui/HotelDestinationPopover";
 import { AddPromoCode } from "@/components/AddPromoCode";
 import {
   Popover,
@@ -119,22 +119,11 @@ function SearchStaysForm({ searchParams = {} }) {
       <input type="hidden" name="promocode" value={stayFormData.promocode} />
 
       <div className="my-[20px] grid gap-[24px] lg:grid-cols-2 xl:grid-cols-[2fr_repeat(3,_1fr)]">
-        <div className="relative flex h-[48px] w-full items-center gap-[4px] rounded-[8px] border-2 border-primary">
+        <div className="relative h-auto w-full rounded-[8px] border-2 border-primary">
           <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
             Enter Destination <span className={"text-red-600"}>*</span>
           </span>
-          <div className="p-2">
-            <Image
-              alt=""
-              width={24}
-              height={24}
-              src={"/icons/bed-filled.svg"}
-            />
-          </div>
-
-          <div className="h-full grow">
-            <HotelDestinationAutoCompletePopover className={"h-full w-full"} />
-          </div>
+          <HotelDestinationPopover className={"pl-4 rounded-[8px] border-0"} />
         </div>
 
         <div className="relative flex h-[48px] w-full items-center gap-[4px] rounded-[8px] border-2 border-primary">
