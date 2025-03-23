@@ -2,7 +2,6 @@ import { FlightResultList } from "./FlightResultList";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { minutesToHMFormat } from "@/lib/utils";
 export async function FlightResult({ flightResults, metaData }) {
-  console.log(flightResults[0].price);
   const sortByCheapest = flightResults.slice(0).sort((a, b) => {
     const aTotalPrice = a.price.total;
     const bTotalPrice = b.price.total;
