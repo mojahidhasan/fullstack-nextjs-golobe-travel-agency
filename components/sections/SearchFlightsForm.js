@@ -20,17 +20,10 @@ import { AddPromoCode } from "@/components/AddPromoCode";
 import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
-import {
-  isDateObjValid,
-  passengerObjectToStr,
-  cn,
-  isObject,
-} from "@/lib/utils";
+import { isDateObjValid, passengerObjectToStr, cn } from "@/lib/utils";
 import validateFlightSearchParams from "@/lib/zodSchemas/flightSearchParams";
 import { addDays } from "date-fns";
-import airports from "@/data/airports.json";
 import swap from "@/public/icons/swap.svg";
-import { validateFlightSearchFormAction } from "@/lib/actions/validateFlightSearchFormAction";
 import Counter from "../local-ui/Counter";
 import { ErrorMessage } from "../local-ui/errorMessage";
 
@@ -43,43 +36,37 @@ function SearchFlightsForm({ searchParams = {} }) {
   };
   const dispatch = useDispatch();
   const router = useRouter();
-  let searchParamsObj = {};
-  if (Object.keys(searchParams).length > 0) {
-    // for (const [key, value] of Object.entries(searchParams)) {
-    //   if (key === "filters") {
-    //     // searchParamsObj[key] = JSON.parse(value);
-    //     continue;
-    //   }
-    //   if (key === "passengers") {
-    //     const passangerObj = passengerStrToObject(searchParams.passengers);
-    //     searchParamsObj[key] = passangerObj;
-    //     continue;
-    //   }
-    //   searchParamsObj[key] = value;
-    // }
-  }
 
   const flightFormData = useSelector((state) => state.flightForm.value);
   const errors = flightFormData.errors;
-
+  console.log(flightFormData.tripType, errors);
   async function handleSubmit(e) {
     e.preventDefault();
-    const formData = new FormData();
-    Object.entries(flightFormData).forEach(([key, value]) => {
-      if (isObject(value)) {
-        value = JSON.stringify(value);
-      }
-      formData.set(key, value);
-    });
-    const searchParams = new URLSearchParams(flightFormData);
-    searchParams.set(
-      "passengers",
-      passengerObjectToStr(flightFormData.passengers)
-    );
-    const res = await validateFlightSearchFormAction(undefined, formData);
+    const { success, errors, data } = validateFlightForm(flightFormData);
+    if (success === false) {
+      dispatch(setFlightForm({ errors: { ...errors } }));
+      return;
+    }
+    dispatch(setFlightForm({ errors: {} }));
+    const searchParams = new URLSearchParams(data);
+    console.log(searchParams.toString());
     // router.push("/flights/search?" + searchParams.toString());
   }
 
+  function validateFlightForm(flightFormDataObj) {
+    const necessaryData = {
+      departureAirportCode: flightFormDataObj.departureAirportCode,
+      arrivalAirportCode: flightFormDataObj.arrivalAirportCode,
+      tripType: flightFormDataObj.tripType,
+      desiredDepartureDate: flightFormDataObj.desiredDepartureDate,
+      desiredReturnDate: flightFormDataObj.desiredReturnDate,
+      class: flightFormDataObj.class,
+      passengers: passengerObjectToStr(flightFormDataObj.passengers),
+    };
+
+    const { success, errors, data } = validateFlightSearchParams(necessaryData);
+    return { success, errors, data };
+  }
   function totalPassenger() {
     return Object.values(flightFormData.passengers).reduce(
       (a, b) => +a + +b,
@@ -106,7 +93,11 @@ function SearchFlightsForm({ searchParams = {} }) {
             )}
           </div>
           <div className={"col-span-full flex flex-col gap-2 mb-2 ml-2"}>
-            <span className={"font-bold"}>Trip Type</span>
+            <span
+              className={cn("font-bold", errors.tripType && "text-destructive")}
+            >
+              Trip Type
+            </span>
             <TripTypeRadioGroup
               defaultValue={flightFormData.tripType}
               getValue={(value) => {
@@ -508,16 +499,16 @@ function TripTypeRadioGroup({ defaultValue = "one_way", getValue = () => {} }) {
       value={defaultValue}
     >
       <div className="flex items-center space-x-2">
-        <RadioGroupItem value="one_way" id="one_way" />
-        <Label htmlFor="one_way">One Way</Label>
+        <RadioGroupItem value="one_way" id="one_way1234" />
+        <Label htmlFor="one_way1234">One Way</Label>
       </div>
       <div className="flex items-center space-x-2">
-        <RadioGroupItem value="round_trip" id="round_trip" />
-        <Label htmlFor="round_trip">Round Trip</Label>
+        <RadioGroupItem value="round_trip" id="round_trip1234" />
+        <Label htmlFor="round_trip1234">Round Trip</Label>
       </div>
       <div className="flex items-center space-x-2 text-disabled">
-        <RadioGroupItem value="multi_city" id="multi_city" disabled />
-        <Label className="cursor-not-allowed" htmlFor="multi_city">
+        <RadioGroupItem value="multi_city" id="multi_city1234" disabled />
+        <Label className="cursor-not-allowed" htmlFor="multi_city1234">
           Multi City
         </Label>
       </div>
