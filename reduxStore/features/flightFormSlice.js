@@ -43,18 +43,20 @@ const flightFormSlice = createSlice({
         (acc, value) => +acc + +value,
         0
       );
-      if (+totalPassengers > 9) {
-        newValue.errors = {
-          ...state.value.errors,
-          passengers: "Total passengers cannot be more than 9",
-        };
-      } else if (+passengerObj.adults < +passengerObj.infants) {
-        newValue.errors = {
-          ...state.value.errors,
-          passengers: "Infants cannot be more than adults",
-        };
-      } else {
-        delete newValue.errors.passengers;
+      if (action.payload.passengers) {
+        if (+totalPassengers > 9) {
+          newValue.errors = {
+            ...state.value.errors,
+            passengers: "Total passengers cannot be more than 9",
+          };
+        } else if (+passengerObj.adults < +passengerObj.infants) {
+          newValue.errors = {
+            ...state.value.errors,
+            passengers: "Infants cannot be more than adults",
+          };
+        } else {
+          delete newValue.errors.passengers;
+        }
       }
       state.value = newValue;
     },
