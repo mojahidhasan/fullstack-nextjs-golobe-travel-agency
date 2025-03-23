@@ -293,7 +293,7 @@ function SearchFlightsForm({ searchParams = {} }) {
             <Popover>
               <PopoverTrigger
                 asChild
-                className="h-full w-full justify-start rounded-lg p-4"
+                className="min-h-[100px] max-h-[100px] w-full justify-start rounded-lg p-4"
               >
                 <div>
                   <div className={"text-xl font-bold"}>
