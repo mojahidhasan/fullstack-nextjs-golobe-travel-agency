@@ -4,55 +4,22 @@ import { getManyDocs } from "@/lib/db/getOperationDB";
 import { addMinutes, endOfDay, startOfDay } from "date-fns";
 import { cookies } from "next/headers";
 import { getSession } from "@/lib/auth";
-import { z } from "zod";
+import validateFlightSearchParams from "@/lib/zodSchemas/flightSearchParams";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
 import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalculation";
 import { extractFlightPriceFromAirline } from "@/lib/helpers/flights/priceCalculations";
 import { getUserDetails } from "@/lib/controllers/user";
-import { getFlights, passengerStrToObject } from "@/lib/controllers/flights";
+import { getFlights } from "@/lib/controllers/flights";
+import { passengerStrToObject } from "@/lib/utils";
 
 async function FlightResultPage({ searchParams }) {
   let flightResults = [];
-  let searchParamsObj = {};
-
-  const searchParamsSchema = z
-    .object({
-      departureAirportCode: z
-        .string()
-        .trim()
-        .min(3, "Invalid airport code")
-        .max(3, "Invalid airport code"),
-      arrivalAirportCode: z.string().trim().min(3).max(3),
-      tripType: z.enum(["one_way", "round_trip", "multi_city"]),
-      desiredDepartureDate: z
-        .string("Date is required")
-        .datetime("Invalid date string"),
-      desiredReturnDate: z.string("Date is required").optional(),
-      class: z.enum(["economy", "premium_economy", "business", "first"]),
-      passengers: z
-        .string()
-        .trim()
-        .regex(/adult-\d+_child-\d+_infant-\d+/, "Invalid passengers format"),
-    })
-    .safeParse(searchParams);
-
-  if (searchParamsSchema.success) {
-    if (searchParamsSchema.success.tripType !== "one_way") {
-      const desiredReturnDateValidation = z
-        .object({
-          desiredReturnDate: z
-            .string("Date is required")
-            .datetime("Invalid date string"),
-        })
-        .safeParse(searchParams.desiredReturnDate);
-      if (desiredReturnDateValidation.success) {
-        searchParamsSchema.data.desiredReturnDate =
-          desiredReturnDateValidation.data.desiredReturnDate;
-      }
-    }
-    searchParamsObj = searchParamsSchema.data;
+  const { success, errors, data } = validateFlightSearchParams(searchParams);
+  if (success === false) {
+    // pass error on form input
+    //will implement later
+    return;
   }
-
   const {
     departureAirportCode,
     arrivalAirportCode,
@@ -61,7 +28,7 @@ async function FlightResultPage({ searchParams }) {
     desiredReturnDate,
     class: flightClass,
     passengers,
-  } = searchParamsObj;
+  } = data;
 
   const departureDate = new Date(desiredDepartureDate);
   const returnDate = new Date(desiredReturnDate);
@@ -95,12 +62,8 @@ async function FlightResultPage({ searchParams }) {
   await updateOneDoc(modelName, filter, {
     flights: {
       latestFlightSearchState: {
-        departureAirport: {
-          code: departureAirportCode,
-        },
-        arrivalAirport: {
-          code: arrivalAirportCode,
-        },
+        departureAirport: departureAirportCode,
+        arrivalAirport: arrivalAirportCode,
         tripType,
         desiredDepartureDate,
         desiredReturnDate: Boolean(desiredReturnDate)
@@ -188,7 +151,7 @@ async function FlightResultPage({ searchParams }) {
   return (
     <>
       <SetSessionStorage obj={{ sessionTimeoutAt: sessionTimeoutAt }} />
-      <FlightResult flightResults={flightResults} metaData={metaData} />;
+      <FlightResult flightResults={flightResults} metaData={metaData} />
     </>
   );
 }
