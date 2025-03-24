@@ -14,10 +14,6 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
-import { AddPromoCode } from "@/components/AddPromoCode";
-
-import { useRouter } from "next/navigation";
 import { useSelector, useDispatch } from "react-redux";
 import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
 import {
@@ -36,7 +32,7 @@ import Counter from "../local-ui/Counter";
 import { ErrorMessage } from "../local-ui/errorMessage";
 import { useEffect, useState } from "react";
 
-function SearchFlightsForm({ searchParams = {} }) {
+function SearchFlightsForm() {
   const classPlaceholders = {
     economy: "Economy",
     premium_economy: "Premium Economy",
@@ -44,7 +40,6 @@ function SearchFlightsForm({ searchParams = {} }) {
     first: "First class",
   };
   const dispatch = useDispatch();
-  const router = useRouter();
 
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const flightFormData = useSelector((state) => state.flightForm.value);
@@ -142,7 +137,6 @@ function SearchFlightsForm({ searchParams = {} }) {
   function saveSearchState(formDateObj) {
     sessionStorage.setItem("searchState", JSON.stringify(formDateObj));
   }
-
   function validateFlightForm(flightFormDataObj) {
     const necessaryData = {
       from: airportObjectToStr(flightFormDataObj.from),
@@ -184,7 +178,10 @@ function SearchFlightsForm({ searchParams = {} }) {
           </div>
           <div className={"col-span-full flex flex-col gap-2 mb-2 ml-2"}>
             <span
-              className={cn("font-bold", errors.tripType && "text-destructive")}
+              className={cn(
+                "font-bold",
+                errors?.tripType && "text-destructive"
+              )}
             >
               Trip Type
             </span>
@@ -217,8 +214,7 @@ function SearchFlightsForm({ searchParams = {} }) {
           <div
             className={cn(
               "relative col-span-full lg:col-span-2 flex flex-col md:flex-row gap-2 h-auto rounded-[8px] border-2 border-primary",
-              (errors.departureAirportCode || errors.arrivalAirportCode) &&
-                "border-destructive"
+              (errors?.to || errors?.from) && "border-destructive"
             )}
           >
             <InputLabel
@@ -232,7 +228,7 @@ function SearchFlightsForm({ searchParams = {} }) {
             <FlightFromToPopover
               className={cn(
                 "h-auto min-h-[100px] max-h-[100px] p-4 max-w-full md:w-1/2 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-b-2 md:border-r-2 border-primary",
-                errors.departureAirportCode && "border-destructive"
+                errors?.from && "border-destructive"
               )}
               fetchInputs={{
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_airports`,
@@ -247,7 +243,6 @@ function SearchFlightsForm({ searchParams = {} }) {
                   setFlightForm({
                     ...flightFormData,
                     from: obj,
-                    departureAirportCode: obj.iataCode,
                   })
                 )
               }
@@ -259,8 +254,6 @@ function SearchFlightsForm({ searchParams = {} }) {
                     ...flightFormData,
                     from: flightFormData.to,
                     to: flightFormData.from,
-                    departureAirportCode: flightFormData.arrivalAirportCode,
-                    arrivalAirportCode: flightFormData.departureAirportCode,
                   })
                 );
               }}
@@ -280,7 +273,7 @@ function SearchFlightsForm({ searchParams = {} }) {
             <FlightFromToPopover
               className={cn(
                 "h-auto min-h-[100px] max-h-[100px] max-w-full md:w-1/2 p-4 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-t-2 md:border-l-2 border-primary",
-                errors.arrivalAirportCode && "border-destructive"
+                errors?.to && "border-destructive"
               )}
               fetchInputs={{
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_airports`,
@@ -295,7 +288,6 @@ function SearchFlightsForm({ searchParams = {} }) {
                   setFlightForm({
                     ...flightFormData,
                     to: obj,
-                    arrivalAirportCode: obj.iataCode,
                   })
                 )
               }
@@ -304,7 +296,7 @@ function SearchFlightsForm({ searchParams = {} }) {
           <div
             className={cn(
               "relative col-span-full lg:col-span-2 flex flex-col md:flex-row gap-2 h-auto rounded-[8px] border-2 border-primary",
-              (errors.desiredDepartureDate || errors.desiredReturnDate) &&
+              (errors?.desiredDepartureDate || errors?.desiredReturnDate) &&
                 "border-destructive"
             )}
           >
@@ -321,7 +313,7 @@ function SearchFlightsForm({ searchParams = {} }) {
             <div
               className={cn(
                 "h-auto min-h-[100px] max-h-[100px] max-w-full md:w-1/2 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-b-2 md:border-r-2 border-primary",
-                errors.desiredDepartureDate && "border-destructive"
+                errors?.desiredDepartureDate && "border-destructive"
               )}
             >
               <DatePicker
@@ -353,7 +345,7 @@ function SearchFlightsForm({ searchParams = {} }) {
             <div
               className={cn(
                 "h-auto min-h-[100px] max-h-[100px] max-w-full md:w-1/2 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-t-2 md:border-l-2 border-primary",
-                errors.desiredReturnDate && "border-destructive"
+                errors?.desiredReturnDate && "border-destructive"
               )}
             >
               <DatePicker
@@ -520,12 +512,6 @@ function SearchFlightsForm({ searchParams = {} }) {
           </div>
         </div>
         <div className="flex flex-wrap justify-end gap-[24px]">
-          <AddPromoCode
-            defaultCode={flightFormData.promocode}
-            getPromoCode={(promo) => {
-              dispatch(setFlightForm({ promocode: promo }));
-            }}
-          />
           <Button type="submit" className="gap-1">
             <Image
               width={24}
