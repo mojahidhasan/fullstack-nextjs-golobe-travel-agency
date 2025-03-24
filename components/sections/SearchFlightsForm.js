@@ -26,6 +26,7 @@ import { addDays } from "date-fns";
 import swap from "@/public/icons/swap.svg";
 import Counter from "../local-ui/Counter";
 import { ErrorMessage } from "../local-ui/errorMessage";
+import { useEffect, useState } from "react";
 
 function SearchFlightsForm({ searchParams = {} }) {
   const classPlaceholders = {
@@ -37,26 +38,107 @@ function SearchFlightsForm({ searchParams = {} }) {
   const dispatch = useDispatch();
   const router = useRouter();
 
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const flightFormData = useSelector((state) => state.flightForm.value);
   const errors = flightFormData.errors;
-  console.log(flightFormData.tripType, errors);
+
+  useEffect(() => {
+    const searchState = getSearchState() || {};
+    dispatch(setFlightForm(searchState));
+  }, []);
+
+  useEffect(() => {
+    async function getAvailableFlightDateRange() {
+      const getCachedFlight = sessionStorage.getItem("flightDateRange");
+      if (getCachedFlight) {
+        const { from, to, expireAt } = JSON.parse(getCachedFlight);
+        if (Date.now() < expireAt) {
+          dispatch(setFlightForm({ availableFlightDateRange: { from, to } }));
+          return;
+        }
+      }
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_flight_date_range`,
+        {
+          method: "GET",
+          next: { revalidate: 60, tags: ["flightDateRange"] },
+        }
+      );
+      const data = await res.json();
+      if (data.success === true) {
+        const { from, to } = data.data;
+        sessionStorage.setItem(
+          "flightDateRange",
+          JSON.stringify({
+            from,
+            to,
+            expireAt: Date.now() + 60 * 1000,
+          })
+        );
+        dispatch(setFlightForm({ availableFlightDateRange: { from, to } }));
+      }
+    }
+    if (isDatePickerOpen === true) {
+      getAvailableFlightDateRange();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isDatePickerOpen]);
+
   async function handleSubmit(e) {
     e.preventDefault();
-    const { success, errors, data } = validateFlightForm(flightFormData);
-    if (success === false) {
+
+    const {
+      success: sFForm,
+      errors: eFForm,
+      data: dFForm,
+    } = validateFlightForm(flightFormData);
+
+    let searchState = getSearchState() || {};
+    const {
+      success: sSState,
+      errors: eSState,
+      data: dSState,
+    } = validateFlightForm(searchState);
+
+    const areTheySame = objDeepCompare(dFForm, dSState);
+
+    if (areTheySame) {
+      return;
+    }
+
+    if (sFForm === false) {
       dispatch(setFlightForm({ errors: { ...errors } }));
       return;
     }
     dispatch(setFlightForm({ errors: {} }));
-    const searchParams = new URLSearchParams(data);
-    console.log(searchParams.toString());
-    // router.push("/flights/search?" + searchParams.toString());
+    const searchParams = new URLSearchParams(dFForm);
+    window.location.href = "/flights/search?" + searchParams.toString();
+  }
+
+  function getSearchState() {
+    const searchState = sessionStorage.getItem("searchState");
+    if (searchState) {
+      return parseSessionSearchState(searchState);
+    }
+    return null;
+  }
+  function parseSessionSearchState(searchStateJSON) {
+    const parsedSearchState = JSON.parse(searchStateJSON);
+    parsedSearchState.passengers = passengerStrToObject(
+      parsedSearchState.passengers
+    );
+    parsedSearchState.from = airportStrToObject(parsedSearchState.from);
+    parsedSearchState.to = airportStrToObject(parsedSearchState.to);
+    return parsedSearchState;
+  }
+  function saveSearchState(formDateObj) {
+    sessionStorage.setItem("searchState", JSON.stringify(formDateObj));
   }
 
   function validateFlightForm(flightFormDataObj) {
     const necessaryData = {
-      departureAirportCode: flightFormDataObj.departureAirportCode,
-      arrivalAirportCode: flightFormDataObj.arrivalAirportCode,
+      from: airportObjectToStr(flightFormDataObj.from),
+      to: airportObjectToStr(flightFormDataObj.to),
       tripType: flightFormDataObj.tripType,
       desiredDepartureDate: flightFormDataObj.desiredDepartureDate,
       desiredReturnDate: flightFormDataObj.desiredReturnDate,
@@ -234,6 +316,14 @@ function SearchFlightsForm({ searchParams = {} }) {
             >
               <DatePicker
                 date={new Date(flightFormData.desiredDepartureDate)}
+                disabledDates={[
+                  {
+                    before: new Date(
+                      flightFormData.availableFlightDateRange.from
+                    ),
+                    after: new Date(flightFormData.availableFlightDateRange.to),
+                  },
+                ]}
                 getDate={(date) => {
                   dispatch(
                     setFlightForm({
@@ -247,6 +337,7 @@ function SearchFlightsForm({ searchParams = {} }) {
                     })
                   );
                 }}
+                getPopoverOpenState={setIsDatePickerOpen}
               />
             </div>
             <div
@@ -258,6 +349,15 @@ function SearchFlightsForm({ searchParams = {} }) {
               <DatePicker
                 date={new Date(flightFormData.desiredReturnDate)}
                 required={false}
+                disabledDates={[
+                  {
+                    before: new Date(
+                      flightFormData.desiredDepartureDate ||
+                        flightFormData.availableFlightDateRange.from
+                    ),
+                    after: new Date(flightFormData.availableFlightDateRange.to),
+                  },
+                ]}
                 getDate={(date) => {
                   if (isDateObjValid(date)) {
                     dispatch(
@@ -277,6 +377,7 @@ function SearchFlightsForm({ searchParams = {} }) {
                     );
                   }
                 }}
+                getPopoverOpenState={setIsDatePickerOpen}
               />
             </div>
           </div>
