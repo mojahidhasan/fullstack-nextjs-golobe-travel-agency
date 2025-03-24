@@ -1,11 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addDays } from "date-fns";
+import { addYears } from "date-fns";
 
 const d = new Date();
 export const defaultFlightFormValue = {
   // main props
-  departureAirportCode: "",
-  arrivalAirportCode: "",
   tripType: "one_way",
   desiredDepartureDate: d.toISOString(),
   desiredReturnDate: "",
@@ -15,12 +13,13 @@ export const defaultFlightFormValue = {
     infants: 0,
   },
   class: "economy",
-  promoCode: "",
   // helper props
   from: {},
   to: {},
-  firstAvailableFlightDate: d.toISOString(),
-  lastAvailableFlightDate: addDays(d, 9).toISOString(),
+  availableFlightDateRange: {
+    from: d.getTime(),
+    to: addYears(d, 100).getTime(),
+  },
   filters: {
     rates: [], // 1,2,3,4,5
     airlines: [], // EK, FZ, EY
