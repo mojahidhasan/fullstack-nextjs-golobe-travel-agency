@@ -239,6 +239,11 @@ function SearchFlightsForm({ searchParams = {} }) {
                     setFlightForm({
                       ...flightFormData,
                       desiredDepartureDate: date.toISOString(),
+                      // ...(flightFormData.tripType === "round_trip" &&
+                      //   new Date(date) >
+                      //     new Date(flightFormData.desiredReturnDate) && {
+                      //     desiredReturnDate: date.toISOString(),
+                      //   }),
                     })
                   );
                 }}
@@ -258,8 +263,8 @@ function SearchFlightsForm({ searchParams = {} }) {
                     dispatch(
                       setFlightForm({
                         ...flightFormData,
-                        tripType: "round_trip",
-                        desiredReturnDate: date.toISOString(),
+                        // tripType: "round_trip",
+                        desiredReturnDate: "", //date.toISOString(),
                       })
                     );
                   } else {
@@ -503,12 +508,20 @@ function TripTypeRadioGroup({ defaultValue = "one_way", getValue = () => {} }) {
         <Label htmlFor="one_way1234">One Way</Label>
       </div>
       <div className="flex items-center space-x-2">
-        <RadioGroupItem value="round_trip" id="round_trip1234" />
-        <Label htmlFor="round_trip1234">Round Trip</Label>
+        <RadioGroupItem disabled value="round_trip" id="round_trip1234" />
+        <Label
+          className="cursor-not-allowed text-disabled"
+          htmlFor="round_trip1234"
+        >
+          Round Trip
+        </Label>
       </div>
-      <div className="flex items-center space-x-2 text-disabled">
+      <div className="flex items-center space-x-2">
         <RadioGroupItem value="multi_city" id="multi_city1234" disabled />
-        <Label className="cursor-not-allowed" htmlFor="multi_city1234">
+        <Label
+          className="cursor-not-allowed text-disabled"
+          htmlFor="multi_city1234"
+        >
           Multi City
         </Label>
       </div>
