@@ -64,6 +64,10 @@ function SearchResults({
     url: process.env.NEXT_PUBLIC_BASE_URL,
     method: "GET",
     searchParamsName: "searchQuery",
+    next: {
+      revalidate: 0,
+      tags: [],
+    },
   },
 }) {
   const [searchQuery, setSearchQuery] = useState("");
@@ -78,7 +82,12 @@ function SearchResults({
     async function getData() {
       setLoading(true);
       const res = await fetch(`${fetchInputs.url}?${urlSearchParam}`, {
+        next: {
+          revalidate: fetchInputs.next.revalidate,
+          tags: fetchInputs.next.tags,
+        },
         method: fetchInputs.method,
+        cache: "default",
       });
       if (!res.ok) {
         return;

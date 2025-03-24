@@ -3,7 +3,6 @@ import { useEffect } from "react";
 
 export function SetSessionStorage({ obj }) {
   useEffect(() => {
-    console.log(obj);
     Object.entries(obj).forEach(([key, value]) => {
       sessionStorage.setItem(key, value);
     });
