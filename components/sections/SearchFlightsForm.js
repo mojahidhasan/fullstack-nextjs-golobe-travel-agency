@@ -230,6 +230,7 @@ function SearchFlightsForm({ searchParams = {} }) {
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_airports`,
                 method: "GET",
                 searchParamsName: "searchQuery",
+                next: { revalidate: 21600, tags: ["airports"] },
               }}
               excludeVals={[flightFormData.to]}
               defaultSelected={flightFormData.from}
@@ -276,6 +277,7 @@ function SearchFlightsForm({ searchParams = {} }) {
               fetchInputs={{
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_airports`,
                 method: "GET",
+                next: { revalidate: 21600, tags: ["airports"] },
                 searchParamsName: "searchQuery",
               }}
               excludeVals={[flightFormData.from]}
