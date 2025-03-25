@@ -22,8 +22,8 @@ export function ApiSearchInputPopover({
   renderSearchResults = () => {},
 }) {
   const [open, setOpen] = useState(false);
-  const [val, setVal] = useState(defaultSelected);
-  const [selectedState, setSelectedState] = useState(defaultSelected);
+  const [val, setVal] = useState({});
+  const [selectedState, setSelectedState] = useState({});
 
   useEffect(() => {
     getSelectedResult(selectedState);
@@ -90,7 +90,7 @@ function SearchResults({
         cache: "default",
       });
       if (!res.ok) {
-        return;
+        return { success: false, message: "An error occurred" };
       }
       const data = await res.json();
       setData(data);
