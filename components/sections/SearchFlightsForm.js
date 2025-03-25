@@ -21,9 +21,8 @@ import {
   passengerObjectToStr,
   cn,
   airportObjectToStr,
-  passengerStrToObject,
-  airportStrToObject,
   objDeepCompare,
+  parseFlightSearchParams,
 } from "@/lib/utils";
 import validateFlightSearchParams from "@/lib/zodSchemas/flightSearchParams";
 import { addDays } from "date-fns";
@@ -40,16 +39,9 @@ function SearchFlightsForm() {
     first: "First class",
   };
   const dispatch = useDispatch();
-
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const flightFormData = useSelector((state) => state.flightForm.value);
   const errors = flightFormData.errors;
-
-  useEffect(() => {
-    const searchState = getSearchState() || {};
-    dispatch(setFlightForm(searchState));
-  }, []);
-
   useEffect(() => {
     async function getAvailableFlightDateRange() {
       const getCachedFlight = sessionStorage.getItem("flightDateRange");
@@ -104,13 +96,11 @@ function SearchFlightsForm() {
     } = validateFlightForm(searchState);
 
     const areTheySame = objDeepCompare(dFForm, dSState);
-
-    if (areTheySame) {
+    if (sFForm === false) {
+      dispatch(setFlightForm({ errors: { ...eFForm } }));
       return;
     }
-
-    if (sFForm === false) {
-      dispatch(setFlightForm({ errors: { ...errors } }));
+    if (areTheySame) {
       return;
     }
     dispatch(setFlightForm({ errors: {} }));
@@ -121,22 +111,11 @@ function SearchFlightsForm() {
   function getSearchState() {
     const searchState = sessionStorage.getItem("searchState");
     if (searchState) {
-      return parseSessionSearchState(searchState);
+      return parseFlightSearchParams(searchState);
     }
     return null;
   }
-  function parseSessionSearchState(searchStateJSON) {
-    const parsedSearchState = JSON.parse(searchStateJSON);
-    parsedSearchState.passengers = passengerStrToObject(
-      parsedSearchState.passengers
-    );
-    parsedSearchState.from = airportStrToObject(parsedSearchState.from);
-    parsedSearchState.to = airportStrToObject(parsedSearchState.to);
-    return parsedSearchState;
-  }
-  function saveSearchState(formDateObj) {
-    sessionStorage.setItem("searchState", JSON.stringify(formDateObj));
-  }
+
   function validateFlightForm(flightFormDataObj) {
     const necessaryData = {
       from: airportObjectToStr(flightFormDataObj.from),
@@ -242,7 +221,11 @@ function SearchFlightsForm() {
                 dispatch(
                   setFlightForm({
                     ...flightFormData,
-                    from: obj,
+                    from: {
+                      iataCode: obj.iataCode,
+                      name: obj.name,
+                      city: obj.city,
+                    },
                   })
                 )
               }
@@ -287,7 +270,11 @@ function SearchFlightsForm() {
                 dispatch(
                   setFlightForm({
                     ...flightFormData,
-                    to: obj,
+                    to: {
+                      iataCode: obj.iataCode,
+                      name: obj.name,
+                      city: obj.city,
+                    },
                   })
                 )
               }
