@@ -4,6 +4,8 @@ import { addYears } from "date-fns";
 const d = new Date();
 export const defaultFlightFormValue = {
   // main props
+  from: {},
+  to: {},
   tripType: "one_way",
   desiredDepartureDate: d.toISOString(),
   desiredReturnDate: "",
@@ -14,8 +16,6 @@ export const defaultFlightFormValue = {
   },
   class: "economy",
   // helper props
-  from: {},
-  to: {},
   availableFlightDateRange: {
     from: d.getTime(),
     to: addYears(d, 100).getTime(),
