@@ -29,11 +29,18 @@ export function FlightFromToPopover({
   }
 
   function renderSearchResults(
-    resultArr,
+    result,
     setOpen = () => {},
     setSelected = () => {}
   ) {
-    const filteredResultArr = resultArr.filter((obj) => {
+    if (result.success === false) {
+      return (
+        <div className="p-2 font-bold h-full flex items-center justify-center text-center text-sm">
+          {result.message}
+        </div>
+      );
+    }
+    const filteredResultArr = result.data.filter((obj) => {
       return !excludeVals.some((exObj) => objDeepCompare(obj, exObj));
     });
 
