@@ -6,11 +6,11 @@ export async function GET(req) {
 
   const airports = await Airport.find({})
     .limit(limit)
-    .select("iataCode name city state country -_id")
+    .select("iataCode name city -_id")
     .exec();
   try {
     if (!!!searchQuery) {
-      return Response.json(airports);
+      return Response.json({ success: true, data: airports });
     }
 
     const regex = new RegExp(
@@ -22,14 +22,12 @@ export async function GET(req) {
       return (
         regex.test(airport.iataCode) ||
         regex.test(airport.name) ||
-        regex.test(airport.city) ||
-        regex.test(airport.state) ||
-        regex.test(airport.country)
+        regex.test(airport.city)
       );
     });
 
-    return Response.json(filteredAirports);
+    return Response.json({ success: true, data: filteredAirports });
   } catch (error) {
-    return Response.json({ error: error.message });
+    return Response.json({ success: false, message: error.message });
   }
 }
