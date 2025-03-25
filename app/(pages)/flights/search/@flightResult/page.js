@@ -10,32 +10,35 @@ import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalcu
 import { extractFlightPriceFromAirline } from "@/lib/helpers/flights/priceCalculations";
 import { getUserDetails } from "@/lib/controllers/user";
 import { getFlights } from "@/lib/controllers/flights";
-import { passengerStrToObject } from "@/lib/utils";
+import { parseFlightSearchParams } from "@/lib/utils";
+import { SetFlightFormState } from "@/components/helpers/setFlightFromState";
 
 async function FlightResultPage({ searchParams }) {
   let flightResults = [];
   const { success, errors, data } = validateFlightSearchParams(searchParams);
   if (success === false) {
-    // pass error on form input
-    //will implement later
-    return;
+    return <SetFlightFormState obj={{ errors }} />;
   }
+
+  const parsedSearchParams = parseFlightSearchParams(data);
+
+  console.log(parsedSearchParams);
   const {
-    departureAirportCode,
-    arrivalAirportCode,
+    from,
+    to,
     tripType,
     desiredDepartureDate,
     desiredReturnDate,
     class: flightClass,
     passengers,
-  } = data;
+  } = parsedSearchParams;
 
   const departureDate = new Date(desiredDepartureDate);
   const returnDate = new Date(desiredReturnDate);
 
   flightResults = await getFlights({
-    departureAirportCode,
-    arrivalAirportCode,
+    departureAirportCode: from.iataCode,
+    arrivalAirportCode: to.iataCode,
     departureDate,
     returnDate,
     tripType,
@@ -48,36 +51,45 @@ async function FlightResultPage({ searchParams }) {
 
   const airlines = await getManyDocs("Airline", {}, ["airlines"], false);
 
-  const modelName =
-    session !== null && session.user.type === "credentials"
-      ? "User"
-      : "AnonymousUser";
-  const filter =
-    modelName === "User"
-      ? { _id: session.user.id }
-      : { sessionId: session.user.sessionId };
+  let modelName = "";
+  let filter = {};
 
-  const passengersObject = passengerStrToObject(passengers);
+  if (session !== null) {
+    if (session.user.type === "credentials") {
+      modelName = "User";
+    }
+    if (session.user.type === "anonymous") {
+      modelName = "AnonymousUser";
+    }
+  }
 
-  await updateOneDoc(modelName, filter, {
-    flights: {
-      latestFlightSearchState: {
-        departureAirport: departureAirportCode,
-        arrivalAirport: arrivalAirportCode,
-        tripType,
-        desiredDepartureDate,
-        desiredReturnDate: Boolean(desiredReturnDate)
-          ? new Date(desiredReturnDate)
-          : null,
-        class: flightClass,
-        passengers: passengersObject,
-      },
-      airlines,
-      sessionTimeoutAt,
-    },
-  });
+  if (modelName === "User") {
+    filter = { _id: session.user.id };
+  }
 
-  const userDetails = await getUserDetails();
+  if (modelName === "AnonymousUser") {
+    filter = { sessionId: session.user.sessionId };
+  }
+
+  // await updateOneDoc(modelName, filter, {
+  //   flights: {
+  //     latestFlightSearchState: {
+  //       departureAirport: departureAirportCode,
+  //       arrivalAirport: arrivalAirportCode,
+  //       tripType,
+  //       desiredDepartureDate,
+  //       desiredReturnDate: Boolean(desiredReturnDate)
+  //         ? new Date(desiredReturnDate)
+  //         : null,
+  //       class: flightClass,
+  //       passengers: passengersObject,
+  //     },
+  //     airlines,
+  //     sessionTimeoutAt,
+  //   },
+  // });
+
+  const userDetails = await getUserDetails(0);
   const cachedAirlines = userDetails.flights.airlines;
   const metaData = {
     flightClass: userDetails.flights.latestFlightSearchState.class,
@@ -150,7 +162,13 @@ async function FlightResultPage({ searchParams }) {
   );
   return (
     <>
-      <SetSessionStorage obj={{ sessionTimeoutAt: sessionTimeoutAt }} />
+      <SetSessionStorage
+        obj={{
+          sessionTimeoutAt: sessionTimeoutAt,
+          searchState: JSON.stringify(data),
+        }}
+      />
+      <SetFlightFormState obj={parsedSearchParams} />
       <FlightResult flightResults={flightResults} metaData={metaData} />
     </>
   );
