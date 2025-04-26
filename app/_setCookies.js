@@ -1,20 +1,19 @@
 "use client";
 
-import {
-  setNecessaryCookiesAction,
-  anonymousUserSignUpAction,
-} from "@/lib/actions";
+import { anonymousUserSignUpAction } from "@/lib/actions";
+import { setCookiesAction } from "@/lib/actions";
 import { useEffect } from "react";
 
-const cookies = {
-  timezone: {
+const cookies = [
+  {
+    name: "timeZone",
     value: Intl.DateTimeFormat().resolvedOptions().timeZone,
   },
-};
+];
 
 export default function SetCookies() {
   useEffect(() => {
-    setNecessaryCookiesAction(cookies);
+    setCookiesAction(cookies);
     anonymousUserSignUpAction();
   }, []);
   return null;
