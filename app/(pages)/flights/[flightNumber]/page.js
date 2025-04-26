@@ -17,10 +17,10 @@ import { isLoggedIn } from "@/lib/auth";
 export default async function FlightDetailsPage({ params }) {
   const loggedIn = await isLoggedIn();
   const timeZone = cookies().get("timeZone")?.value || "UTC";
-  const metaData = { timeZone, flightClass, isBookmarked: false };
   const searchState = cookies().get("searchState")?.value || "{}";
   const parsedSearchState = parseFlightSearchParams(searchState);
   const flightClass = parsedSearchState?.class || "economy";
+  const metaData = { timeZone, flightClass, isBookmarked: false };
   const alirlinePrices = await getManyDocs("AirlineFlightPrice", {}, [
     "airlinePrices",
   ]);
