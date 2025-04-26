@@ -7,17 +7,17 @@ import { cn } from "@/lib/utils";
 export function FlightResultList({ data, metaData, resultType = "result(s)" }) {
   const maxResultPerPage = 4;
   const [shownTill, setShownTill] = useState(
-    data.length < maxResultPerPage ? data.length : maxResultPerPage
+    data.length < maxResultPerPage ? data.length : maxResultPerPage,
   );
 
   return (
     <>
       <div className="my-10">
-        <div className="flex my-5 justify-between text-[0.875rem] font-semibold">
+        <div className="my-5 flex justify-between text-[0.875rem] font-semibold">
           <p>
-            Showing { shownTill } of{ " " }
+            Showing {shownTill} of{" "}
             <span className="text-tertiary">
-              { data.length } { resultType }
+              {data.length} {resultType}
             </span>
           </p>
           {/* <p>
@@ -31,19 +31,23 @@ export function FlightResultList({ data, metaData, resultType = "result(s)" }) {
             </select>
           </p> */}
         </div>
-        <div className="grid grid-cols-1 mb-5 gap-[16px]">
-          { data.slice(0, shownTill).map((item, i) => (
-            <FlightResultCard key={ item._id } data={ item } metaData={ metaData } />
-          )) }
+        <div className="mb-5 grid grid-cols-1 gap-[16px]">
+          {data.slice(0, shownTill).map((item, i) => (
+            <FlightResultCard
+              key={item._id}
+              data={item}
+              metaData={{ ...metaData, isBookmarked: item.isBookmarked }}
+            />
+          ))}
         </div>
 
         <div>
           <Button
-            className={ cn(
-              "w-full hover:bg-secondary/90 bg-secondary focus:bg-secondary !font-semibold text-white",
-              shownTill >= data.length && "hidden"
-            ) }
-            onClick={ () =>
+            className={cn(
+              "w-full bg-secondary !font-semibold text-white hover:bg-secondary/90 focus:bg-secondary",
+              shownTill >= data.length && "hidden",
+            )}
+            onClick={() =>
               setShownTill(Math.min(shownTill + maxResultPerPage, data.length))
             }
           >
