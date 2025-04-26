@@ -136,7 +136,7 @@ function SearchFlightsForm() {
   function totalPassenger() {
     return Object.values(flightFormData.passengers).reduce(
       (a, b) => +a + +b,
-      0
+      0,
     );
   }
 
@@ -144,12 +144,12 @@ function SearchFlightsForm() {
     <>
       <Jumper id={"flightFormJump"} />
       <form id="flightform" method={"get"} onSubmit={handleSubmit}>
-        <div className="my-[20px] grid grid-cols-4 xl:grid-cols-5 gap-4">
+        <div className="my-[20px] grid grid-cols-4 gap-4 xl:grid-cols-5">
           <div className={"col-span-full"}>
             {Object.keys(errors).length > 0 && (
               <ErrorMessage
                 message={
-                  <ol className={"list-[lower-roman] list-inside"}>
+                  <ol>
                     {Object.entries(errors).map((err) => {
                       return <li key={err[0]}>{err[1]}</li>;
                     })}
@@ -159,11 +159,11 @@ function SearchFlightsForm() {
               />
             )}
           </div>
-          <div className={"col-span-full flex flex-col gap-2 mb-2 ml-2"}>
+          <div className={"col-span-full mb-2 ml-2 flex flex-col gap-2"}>
             <span
               className={cn(
                 "font-bold",
-                errors?.tripType && "text-destructive"
+                errors?.tripType && "text-destructive",
               )}
             >
               Trip Type
@@ -178,9 +178,9 @@ function SearchFlightsForm() {
                       tripType: value,
                       desiredReturnDate: addDays(
                         new Date(flightFormData.desiredDepartureDate),
-                        1
+                        1,
                       ).toISOString(),
-                    })
+                    }),
                   );
                 } else {
                   dispatch(
@@ -188,7 +188,7 @@ function SearchFlightsForm() {
                       ...flightFormData,
                       tripType: value,
                       desiredReturnDate: "",
-                    })
+                    }),
                   );
                 }
               }}
@@ -196,8 +196,8 @@ function SearchFlightsForm() {
           </div>
           <div
             className={cn(
-              "relative col-span-full lg:col-span-2 flex flex-col md:flex-row gap-2 h-auto rounded-[8px] border-2 border-primary",
-              (errors?.to || errors?.from) && "border-destructive"
+              "relative col-span-full flex h-auto flex-col gap-2 rounded-[8px] border-2 border-primary md:flex-row lg:col-span-2",
+              (errors?.to || errors?.from) && "border-destructive",
             )}
           >
             <InputLabel
@@ -210,8 +210,8 @@ function SearchFlightsForm() {
             />
             <FlightFromToPopover
               className={cn(
-                "h-auto min-h-[100px] max-h-[100px] p-4 max-w-full md:w-1/2 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-b-2 md:border-r-2 border-primary",
-                errors?.from && "border-destructive"
+                "h-auto max-h-[100px] min-h-[100px] max-w-full grow rounded-none border-0 border-primary p-4 max-md:mx-1 max-md:border-b-2 md:my-1 md:w-1/2 md:border-r-2",
+                errors?.from && "border-destructive",
               )}
               fetchInputs={{
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_airports`,
@@ -230,7 +230,7 @@ function SearchFlightsForm() {
                       name: obj.name,
                       city: obj.city,
                     },
-                  })
+                  }),
                 )
               }
             />
@@ -241,13 +241,13 @@ function SearchFlightsForm() {
                     ...flightFormData,
                     from: flightFormData.to,
                     to: flightFormData.from,
-                  })
+                  }),
                 );
               }}
               aria-label={"swap airport names"}
               role={"button"}
               type={"button"}
-              className="flex absolute w-10 h-10 left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 p-2 bg-primary items-center justify-center rounded-full hover:bg-secondary-foreground hover:border-primary hover:border-2 transition-all"
+              className="absolute left-1/2 top-1/2 flex h-10 w-10 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-primary p-2 transition-all hover:border-2 hover:border-primary hover:bg-secondary-foreground"
             >
               <Image
                 alt=""
@@ -259,8 +259,8 @@ function SearchFlightsForm() {
             </button>
             <FlightFromToPopover
               className={cn(
-                "h-auto min-h-[100px] max-h-[100px] max-w-full md:w-1/2 p-4 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-t-2 md:border-l-2 border-primary",
-                errors?.to && "border-destructive"
+                "h-auto max-h-[100px] min-h-[100px] max-w-full grow rounded-none border-0 border-primary p-4 max-md:mx-1 max-md:border-t-2 md:my-1 md:w-1/2 md:border-l-2",
+                errors?.to && "border-destructive",
               )}
               fetchInputs={{
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_airports`,
@@ -279,16 +279,16 @@ function SearchFlightsForm() {
                       name: obj.name,
                       city: obj.city,
                     },
-                  })
+                  }),
                 )
               }
             />
           </div>
           <div
             className={cn(
-              "relative col-span-full lg:col-span-2 flex flex-col md:flex-row gap-2 h-auto rounded-[8px] border-2 border-primary",
+              "relative col-span-full flex h-auto flex-col gap-2 rounded-[8px] border-2 border-primary md:flex-row lg:col-span-2",
               (errors?.desiredDepartureDate || errors?.desiredReturnDate) &&
-                "border-destructive"
+                "border-destructive",
             )}
           >
             <InputLabel
@@ -303,8 +303,8 @@ function SearchFlightsForm() {
             />
             <div
               className={cn(
-                "h-auto min-h-[100px] max-h-[100px] max-w-full md:w-1/2 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-b-2 md:border-r-2 border-primary",
-                errors?.desiredDepartureDate && "border-destructive"
+                "h-auto max-h-[100px] min-h-[100px] max-w-full grow rounded-none border-0 border-primary max-md:mx-1 max-md:border-b-2 md:my-1 md:w-1/2 md:border-r-2",
+                errors?.desiredDepartureDate && "border-destructive",
               )}
             >
               <DatePicker
@@ -312,7 +312,7 @@ function SearchFlightsForm() {
                 disabledDates={[
                   {
                     before: new Date(
-                      flightFormData.availableFlightDateRange.from
+                      flightFormData.availableFlightDateRange.from,
                     ),
                     after: new Date(flightFormData.availableFlightDateRange.to),
                   },
@@ -327,7 +327,7 @@ function SearchFlightsForm() {
                       //     new Date(flightFormData.desiredReturnDate) && {
                       //     desiredReturnDate: date.toISOString(),
                       //   }),
-                    })
+                    }),
                   );
                 }}
                 getPopoverOpenState={setIsDatePickerOpen}
@@ -335,8 +335,8 @@ function SearchFlightsForm() {
             </div>
             <div
               className={cn(
-                "h-auto min-h-[100px] max-h-[100px] max-w-full md:w-1/2 grow border-0 rounded-none max-md:mx-1 md:my-1 max-md:border-t-2 md:border-l-2 border-primary",
-                errors?.desiredReturnDate && "border-destructive"
+                "h-auto max-h-[100px] min-h-[100px] max-w-full grow rounded-none border-0 border-primary max-md:mx-1 max-md:border-t-2 md:my-1 md:w-1/2 md:border-l-2",
+                errors?.desiredReturnDate && "border-destructive",
               )}
             >
               <DatePicker
@@ -366,7 +366,7 @@ function SearchFlightsForm() {
                         ...flightFormData,
                         tripType: "one_way",
                         desiredReturnDate: "",
-                      })
+                      }),
                     );
                   }
                 }}
@@ -377,8 +377,8 @@ function SearchFlightsForm() {
 
           <div
             className={cn(
-              "relative col-span-4 xl:col-span-1 flex h-auto items-center gap-[4px] rounded-[8px] border-2 border-primary",
-              (errors?.passengers || errors?.class) && "border-destructive"
+              "relative col-span-4 flex h-auto items-center gap-[4px] rounded-[8px] border-2 border-primary xl:col-span-1",
+              (errors?.passengers || errors?.class) && "border-destructive",
             )}
           >
             <InputLabel
@@ -392,7 +392,7 @@ function SearchFlightsForm() {
             <Popover>
               <PopoverTrigger
                 asChild
-                className="min-h-[100px] max-h-[100px] w-full justify-start rounded-lg p-4"
+                className="max-h-[100px] min-h-[100px] w-full justify-start rounded-lg p-4"
               >
                 <div>
                   <div className={"text-xl font-bold"}>
@@ -407,14 +407,14 @@ function SearchFlightsForm() {
                   </div>
                 </div>
               </PopoverTrigger>
-              <PopoverContent className="w-[300px] sm:w-[400px] p-3">
+              <PopoverContent className="w-[300px] p-3 sm:w-[400px]">
                 <Card
                   className={cn(
-                    "p-3 border-primary border-2 mb-3",
-                    errors?.class && "border-destructive"
+                    "mb-3 border-2 border-primary p-3",
+                    errors?.class && "border-destructive",
                   )}
                 >
-                  <CardHeader className="p-0 mb-4">
+                  <CardHeader className="mb-4 p-0">
                     <CardTitle>Class</CardTitle>
                   </CardHeader>
                   <CardContent className="p-0">
@@ -425,7 +425,7 @@ function SearchFlightsForm() {
                           setFlightForm({
                             ...flightFormData,
                             class: value,
-                          })
+                          }),
                         );
                       }}
                     />
@@ -434,30 +434,30 @@ function SearchFlightsForm() {
                 </Card>
                 <Card
                   className={cn(
-                    "p-3 border-primary border-2",
-                    errors?.passengers && "border-destructive"
+                    "border-2 border-primary p-3",
+                    errors?.passengers && "border-destructive",
                   )}
                 >
-                  <CardHeader className="p-0 mb-4">
+                  <CardHeader className="mb-4 p-0">
                     <CardTitle>Travelers</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-0 flex-col flex gap-4">
+                  <CardContent className="flex flex-col gap-4 p-0">
                     <TravelersCounts
                       travelerType={"Adults"}
                       defaultCount={flightFormData.passengers.adults}
                       description={"12 years and older"}
                       minCount={1}
                       maxCount={9}
-                      getTravelersCount={(count) =>
+                      getTravelersCount={(count) => {
                         dispatch(
                           setFlightForm({
                             passengers: {
                               ...flightFormData.passengers,
                               adults: count,
                             },
-                          })
-                        )
-                      }
+                          }),
+                        );
+                      }}
                     />
                     <TravelersCounts
                       travelerType={"Children"}
@@ -472,7 +472,7 @@ function SearchFlightsForm() {
                               ...flightFormData.passengers,
                               children: count,
                             },
-                          })
+                          }),
                         )
                       }
                     />
@@ -489,7 +489,7 @@ function SearchFlightsForm() {
                               ...flightFormData.passengers,
                               infants: count,
                             },
-                          })
+                          }),
                         )
                       }
                     />
@@ -522,8 +522,8 @@ function InputLabel({ label, className }) {
   return (
     <span
       className={cn(
-        "absolute -top-[10px] left-[10px] z-10 inline-block bg-white px-[4px] leading-none text-sm font-medium rounded-md",
-        className
+        "absolute -top-[10px] left-[10px] z-10 inline-block rounded-md bg-white px-[4px] text-sm font-medium leading-none",
+        className,
       )}
     >
       {label}
@@ -539,7 +539,7 @@ function TravelersCounts({
   getTravelersCount = () => {},
 }) {
   return (
-    <div className={"flex justify-between items-center flex-wrap"}>
+    <div className={"flex flex-wrap items-center justify-between"}>
       <div>
         <p className={"text-sm font-bold"}>{travelerType}</p>
         <p className={"text-xs"}>{description}</p>
