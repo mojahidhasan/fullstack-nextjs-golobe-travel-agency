@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "cross-env TZ=UTC next dev",
     "build": "next build",
     "start": "next start",
     "generateAndUploadFlightsDB": "vitest --testNamePattern generateAndUploadFlightsDB --run",
@@ -72,11 +72,14 @@
     "@testing-library/jest-dom": "^6.6.2",
     "@testing-library/react": "^16.0.1",
     "@vitejs/plugin-react": "^4.3.3",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.4.5",
     "eslint": "^8",
     "eslint-config-next": "^14.2.3",
     "jsdom": "^25.0.1",
     "postcss": "^8",
+    "prettier": "^3.5.3",
+    "prettier-plugin-tailwindcss": "^0.6.11",
     "tailwindcss": "^3.4.1",
     "vitest": "^2.1.3"
   }
