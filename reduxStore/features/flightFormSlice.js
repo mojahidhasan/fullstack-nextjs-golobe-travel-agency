@@ -1,13 +1,19 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { addYears } from "date-fns";
 
-const d = new Date();
+const d = new Date().toLocaleString("en-CA", {
+  timeZone: "UTC",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+
 export const defaultFlightFormValue = {
   // main props
   from: {},
   to: {},
   tripType: "one_way",
-  desiredDepartureDate: d.toISOString(),
+  desiredDepartureDate: d,
   desiredReturnDate: "",
   passengers: {
     adults: 1,
@@ -17,7 +23,7 @@ export const defaultFlightFormValue = {
   class: "economy",
   // helper props
   availableFlightDateRange: {
-    from: d.getTime(),
+    from: Date.parse(d),
     to: addYears(d, 100).getTime(),
   },
   filters: {
@@ -36,13 +42,13 @@ const flightFormSlice = createSlice({
   },
   reducers: {
     setFlightForm(state, action) {
-      const newValue = { ...state.value, ...action.payload };
-      const passengerObj = newValue.passengers;
-      const totalPassengers = Object.values(passengerObj).reduce(
-        (acc, value) => +acc + +value,
-        0
-      );
-      if (action.payload.passengers) {
+      let newValue = { ...state.value, ...action.payload };
+      if (action.payload?.passengers) {
+        const passengerObj = newValue?.passengers;
+        const totalPassengers = Object.values(passengerObj).reduce(
+          (acc, value) => +acc + +value,
+          0,
+        );
         if (+totalPassengers > 9) {
           newValue.errors = {
             ...state.value.errors,
@@ -54,7 +60,8 @@ const flightFormSlice = createSlice({
             passengers: "Infants cannot be more than adults",
           };
         } else {
-          delete newValue.errors.passengers;
+          const { passengers, ...restErrors } = newValue.errors || {};
+          newValue.errors = restErrors;
         }
       }
       state.value = newValue;
