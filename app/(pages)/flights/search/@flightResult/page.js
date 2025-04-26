@@ -137,13 +137,15 @@ async function FlightResultPage({ searchParams }) {
           ]}
         />
       )}
-      <Jumper id="flightResult" />
-      <SessionTimeoutCountdown
-        redirectionLink="/flights/search"
-        className={"mb-2 rounded-md"}
-        jumpToId={"flightFormJump"}
-      />
-      <FlightResult flightResults={flightResults} metaData={metaData} />
+      <div>
+        <Jumper id="flightResult" />
+        <SessionTimeoutCountdown
+          redirectionLink="/flights/search"
+          className={"mb-2 rounded-md"}
+          jumpToId={"flightFormJump"}
+        />
+        <FlightResult flightResults={flightResults} metaData={metaData} />
+      </div>
     </>
   );
 }
