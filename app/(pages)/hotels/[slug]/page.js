@@ -20,12 +20,12 @@ export default async function HotelDetailsPage({ params }) {
   const reviews = await getManyDocs(
     "HotelReview",
     { hotelId: hotelDetails._id, slug },
-    [hotelDetails._id + "_review", params.slug + "_review", "hotelReviews"]
+    [hotelDetails._id + "_review", params.slug + "_review", "hotelReviews"],
   );
 
   const totalRatingsSum = reviews.reduce(
     (acc, review) => acc + +review.rating,
-    0
+    0,
   );
   const totalReviewsCount = reviews.length;
 
@@ -53,9 +53,9 @@ export default async function HotelDetailsPage({ params }) {
   }
 
   return (
-    <main className={"mx-auto mt-10 mb-[90px] w-[90%]"}>
+    <main className={"mx-auto mb-[90px] mt-10 w-[90%]"}>
       <BreadcrumbUI />
-      <div className="my-[40px] flex gap-5 justify-between">
+      <div className="my-[40px] flex justify-between gap-5">
         <div>
           <div className="mb-[16px] flex items-center gap-[16px]">
             <h1 className="text-[1.5rem] font-bold text-secondary">
@@ -88,7 +88,7 @@ export default async function HotelDetailsPage({ params }) {
         </div>
         <div>
           <p className="mb-[16px] text-right text-[0.875rem] font-bold text-tertiary">
-            <span className="text-[2rem]">${cheapestRoomPrice.toFixed(2)}</span>
+            <span className="text-[2rem]">${cheapestRoomPrice}</span>
             /night
           </p>
           <div className="flex gap-[16px]">
@@ -122,7 +122,7 @@ export default async function HotelDetailsPage({ params }) {
       <div className="relative mb-[40px] grid grid-cols-4 grid-rows-2 gap-[8px] overflow-hidden rounded-[12px]">
         <Image
           height={300}
-          className="col-span-2 w-full row-span-2 h-full object-cover object-center"
+          className="col-span-2 row-span-2 h-full w-full object-cover object-center"
           src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
           alt=""
           width={302}
@@ -294,10 +294,8 @@ export default async function HotelDetailsPage({ params }) {
       </div>
       <Separator className="my-[64px]" />
       <div>
-        <div className="mb-[32px] flex items-center justify-between ">
-          <h2 className="font-tradeGothic text-1.25rem font-bold">
-            Location/Map
-          </h2>
+        <div className="mb-[32px] flex items-center justify-between">
+          <h2 className="text-1.25rem font-bold">Location/Map</h2>
           <Button className="text-right">View on map</Button>
         </div>
         <div>
@@ -312,7 +310,7 @@ export default async function HotelDetailsPage({ params }) {
             {hotelDetails.amenities.map((amenity) => (
               <li
                 key={amenity}
-                className="flex font-semibold items-center gap-[8px]"
+                className="flex items-center gap-[8px] font-semibold"
               >
                 {amenity}
               </li>

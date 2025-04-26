@@ -22,7 +22,7 @@ export function WriteReview({
     null,
     reviewKeys,
     isAlreadyReviewed,
-    flightOrHotel
+    flightOrHotel,
   );
   const [state, dispatch] = useFormState(extendedWriteReviewAction, undefined);
   const reviewInput = useRef();
@@ -61,7 +61,7 @@ export function WriteReview({
   return (
     <>
       <Button
-        className={"inline-block opacity-100 float-right"}
+        className={"float-right inline-block opacity-100"}
         onClick={(e) => handleClick("reviewOpen", e)}
         ref={reviewBtn}
       >
@@ -74,10 +74,10 @@ export function WriteReview({
       <div
         ref={reviewInput}
         className={
-          "transition-all transition-[duration:200ms] w-full hidden opacity-0"
+          "transition-[duration:200ms] hidden w-full rounded-lg border p-3 opacity-0 transition-all"
         }
       >
-        <div className={"flex justify-between my-4"}>
+        <div className={"my-4 flex justify-between"}>
           <h3 className={"font-bold"}>
             {isLoggedIn
               ? isAlreadyReviewed
@@ -87,7 +87,7 @@ export function WriteReview({
           </h3>
           <X
             className={
-              "transition-all hover:border-2 cursor-pointer border-black rounded-sm"
+              "cursor-pointer rounded-sm border-black transition-all hover:border-2"
             }
             onClick={(e) => handleClick("reviewClose", e)}
           />
@@ -101,7 +101,7 @@ export function WriteReview({
               state?.success === false &&
               state?.message && <ErrorMessage message={state?.message} />}
             <form id={"review-form"} action={dispatch}>
-              <div className={"flex mb-5 flex-col gap-4"}>
+              <div className={"mb-5 flex flex-col gap-4"}>
                 <RatingStar
                   fill={"hsl(120, 33%, 10%)"}
                   error={state?.error && state?.error.rating}
@@ -122,7 +122,7 @@ export function WriteReview({
             </form>
           </>
         ) : (
-          <LoginForm />
+          <LoginForm className={"p-0 shadow-none"} />
         )}
       </div>
     </>

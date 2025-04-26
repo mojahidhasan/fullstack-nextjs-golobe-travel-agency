@@ -8,7 +8,7 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "../ui/use-toast";
 /**
  *
- * @param {{keys: object, liked: boolean, flightsOrHotels: string, className: string}} params keys object should contain data that you want to save or delete from db during like and unlike action
+ * @param {{keys: object, isBookmarked: boolean, flightsOrHotels: string, className: string}} params keys object should contain data that you want to save or delete from db during like and unlike action
  * @returns
  */
 export const LikeButton = ({
@@ -52,7 +52,7 @@ export const LikeButton = ({
     <>
       {likeLoading ? (
         <Button className={cn(className)} variant={"outline"}>
-          <Loader2 className="animate-spin w-6 h-6" />
+          <Loader2 className="h-6 w-6 animate-spin" />
         </Button>
       ) : (
         <Button

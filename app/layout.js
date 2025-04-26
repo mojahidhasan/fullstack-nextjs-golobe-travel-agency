@@ -11,7 +11,7 @@ import mongoose from "mongoose";
 import dynamic from "next/dynamic";
 
 import openGraph from "./opengraph-image.jpg";
-import SetCookies from "./_setCookies";
+import SetNecessaryCookies from "./_setCookies";
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",
@@ -66,7 +66,7 @@ export default async function RootLayout({ children }) {
     try {
       await mongoose.connect(process.env.MONGODB_URI);
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
     }
   }
 
@@ -74,14 +74,14 @@ export default async function RootLayout({ children }) {
     () => import("@/app/_notification").then((mod) => mod.Notification),
     {
       ssr: false,
-    }
+    },
   );
   return (
     <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
       <body className={monse.className}>
         <StoreProvider>
           <SessionProvider>
-            <div className="max-w-[1440px] mx-auto">
+            <div className="mx-auto max-w-[1440px]">
               <Notification />
               {children}
             </div>
@@ -89,7 +89,7 @@ export default async function RootLayout({ children }) {
         </StoreProvider>
         <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
         <Toaster className="bg-secondary" />
-        <SetCookies />
+        <SetNecessaryCookies />
       </body>
     </html>
   );

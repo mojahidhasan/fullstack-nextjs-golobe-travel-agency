@@ -3,14 +3,15 @@ import { Button } from "@/components/ui/button";
 import routes from "@/data/routes.json";
 export default function NotFound() {
   return (
-    <div className="flex h-screen w-full flex-col items-center justify-center gap-5 text-3xl sm:text-5xl font-black">
-      <span className={"text-center px-6 leading-normal"}>
-        The Flight you are looking for does not exist or got expired
+    <div className="flex h-screen w-full flex-col items-center justify-center gap-5 text-3xl font-black sm:text-5xl">
+      <span className={"px-6 text-center leading-normal"}>
+        {" "}
+        Flight not found
       </span>
       <Button
         asChild
         variant={"outline"}
-        className={"max-sm:h-[40px] hover:bg-primary hover:text-white"}
+        className={"hover:bg-primary hover:text-white max-sm:h-[40px]"}
       >
         <Link className={"max-sm:text-xs"} href={routes.flights.path}>
           {routes.flights.title}
