@@ -71,8 +71,8 @@ export function Input({
             type === "tel" ? (
               <div
                 className={cn(
-                  "border-2 h-10 w-full lg:h-14 rounded-md flex border-black",
-                  error && "border-destructive"
+                  "flex h-10 w-full rounded-md border-2 border-black lg:h-14",
+                  error && "border-destructive",
                 )}
               >
                 <input
@@ -103,7 +103,7 @@ export function Input({
                 }}
                 className={cn(
                   "border-2 border-black",
-                  error && "border-destructive"
+                  error && "border-destructive",
                 )}
                 type={inputType}
                 onChange={onChange}
@@ -117,18 +117,18 @@ export function Input({
               }}
               // wrap
               className={cn(
-                "border-2 p-2 border-black w-full min-h-[100px] rounded-sm",
-                error && "border-destructive"
+                "min-h-[100px] w-full rounded-sm border-2 border-black p-2",
+                error && "border-destructive",
               )}
               {...props}
             ></textarea>
           )}
-          <div className="flex gap-[6px] w-auto absolute right-3 top-1/2 -translate-y-1/2">
+          <div className="absolute right-3 top-1/2 flex w-auto -translate-y-1/2 gap-[6px]">
             {type === "password" && (
               <button
                 type="button"
                 onClick={toggleEye}
-                className="w-auto h-auto"
+                className="h-auto w-auto"
               >
                 <Image
                   width={16}
@@ -143,7 +143,7 @@ export function Input({
             )}
           </div>
         </div>
-        <p className="pl-4 mt-1 text-destructive">{error}</p>
+        <p className="mt-1 pl-4 text-destructive">{error}</p>
       </Label>
     </>
   );
