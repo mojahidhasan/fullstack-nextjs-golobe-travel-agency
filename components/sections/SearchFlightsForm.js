@@ -318,10 +318,16 @@ function SearchFlightsForm() {
                   },
                 ]}
                 getDate={(date) => {
+                  const d = date.toLocaleString("en-CA", {
+                    year: "numeric",
+                    month: "2-digit",
+                    day: "2-digit",
+                  });
+
                   dispatch(
                     setFlightForm({
                       ...flightFormData,
-                      desiredDepartureDate: date.toISOString(),
+                      desiredDepartureDate: d,
                       // ...(flightFormData.tripType === "round_trip" &&
                       //   new Date(date) >
                       //     new Date(flightFormData.desiredReturnDate) && {
@@ -346,19 +352,24 @@ function SearchFlightsForm() {
                   {
                     before: new Date(
                       flightFormData.desiredDepartureDate ||
-                        flightFormData.availableFlightDateRange.from
+                        flightFormData.availableFlightDateRange.from,
                     ),
                     after: new Date(flightFormData.availableFlightDateRange.to),
                   },
                 ]}
                 getDate={(date) => {
                   if (isDateObjValid(date)) {
+                    const d = date.toLocaleString("en-CA", {
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    });
                     dispatch(
                       setFlightForm({
                         ...flightFormData,
                         // tripType: "round_trip",
-                        desiredReturnDate: "", //date.toISOString(),
-                      })
+                        desiredReturnDate: "", //d,
+                      }),
                     );
                   } else {
                     dispatch(
