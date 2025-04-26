@@ -1,6 +1,7 @@
-import { FlightScheduleCard } from "@/components/FlightScheduleCard";
-import { minutesToHMFormat } from "@/lib/utils";
-export function FlightsSchedule({ flight, metaData }) {
+import { FlightDetailsCard } from "@/components/FlightScheduleCard";
+import { cn, minutesToHMFormat } from "@/lib/utils";
+
+export function FlightDetails({ flight, metaData, className }) {
   let flightSegments = [];
 
   let currentDeparture = flight.departure,
@@ -48,18 +49,30 @@ export function FlightsSchedule({ flight, metaData }) {
     });
   }
   return (
-    <section className="mb-[120px] p-0 text-secondary flex flex-col gap-3">
-      {
-        flightSegments.map((stopover, index) => {
-          return <>
-            <FlightScheduleCard key={ index } flightScheduleDetails={ { ...stopover, price: flight.price, timezone: metaData.timezone } } />
-            { stopover.layover && <div className={ "text-center bg-tertiary rounded-md text-white font-bold w-fit px-5 py-1 self-center" }>
-              Layover { minutesToHMFormat(stopover.layover) }
-            </div> }
-          </>;
-        }
-        )
-      }
+    <section
+      className={cn("flex flex-col gap-3 p-0 text-secondary", className)}
+    >
+      {flightSegments.map((stopover, index) => (
+        <div key={index} className="flex flex-col gap-3">
+          <FlightDetailsCard
+            flight={flight}
+            flightScheduleDetails={{
+              ...stopover,
+              price: flight.price,
+              timeZone: metaData.timeZone,
+            }}
+          />
+          {stopover.layover && (
+            <div
+              className={
+                "w-fit self-center rounded-md bg-tertiary px-5 py-1 text-center font-bold text-white"
+              }
+            >
+              Layover {minutesToHMFormat(stopover.layover)}
+            </div>
+          )}
+        </div>
+      ))}
     </section>
   );
 }
