@@ -30,6 +30,9 @@ import swap from "@/public/icons/swap.svg";
 import Counter from "../local-ui/Counter";
 import { ErrorMessage } from "../local-ui/errorMessage";
 import { useEffect, useState } from "react";
+import { usePathname, useSearchParams } from "next/navigation";
+import { getCookiesAction, validateSearchStateAction } from "@/lib/actions";
+import Jumper, { jumpTo } from "../local-ui/Jumper";
 
 function SearchFlightsForm() {
   const classPlaceholders = {
@@ -139,6 +142,7 @@ function SearchFlightsForm() {
 
   return (
     <>
+      <Jumper id={"flightFormJump"} />
       <form id="flightform" method={"get"} onSubmit={handleSubmit}>
         <div className="my-[20px] grid grid-cols-4 xl:grid-cols-5 gap-4">
           <div className={"col-span-full"}>
