@@ -6,18 +6,36 @@ import Image from "next/image";
 import error_icon from "@/public/icons/error.svg";
 import { cn } from "@/lib/utils";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import eye from "@/public/icons/eye.svg";
 import eyeOff from "@/public/icons/eye-closed.svg";
-import { SelectCountry } from "../pages/profile/ui/SelectCountry";
+import { SelectDialCode } from "../SelectDialCode";
 export function Input({
   label = "Label",
   error = null,
   className,
   type = "text",
+  onChange = () => {},
+  defaultPhoneValue,
   ...props
 }) {
   const [inputType, setInputType] = useState(type);
+  const [phoneData, setPhoneData] = useState({
+    number: "",
+    dialCode: "",
+  });
+
+  useEffect(() => {
+    if (type === "tel") {
+      const value = defaultPhoneValue;
+
+      if (value) {
+        const parsedValue = JSON.parse(value);
+        setPhoneData(parsedValue);
+      }
+    }
+  }, [defaultPhoneValue, type]);
+
   function toggleEye() {
     if (inputType === "password") {
       setInputType("text");
@@ -25,6 +43,19 @@ export function Input({
       setInputType("password");
     }
   }
+
+  const handlePhoneChange = (e) => {
+    const newPhone = e.target.value;
+    const newPhoneData = { ...phoneData, number: newPhone };
+    setPhoneData(newPhoneData);
+    onChange({ target: { value: JSON.stringify(newPhoneData) } });
+  };
+
+  const handleDialCode = (dialCode) => {
+    const newPhoneData = { ...phoneData, dialCode: dialCode.value };
+    setPhoneData(newPhoneData);
+    onChange({ target: { value: JSON.stringify(newPhoneData) } });
+  };
 
   return (
     <>
@@ -41,14 +72,25 @@ export function Input({
                   error && "border-destructive"
                 )}
               >
-                <SelectCountry name={"callingCode"} />
+                <input
+                  type="hidden"
+                  value={JSON.stringify(phoneData)}
+                  {...props}
+                />
+                <SelectDialCode
+                  name={"callingCode"}
+                  getDialCode={handleDialCode}
+                  value={phoneData?.dialCode}
+                  className={"border-none bg-slate-300"}
+                />
                 <_Input
                   style={{
                     outline: "none",
                   }}
-                  type={inputType}
-                  className="h-full bg-inherit lg:h-full border-none"
-                  {...props}
+                  type="tel"
+                  defaultValue={phoneData?.number}
+                  className="h-full border-none bg-inherit lg:h-full"
+                  onChange={handlePhoneChange}
                 />
               </div>
             ) : (
@@ -61,6 +103,7 @@ export function Input({
                   error && "border-destructive"
                 )}
                 type={inputType}
+                onChange={onChange}
                 {...props}
               />
             )
