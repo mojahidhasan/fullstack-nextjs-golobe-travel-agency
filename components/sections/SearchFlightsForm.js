@@ -15,7 +15,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useSelector, useDispatch } from "react-redux";
-import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
+import {
+  setFlightForm,
+  defaultFlightFormValue,
+} from "@/reduxStore/features/flightFormSlice";
 import {
   isDateObjValid,
   passengerObjectToStr,
@@ -42,9 +45,38 @@ function SearchFlightsForm() {
     first: "First class",
   };
   const dispatch = useDispatch();
+  const sp = useSearchParams();
+  const pathname = usePathname();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const flightFormData = useSelector((state) => state.flightForm.value);
   const errors = flightFormData.errors;
+
+  useEffect(() => {
+    async function searchState() {
+      let searchState = await getSearchState();
+      if (searchState) {
+        dispatch(setFlightForm({ ...defaultFlightFormValue, ...searchState }));
+      }
+    }
+    const validateFlightForm = validateFlightSearchParams(
+      Object.fromEntries(sp),
+    );
+    if (validateFlightForm.success == false && pathname === "/flights/search") {
+      return;
+      // because this part is handled in flight/search page
+    }
+    if (validateFlightForm.success === true) {
+      const parse = parseFlightSearchParams(validateFlightForm.data);
+      dispatch(setFlightForm({ ...defaultFlightFormValue, ...parse }));
+    } else {
+      searchState();
+    }
+    setTimeout(() => {
+      jumpTo("flightResult");
+    }, 500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     async function getAvailableFlightDateRange() {
       const getCachedFlight = sessionStorage.getItem("flightDateRange");
@@ -60,7 +92,7 @@ function SearchFlightsForm() {
         {
           method: "GET",
           next: { revalidate: 60, tags: ["flightDateRange"] },
-        }
+        },
       );
       const data = await res.json();
       if (data.success === true) {
@@ -71,14 +103,13 @@ function SearchFlightsForm() {
             from,
             to,
             expireAt: Date.now() + 60 * 1000,
-          })
+          }),
         );
         dispatch(setFlightForm({ availableFlightDateRange: { from, to } }));
       }
     }
-    if (isDatePickerOpen === true) {
-      getAvailableFlightDateRange();
-    }
+    getAvailableFlightDateRange();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDatePickerOpen]);
 
@@ -111,8 +142,9 @@ function SearchFlightsForm() {
     window.location.href = "/flights/search?" + searchParams.toString();
   }
 
-  function getSearchState() {
-    const searchState = sessionStorage.getItem("searchState");
+  async function getSearchState() {
+    const searchState =
+      (await getCookiesAction(["searchState"]))[0]?.value || "{}";
     if (searchState) {
       return parseFlightSearchParams(searchState);
     }
