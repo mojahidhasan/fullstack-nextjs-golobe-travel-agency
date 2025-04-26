@@ -35,11 +35,11 @@ export function HotelResultCard({
           alt={""}
         />
       </div>
-      <div className="max-h-full w-full p-3 flex flex-col">
+      <div className="flex max-h-full w-full flex-col p-3">
         <div className="flex flex-wrap">
           <div className="flex grow flex-col gap-2">
             <div>
-              <p className="font-bold text-2xl">{name}</p>
+              <p className="text-2xl font-bold">{name}</p>
               <p>{address}</p>
             </div>
 
@@ -48,43 +48,43 @@ export function HotelResultCard({
                 return (
                   <p
                     key={amenity}
-                    className="text-xs bg-disabled font-semibold px-2 py-1 rounded-xl"
+                    className="rounded-xl bg-disabled px-2 py-1 text-xs font-semibold"
                   >
                     {amenity}
                   </p>
                 );
               })}
-              <p className="text-xs text-tertiary font-bold px-2 py-1 rounded-xl">
+              <p className="rounded-xl px-2 py-1 text-xs font-bold text-tertiary">
                 + more
               </p>
             </div>
             <div className="flex items-center justify-between">
-              <div className="flex mt-2 items-center gap-[4px]">
+              <div className="mt-2 flex items-center gap-[4px]">
                 <RatingShow rating={rating} />
                 <span className="font-bold">{ratingScale}</span>{" "}
                 <span>{totalReviews} reviews</span>
               </div>
             </div>
           </div>
-          <div className={"flex grow flex-col gap-2 justify-between"}>
+          <div className={"flex grow flex-col justify-between gap-2"}>
             <div>
               <div>
                 {discount > 0 ? (
-                  <p className="flex gap-1 items-center justify-end">
+                  <p className="flex items-center justify-end gap-1">
                     <span className="text-right text-[1rem] font-bold line-through">
-                      ${(+base + +tax + +serviceFee).toFixed(2)}
+                      ${+base + +tax + +serviceFee}
                     </span>
                     <span
                       className={
-                        "text-right text-[1.5rem] text-tertiary font-bold"
+                        "text-right text-[1.5rem] font-bold text-tertiary"
                       }
                     >
-                      ${(+base + +tax + +serviceFee - +discount).toFixed(2)}
+                      ${+base + +tax + +serviceFee - +discount}
                     </span>
                   </p>
                 ) : (
-                  <p className="text-right text-[1.5rem] text-tertiary font-bold">
-                    ${(+base + +tax + +serviceFee).toFixed(2)}
+                  <p className="text-right text-[1.5rem] font-bold text-tertiary">
+                    ${+base + +tax + +serviceFee}
                   </p>
                 )}
                 <p className="text-right text-[0.875rem] text-secondary/75">
@@ -95,10 +95,7 @@ export function HotelResultCard({
                 + tax and service fee included
               </div>
             </div>
-            <div
-              className="text-right text-xs font-semibold rounded-xl text-destructive 
-            "
-            >
+            <div className="rounded-xl text-right text-xs font-semibold text-destructive">
               {availableRooms} rooms available
             </div>
           </div>
