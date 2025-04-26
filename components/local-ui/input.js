@@ -60,10 +60,13 @@ export function Input({
   return (
     <>
       <Label className={cn("relative block h-auto", className)}>
-        <span className="absolute z-10 text-sm leading-4 font-normal -top-[8px] left-5 bg-background px-1">
-          {label}
-        </span>
-        <div className="h-auto relative">
+        <p className="absolute -top-[8px] left-5 z-10 bg-background px-1 text-sm font-normal leading-4">
+          <span>{label}</span>
+          {props.required === true && (
+            <span className="text-destructive"> *</span>
+          )}
+        </p>
+        <div className="relative h-auto">
           {type !== "textarea" ? (
             type === "tel" ? (
               <div
