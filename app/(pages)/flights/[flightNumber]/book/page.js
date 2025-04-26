@@ -1,75 +1,49 @@
 import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
-import { FareCard } from "@/components/FareCard";
-import { FlightScheduleCard } from "@/components/FlightScheduleCard";
 import { AuthenticationCard } from "@/components/AuthenticationCard";
-import { ChoosePaymentCard } from "@/components/pages/flights.book/ChoosePaymentCard";
+import { isLoggedIn } from "@/lib/auth";
+import { objDeepCompare, parseFlightSearchParams } from "@/lib/utils";
 
-import { Label } from "@/components/ui/label";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-
-import Link from "next/link";
-
-import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
-import { auth } from "@/lib/auth";
-import { capitalize } from "@/lib/utils";
-import { FLIGHT_CLASS_PLACEHOLDERS } from "@/lib/constants";
 import { cookies } from "next/headers";
-import { formatInTimeZone } from "date-fns-tz";
-import { FlightsSchedule } from "@/components/pages/flights.[flightId]/sections/FlightsSchedule";
 import { notFound } from "next/navigation";
+import { getFlight } from "@/lib/controllers/flights";
+import { getUserDetails } from "@/lib/controllers/user";
+import SessionTimeoutCountdown from "@/components/local-ui/SessionTimeoutCountdown";
+import { getManyDocs } from "@/lib/db/getOperationDB";
+import BookingSteps from "@/components/pages/flights.book/BookingSteps";
 export default async function FlightBookPage({ params }) {
-  const flightClass = cookies().get("fc")?.value || "economy";
-  const timezone = cookies().get("timezone")?.value || "UTC";
+  const loggedIn = await isLoggedIn();
+  const searchStateCookie = cookies().get("searchState")?.value || "{}";
+  const parsedSearchState = parseFlightSearchParams(searchStateCookie);
+  const timeZone = cookies().get("timeZone")?.value || "UTC";
+  const flightClass = cookies().get("flightClass")?.value || "economy";
+  const metaData = { timeZone, flightClass, isBookmarked: false };
+  const airlinePrices = await getManyDocs("AirlineFlightPrice", {}, [
+    "airlinePrices",
+  ]);
 
-  const flight = await getOneDoc(
-    "Flight",
+  const flight = await getFlight(
     {
-      flightNumber: params.flightId,
+      flightNumber: params.flightNumber,
+      flightClass: parsedSearchState?.flightClass || flightClass,
+      passengersObj: parsedSearchState?.passengers,
     },
-    [params.flightId, "flights"]
+    airlinePrices,
   );
 
   if (Object.keys(flight).length === 0) {
     notFound();
   }
 
-  const price = flight.price[flightClass];
-
-  const flightReviews = await getManyDocs(
-    "FlightReview",
-    {
-      airlineId: flight.stopovers[0].airlineId._id,
-      departureAirportId: flight.originAirportId._id,
-      arrivalAirportId: flight.destinationAirportId._id,
-      airplaneModelName: flight.stopovers[0].airplaneId.model,
-    },
-    [params.flightId + "_review", flight._id + "_review", "flightReviews"]
-  );
-  const isLoggedIn = !!(await auth())?.user;
-
-  const flightInfo = {
-    flightNumber: flight.flightNumber,
-    airplaneName: flight.stopovers[0].airplaneId.model,
-    price,
-    totalPrice:
-      Object.values(price).reduce((prev, curr) => +prev + +curr, 0) -
-      +price.discount,
-    rating: flightReviews.length
-      ? (
-          flightReviews.reduce((prev, curr) => +prev + +curr.rating, 0) /
-          flightReviews.length
-        ).toFixed(1)
-      : "N/A",
-    reviews: flightReviews.length,
-    imgSrc:
-      "https://images.unsplash.com/photo-1551882026-d2525cfc9656?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-  };
-
-  const halfPaymentChargingDate = formatInTimeZone(
-    flight.expireAt,
-    timezone,
-    "MMM d, yyyy"
-  );
+  if (loggedIn) {
+    const userDetails = await getUserDetails(0);
+    metaData.isBookmarked = userDetails.flights.bookmarked.some((el) => {
+      return objDeepCompare(el, {
+        flightId: flight._id,
+        flightNumber: flight.flightNumber,
+        flightClass: metaData.flightClass,
+      });
+    });
+  }
 
   return (
     <>
