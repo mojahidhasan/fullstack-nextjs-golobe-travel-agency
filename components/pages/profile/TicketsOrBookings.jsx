@@ -9,7 +9,7 @@ import emiratesLogo from "@/public/images/ek.svg";
 import { formatInTimeZone } from "date-fns-tz";
 import { cookies } from "next/headers";
 export function TicketsOrBookings() {
-  const timezone = cookies().get("timezone").value;
+  const timeZone = cookies().get("timeZone").value;
   const ticketFlight = {
     id: 1,
     time: {
@@ -20,7 +20,7 @@ export function TicketsOrBookings() {
       flight: "Newark (EWR)",
       landing: "Newark (EWR)",
     },
-    date: formatInTimeZone(new Date(2023, 0, 30), timezone, "dd-MM-yy"),
+    date: formatInTimeZone(new Date(2023, 0, 30), timeZone, "dd-MM-yy"),
     flightTime: "Newark (EWR)",
     gate: "A12",
     seatNo: 128,
@@ -39,9 +39,7 @@ export function TicketsOrBookings() {
   return (
     <>
       <div className="flex items-center justify-between">
-        <h1 className="mb-[16px] text-[2rem] font-bold">
-          Tickets/Bookings
-        </h1>
+        <h1 className="mb-[16px] text-[2rem] font-bold">Tickets/Bookings</h1>
         <select className="h-min bg-transparent p-0 text-[0.875rem] font-semibold">
           <option value="upcoming">Upcoming</option>
           <option value="past">Past</option>
@@ -50,37 +48,37 @@ export function TicketsOrBookings() {
       </div>
       <div className="mb-[16px] flex items-center gap-[24px] rounded-[12px]">
         <Tabs defaultValue="flights" className="w-full">
-          <TabsList className="bg-white h-auto shadow-md xsm:flex-row flex-col mb-4 p-0 flex justify-start">
+          <TabsList className="mb-4 flex h-auto flex-col justify-start bg-white p-0 shadow-md xsm:flex-row">
             <TabsTrigger
               value="flights"
-              className="md:h-[60px] font-bold h-[48px] w-full grow py-5 gap-2"
+              className="h-[48px] w-full grow gap-2 py-5 font-bold md:h-[60px]"
             >
               <Image
-                width={ 24 }
-                height={ 24 }
-                src={ "/icons/airplane-filled.svg" }
+                width={24}
+                height={24}
+                src={"/icons/airplane-filled.svg"}
                 alt="airplane_icon"
               />
               <span>Flights</span>
             </TabsTrigger>
             <TabsTrigger
               value="stays"
-              className="md:h-[60px] font-bold h-[48px] w-full grow py-5 gap-2"
+              className="h-[48px] w-full grow gap-2 py-5 font-bold md:h-[60px]"
             >
               <Image
-                width={ 24 }
-                height={ 24 }
-                src={ "/icons/bed-filled.svg" }
+                width={24}
+                height={24}
+                src={"/icons/bed-filled.svg"}
                 alt="airplane_icon"
               />
               <span>Stays</span>
             </TabsTrigger>
           </TabsList>
           <TabsContent value="flights">
-            <FlightTicketDownloadCard ticketData={ ticketFlight } />
+            <FlightTicketDownloadCard ticketData={ticketFlight} />
           </TabsContent>
           <TabsContent value="stays">
-            <HotelTicketDownloadCard ticketData={ ticketHotel } />
+            <HotelTicketDownloadCard ticketData={ticketHotel} />
           </TabsContent>
         </Tabs>
       </div>
