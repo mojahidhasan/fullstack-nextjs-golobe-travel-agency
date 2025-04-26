@@ -45,11 +45,12 @@ export default async function FlightOrHotelReview({
   };
 
   return (
-    <div>
+    <div
+      className={cn("rounded-[12px] bg-white px-6 py-8 shadow-lg", className)}
+      {...props}
+    >
       <div className="mb-[32px]">
-        <h2 className="font-tradeGothic text-[1.25rem] font-bold inline-block">
-          Reviews
-        </h2>
+        <h2 className="inline-block text-2xl font-bold">Reviews</h2>
         <WriteReview
           userReviewObj={userReviewObj}
           isLoggedIn={isLoggedIn}
