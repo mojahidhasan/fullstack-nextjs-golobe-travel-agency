@@ -6,7 +6,8 @@ import { setFlightForm } from "@/reduxStore/features/flightFormSlice";
 export function SetFlightFormState({ obj }) {
   const dispatch = useDispatch();
   useEffect(() => {
-    if (Object.keys(obj).length > 0) dispatch(setFlightForm({ ...obj }));
+    if (Object.keys(obj).length > 0) dispatch(setFlightForm(obj));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [JSON.stringify(obj)]);
   return null;
 }
