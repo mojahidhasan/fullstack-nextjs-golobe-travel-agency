@@ -1,23 +1,60 @@
 import { FlightResult } from "@/components/pages/flights.search/sections/FlightResult";
-import { SetSessionStorage } from "@/components/helpers/setSessionStorage";
 import { getManyDocs } from "@/lib/db/getOperationDB";
-import { addMinutes, endOfDay, startOfDay } from "date-fns";
 import { cookies } from "next/headers";
-import { getSession } from "@/lib/auth";
 import validateFlightSearchParams from "@/lib/zodSchemas/flightSearchParams";
-import { updateOneDoc } from "@/lib/db/updateOperationDB";
-import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalculation";
-import { extractFlightPriceFromAirline } from "@/lib/helpers/flights/priceCalculations";
 import { getUserDetails } from "@/lib/controllers/user";
 import { getFlights } from "@/lib/controllers/flights";
-import { parseFlightSearchParams } from "@/lib/utils";
-import { SetFlightFormState } from "@/components/helpers/setFlightFromState";
-
+import {
+  airportStrToObject,
+  parseFlightSearchParams,
+  passengerStrToObject,
+} from "@/lib/utils";
+import { SetFlightFormState } from "@/components/helpers/SetFlightFromState";
+import SetCookies from "@/components/helpers/SetCookies";
+import SessionTimeoutCountdown from "@/components/local-ui/SessionTimeoutCountdown";
+import Jumper from "@/components/local-ui/Jumper";
+import { SetLocalStorage } from "@/components/helpers/SetLocalStorage";
+import { defaultFlightFormValue } from "@/reduxStore/features/flightFormSlice";
 async function FlightResultPage({ searchParams }) {
-  let flightResults = [];
+  if (Object.keys(searchParams).length === 0) {
+    return (
+      <>
+        <SetFlightFormState obj={defaultFlightFormValue} />
+        <div className="flex h-screen items-center justify-center text-center text-2xl font-bold">
+          Search for flights
+        </div>
+      </>
+    );
+  }
   const { success, errors, data } = validateFlightSearchParams(searchParams);
   if (success === false) {
-    return <SetFlightFormState obj={{ errors }} />;
+    const createValidSearchParams = (params, errors) => {
+      const validParams = {};
+
+      if (!errors.from) validParams.from = airportStrToObject(params.from);
+      if (!errors.to) validParams.to = airportStrToObject(params.to);
+      if (!errors.tripType) validParams.tripType = params.tripType;
+      if (!errors.desiredDepartureDate)
+        validParams.desiredDepartureDate = params.desiredDepartureDate;
+      if (!errors.desiredReturnDate)
+        validParams.desiredReturnDate = params.desiredReturnDate;
+      if (!errors.class) validParams.class = params.class;
+      const passengerRegex = /adults-\d+_children-\d+_infants-\d+/;
+      if (passengerRegex.test(params.passengers))
+        validParams.passengers = passengerStrToObject(params.passengers);
+
+      return validParams;
+    };
+
+    const validSearchParams = createValidSearchParams(searchParams, errors);
+    return (
+      <SetFlightFormState
+        obj={{
+          ...validSearchParams,
+          errors,
+        }}
+      />
+    );
   }
 
   const parsedSearchParams = parseFlightSearchParams(data);
