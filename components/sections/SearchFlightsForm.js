@@ -151,7 +151,11 @@ function SearchFlightsForm() {
                 message={
                   <ol>
                     {Object.entries(errors).map((err) => {
-                      return <li key={err[0]}>{err[1]}</li>;
+                      return (
+                        <li key={err[0]}>
+                          <span className="font-bold">{err[0]}</span>: {err[1]}
+                        </li>
+                      );
                     })}
                   </ol>
                 }
