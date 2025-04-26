@@ -57,9 +57,19 @@ async function FlightResultPage({ searchParams }) {
     );
   }
 
-  const parsedSearchParams = parseFlightSearchParams(data);
+  const sParams = JSON.stringify(data);
+  const searchStateCookie = cookies().get("searchState")?.value;
+  let isNewSearch = searchStateCookie !== sParams;
 
-  console.log(parsedSearchParams);
+  const formData = new FormData();
+  Object.entries(data).forEach(([key, value]) => formData.append(key, value));
+
+  let userDetails = await getUserDetails();
+  let airlinePrices = await getManyDocs("AirlineFlightPrice", {}, [
+    "airlinePrices",
+  ]);
+
+  const parsedSearchParams = parseFlightSearchParams(data);
   const {
     from,
     to,
@@ -73,139 +83,66 @@ async function FlightResultPage({ searchParams }) {
   const departureDate = new Date(desiredDepartureDate);
   const returnDate = new Date(desiredReturnDate);
 
-  flightResults = await getFlights({
-    departureAirportCode: from.iataCode,
-    arrivalAirportCode: to.iataCode,
-    departureDate,
-    returnDate,
-    tripType,
-    flightClass,
-    passengers,
-  });
-
-  const session = await getSession();
-  const sessionTimeoutAt = addMinutes(Date.now(), 20).getTime();
-
-  const airlines = await getManyDocs("Airline", {}, ["airlines"], false);
-
-  let modelName = "";
-  let filter = {};
-
-  if (session !== null) {
-    if (session.user.type === "credentials") {
-      modelName = "User";
-    }
-    if (session.user.type === "anonymous") {
-      modelName = "AnonymousUser";
-    }
-  }
-
-  if (modelName === "User") {
-    filter = { _id: session.user.id };
-  }
-
-  if (modelName === "AnonymousUser") {
-    filter = { sessionId: session.user.sessionId };
-  }
-
-  // await updateOneDoc(modelName, filter, {
-  //   flights: {
-  //     latestFlightSearchState: {
-  //       departureAirport: departureAirportCode,
-  //       arrivalAirport: arrivalAirportCode,
-  //       tripType,
-  //       desiredDepartureDate,
-  //       desiredReturnDate: Boolean(desiredReturnDate)
-  //         ? new Date(desiredReturnDate)
-  //         : null,
-  //       class: flightClass,
-  //       passengers: passengersObject,
-  //     },
-  //     airlines,
-  //     sessionTimeoutAt,
-  //   },
-  // });
-
-  const userDetails = await getUserDetails(0);
-  const cachedAirlines = userDetails.flights.airlines;
-  const metaData = {
-    flightClass: userDetails.flights.latestFlightSearchState.class,
-    timeZone: cookies().get("timezone").value,
-  };
-  //add price and rating reviews and other neccesary data
-  // eslint-disable-next-line no-undef
-  flightResults = await Promise.all(
-    flightResults.map(async (flight) => {
-      let price = {};
-
-      const airlineId = {};
-      const flightAirline = cachedAirlines.find(
-        (el) => el.iataCode === flight.airlineId
-      );
-      airlineId._id = flightAirline._id;
-      airlineId.iataCode = flightAirline.iataCode;
-      airlineId.name = flightAirline.name;
-      airlineId.logo = flightAirline.logo;
-      airlineId.contact = flightAirline.contact;
-
-      const flightClass = metaData.flightClass;
-
-      let currentDepartureAirport = flight.departure.airport.iataCode,
-        currentArrivalAirport = flight.arrival.airport.iataCode,
-        currentDepartureAirline = flight.airlineId;
-
-      price = extractFlightPriceFromAirline(
-        currentDepartureAirport,
-        currentArrivalAirport,
-        currentDepartureAirline,
-        flight.priceReductionMultiplierPecentage,
-        flightClass,
-        cachedAirlines
-      );
-
-      const flightReviews = await getManyDocs("FlightReview", {
-        airlineId: currentDepartureAirline,
-        departureAirportId: currentDepartureAirport,
-        arrivalAirportId: currentArrivalAirport,
-        airplaneModelName: flight.airplaneId.model,
-      });
-
-      let ratingReviews = {
-        totalReviews: 0,
-        rating: 0.0,
-      };
-      const rating = flightRatingCalculation(flightReviews);
-
-      ratingReviews.rating = rating;
-      ratingReviews.totalReviews = flightReviews.length;
-
-      return {
-        ...flight,
-        price,
-        ratingReviews,
-        airlineId,
-      };
-
-      /**
-       * price = {
-       *    basePrice: 100,
-       *    discount: 10,
-       *    serviceFee: 5,
-       *    taxes: 5,
-       *    total: 105
-       *  }
-       */
-    })
+  const flightResults = await getFlights(
+    {
+      departureAirportCode: from.iataCode,
+      arrivalAirportCode: to.iataCode,
+      departureDate,
+      returnDate,
+      tripType,
+      flightClass,
+      passengersObj: passengers,
+    },
+    airlinePrices,
+    userDetails.flights?.bookmarked,
   );
+  const metaData = {
+    flightClass: flightClass,
+    timeZone: cookies().get("timeZone").value,
+  };
+
+  const sessionTimeout = cookies().get("sessionTimeoutAt")?.value || 0;
+  const isSessionExpired = +sessionTimeout < Date.now();
+  const shouldUpdateLatestSearchstate = isNewSearch || isSessionExpired;
+  if (flightResults.length < 1) {
+    return (
+      <>
+        <Jumper id="flightResult" />
+        <div className="flex h-[500px] w-full flex-col items-center justify-center gap-5 text-3xl font-black sm:text-5xl">
+          <span className={"px-6 text-center leading-normal"}>
+            No Flights Found
+          </span>
+        </div>
+      </>
+    );
+  }
+
+  const newSessionTimeout = Date.now() + 1000 * 1200;
   return (
     <>
-      <SetSessionStorage
+      <SetLocalStorage
         obj={{
-          sessionTimeoutAt: sessionTimeoutAt,
-          searchState: JSON.stringify(data),
+          sessionTimeoutAt: newSessionTimeout,
         }}
       />
-      <SetFlightFormState obj={parsedSearchParams} />
+
+      {shouldUpdateLatestSearchstate && (
+        <SetCookies
+          cookies={[
+            {
+              name: "searchState",
+              value: sParams,
+              expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
+            },
+          ]}
+        />
+      )}
+      <Jumper id="flightResult" />
+      <SessionTimeoutCountdown
+        redirectionLink="/flights/search"
+        className={"mb-2 rounded-md"}
+        jumpToId={"flightFormJump"}
+      />
       <FlightResult flightResults={flightResults} metaData={metaData} />
     </>
   );
