@@ -10,20 +10,30 @@ export function Checkbox({ className, error, id, name, label, ...props }) {
     <>
       <div
         className={cn(
-          "flex items-center space-x-2 select-none py-1",
-          error && "ring-2 ring-offset-4 rounded-[2px] ring-destructive"
+          "flex select-none items-center space-x-2 py-1",
+          error && "rounded-[2px] ring-2 ring-destructive ring-offset-4",
         )}
       >
         <input type="hidden" value={checked ? "on" : ""} name={name} />
         {id ? (
           <CheckboxShadcn
-            onCheckedChange={(checked) => setChecked(checked)}
+            onCheckedChange={(checked) => {
+              setChecked(checked);
+              props?.onChange && props?.onChange({ target: { checked } });
+            }}
             className={cn(className)}
             id={id}
             {...props}
           />
         ) : (
-          <CheckboxShadcn className={cn(className)} {...props} />
+          <CheckboxShadcn
+            onCheckedChange={(checked) => {
+              setChecked(checked);
+              props?.onChange && props?.onChange({ target: { checked } });
+            }}
+            className={cn(className)}
+            {...props}
+          />
         )}
         {label && (
           <label
