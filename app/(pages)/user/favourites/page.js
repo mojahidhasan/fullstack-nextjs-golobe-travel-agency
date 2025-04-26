@@ -5,6 +5,11 @@ import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import { redirect } from "next/navigation";
 import { RATING_SCALE } from "@/lib/constants";
 import routes from "@/data/routes.json";
+import { cookies } from "next/headers";
+import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalculation";
+import { passengerStrToObject } from "@/lib/utils";
+import { getFlight } from "@/lib/controllers/flights";
+
 export default async function FavouritesPage() {
   const session = await auth();
   const isLoggedIn = !!session?.user?.id;
@@ -13,7 +18,7 @@ export default async function FavouritesPage() {
     return redirect(
       routes.login.path +
         "?callbackPath=" +
-        encodeURIComponent(routes.favourites.path)
+        encodeURIComponent(routes.favourites.path),
     );
   }
 
@@ -22,59 +27,60 @@ export default async function FavouritesPage() {
       "userDetails",
     ]);
 
+    const timeZone = cookies().get("timeZone")?.value || "UTC";
+    const airlinePrices = await getManyDocs("AirlineFlightPrice", {}, [
+      "airlinePrices",
+    ]);
+
     let favouriteFlights = [];
     let favouriteHotels = [];
 
-    if (userDetails.likes.flights.length > 0) {
+    if (userDetails?.flights?.bookmarked?.length > 0) {
+      const passengersObj = passengerStrToObject(
+        userDetails.flights.latestSearchState.passengers,
+      );
       // eslint-disable-next-line no-undef
       favouriteFlights = await Promise.all(
-        userDetails.likes.flights.map(async (flight) => {
-          const flightDetails = await getOneDoc(
-            "Flight",
+        userDetails.flights.bookmarked.map(async (flight) => {
+          const flightClass = flight.flightClass || "economy";
+          const flightDetails = await getFlight(
             {
-              _id: flight.flightId,
+              flightNumber: flight.flightNumber,
+              flightClass,
+              passengersObj,
             },
-            [flight.flightId, "flights", flight.flightNumber]
+            airlinePrices,
           );
+
           if (Object.keys(flightDetails).length === 0) return;
+
           const flightReviews = await getManyDocs(
             "FlightReview",
             {
-              airlineId: flightDetails.stopovers[0].airlineId._id,
-              departureAirportId: flightDetails.originAirportId._id,
-              arrivalAirportId: flightDetails.destinationAirportId._id,
-              airplaneModelName: flightDetails.stopovers[0].airplaneId.model,
+              airlineId: flightDetails.airlineId._id,
+              departureAirportId: flightDetails.departure.airport._id,
+              arrivalAirportId: flightDetails.arrival.airport._id,
+              airplaneModelName: flightDetails.airplaneId.model,
             },
-            [
-              flight.flightNumber + "_review",
-              "flightReviews",
-              flight._id + "_review",
-            ]
+            [flightDetails.flightNumber + "_review", "flightReviews"],
           );
-          const ratingSum = flightReviews.reduce((acc, review) => {
-            return +acc + +review.rating;
-          }, 0);
-          return {
-            ...flightDetails,
-            price: flightDetails.price[flight.flightClass].base,
-            flightClass: flight.flightClass,
+          const rating = flightRatingCalculation(flightReviews);
+          flightDetails.ratingReviews = {
+            rating,
             totalReviews: flightReviews.length,
-            rating: flightReviews.length
-              ? (ratingSum / flightReviews.length).toFixed(1)
-              : "N/A",
-            ratingScale:
-              RATING_SCALE[Math.floor(ratingSum / flightReviews.length)] ||
-              "N/A",
-            liked: true,
-            expired: new Date(flight.expireAt).getTime() < new Date().getTime(),
           };
-        })
+
+          const metaData = { flightClass, timeZone, isBookmarked: false };
+          metaData.isBookmarked = true;
+          flightDetails.metaData = metaData;
+          return flightDetails;
+        }),
       );
     }
 
     favouriteFlights = favouriteFlights.filter(Boolean);
     // will be added later
-    if (userDetails.likes.hotels.length > 0) {
+    if (userDetails?.hotels?.bookmarked.length > 0) {
       // eslint-disable-next-line no-undef
       favouriteHotels = await Promise.all(
         userDetails.likes.hotels.map(async (hotel) => {
@@ -83,7 +89,7 @@ export default async function FavouritesPage() {
             {
               _id: hotel,
             },
-            [hotel, "hotels"]
+            [hotel, "hotels"],
           );
           if (Object.keys(hotelDetails).length === 0) return;
           const hotelReviews = await getManyDocs(
@@ -91,7 +97,7 @@ export default async function FavouritesPage() {
             {
               hotelId: hotelDetails._id,
             },
-            [hotel._id + "_review", "hotelReviews"]
+            [hotel._id + "_review", "hotelReviews"],
           );
 
           const totalReviewsCount = hotelReviews.length;
@@ -127,13 +133,13 @@ export default async function FavouritesPage() {
             image: hotelDetails.images[0],
             liked: true,
           };
-        })
+        }),
       );
     }
 
     return (
       <main className={"mx-auto mb-[90px] w-[95%] sm:w-[90%]"}>
-        <h1 className={"text-[2rem] my-10 font-bold"}>Favourites</h1>
+        <h1 className={"my-10 text-[2rem] font-bold"}>Favourites</h1>
         <FavouritesFlightAndPlacesTab
           favouriteFlights={favouriteFlights}
           favouriteHotels={favouriteHotels}
