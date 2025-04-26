@@ -122,24 +122,69 @@ function SearchFlightsForm() {
       data: dFForm,
     } = validateFlightForm(flightFormData);
 
-    let searchState = getSearchState() || {};
+    const searchStateCookie = await getCookiesAction(["searchState"]);
+    const searchState = searchStateCookie[0]?.value || "{}";
     const {
       success: sSState,
       errors: eSState,
       data: dSState,
-    } = validateFlightForm(searchState);
+    } = validateFlightForm(parseFlightSearchParams(JSON.parse(searchState)));
 
-    const areTheySame = objDeepCompare(dFForm, dSState);
     if (sFForm === false) {
       dispatch(setFlightForm({ errors: { ...eFForm } }));
       return;
     }
-    if (areTheySame) {
+    const sessionTimeout = localStorage.getItem("sessionTimeoutAt") || 0;
+    const currTime = new Date().getTime();
+
+    const areTheySame = objDeepCompare(dFForm, dSState);
+    const isEmptySParams = sp.size === 0;
+    const isTimeouted = +currTime > +sessionTimeout;
+    const shouldPreventFromSubmitting =
+      areTheySame === true && !isTimeouted && isEmptySParams === false;
+
+    if (shouldPreventFromSubmitting) {
+      if (!pathname.startsWith("/flights/search")) {
+        const searchParams = new URLSearchParams(dFForm);
+        window.location.href = "/flights/search?" + searchParams.toString();
+      }
+      jumpTo("flightResult");
+      const newSessionTimeoutAt = Date.now() + 1200 * 1000;
+      localStorage.setItem("sessionTimeoutAt", newSessionTimeoutAt);
+      const event = new CustomEvent("customStorage", {
+        detail: {
+          key: "sessionTimeoutAt",
+          newValue: newSessionTimeoutAt,
+          oldValue: sessionTimeout,
+        },
+      });
+      window.dispatchEvent(event);
       return;
     }
-    dispatch(setFlightForm({ errors: {} }));
-    const searchParams = new URLSearchParams(dFForm);
-    window.location.href = "/flights/search?" + searchParams.toString();
+
+    const formData = new FormData();
+    Object.entries(dFForm).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+    const res = await validateSearchStateAction(undefined, formData);
+    if (res.success === false) {
+      dispatch(setFlightForm({ errors: { ...res.errors } }));
+      return;
+    }
+    if (res.success === true) {
+      localStorage.setItem("sessionTimeoutAt", res.data.sessionTimeoutAt);
+      const event = new CustomEvent("customStorage", {
+        detail: {
+          key: "sessionTimeoutAt",
+          newValue: res.data.sessionTimeoutAt,
+          oldValue: sessionTimeout,
+        },
+      });
+      window.dispatchEvent(event);
+      dispatch(setFlightForm({ errors: {} }));
+      const searchParams = new URLSearchParams(res.data.latestSearchState);
+      window.location.href = "/flights/search?" + searchParams.toString();
+    }
   }
 
   async function getSearchState() {
