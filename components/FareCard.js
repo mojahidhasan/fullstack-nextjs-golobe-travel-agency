@@ -1,83 +1,90 @@
-import { Separator } from "@/components/ui/separator";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
-import Image from "next/image";
+"use client";
+import { capitalize, cn } from "@/lib/utils";
+import { Dropdown } from "./local-ui/Dropdown";
+import { useEffect, useState } from "react";
+import { Loader2Icon } from "lucide-react";
 
-import airportWithPlane from "@/public/images/airport-with-plane.jpeg";
-import { capitalize } from "@/lib/utils";
-import { RATING_SCALE } from "@/lib/constants";
+export function FareCard({ fare = {}, className = "" }) {
+  const fareTypePlaceHolders = {
+    basePrice: "Base Fare",
+    taxes: "Taxes",
+    serviceFee: "Service Fee",
+    discount: "Discount",
+  };
 
-export function FareCard({
-  imgSrc = "",
-  name = "",
-  type = "",
-  rating = "N/A",
-  reviews = 0,
-  fare = {},
-}) {
+  const [loading, setLoading] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 500);
+  }, []);
+
   return (
-    <div className="flex w-full min-w-[350px] flex-col gap-4 rounded-[12px] p-3 md:p-6 shadow-lg bg-white">
-      <div className="flex max-xsm:flex-col items-center gap-[24px]">
-        <Image
-          src={imgSrc || airportWithPlane}
-          alt="airport with plane"
-          className="object-cover self-start rounded-[12px] h-[120px] w-[120px]"
-          width={120}
-          height={120}
-        />
-        <div className="self-start">
-          <h4 className="mb-[4px] font-medium line-clamp-1 opacity-75">
-            {type}
-          </h4>
-          <h3 className="mb-[20px] font-tradeGothic text-[1.25rem] font-semibold">
-            {name}
-          </h3>
-          <div className="flex items-center gap-[8px]">
-            <Button variant="outline" size="sm">
-              {rating}
-            </Button>
-            <p className=" text-[0.75rem]">
-              <span className="font-bold">
-                {RATING_SCALE[parseInt(rating)]}
-              </span>{" "}
-              <span>{reviews} reviews</span>
-            </p>
+    <div
+      className={cn(
+        "flex h-auto w-full min-w-[350px] flex-col gap-4 rounded-[12px] bg-white p-3 shadow-lg",
+        className,
+      )}
+    >
+      {loading ? (
+        <div className="flex h-[300px] w-full items-center justify-center">
+          <Loader2Icon className="animate-spin" />
+        </div>
+      ) : (
+        <div className="flex flex-col gap-3">
+          {Object.entries(fare).map(([passengerType, price]) => {
+            if (passengerType === "metaData" || Object.keys(price).length === 0)
+              return null;
+            return (
+              <Dropdown
+                key={passengerType}
+                title={
+                  <div className="font-bold">
+                    {`${capitalize(passengerType)} (${price.basePrice.count}
+                  traveler${price.basePrice.count > 1 ? "s" : ""})`}
+                  </div>
+                }
+                open={true}
+              >
+                <div className="flex flex-col gap-1">
+                  {Object.entries(price).map(([fareType, value]) => {
+                    if (fareType === "total")
+                      return (
+                        <div
+                          key={fareType}
+                          className="mt-2 flex items-center justify-between rounded-lg bg-tertiary/30 p-2"
+                        >
+                          <p className="font-medium">Total</p>
+                          <p className="font-semibold">${Math.abs(value)}</p>
+                        </div>
+                      );
+                    return (
+                      <div key={fareType} className="px-2">
+                        <div className="flex items-center justify-between">
+                          <p className="font-medium">
+                            {fareTypePlaceHolders[fareType]}
+                          </p>
+                          <p className="font-semibold">
+                            ${Math.abs(value.total)}
+                          </p>
+                        </div>
+                        <p className="text-right text-sm text-gray-500">{`(${
+                          value.count
+                        } x ${Math.abs(value.base)})`}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Dropdown>
+            );
+          })}
+
+          <div className="flex h-12 items-center justify-between rounded-md bg-tertiary/30 px-3 font-semibold">
+            <p>Sub Total</p>
+            <p>${fare.metaData?.subTotal || 0}</p>
           </div>
         </div>
-      </div>
-      <Separator />
-      <p className="font-medium">
-        Your booking is protected by{" "}
-        <Link href={"/"} className="font-bold">
-          Golob
-        </Link>
-      </p>
-      <Separator />
-      <div>
-        <table className="w-full">
-          <caption className="caption-top text-left font-tradeGothic font-bold">
-            Price Details
-          </caption>
-          {Object.entries(fare.price).map(([key, val]) => (
-            <tbody className="border-b" key={key}>
-              <tr className="h-[48px] text-left">
-                <th className="font-medium">{capitalize(key)}</th>
-                <td className="text-right font-semibold">
-                  ${parseFloat(val).toFixed(2)}
-                </td>
-              </tr>
-            </tbody>
-          ))}
-          <tfoot>
-            <tr className="h-[48px] text-left">
-              <th className="font-medium">Total</th>
-              <td className="text-right font-semibold">
-                ${fare.totalPrice.toFixed(2)}
-              </td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+      )}
     </div>
   );
 }
