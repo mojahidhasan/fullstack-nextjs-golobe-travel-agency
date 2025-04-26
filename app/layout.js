@@ -11,7 +11,7 @@ import mongoose from "mongoose";
 import dynamic from "next/dynamic";
 
 import openGraph from "./opengraph-image.jpg";
-import SetNecessaryCookies from "./_setCookies";
+import SetNecessaryCookies from "./_SetCookies";
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",
