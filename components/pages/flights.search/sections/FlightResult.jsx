@@ -3,8 +3,8 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { minutesToHMFormat } from "@/lib/utils";
 export async function FlightResult({ flightResults, metaData }) {
   const sortByCheapest = flightResults.slice(0).sort((a, b) => {
-    const aTotalPrice = a.price.total;
-    const bTotalPrice = b.price.total;
+    const aTotalPrice = a.price.metaData.subTotal;
+    const bTotalPrice = b.price.metaData.subTotal;
     return +aTotalPrice - +bTotalPrice;
   });
   const sortByQuickest = [...flightResults].sort((a, b) => {
@@ -13,14 +13,16 @@ export async function FlightResult({ flightResults, metaData }) {
   return (
     <div className="flex grow flex-col gap-[32px]">
       <Tabs defaultValue="cheapest" className="w-full">
-        <TabsList className="bg-white p-0 gap-1 flex sm:flex-row flex-col h-auto">
+        <TabsList className="flex h-auto flex-col gap-1 bg-white p-0 sm:flex-row">
           <TabsTrigger
             value="cheapest"
             className="w-full grow justify-start gap-2"
           >
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Cheapest</p>
-              <p className={ "text-sm text-gray-500" }>${ sortByCheapest[0]?.price.total.toFixed(2) }</p>
+              <p className={"text-sm text-gray-500"}>
+                ${sortByCheapest[0]?.price.metaData.subTotal}
+              </p>
             </div>
           </TabsTrigger>
           <TabsTrigger
@@ -30,18 +32,16 @@ export async function FlightResult({ flightResults, metaData }) {
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Quickest</p>
               <p className="text-sm text-gray-500">
-                { minutesToHMFormat(
-                  sortByQuickest[0]?.totalDuration || 0
-                ) }
+                {minutesToHMFormat(sortByQuickest[0]?.totalDuration || 0)}
               </p>
             </div>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="cheapest">
-          <FlightResultList data={ sortByCheapest } metaData={ metaData } />
+          <FlightResultList data={sortByCheapest} metaData={metaData} />
         </TabsContent>
         <TabsContent value="quickest">
-          <FlightResultList data={ sortByQuickest } metaData={ metaData } />
+          <FlightResultList data={sortByQuickest} metaData={metaData} />
         </TabsContent>
       </Tabs>
     </div>
