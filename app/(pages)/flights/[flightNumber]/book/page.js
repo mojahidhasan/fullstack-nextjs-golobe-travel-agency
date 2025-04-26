@@ -47,7 +47,7 @@ export default async function FlightBookPage({ params }) {
 
   return (
     <>
-      <main className="mx-auto mb-[80px] mt-[40px] w-[90%] text-secondary">
+      <main className="mx-auto my-10 w-[90%] text-secondary">
         <BreadcrumbUI />
         <SessionTimeoutCountdown
           redirectionLink="/flights"
