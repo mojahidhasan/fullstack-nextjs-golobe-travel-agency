@@ -44,6 +44,7 @@ export default function BookingSteps({ flight, metaData, searchStateObj }) {
         <TravelersFormsSection
           errors={passengerFormError}
           passengersObj={passengersObj}
+          primaryPassengerEmail={metaData.userEmail}
         />
       ),
     },

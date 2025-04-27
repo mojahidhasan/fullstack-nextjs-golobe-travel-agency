@@ -3,7 +3,11 @@ import { Dropdown } from "@/components/local-ui/Dropdown";
 import TravelerDetailsForm from "./TravelerDetailsForm";
 import { useEffect, useState } from "react";
 import { Loader2Icon } from "lucide-react";
-export default function TravelersFormsSection({ errors = {}, passengersObj }) {
+export default function TravelersFormsSection({
+  primaryPassengerEmail,
+  errors = {},
+  passengersObj,
+}) {
   let traversalCount = 0;
 
   const PASSENGER_TYPE_PLACEHOLDERS = {
@@ -54,6 +58,9 @@ export default function TravelersFormsSection({ errors = {}, passengersObj }) {
                     className={"p-0 shadow-none"}
                     travelerType={passengerType + "-" + traversalCount}
                     primaryTraveler={parentIndex === 0}
+                    primaryPassengerEmail={
+                      parentIndex === 0 ? primaryPassengerEmail : ""
+                    }
                   />
                 </Dropdown>
               );

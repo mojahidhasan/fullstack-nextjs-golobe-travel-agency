@@ -12,6 +12,7 @@ export default function TravelerDetailsForm({
   className,
   travelerType = "adult-1",
   primaryTraveler = false,
+  primaryPassengerEmail,
 }) {
   const [thisPassenger, setThisPassenger] = useState(defaultPassengerFormValue);
   useEffect(() => {
@@ -222,7 +223,7 @@ export default function TravelerDetailsForm({
       <div className="mt-3 flex flex-col gap-6">
         <h3 className="mb-2 text-xl font-bold">Contacts</h3>
         <Input
-          defaultValue={thisPassenger?.email}
+          defaultValue={primaryPassengerEmail || thisPassenger?.email}
           type="text"
           name={travelerType + "-" + "email"}
           label="Email"
@@ -230,6 +231,7 @@ export default function TravelerDetailsForm({
           onChange={handleOnChange}
           required
           error={errors?.email}
+          disabled={!!primaryPassengerEmail}
         />
         <Input
           defaultPhoneValue={JSON.stringify(thisPassenger?.phoneNumber)}
