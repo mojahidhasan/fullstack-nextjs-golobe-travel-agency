@@ -37,7 +37,21 @@ export default function BookingSteps({ flight, metaData, searchStateObj }) {
           }),
         );
         const res = await setPassengersDetailsAction(undefined, formData);
-        return res;
+        if (res?.success === false && res?.errors) {
+          setPassengerFormError(res.errors);
+        }
+        if (res?.success === false && res?.message) {
+          toast({
+            title: "Error",
+            description: res.message,
+            variant: "destructive",
+          });
+        }
+        if (res?.success === true) {
+          setProgress(progress + 1);
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+        e.target.disabled = false;
       },
       continueBtnTitle: "Review Booking Details",
       component: (
@@ -94,25 +108,7 @@ export default function BookingSteps({ flight, metaData, searchStateObj }) {
               className="mt-3"
               onClick={async (e) => {
                 e.target.disabled = true;
-                await new Promise((resolve) => setTimeout(resolve, 1000));
-                // const res =
-                //   await bookingSteps[currentStep]?.progressFunction(e);
-                // if (res?.success === false && res?.errors) {
-                //   setPassengerFormError(res.errors);
-                // }
-                // if (res?.success === false && res?.message) {
-                //   toast({
-                //     title: "Error",
-                //     description: res.message,
-                //     variant: "destructive",
-                //   });
-                // }
-                // if (res?.success === true) {
-                //   setProgress(progress + 1);
-                // }
-                e.target.disabled = false;
-                setProgress(progress + 1);
-                window.scrollTo({ top: 0, behavior: "smooth" });
+                bookingSteps[currentStep]?.progressFunction(e);
               }}
             >
               {
