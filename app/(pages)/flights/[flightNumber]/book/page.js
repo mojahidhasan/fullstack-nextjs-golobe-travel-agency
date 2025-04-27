@@ -1,6 +1,6 @@
 import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
 import { AuthenticationCard } from "@/components/AuthenticationCard";
-import { isLoggedIn } from "@/lib/auth";
+import { auth, isLoggedIn } from "@/lib/auth";
 import { objDeepCompare, parseFlightSearchParams } from "@/lib/utils";
 
 import { cookies } from "next/headers";
@@ -11,12 +11,18 @@ import SessionTimeoutCountdown from "@/components/local-ui/SessionTimeoutCountdo
 import { getManyDocs } from "@/lib/db/getOperationDB";
 import BookingSteps from "@/components/pages/flights.book/BookingSteps";
 export default async function FlightBookPage({ params }) {
-  const loggedIn = await isLoggedIn();
+  const session = await auth();
+  const loggedIn = !!session?.user;
   const searchStateCookie = cookies().get("searchState")?.value || "{}";
   const parsedSearchState = parseFlightSearchParams(searchStateCookie);
   const timeZone = cookies().get("timeZone")?.value || "UTC";
   const flightClass = cookies().get("flightClass")?.value || "economy";
-  const metaData = { timeZone, flightClass, isBookmarked: false };
+  const metaData = {
+    timeZone,
+    flightClass,
+    isBookmarked: false,
+    userEmail: session?.user?.email,
+  };
   const airlinePrices = await getManyDocs("AirlineFlightPrice", {}, [
     "airlinePrices",
   ]);
