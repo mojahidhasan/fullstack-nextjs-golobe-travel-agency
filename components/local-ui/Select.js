@@ -260,8 +260,16 @@ const Option = forwardRef(
             value: value,
             placeholder: displayValue || children,
           };
-          cntx.onValueChange(v);
-          cntx.setValue(v);
+
+          if (cntx.value.value === v.value) {
+            // de-select
+            cntx.setValue({ value: "", placeholder: "Select a value" });
+            cntx.onValueChange({ value: "", placeholder: "Select a value" });
+          } else {
+            // select
+            cntx.setValue(v);
+            cntx.onValueChange(v);
+          }
           cntx.setIsOpen(false);
         }}
         {...props}
