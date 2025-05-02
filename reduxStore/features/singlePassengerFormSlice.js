@@ -1,22 +1,22 @@
-import { objDeepCompare } from "@/lib/utils";
 import { createSlice } from "@reduxjs/toolkit";
 
 export const defaultPassengerPreference = {
+  key: "",
   passengerType: "",
   seating: {
-    position: "",
-    location: "",
-    legroom: "",
+    position: "any",
+    location: "any",
+    legroom: "any",
     quietZone: false,
     nearLavatory: "",
   },
   baggage: {
-    type: "",
+    type: "any",
     extraAllowance: false,
     specialHandling: false,
   },
   meal: {
-    type: "",
+    type: "standard",
     specialMealType: "",
   },
   specialAssistance: {
@@ -32,6 +32,7 @@ export const defaultPassengerPreference = {
   },
 };
 export const defaultPassengerFormValue = {
+  passengerType: "",
   title: "",
   firstName: "",
   lastName: "",
@@ -48,7 +49,7 @@ export const defaultPassengerFormValue = {
   },
   email: "",
   // helper props
-  passengerType: "",
+  key: "",
   isPrimary: false,
   errors: {},
   saveDetails: false,
