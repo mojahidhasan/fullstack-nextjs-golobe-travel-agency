@@ -11,7 +11,7 @@ import visaIcon from "@/public/icons/visa.svg";
 import masterCardIcon from "@/public/icons/mastercard.svg";
 import paypalIcon from "@/public/icons/paypal.svg";
 import { Button } from "./ui/button";
-export function AddPaymentCardForm({ serverAction = () => {} }) {
+export default function PaymentForm({ serverAction = () => {} }) {
   const [state, dispatch] = useFormState(serverAction, undefined);
   const paymentMethods = [
     { icon: visaIcon, label: "Visa", value: "visa" },
