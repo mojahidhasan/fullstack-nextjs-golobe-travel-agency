@@ -134,7 +134,7 @@ export function Input({
                   width={16}
                   height={16}
                   src={inputType === "password" ? eyeOff : eye}
-                  alt="error_icon"
+                  alt="eye_on_off_icon"
                 />
               </button>
             )}
