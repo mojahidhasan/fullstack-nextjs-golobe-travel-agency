@@ -180,6 +180,10 @@ function SearchFlightsForm() {
           oldValue: sessionTimeout,
         },
       });
+
+      // clear passengersDetails if it exists for previous search
+      sessionStorage.removeItem("passengersDetails");
+
       window.dispatchEvent(event);
       dispatch(setFlightForm({ errors: {} }));
       const searchParams = new URLSearchParams(res.data.latestSearchState);
