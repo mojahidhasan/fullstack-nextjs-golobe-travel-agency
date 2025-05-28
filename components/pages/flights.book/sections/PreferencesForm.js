@@ -1,10 +1,9 @@
-"use client";
-import { Option, Select } from "@/components/local-ui/Select";
-import { Checkbox } from "@/components/ui/checkbox";
-import { useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { defaultPassengerPreference } from "@/reduxStore/features/singlePassengerFormSlice";
-// incomplete, working on it currently
-const PreferenceForm = ({ passenger, index }) => {
+import { Select, Option } from "@/components/local-ui/Select";
+import { Checkbox } from "@/components/ui/checkbox";
+
+const PreferencesForm = ({ passenger, index }) => {
   const [preferences, setPreferences] = useState({});
 
   useEffect(() => {
@@ -12,28 +11,35 @@ const PreferenceForm = ({ passenger, index }) => {
       sessionStorage.getItem("passengersPreferences") ?? "[]",
     );
     const findThisPreferences = passengersPreferences.find(
-      (x) => x.passengerType === passenger.passengerType,
+      (x) => x.key === passenger.key,
     );
     if (findThisPreferences) {
       setPreferences(findThisPreferences);
     } else {
-      setPreferences({
+      const prefere = {
         ...defaultPassengerPreference,
+        key: passenger.key,
         passengerType: passenger.passengerType,
-      });
+      };
+      setPreferences(prefere);
+      sessionStorage.setItem(
+        "passengersPreferences",
+        JSON.stringify([...passengersPreferences, prefere]),
+      );
     }
-  }, [passenger.passengerType]);
+  }, [passenger.key, passenger.passengerType]);
 
   function updatePassengersPreferencesSession(val) {
     const passengersPreferences =
       sessionStorage.getItem("passengersPreferences") ?? "[]";
     let parsed = JSON.parse(passengersPreferences);
+    // eslint-disable-next-line no-undef
     const preferencesMap = new Map();
     for (let pre of parsed) {
       if (Object.keys(pre) < 1) continue;
-      preferencesMap.set(pre.passengerType, pre);
+      preferencesMap.set(pre.key, pre);
     }
-    preferencesMap.set(passenger.passengerType, val);
+    preferencesMap.set(passenger.key, val);
     const preferencesObj = Object.fromEntries(preferencesMap);
     const newPreferences = Object.values(preferencesObj);
     sessionStorage.setItem(
@@ -46,9 +52,8 @@ const PreferenceForm = ({ passenger, index }) => {
     setPreferences(updatedPreference);
     updatePassengersPreferencesSession(updatedPreference);
   }
-  function handleCheckboxPreferencesChange(val) {}
   return (
-    <div className="mb-8 rounded-lg p-6 shadow-lg">
+    <div className="rounded-lg border p-6 shadow-lg">
       <h2 className="mb-6 flex items-center justify-between text-2xl font-bold">
         <span>Passenger {index + 1} Preferences</span>
       </h2>
@@ -61,8 +66,7 @@ const PreferenceForm = ({ passenger, index }) => {
           <span className="font-bold">Last name:</span> {passenger.lastName}
         </p>
         <p>
-          <span className="font-bold">Type:</span>{" "}
-          {passenger.passengerType.split("-")[0]}
+          <span className="font-bold">Type:</span> {passenger.key.split("-")[0]}
         </p>
       </div>
 
@@ -91,6 +95,7 @@ const PreferenceForm = ({ passenger, index }) => {
                   handlePreferencesChange(update);
                 }}
               >
+                <Option value="any">Any</Option>
                 <Option value="window">Window</Option>
                 <Option value="aisle">Aisle</Option>
                 <Option value="middle">Middle</Option>
@@ -116,6 +121,7 @@ const PreferenceForm = ({ passenger, index }) => {
                   handlePreferencesChange(update);
                 }}
               >
+                <Option value="any">Any</Option>
                 <Option value="front">Front</Option>
                 <Option value="middle">Middle</Option>
                 <Option value="back">Back</Option>
@@ -140,6 +146,7 @@ const PreferenceForm = ({ passenger, index }) => {
                   handlePreferencesChange(update);
                 }}
               >
+                <Option value="none">None</Option>
                 <Option value="standard">Standard</Option>
                 <Option value="extra">Extra Legroom</Option>
               </Select>
@@ -190,8 +197,9 @@ const PreferenceForm = ({ passenger, index }) => {
                   handlePreferencesChange(update);
                 }}
               >
+                <Option value="any">Any</Option>
                 <Option value="carry-on">Carry-on Only</Option>
-                <Option value="checked">Checked-in Luggage</Option>
+                <Option value="checked">Checked-in Laggage</Option>
               </Select>
             </div>
           </div>
@@ -322,33 +330,4 @@ const PreferenceForm = ({ passenger, index }) => {
   );
 };
 
-const PassengerPreferencesSection = () => {
-  const [passengersFormVals, setPassengersFormVals] = useState([]);
-
-  useLayoutEffect(() => {
-    const p = sessionStorage.getItem("passengersDetails");
-    if (p) {
-      setPassengersFormVals(JSON.parse(p));
-    } else {
-      throw "Please fill the passenger details first";
-    }
-  }, []);
-
-  return (
-    <div className="mx-auto max-w-4xl">
-      <div className="mb-6">
-        <h1 className="text-3xl font-bold">Passenger Preferences</h1>
-        <p className="text-gray-600">
-          Please set preferences for all {passengersFormVals.length}{" "}
-          passenger(s)
-        </p>
-      </div>
-
-      {passengersFormVals.map((passenger, index) => (
-        <PreferenceForm key={index} passenger={passenger} index={index} />
-      ))}
-    </div>
-  );
-};
-
-export default PassengerPreferencesSection;
+export default PreferencesForm;
