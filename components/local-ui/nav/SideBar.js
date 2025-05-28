@@ -17,9 +17,6 @@ import { LogIn } from "lucide-react";
 import love from "@/public/icons/love.svg";
 import plane from "@/public/icons/airplane-filled.svg";
 import hotel from "@/public/icons/building.svg";
-import user from "@/public/icons/user.svg";
-import card from "@/public/icons/card.svg";
-import settings from "@/public/icons/settings.svg";
 import support from "@/public/icons/support.svg";
 import logout from "@/public/icons/logout.svg";
 import { useEffect, useState } from "react";
@@ -27,32 +24,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { usePathname } from "next/navigation";
 
 import routes from "@/data/routes.json";
-export function SideBar({ isLoggedIn }) {
-  const afterLoggedinOptions = [
-    {
-      title: routes.profile.title,
-      icon: user,
-      path: routes.profile.path,
-    },
-    {
-      title: routes.payments.title,
-      icon: card,
-      path: routes.payments.path,
-    },
-    {
-      title: routes.settings.title,
-      icon: settings,
-      path: routes.settings.path,
-    },
-    {
-      separator: true,
-    },
-    {
-      title: routes.support.title,
-      icon: support,
-      path: routes.support.path,
-    },
-  ];
+export function SideBar({ isLoggedIn, sideBarLinksUser }) {
   const pathname = encodeURIComponent(usePathname());
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
@@ -84,7 +56,7 @@ export function SideBar({ isLoggedIn }) {
         <Button
           variant="ghost"
           aria-label="Sidebar Toggle"
-          className="p-2 hover:bg-transparent h-auto"
+          className="h-auto p-2 hover:bg-transparent"
         >
           <svg
             width="18"
@@ -104,10 +76,10 @@ export function SideBar({ isLoggedIn }) {
         </Button>
       </SheetTrigger>
       <SheetContent>
-        <ul className="grid mt-2 gap-2 py-2 font-semibold">
+        <ul className="mt-2 grid gap-2 py-2 font-semibold">
           <li>
             <SheetClose asChild>
-              <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
+              <Button className={"h-auto gap-2 p-0"} variant="link" asChild>
                 <Link href={routes.flights.path}>
                   <Image src={plane} alt="plane_icon" width={20} />
                   <span>{routes.flights.title}</span>
@@ -117,7 +89,7 @@ export function SideBar({ isLoggedIn }) {
           </li>
           <li>
             <SheetClose asChild>
-              <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
+              <Button className={"h-auto gap-2 p-0"} variant="link" asChild>
                 <Link href={routes.hotels.path}>
                   <Image src={hotel} alt="hotel_icon" width={20} />
                   <span>{routes.hotels.title}</span>
@@ -130,7 +102,7 @@ export function SideBar({ isLoggedIn }) {
             <>
               <li>
                 <SheetClose asChild>
-                  <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
+                  <Button className={"h-auto gap-2 p-0"} variant="link" asChild>
                     <Link
                       href={`${routes.login.path}?callbackPath=${pathname}`}
                     >
@@ -142,7 +114,7 @@ export function SideBar({ isLoggedIn }) {
               </li>
               <li>
                 <SheetClose asChild>
-                  <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
+                  <Button className={"h-auto gap-2 p-0"} variant="link" asChild>
                     <Link href={routes.signup.path}>
                       <svg
                         width="24"
@@ -190,7 +162,7 @@ export function SideBar({ isLoggedIn }) {
             <>
               <li>
                 <SheetClose asChild>
-                  <Button className={"p-0 h-auto gap-2"} variant="link" asChild>
+                  <Button className={"h-auto gap-2 p-0"} variant="link" asChild>
                     <Link href={routes.favourites.path}>
                       <Image src={love} alt="heart_icon" width={20} />
                       <span>{routes.favourites.title}</span>
@@ -199,24 +171,17 @@ export function SideBar({ isLoggedIn }) {
                 </SheetClose>
               </li>
               <Separator />
-              {afterLoggedinOptions.map((option, index) => {
-                if (option.separator) {
-                  return <Separator key={index} />;
-                }
+              {sideBarLinksUser.map((option, index) => {
                 return (
                   <li key={index}>
                     <SheetClose asChild>
                       <Button
-                        className={"p-0 h-auto gap-2"}
+                        className={"h-auto gap-2 p-0"}
                         variant="link"
                         asChild
                       >
-                        <Link href={option.path}>
-                          <Image
-                            src={option.icon}
-                            alt={option.title}
-                            width={20}
-                          />
+                        <Link href={option.href}>
+                          {option.icon}
                           <span>{option.title}</span>
                         </Link>
                       </Button>
@@ -224,6 +189,21 @@ export function SideBar({ isLoggedIn }) {
                   </li>
                 );
               })}
+              <Separator />
+              <li>
+                <SheetClose asChild>
+                  <Button className={"h-auto gap-2 p-0"} variant="link" asChild>
+                    <Link href={routes.support.path}>
+                      <Image
+                        src={support}
+                        alt={routes.support.title}
+                        width={20}
+                      />
+                      <span>{routes.support.title}</span>
+                    </Link>
+                  </Button>
+                </SheetClose>
+              </li>
               <li>
                 <form
                   onSubmit={async (e) => {
@@ -238,7 +218,7 @@ export function SideBar({ isLoggedIn }) {
                 >
                   <Button
                     type="submit"
-                    className={"p-0 h-auto gap-2"}
+                    className={"h-auto gap-2 p-0"}
                     variant="link"
                   >
                     <Image src={logout} alt="logout_icon" width={20} />

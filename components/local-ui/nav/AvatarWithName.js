@@ -23,6 +23,7 @@ import { signOutAction } from "@/lib/actions";
 
 import routes from "@/data/routes.json";
 export function AvatarWithName({
+  sideBarLinksUser,
   onlineStatus = "Online",
   profilePic = "",
   profileName = "John Doe",
@@ -41,7 +42,7 @@ export function AvatarWithName({
       <DropdownMenuContent
         sideOffset={20}
         align="end"
-        className="font-medium p-4 w-[300px]"
+        className="w-[300px] p-4 font-medium"
       >
         <DropdownMenuLabel>
           <div className="flex items-center gap-3">
@@ -60,42 +61,25 @@ export function AvatarWithName({
         </DropdownMenuLabel>
         <DropdownMenuSeparator className="my-4" />
         <DropdownMenuGroup>
-          <DropdownMenuItem asChild className="justify-between cursor-pointer">
-            <Link href={routes.profile.path}>
-              <div className="flex items-center gap-2">
-                <Image src={user} alt="user_icon" height={18} width={18} />
-                <span>{routes.profile.title}</span>
-              </div>
-              <ChevronRight height={16} width={16} />
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className="justify-between cursor-pointer">
-            <Link href={routes.payments.path}>
-              <div className="flex items-center gap-2">
-                <Image src={card} alt="card_icon" height={18} width={18} />
-                <span>{routes.payments.title}</span>
-              </div>
-              <ChevronRight height={16} width={16} />
-            </Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem asChild className="justify-between cursor-pointer">
-            <Link href={routes.settings.path}>
-              <div className="flex items-center gap-2">
-                <Image
-                  src={settings}
-                  alt="settings_icon"
-                  height={18}
-                  width={18}
-                />
-                <span>{routes.settings.title}</span>
-              </div>
-              <ChevronRight height={16} width={16} />
-            </Link>
-          </DropdownMenuItem>
+          {sideBarLinksUser.map((option, index) => {
+            return (
+              <DropdownMenuItem
+                key={index}
+                asChild
+                className="cursor-pointer justify-between"
+              >
+                <Link href={option.href}>
+                  <div className="flex items-center gap-2">
+                    {option.icon} <span>{option.title}</span>
+                  </div>
+                </Link>
+              </DropdownMenuItem>
+            );
+          })}
         </DropdownMenuGroup>
         <DropdownMenuSeparator className="my-4" />
         <DropdownMenuGroup>
-          <DropdownMenuItem asChild className="justify-between cursor-pointer">
+          <DropdownMenuItem asChild className="cursor-pointer justify-between">
             <Link href={routes.support.path}>
               <div className="flex items-center gap-2">
                 <Image
@@ -106,7 +90,6 @@ export function AvatarWithName({
                 />
                 <span>{routes.support.title}</span>
               </div>
-              <ChevronRight height={16} width={16} />
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem asChild className="cursor-pointer">
@@ -114,7 +97,7 @@ export function AvatarWithName({
               <Button
                 variant="Ghost"
                 className={
-                  "gap-2 justify-start p-0 w-full h-auto text-inherit font-medium"
+                  "h-auto w-full justify-start gap-2 p-0 font-medium text-inherit"
                 }
                 type={"submit"}
               >
