@@ -7,25 +7,42 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn, debounce } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { defaultPassengerFormValue } from "@/reduxStore/features/singlePassengerFormSlice";
+
+// import { Option, Select } from "@/components/local-ui/Select";
 export default function TravelerDetailsForm({
   errors,
   className,
-  travelerType = "adult-1",
+  travelerType,
+  travelerCount,
   primaryTraveler = false,
   primaryPassengerEmail,
+  flightClass,
 }) {
+  const travelerKey = `${travelerType}-${travelerCount}`;
   const [thisPassenger, setThisPassenger] = useState(defaultPassengerFormValue);
   useEffect(() => {
     const passengersDetails = JSON.parse(
       sessionStorage.getItem("passengersDetails") || "[]",
     );
     const findThisPassenger = passengersDetails.find(
-      (x) => x.passengerType === travelerType,
+      (x) => x.key === travelerKey,
     );
     if (findThisPassenger) {
       setThisPassenger(findThisPassenger);
+    } else {
+      const newPForm = {
+        ...defaultPassengerFormValue,
+        key: travelerKey,
+        passengerType: travelerType,
+        email: primaryPassengerEmail || "",
+        isPrimary: primaryTraveler,
+      };
+      sessionStorage.setItem(
+        "passengersDetails",
+        JSON.stringify([...passengersDetails, newPForm]),
+      );
     }
-  }, [travelerType, primaryTraveler]);
+  }, [travelerType, travelerKey, primaryTraveler, primaryPassengerEmail]);
 
   const handleOnChange = debounce((e) => {
     const { name, value } = e.target;
@@ -39,14 +56,15 @@ export default function TravelerDetailsForm({
     let passengersDetails = JSON.parse(
       sessionStorage.getItem("passengersDetails") || "[]",
     );
-    const pIndex = passengersDetails.findIndex(
-      (x) => x.passengerType === travelerType,
-    );
+    const pIndex = passengersDetails.findIndex((x) => x.key === travelerKey);
 
-    let newPForm = {};
+    let newPForm = {
+      passengerType: travelerType,
+    };
     if (pIndex === -1) {
       newPForm = {
         ...defaultPassengerFormValue,
+        key: travelerKey,
         passengerType: travelerType,
         isPrimary: primaryTraveler,
       };
@@ -95,7 +113,7 @@ export default function TravelerDetailsForm({
       <Input
         defaultValue={thisPassenger?.firstName}
         type="text"
-        name={travelerType + "-" + "firstName"}
+        name={travelerKey + "-" + "firstName"}
         label="First Name"
         placeholder="Enter your first name"
         required
@@ -105,7 +123,7 @@ export default function TravelerDetailsForm({
       <Input
         defaultValue={thisPassenger?.lastName}
         type="text"
-        name={travelerType + "-" + "lastName"}
+        name={travelerKey + "-" + "lastName"}
         label="Last Name"
         placeholder="Enter your last name"
         required
@@ -115,7 +133,7 @@ export default function TravelerDetailsForm({
       <Input
         defaultValue={thisPassenger?.dateOfBirth}
         type="date"
-        name={travelerType + "-" + "dateOfBirth"}
+        name={travelerKey + "-" + "dateOfBirth"}
         label="Date of Birth"
         placeholder="Date of Birth"
         required
@@ -125,7 +143,7 @@ export default function TravelerDetailsForm({
       <Input
         defaultValue={thisPassenger?.passportNumber}
         type="text"
-        name={travelerType + "-" + "passportNumber"}
+        name={travelerKey + "-" + "passportNumber"}
         label="Passport Number"
         placeholder="Passport Number"
         required
@@ -136,7 +154,7 @@ export default function TravelerDetailsForm({
         <Input
           defaultValue={thisPassenger?.passportExpiryDate}
           type="date"
-          name={travelerType + "-" + "passportExpiryDate"}
+          name={travelerKey + "-" + "passportExpiryDate"}
           label="Passport Expiry Date"
           placeholder="Passport Expiry Date"
           required
@@ -153,7 +171,7 @@ export default function TravelerDetailsForm({
           Country
         </span>
         <SelectCountry
-          name={travelerType + "-" + "country"}
+          name={travelerKey + "-" + "country"}
           className={"h-auto"}
           defaultValue={thisPassenger?.country}
           value={thisPassenger?.country}
@@ -172,7 +190,7 @@ export default function TravelerDetailsForm({
       >
         <p className="text-sm font-bold">Gender</p>
         <RadioGroup
-          name={travelerType + "-" + "gender"}
+          name={travelerKey + "-" + "gender"}
           value={thisPassenger?.gender}
           className="flex gap-3"
           onValueChange={(v) => {
@@ -199,12 +217,24 @@ export default function TravelerDetailsForm({
           <p className="mt-1 pl-4 text-destructive">{errors.gender}</p>
         )}
       </div>
+      {/* <div className="relative block h-auto">
+        <span className="absolute -top-[8px] left-5 z-10 bg-background px-1 text-sm font-normal leading-4">
+          Flight Class <span className="text-destructive">*</span>
+        </span>
+        <Select name={travelerKey + "-" + "flightClass"} value={flightClass}>
+          <Option value="economy">Economy</Option>
+          <Option value="premium_economy">Premium Economy</Option>
+          <Option value="business">Business</Option>
+          <Option value="first">First Class</Option>
+        </Select>
+      </div> */}
+
       <div className="mt-3 flex flex-col gap-6">
         <h3 className="mb-2 text-xl font-bold">Frequent Flyer</h3>
         <Input
           defaultValue={thisPassenger?.frequentFlyerAirline}
           type="text"
-          name={travelerType + "-" + "frequentFlyerAirline"}
+          name={travelerKey + "-" + "frequentFlyerAirline"}
           label="Frequent Flyer Airline(If Any)"
           placeholder="Frequent Flyer Airline"
           onChange={handleOnChange}
@@ -213,7 +243,7 @@ export default function TravelerDetailsForm({
         <Input
           defaultValue={thisPassenger?.frequentFlyerNumber}
           type="text"
-          name={travelerType + "-" + "frequentFlyerNumber"}
+          name={travelerKey + "-" + "frequentFlyerNumber"}
           label="Frequent Flyer Name"
           placeholder="Frequent Flyer Name"
           onChange={handleOnChange}
@@ -225,7 +255,7 @@ export default function TravelerDetailsForm({
         <Input
           defaultValue={primaryPassengerEmail || thisPassenger?.email}
           type="text"
-          name={travelerType + "-" + "email"}
+          name={travelerKey + "-" + "email"}
           label="Email"
           placeholder="Email"
           onChange={handleOnChange}
@@ -236,7 +266,7 @@ export default function TravelerDetailsForm({
         <Input
           defaultPhoneValue={JSON.stringify(thisPassenger?.phoneNumber)}
           type="tel"
-          name={travelerType + "-" + "phoneNumber"}
+          name={travelerKey + "-" + "phoneNumber"}
           label="Phone Number"
           placeholder="Phone Number"
           required
@@ -255,8 +285,8 @@ export default function TravelerDetailsForm({
           <Checkbox
             error={errors?.saveDetails}
             checked={thisPassenger?.saveDetails}
-            name={travelerType + "-" + "savedetails"}
-            id={travelerType + "-" + "savedetails"}
+            name={travelerKey + "-" + "savedetails"}
+            id={travelerKey + "-" + "savedetails"}
             label={<p className="font-semibold">Save my details</p>}
             onChange={(e) => {
               setThisPassenger({
