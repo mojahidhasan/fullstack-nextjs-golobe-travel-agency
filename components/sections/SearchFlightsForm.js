@@ -33,7 +33,7 @@ import swap from "@/public/icons/swap.svg";
 import Counter from "../local-ui/Counter";
 import { ErrorMessage } from "../local-ui/errorMessage";
 import { useEffect, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getCookiesAction, validateSearchStateAction } from "@/lib/actions";
 import Jumper, { jumpTo } from "../local-ui/Jumper";
 
@@ -47,6 +47,7 @@ function SearchFlightsForm() {
   const dispatch = useDispatch();
   const sp = useSearchParams();
   const pathname = usePathname();
+  const router = useRouter();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const flightFormData = useSelector((state) => state.flightForm.value);
   const errors = flightFormData.errors;
@@ -187,7 +188,13 @@ function SearchFlightsForm() {
       window.dispatchEvent(event);
       dispatch(setFlightForm({ errors: {} }));
       const searchParams = new URLSearchParams(res.data.latestSearchState);
-      window.location.href = "/flights/search?" + searchParams.toString();
+      router.replace(
+        "/flights/search/" + encodeURIComponent(searchParams.toString()),
+        {
+          scroll: false,
+        },
+      );
+      jumpTo("flightResult");
     }
   }
 
