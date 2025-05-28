@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { cn } from "@/lib/utils";
+import { cn, debounce } from "@/lib/utils";
 import {
   Dialog,
   DialogContent,
@@ -44,7 +44,8 @@ export default function SessionTimeoutCountdown({
       const biggerValue = Math.max(+timeoutCookie, +timeoutLocal);
       if (timeoutLocal !== timeoutCookie) {
         localStorage.setItem("sessionTimeoutAt", biggerValue);
-        setCookiesAction([
+        const setSessionTimeoutCookie = setCookiesAction;
+        setSessionTimeoutCookie([
           {
             name: "sessionTimeoutAt",
             value: biggerValue,
@@ -73,8 +74,6 @@ export default function SessionTimeoutCountdown({
       }, 1000);
     }
 
-    window.addEventListener("storage", handleStorageChange);
-    window.addEventListener("customStorage", handleStorageChange);
     function handleStorageChange(e) {
       const ev = e.type === "storage" ? e : e.detail;
       if (ev.key === "sessionTimeoutAt") {
@@ -85,10 +84,13 @@ export default function SessionTimeoutCountdown({
         setIntervalForCheckingSessionTimeout(newValue, () => setOpen(true));
       }
     }
+    const debouncedHandle = debounce(handleStorageChange, 2000);
+    window.addEventListener("storage", debouncedHandle);
+    window.addEventListener("customStorage", debouncedHandle);
 
     return () => {
-      window.removeEventListener("customStorage", handleStorageChange);
-      window.removeEventListener("storage", handleStorageChange);
+      window.removeEventListener("customStorage", debouncedHandle);
+      window.removeEventListener("storage", debouncedHandle);
       if (interval.current) {
         clearInterval(interval.current);
         interval.current = null;
