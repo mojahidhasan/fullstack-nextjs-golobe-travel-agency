@@ -15,10 +15,7 @@ export function FlightDetailsCard({
 }) {
   const { departure, arrival, duration, airline, airplane, timeZone } =
     flightScheduleDetails;
-  const totalAvailableSeats = flight.seatAvailability.reduce((acc, seat) => {
-    if (seat.isAvailable) return acc + 1;
-    return acc;
-  }, 0);
+
   return (
     <div
       className={cn(
