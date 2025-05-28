@@ -1,4 +1,3 @@
-"use client";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -7,15 +6,11 @@ import { LikeButton } from "@/components/local-ui/likeButton";
 import airlinesLogos from "@/data/airlinesLogos";
 import { RATING_SCALE } from "@/lib/constants";
 import { minutesToHMFormat } from "@/lib/utils";
-import { useRouter } from "next/navigation";
 import { RatingShow } from "@/components/local-ui/ratingShow";
 import { cn } from "@/lib/utils";
 import { formatInTimeZone } from "date-fns-tz";
+import Link from "next/link";
 export function FlightResultCard({ data, metaData }) {
-  const router = useRouter();
-  async function handleClick() {
-    router.push(`/flights/${data.flightNumber}`);
-  }
   let flightSegments = [];
 
   let currentDeparture = data.departure,
@@ -163,8 +158,10 @@ export function FlightResultCard({ data, metaData }) {
             }}
             flightsOrHotels={"flights"}
           />
-          <Button onClick={handleClick} className={"w-full"}>
-            View Deals
+          <Button className={"w-full"} asChild>
+            <Link target="_blank" href={`/flights/${data.flightNumber}`}>
+              View Deals
+            </Link>
           </Button>
         </div>
       </div>
