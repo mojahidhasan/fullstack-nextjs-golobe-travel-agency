@@ -1,123 +1,191 @@
 "use client";
 import ProgressStepper from "@/components/local-ui/ProgressStepper";
 import { FareCard } from "@/components/FareCard";
-import { capitalize, passengerStrToObject } from "@/lib/utils";
-import { FLIGHT_CLASS_PLACEHOLDERS } from "@/lib/constants";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import TravelersFormsSection from "./sections/TravelersFormsSection";
 import { Separator } from "@/components/ui/separator";
-import { setPassengersDetailsAction } from "@/lib/actions";
 import { toast } from "@/components/ui/use-toast";
-import BookingPayment from "./sections/BookingPayment";
-import PassengerPreferences from "./sections/PassengerPreferences";
 import ReviewBooking from "./sections/ReviewBooking";
+import SeatPreferencesSection from "./sections/PreferencesSection";
+import { usePathname, useSearchParams } from "next/navigation";
+import { flightReserveAction } from "@/lib/actions/flightReserveAction";
+import { useRouter } from "next/navigation";
+import BookingPayment from "./sections/BookingPayment";
 
-// incomplete, working on it currently
 export default function BookingSteps({ flight, metaData, searchStateObj }) {
-  const [progress, setProgress] = useState(1);
-  const [passengerFormError, setPassengerFormError] = useState({});
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const tab = searchParams.get("tab");
+
+  /**
+   * @typedef {import("@/lib/zodSchemas/passengerDetailsValidation").PassengerDetailsZodError} PassengerDetailsZodError
+   * @typedef {import("@/lib/zodSchemas/passengersPreferencesValidation").PassengerPreferencesZodError} PassengerPreferencesZodError
+   * @typedef {{passengersDetails?: {[passengerKey: string]: PassengerDetailsZodError}, passengersPreferences?: {[passengerKey: string]: PassengerPreferencesZodError}}} FormsError
+   */
+
+  /** @type {FormsError} */
+  const initialFormsError = {};
+  const [formsError, setFormsError] = useState(initialFormsError);
+
+  /**
+   * @typedef {Object} ReserveActionReturn
+   * @property {boolean} success
+   * @property {string} [message]
+   * @property {FormsError} [errors]
+   */
+
+  /** @type {ReserveActionReturn} */
+  const initialReserveActionError = {};
+  const [reserveActionError, setReserveActionError] = useState(
+    initialReserveActionError,
+  );
 
   const { passengers: passengersObj } = searchStateObj;
-  const bookingSteps = {
-    "Passenger Info": {
-      progressFunction: async (e) => {
-        const passengersDetails =
-          sessionStorage.getItem("passengersDetails") || "[]";
-        const parsedPassengersDetails = JSON.parse(passengersDetails);
-        const formData = new FormData();
-        parsedPassengersDetails.forEach((passenger) => {
-          formData.append(passenger.passengerType, JSON.stringify(passenger));
-        });
-        formData.append(
-          "metaData",
-          JSON.stringify({
-            flightNumber: flight.flightNumber,
-            totalPrice: flight.price.metaData.subTotal,
-          }),
-        );
-        const res = await setPassengersDetailsAction(undefined, formData);
-        if (res?.success === false && res?.errors) {
-          setPassengerFormError(res.errors);
-        }
-        if (res?.success === false && res?.message) {
-          toast({
-            title: "Error",
-            description: res.message,
-            variant: "destructive",
+
+  function showErrorToast(message) {
+    toast({
+      title: "Error",
+      description: message,
+      variant: "destructive",
+    });
+  }
+
+  async function savePassengersDetails(e) {
+    e.target.disabled = true;
+
+    const passengersDetails =
+      sessionStorage.getItem("passengersDetails") || "[]";
+    const passengersPreferences =
+      sessionStorage.getItem("passengersPreferences") || "[]";
+
+    if (passengersDetails === "[]") {
+      showErrorToast(
+        "Please fill all the details in passengers details form first",
+      );
+      sessionStorage.removeItem("passengersDetails");
+      sessionStorage.removeItem("passengersPreferences");
+      e.target.disabled = false;
+      return;
+    }
+
+    if (passengersPreferences === "[]") {
+      showErrorToast(
+        "Please fill all the details in passengers preferences form first",
+      );
+      sessionStorage.removeItem("passengersPreferences");
+      e.target.disabled = false;
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("passengersDetails", passengersDetails);
+    formData.append("passengersPreferences", passengersPreferences);
+    formData.append(
+      "metaData",
+      JSON.stringify({
+        flightNumber: flight.flightNumber,
+        totalPrice: flight.price.metaData.subTotal,
+      }),
+    );
+
+    const res = await flightReserveAction(undefined, formData);
+
+    if (res?.success === true) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      sessionStorage.removeItem("passengersDetails");
+      sessionStorage.removeItem("passengersPreferences");
+      router.push(`${pathname}?tab=payment`);
+    } else {
+      if (res.errors) setFormsError(res.errors);
+      if (res.message) {
+        if (
+          res.message ===
+          "You have already reserved a flight of this flight number. Please cancel it or cofirm it first to book another flight"
+        ) {
+          setReserveActionError({
+            ...res,
+            link: {
+              href: `${pathname}?tab=payment`,
+              label: "Pay previous booking",
+            },
           });
         }
-        if (res?.success === true) {
-          setProgress(progress + 1);
-          window.scrollTo({ top: 0, behavior: "smooth" });
-        }
-        e.target.disabled = false;
-      },
-      continueBtnTitle: "Review Booking Details",
-      component: (
-        <TravelersFormsSection
-          errors={passengerFormError}
-          passengersObj={passengersObj}
-          primaryPassengerEmail={metaData.userEmail}
-        />
-      ),
-    },
-    "Passenger Preferences": {
-      progressFunction: () => {
-        setProgress(2);
-      },
-      continueBtnTitle: "Review & Confirm",
-      component: <PassengerPreferences numberOfPassengers={3} />,
-    },
-    "Review & Confirm": {
-      progressFunction: () => {
-        setProgress(2);
-      },
-      continueBtnTitle: "Pay the fare",
-      component: <h1>IUgifguiguigiu</h1>, // <ReviewBooking />,
-    },
-    // "Extras (Optional)": {
-    //   progressFunction: () => {
-    //     setProgress(3);
-    //   },
-    //   continueBtnTitle: "Pay Now",
-    //   component: <TravelersFormsSection passengersObj={passengersObj} />,
-    // },
-    Payment: {
-      progressFunction: () => {
-        window.location.href = "/user/profile";
-      },
-      continueBtnTitle: "See your booking",
-      component: <BookingPayment />,
-    },
-  };
-  const currentStep = Object.keys(bookingSteps)[progress - 1];
+        showErrorToast(res.message);
+      }
+    }
 
+    e.target.disabled = false;
+  }
+
+  function setPassengersDetailsError(err) {
+    setFormsError((prev) => ({ ...prev, passengersDetails: err }));
+  }
+  function renderComponent(tab) {
+    switch (tab) {
+      case "passenger_forms":
+        return (
+          <TravelersFormsSection
+            errors={formsError?.passengersDetails}
+            setErrors={setPassengersDetailsError}
+            passengersCountObj={passengersObj}
+            primaryPassengerEmail={metaData.userEmail}
+            flightClass={metaData.flightClass}
+            nextStep={"passenger_preferences"}
+          />
+        );
+      case "passenger_preferences":
+        return <SeatPreferencesSection nextStep={"review"} />;
+      case "review":
+        return (
+          <ReviewBooking
+            reserveActionError={reserveActionError}
+            setReserveActionError={setReserveActionError}
+            formsError={formsError}
+            setFormsError={setFormsError}
+            flight={flight}
+            onConfirm={savePassengersDetails}
+            nextStep={"payment"}
+          />
+        );
+      case "payment":
+        return <BookingPayment flightNumber={flight.flightNumber} />;
+      default:
+        return (
+          <TravelersFormsSection
+            errors={formsError?.passengersDetails}
+            setErrors={setPassengersDetailsError}
+            passengersCountObj={passengersObj}
+            primaryPassengerEmail={metaData.userEmail}
+            flightClass={metaData.flightClass}
+            nextStep={"passenger_preferences"}
+          />
+        );
+    }
+  }
+
+  const bookingSteps = [
+    { label: "Passengers", value: "passenger_forms" },
+    { label: "Preferences", value: "passenger_preferences" },
+    { label: "Review", value: "review" },
+    { label: "Payment", value: "payment" },
+  ];
   return (
     <>
       <ProgressStepper
         className="my-5"
-        steps={Object.keys(bookingSteps)}
-        currentStep={progress}
+        steps={bookingSteps}
+        currentStepValue={tab || "passenger_forms"}
+        onCurrentValueChange={(value) => {
+          router.push(`${pathname}?tab=${value}`);
+        }}
       />
-      <div className="flex gap-10 max-lg:flex-col">
+      <div className="flex gap-5 max-lg:flex-col">
         <div className="w-full">
-          {bookingSteps[currentStep]?.component || ""}
-          {progress <= Object.keys(bookingSteps).length && (
-            <Button
-              className="mt-3"
-              onClick={async (e) => {
-                e.target.disabled = true;
-                bookingSteps[currentStep]?.progressFunction(e);
-              }}
-            >
-              {
-                bookingSteps[Object.keys(bookingSteps)[progress - 1]]
-                  .continueBtnTitle
-              }
-            </Button>
-          )}
-          <Separator className="my-5" />
+          {renderComponent(tab)}
+
+          <Separator className="mt-5" />
         </div>
         <div className="flex-grow">
           <div className="h-auto rounded-lg bg-white p-6 shadow-lg">
