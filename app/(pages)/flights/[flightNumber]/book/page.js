@@ -1,6 +1,6 @@
 import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
 import { AuthenticationCard } from "@/components/AuthenticationCard";
-import { auth, isLoggedIn } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { objDeepCompare, parseFlightSearchParams } from "@/lib/utils";
 
 import { cookies } from "next/headers";
@@ -13,7 +13,7 @@ import BookingSteps from "@/components/pages/flights.book/BookingSteps";
 export default async function FlightBookPage({ params }) {
   const session = await auth();
   const loggedIn = !!session?.user;
-  const searchStateCookie = cookies().get("searchState")?.value || "{}";
+  const searchStateCookie = cookies().get("flightSearchState")?.value || "{}";
   const parsedSearchState = parseFlightSearchParams(searchStateCookie);
   const timeZone = cookies().get("timeZone")?.value || "UTC";
   const flightClass = cookies().get("flightClass")?.value || "economy";
