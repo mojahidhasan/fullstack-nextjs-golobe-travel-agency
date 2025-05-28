@@ -36,7 +36,6 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getCookiesAction, validateSearchStateAction } from "@/lib/actions";
 import Jumper, { jumpTo } from "../local-ui/Jumper";
-
 function SearchFlightsForm() {
   const classPlaceholders = {
     economy: "Economy",
@@ -50,7 +49,7 @@ function SearchFlightsForm() {
   const router = useRouter();
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const flightFormData = useSelector((state) => state.flightForm.value);
-  const errors = flightFormData.errors;
+  const errors = flightFormData?.errors || {};
 
   useEffect(() => {
     async function searchState() {
@@ -79,6 +78,7 @@ function SearchFlightsForm() {
   }, []);
 
   useEffect(() => {
+    const controller = new AbortController();
     async function getAvailableFlightDateRange() {
       const getCachedFlight = sessionStorage.getItem("flightDateRange");
       if (getCachedFlight) {
@@ -88,29 +88,38 @@ function SearchFlightsForm() {
           return;
         }
       }
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_flight_date_range`,
-        {
-          method: "GET",
-          next: { revalidate: 60, tags: ["flightDateRange"] },
-        },
-      );
-      const data = await res.json();
-      if (data.success === true) {
-        const { from, to } = data.data;
-        sessionStorage.setItem(
-          "flightDateRange",
-          JSON.stringify({
-            from,
-            to,
-            expireAt: Date.now() + 60 * 1000,
-          }),
+
+      try {
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_flight_date_range`,
+          {
+            method: "GET",
+            next: { revalidate: 60, tags: ["flightDateRange"] },
+            signal: controller.signal,
+          },
         );
-        dispatch(setFlightForm({ availableFlightDateRange: { from, to } }));
+        const data = await res.json();
+        if (data.success === true) {
+          const { from, to } = data.data;
+          sessionStorage.setItem(
+            "flightDateRange",
+            JSON.stringify({
+              from,
+              to,
+              expireAt: Date.now() + 60 * 1000,
+            }),
+          );
+          dispatch(setFlightForm({ availableFlightDateRange: { from, to } }));
+        }
+      } catch (e) {
+        if (e.name === "AbortError") return;
       }
     }
     getAvailableFlightDateRange();
 
+    return () => {
+      controller.abort();
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDatePickerOpen]);
 
