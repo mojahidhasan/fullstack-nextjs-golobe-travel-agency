@@ -24,6 +24,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { setStayForm } from "@/reduxStore/features/stayFormSlice";
 
 import { addDays } from "date-fns";
+import { cn } from "@/lib/utils";
 
 export function searchForEmptyValuesInStaySearchForm(obj) {
   const optionals = ["promocode"];
@@ -67,13 +68,13 @@ function SearchStaysForm({ searchParams = {} }) {
   }, []);
 
   const stayFormData = useSelector((state) => state.stayForm.value);
-
+  const errors = stayFormData.errors;
   function handleSubmit(e) {
     e.preventDefault();
 
     if (searchForEmptyValuesInStaySearchForm(stayFormData)) {
       alert(
-        "Please fill all the required fields. Asterisk (*) indicates 'required'"
+        "Please fill all the required fields. Asterisk (*) indicates 'required'",
       );
       return;
     }
@@ -119,74 +120,106 @@ function SearchStaysForm({ searchParams = {} }) {
       <input type="hidden" name="promocode" value={stayFormData.promocode} />
 
       <div className="my-[20px] grid gap-[24px] lg:grid-cols-2 xl:grid-cols-[2fr_repeat(3,_1fr)]">
-        <div className="relative h-auto w-full rounded-[8px] border-2 border-primary">
+        <div className="relative h-[100px] w-full rounded-[8px] border-2 border-primary">
           <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
             Enter Destination <span className={"text-red-600"}>*</span>
           </span>
-          <HotelDestinationPopover className={"pl-4 rounded-[8px] border-0"} />
-        </div>
-
-        <div className="relative flex h-[48px] w-full items-center gap-[4px] rounded-[8px] border-2 border-primary">
-          <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
-            Check in <span className={"text-red-600"}>*</span>
-          </span>
-          <div className="h-full grow">
-            <DatePicker
-              className={"h-full w-full rounded-[8px]"}
-              date={stayFormData.checkIn}
-              setDate={(date) => {
-                dispatch(
-                  setStayForm({
-                    checkIn: date.toString(),
-                  })
-                );
-              }}
-            />
-          </div>
-          <div className="p-2">
-            <Image
-              src={"/icons/calender.svg"}
-              height={24}
-              width={24}
-              alt="calender_icon"
-            />
-          </div>
+          <HotelDestinationPopover
+            className={"h-full rounded-[8px] border-0 py-4 pl-4"}
+            fetchInputs={{
+              url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/hotels/available_places`,
+              searchParamsName: "searchQuery",
+              method: "GET",
+            }}
+            defaultSelected={stayFormData.destination}
+            getSelected={(selected) => {
+              console.log(selected);
+              dispatch(setStayForm({ destination: selected }));
+            }}
+          />
         </div>
         <div
-          className={
-            "relative flex h-[48px] w-full items-center gap-[4px] rounded-[8px] border-2 border-primary"
-          }
+          className={cn(
+            "relative col-span-full flex h-auto flex-col gap-2 rounded-[8px] border-2 border-primary md:flex-row lg:col-span-2",
+            (errors?.desiredDepartureDate || errors?.desiredReturnDate) &&
+              "border-destructive",
+          )}
         >
-          <span className="absolute -top-[8px] left-[16px] z-10 inline-block bg-white px-[4px] leading-none">
-            Check Out <span className={"text-red-600"}>*</span>
-          </span>
-          <div className="h-full grow">
+          <InputLabel
+            label={
+              <>
+                checkIn <span className={"text-red-600"}>*</span> - checkOut
+                <span className={"text-red-600"}>*</span>
+              </>
+            }
+          />
+          <div
+            className={cn(
+              "h-auto max-h-[100px] min-h-[100px] max-w-full grow rounded-none border-0 border-primary max-md:mx-1 max-md:border-b-2 md:my-1 md:w-1/2 md:border-r-2",
+              errors?.desiredDepartureDate && "border-destructive",
+            )}
+          >
             <DatePicker
-              date={stayFormData.checkOut}
-              setDate={(date) => {
+              date={new Date(stayFormData.checkIn)}
+              // disabledDates={[
+              //   {
+              //     before: new Date(
+              //       flightFormData.availableFlightDateRange.from,
+              //     ),
+              //     after: new Date(flightFormData.availableFlightDateRange.to),
+              //   },
+              // ]}
+              getDate={(date) => {
+                const d = date.toLocaleString("en-CA", {
+                  year: "numeric",
+                  month: "2-digit",
+                  day: "2-digit",
+                });
+
+                dispatch(
+                  setStayForm({
+                    ...stayFormData,
+                    checkIn: d,
+                  }),
+                );
+              }}
+              // getPopoverOpenState={setIsDatePickerOpen}
+            />
+          </div>
+          <div
+            className={cn(
+              "h-auto max-h-[100px] min-h-[100px] max-w-full grow rounded-none border-0 border-primary max-md:mx-1 max-md:border-t-2 md:my-1 md:w-1/2 md:border-l-2",
+              errors?.desiredReturnDate && "border-destructive",
+            )}
+          >
+            <DatePicker
+              date={new Date(stayFormData.checkOut)}
+              required={false}
+              // disabledDates={[
+              //   {
+              //     before: new Date(
+              //       flightFormData.desiredDepartureDate ||
+              //         flightFormData.availableFlightDateRange.from,
+              //     ),
+              //     after: new Date(flightFormData.availableFlightDateRange.to),
+              //   },
+              // ]}
+              getDate={(date) => {
                 if (date == undefined) {
                   dispatch(
                     setStayForm({
                       checkOut: "",
-                    })
+                    }),
                   );
                 } else {
                   dispatch(
                     setStayForm({
                       checkOut: date.toString(),
-                    })
+                    }),
                   );
                 }
               }}
-              className={"h-full w-full rounded-[8px]"}
-            />
-          </div>
-          <div className="p-2">
-            <Image
-              src={"/icons/calender.svg"}
-              height={24}
-              width={24}
-              alt="calender_icon"
+              // getPopoverOpenState={setIsDatePickerOpen}
             />
           </div>
         </div>
@@ -202,13 +235,13 @@ function SearchStaysForm({ searchParams = {} }) {
                 asChild
                 className="h-full w-full justify-start rounded-lg"
               >
-                <Button className="font-normal justify-start" variant={"ghost"}>
+                <Button className="justify-start font-normal" variant={"ghost"}>
                   {`${stayFormData.rooms} Rooms, ${stayFormData.guests} Guests`}
                 </Button>
               </PopoverTrigger>
               <PopoverContent>
-                <Card className="p-3 bg-primary/30 border-primary border-2 mb-3">
-                  <CardHeader className="p-0 mb-4">
+                <Card className="mb-3 border-2 border-primary bg-primary/30 p-3">
+                  <CardHeader className="mb-4 p-0">
                     <CardTitle>Rooms (max 5)</CardTitle>
                   </CardHeader>
                   <CardContent className="p-0">
@@ -223,17 +256,17 @@ function SearchStaysForm({ searchParams = {} }) {
                         dispatch(
                           setStayForm({
                             rooms: +e.currentTarget.value,
-                          })
+                          }),
                         );
                       }}
                     />
                   </CardContent>
                 </Card>
-                <Card className="p-3 bg-primary/30 border-primary border-2">
-                  <CardHeader className="p-0 mb-4">
+                <Card className="border-2 border-primary bg-primary/30 p-3">
+                  <CardHeader className="mb-4 p-0">
                     <CardTitle>Guests (max 10)</CardTitle>
                   </CardHeader>
-                  <CardContent className="p-0 flex-col flex gap-3">
+                  <CardContent className="flex flex-col gap-3 p-0">
                     <Input
                       defaultValue={1}
                       label="Guests"
@@ -245,7 +278,7 @@ function SearchStaysForm({ searchParams = {} }) {
                         dispatch(
                           setStayForm({
                             guests: +e.currentTarget.value,
-                          })
+                          }),
                         );
                       }}
                     />
@@ -276,5 +309,16 @@ function SearchStaysForm({ searchParams = {} }) {
     </form>
   );
 }
-
+function InputLabel({ label, className }) {
+  return (
+    <span
+      className={cn(
+        "absolute -top-[10px] left-[10px] z-10 inline-block rounded-md bg-white px-[4px] text-sm font-medium leading-none",
+        className,
+      )}
+    >
+      {label}
+    </span>
+  );
+}
 export { SearchStaysForm };
