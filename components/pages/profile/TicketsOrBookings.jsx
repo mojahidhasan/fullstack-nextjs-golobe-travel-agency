@@ -1,31 +1,20 @@
 import { TabsContent, TabsList, TabsTrigger, Tabs } from "@/components/ui/tabs";
-import { FlightTicketDownloadCard } from "@//components/pages/profile/ui/FlightTicketDownloadCard";
 import { HotelTicketDownloadCard } from "@/components/pages/profile/ui/HotelTicketDownloadCard";
 
 import Image from "next/image";
 
 import CVKHotel from "@/public/images/CVK-hotel.jpg";
-import emiratesLogo from "@/public/images/ek.svg";
-import { formatInTimeZone } from "date-fns-tz";
-import { cookies } from "next/headers";
-export function TicketsOrBookings() {
-  const timeZone = cookies().get("timeZone").value;
-  const ticketFlight = {
-    id: 1,
-    time: {
-      flight: new Date(2023, 1, 1, 18, 0),
-      landing: new Date(2023, 1, 1, 22, 0),
-    },
-    airport: {
-      flight: "Newark (EWR)",
-      landing: "Newark (EWR)",
-    },
-    date: formatInTimeZone(new Date(2023, 0, 30), timeZone, "dd-MM-yy"),
-    flightTime: "Newark (EWR)",
-    gate: "A12",
-    seatNo: 128,
-    logo: emiratesLogo,
-  };
+import { auth } from "@/lib/auth";
+import { getAllFlightBookings } from "@/lib/controllers/flights";
+import Link from "next/link";
+import FlightBookingDetailsCardSmall from "./ui/FlightBookingDetailsCardSmall";
+export async function TicketsOrBookings() {
+  const session = await auth();
+
+  const userId = session?.user?.id;
+
+  const flightBookings = await getAllFlightBookings(userId);
+
   const ticketHotel = {
     id: 1,
     check: {
@@ -41,9 +30,9 @@ export function TicketsOrBookings() {
       <div className="flex items-center justify-between">
         <h1 className="mb-[16px] text-[2rem] font-bold">Tickets/Bookings</h1>
         <select className="h-min bg-transparent p-0 text-[0.875rem] font-semibold">
+          <option value="all">All</option>
           <option value="upcoming">Upcoming</option>
           <option value="past">Past</option>
-          <option value="all">All</option>
         </select>
       </div>
       <div className="mb-[16px] flex items-center gap-[24px] rounded-[12px]">
@@ -74,8 +63,18 @@ export function TicketsOrBookings() {
               <span>Stays</span>
             </TabsTrigger>
           </TabsList>
-          <TabsContent value="flights">
-            <FlightTicketDownloadCard ticketData={ticketFlight} />
+          <TabsContent className="flex flex-col gap-3" value="flights">
+            {!flightBookings.length && <NoSavedCardsMessage />}
+
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {flightBookings.map((booking) => (
+                <FlightBookingDetailsCardSmall
+                  key={booking._id}
+                  bookingDetails={booking}
+                  className={"mx-auto"}
+                />
+              ))}
+            </div>
           </TabsContent>
           <TabsContent value="stays">
             <HotelTicketDownloadCard ticketData={ticketHotel} />
@@ -83,5 +82,16 @@ export function TicketsOrBookings() {
         </Tabs>
       </div>
     </>
+  );
+}
+function NoSavedCardsMessage() {
+  return (
+    <div className="flex flex-col items-center justify-center gap-4 rounded-xl bg-gray-50 p-6 text-gray-700 shadow-inner">
+      <div className="text-2xl font-semibold">No Bookings yet</div>
+      <p className="max-w-md text-center text-base">
+        You don&apos;t have any flight booking yet. Go to{" "}
+        <Link href="/flights">flights</Link> to book a flight
+      </p>
+    </div>
   );
 }
