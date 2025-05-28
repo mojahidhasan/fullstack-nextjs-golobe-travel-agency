@@ -15,7 +15,10 @@ import SessionTimeoutCountdown from "@/components/local-ui/SessionTimeoutCountdo
 import Jumper from "@/components/local-ui/Jumper";
 import { SetLocalStorage } from "@/components/helpers/SetLocalStorage";
 import { defaultFlightFormValue } from "@/reduxStore/features/flightFormSlice";
-async function FlightResultPage({ searchParams }) {
+async function FlightResultPage({ params }) {
+  const decoded = decodeURIComponent(params.query);
+  const searchParams = Object.fromEntries(new URLSearchParams(decoded));
+
   if (Object.keys(searchParams).length === 0) {
     return (
       <>
@@ -58,7 +61,7 @@ async function FlightResultPage({ searchParams }) {
   }
 
   const sParams = JSON.stringify(data);
-  const searchStateCookie = cookies().get("searchState")?.value;
+  const searchStateCookie = cookies().get("flightSearchState")?.value;
   let isNewSearch = searchStateCookie !== sParams;
 
   const formData = new FormData();
@@ -130,7 +133,7 @@ async function FlightResultPage({ searchParams }) {
         <SetCookies
           cookies={[
             {
-              name: "searchState",
+              name: "flightSearchState",
               value: sParams,
               expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
             },
