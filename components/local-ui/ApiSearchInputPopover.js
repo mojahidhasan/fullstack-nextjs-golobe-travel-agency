@@ -40,7 +40,7 @@ export function ApiSearchInputPopover({
         <PopoverTrigger asChild className={cn("cursor-pointer", className)}>
           {renderSelectedResult(val)}
         </PopoverTrigger>
-        <PopoverContent className="w-[300px] md:w-[400px] p-2" align="center">
+        <PopoverContent className="w-[300px] p-2 md:w-[400px]" align="center">
           <SearchResults
             setOpen={setOpen}
             setSelected={setSelectedState}
@@ -83,10 +83,10 @@ function SearchResults({
       setLoading(true);
       const res = await fetch(`${fetchInputs.url}?${urlSearchParam}`, {
         next: {
-          revalidate: fetchInputs.next.revalidate,
-          tags: fetchInputs.next.tags,
+          revalidate: fetchInputs?.next?.revalidate || 600,
+          tags: fetchInputs?.next?.tags,
         },
-        method: fetchInputs.method,
+        method: fetchInputs?.method || "GET",
         cache: "default",
       });
       if (!res.ok) {
@@ -106,10 +106,10 @@ function SearchResults({
   };
   return (
     <div>
-      <div className={"flex mb-2"}>
+      <div className={"mb-2 flex"}>
         <div
           className={
-            "p-1 flex justify-center items-center border border-r-0 rounded-l rounded-md"
+            "flex items-center justify-center rounded-md rounded-l border border-r-0 p-1"
           }
         >
           <Image src={searchIcon} alt={"search_icon"} />
@@ -117,21 +117,21 @@ function SearchResults({
         <Input
           ref={inputRef}
           defaultValue={searchQuery}
-          className="w-full !h-full bg-transparent outline-none hover:bg-muted transition-all border-l-0 rounded-l-[0px]"
+          className="!h-full w-full rounded-l-[0px] border-l-0 bg-transparent outline-none transition-all hover:bg-muted"
           placeholder="Search..."
           onChange={debounce(handleInputChange)}
         />
       </div>
       {loading ? (
-        <div className="h-80 flex flex-col gap-2">
+        <div className="flex h-80 flex-col gap-2">
           {[1, 2, 3, 4, 5].map((el) => (
             <Skeleton key={el} className="h-[60px] w-full" />
           ))}
         </div>
       ) : (
-        <div className="h-80 flex flex-col gap-2 overflow-auto golobe-scrollbar">
+        <div className="golobe-scrollbar flex h-80 flex-col gap-2 overflow-auto">
           {data.length < 1 ? (
-            <div className="p-2 font-bold h-full flex items-center justify-center text-center text-sm">
+            <div className="flex h-full items-center justify-center p-2 text-center text-sm font-bold">
               No results found
             </div>
           ) : (

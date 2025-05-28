@@ -11,10 +11,10 @@ import {
 } from "@/components/ui/breadcrumb";
 import { Fragment } from "react";
 import { usePathname } from "next/navigation";
-export function BreadcrumbUI() {
+export function BreadcrumbUI({ className }) {
   const pathname = usePathname().split("/");
   return (
-    <Breadcrumb>
+    <Breadcrumb className={className}>
       <BreadcrumbList>
         {pathname.map((path, i, arr) => {
           const link = path ? pathname.slice(0, i + 1).join("/") : "/";
