@@ -123,7 +123,7 @@ function SearchFlightsForm() {
       data: dFForm,
     } = validateFlightForm(flightFormData);
 
-    const searchStateCookie = await getCookiesAction(["searchState"]);
+    const searchStateCookie = await getCookiesAction(["flightSearchState"]);
     const searchState = searchStateCookie[0]?.value || "{}";
     const {
       success: sSState,
@@ -200,7 +200,7 @@ function SearchFlightsForm() {
 
   async function getSearchState() {
     const searchState =
-      (await getCookiesAction(["searchState"]))[0]?.value || "{}";
+      (await getCookiesAction(["flightSearchState"]))[0]?.value || "{}";
     if (searchState) {
       return parseFlightSearchParams(searchState);
     }
