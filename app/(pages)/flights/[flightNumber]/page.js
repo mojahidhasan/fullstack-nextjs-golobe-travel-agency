@@ -13,11 +13,14 @@ import dynamic from "next/dynamic";
 import FlightOrHotelReviewsSectionSkeleton from "@/components/local-ui/skeleton/FlightOrHotelReviewsSectionSkeleton";
 import { FareCard } from "@/components/FareCard";
 import { isLoggedIn } from "@/lib/auth";
+import { FlightBooking } from "@/lib/db/models";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default async function FlightDetailsPage({ params }) {
   const loggedIn = await isLoggedIn();
   const timeZone = cookies().get("timeZone")?.value || "UTC";
-  const searchState = cookies().get("searchState")?.value || "{}";
+  const searchState = cookies().get("flightSearchState")?.value || "{}";
   const parsedSearchState = parseFlightSearchParams(searchState);
   const flightClass = parsedSearchState?.class || "economy";
   const metaData = { timeZone, flightClass, isBookmarked: false };
@@ -32,11 +35,11 @@ export default async function FlightDetailsPage({ params }) {
     },
     alirlinePrices,
   );
-
   if (Object.keys(flight).length === 0) {
     notFound();
   }
 
+  let hasFlightBooking = false;
   if (loggedIn) {
     const userDetails = await getUserDetails(0);
     metaData.isBookmarked = userDetails.flights.bookmarked.some((el) => {
@@ -46,6 +49,14 @@ export default async function FlightDetailsPage({ params }) {
         flightClass: metaData.flightClass,
       });
     });
+
+    const flightBookings = await FlightBooking.exists({
+      "flightSnapshot.flightNumber": params.flightNumber,
+      userId: userDetails._id,
+      bookingStatus: "pending",
+    });
+
+    hasFlightBooking = flightBookings !== null;
   }
   const FlightOrHotelReview = dynamic(
     () => import("@/components/sections/FlightOrHotelReview"),
@@ -65,6 +76,16 @@ export default async function FlightDetailsPage({ params }) {
           className={"mb-2 rounded-md shadow-lg"}
         />
         <div className="flex flex-col gap-3">
+          {hasFlightBooking && (
+            <div className="flex items-center justify-between rounded-lg p-5 font-bold shadow-lg">
+              <p>You have a pending booking for this flight</p>
+              <Button asChild>
+                <Link href={`/user/my_bookings/${params.flightNumber}`}>
+                  See this booking
+                </Link>
+              </Button>
+            </div>
+          )}
           <FlightData className={"w-full"} data={flight} metaData={metaData} />
           <FlightDetails
             className={"w-full"}
