@@ -14,7 +14,7 @@ export default async function ProfilePage({ searchParams }) {
     return redirect(
       routes.login.path +
         "?callbackPath=" +
-        encodeURIComponent(routes.profile.path)
+        encodeURIComponent(routes.profile.path),
     );
   }
 
@@ -28,7 +28,7 @@ export default async function ProfilePage({ searchParams }) {
         <ProfileImages
           avatar={userDetails.profileImage}
           cover={userDetails.coverImage}
-          name={userDetails.firstname + " " + userDetails.lastname}
+          name={userDetails.firstName + " " + userDetails.lastName}
           email={userDetails.email}
         />
         <ProfileData
