@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState } from "react";
-import { deletePaymentCard } from "@/lib/actions/updateProfileActions";
+import { deletePaymentCardAction } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 import { toast } from "@/components/ui/use-toast";
 import {
@@ -20,7 +20,7 @@ export function PaymentCard({ card, tryAgain = () => {} }) {
 
   async function handleClick() {
     setDeleting(true);
-    const res = await deletePaymentCard(card.id);
+    const res = await deletePaymentCardAction(card.id);
     if (res?.success === false) {
       toast({
         title: "Error",
