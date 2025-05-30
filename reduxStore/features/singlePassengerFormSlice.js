@@ -6,7 +6,7 @@ export const defaultPassengerPreference = {
   seating: {
     position: "any",
     location: "any",
-    legroom: "any",
+    legroom: "none",
     quietZone: false,
     nearLavatory: "",
   },
@@ -30,6 +30,7 @@ export const defaultPassengerPreference = {
     wifi: false,
     powerOutlet: false,
   },
+  errors: {},
 };
 export const defaultPassengerFormValue = {
   passengerType: "",
