@@ -4,43 +4,48 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 import locationIcon from "@/public/icons/location.svg";
-export function HotelDestinationPopover({ className }) {
-
+export function HotelDestinationPopover({
+  className,
+  fetchInputs,
+  defaultSelected,
+  excludeVals,
+  getSelected = () => {},
+}) {
   function renderSelectedResult(obj) {
     if (Object.keys(obj).length > 0) {
       return (
-        <div className={ cn("border rounded p-2", className) }>
-          <div className={ "font-bold text-2xl" }>{ obj.address.city }</div>
-          <div className={ "text-sm" }>{ obj.address.country }</div>
+        <div className={cn("rounded border p-2", className)}>
+          <div className={"text-2xl font-bold"}>{obj.address.city}</div>
+          <div className={"text-sm"}>{obj.address.country}</div>
         </div>
       );
     }
     return (
-      <div className={ cn("border rounded p-2", className) }>
-        <div className={ "font-bold text-2xl" }>{ "City" }</div>
-        <div className={ "text-sm" }>{ "Country" }</div>
+      <div className={cn("rounded border p-2", className)}>
+        <div className={"text-2xl font-bold"}>{"City"}</div>
+        <div className={"text-sm"}>{"Country"}</div>
       </div>
     );
   }
 
   function renderSearchResults(
     resultArr,
-    setOpen = () => { },
-    setSelected = () => { }
+    setOpen = () => {},
+    setSelected = () => {},
   ) {
     return resultArr.map((obj, i) => (
       <div
-        onClick={ () => {
+        onClick={() => {
           setSelected(obj);
           setOpen(false);
-        } }
-        key={ i }
-        className="cursor-pointer gap-2 p-2 hover:bg-muted border rounded-md flex items-center"
+        }}
+        key={i}
+        className="flex cursor-pointer items-center gap-2 rounded-md border p-2 hover:bg-muted"
       >
-        <Image width={ 24 } height={ 24 } src={ locationIcon } alt="location_icon" />
+        <Image width={24} height={24} src={locationIcon} alt="location_icon" />
         <div>
-          <div className={ "font-bold text-md" }>{ obj.address.city }</div>
-          <div className={ "text-xs" }>{ obj.address.country }</div>
+          <div className={"text-md font-bold"}>{obj.address.city}</div>
+          <div className={"text-xs"}>{obj.address.country}</div>
         </div>
       </div>
     ));
@@ -49,15 +54,12 @@ export function HotelDestinationPopover({ className }) {
   return (
     <>
       <ApiSearchInputPopover
-        fetchInputs={ {
-          url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/hotels/available_places`,
-          searchParamsName: "searchQuery",
-          method: "GET",
-        } }
-        renderSelectedResult={ renderSelectedResult }
-        renderSearchResults={ renderSearchResults }
+        fetchInputs={fetchInputs}
+        defaultSelected={defaultSelected}
+        renderSelectedResult={renderSelectedResult}
+        renderSearchResults={renderSearchResults}
+        getSelectedResult={getSelected}
       />
     </>
   );
 }
-
