@@ -1,7 +1,6 @@
 "use client";
-import React, { useEffect, useLayoutEffect, useState } from "react";
+import React, { useLayoutEffect, useState } from "react";
 import { format } from "date-fns";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { isObject } from "@/lib/utils";
@@ -9,17 +8,13 @@ import validatePassengerDetails from "@/lib/zodSchemas/passengerDetailsValidatio
 import validatePassengerPreferences from "@/lib/zodSchemas/passengersPreferencesValidation";
 import { AlertTriangle } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
+import NoSSR from "@/components/helpers/NoSSR";
 // incomplete, working on it currently
 const SectionHeader = ({ title }) => (
   <h3 className="text-xl font-semibold">{title}</h3>
 );
 
 const FlightDetails = ({ flight }) => {
-  const [mounted, setMounted] = useState(false);
-  useEffect(() => {
-    setMounted(true);
-  }, []);
-
   return (
     <div className="rounded-lg bg-white p-6 shadow-lg">
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
@@ -34,11 +29,9 @@ const FlightDetails = ({ flight }) => {
         <div>
           <p className="text-gray-600">Departure</p>
           <div className="font-semibold">
-            {mounted ? (
-              format(+flight.departure.scheduled, "eee, MMM d, yyyy")
-            ) : (
-              <Skeleton className={"h-5 w-20"} />
-            )}
+            <NoSSR>
+              {format(+flight.departure.scheduled, "eee, MMM d, yyyy")}
+            </NoSSR>
           </div>
           <p className="text-sm text-gray-500">
             {flight.departure.airport.name} - Terminal{" "}
@@ -48,11 +41,9 @@ const FlightDetails = ({ flight }) => {
         <div>
           <p className="text-gray-600">Arrival</p>
           <div className="font-semibold">
-            {mounted ? (
-              format(+flight.arrival.scheduled, "eee, MMM d, yyyy")
-            ) : (
-              <Skeleton className={"h-5 w-20"} />
-            )}
+            <NoSSR>
+              {format(+flight.departure.scheduled, "eee, MMM d, yyyy")}
+            </NoSSR>
           </div>
           <p className="text-sm text-gray-500">
             {flight.arrival.airport.name} - Terminal {flight.arrival.terminal}
