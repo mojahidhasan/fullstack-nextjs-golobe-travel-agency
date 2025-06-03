@@ -1,4 +1,5 @@
 import { auth } from "@/lib/auth";
+import { cancelBooking, isSeatTakenByElse } from "@/lib/controllers/flights";
 import { getUserDetails } from "@/lib/controllers/user";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
@@ -72,9 +73,35 @@ export async function POST(req) {
       });
     }
 
-    const isExpired = bookingData.expiresAt < new Date();
+    const isExpired = bookingData.temporaryReservationExpiresAt < new Date();
 
     if (isExpired) {
+      for (const seat of bookingData.seats) {
+        const isSeatTaken = await isSeatTakenByElse(
+          bookingData.flightSnapshot.flightNumber,
+          seat,
+        );
+
+        if (isSeatTaken) {
+          const cancellationData = {
+            reason:
+              "Seat taken by another passenger due to expired reservation",
+            canceledAt: new Date(),
+            canceledBy: "system",
+          };
+
+          await cancelBooking(
+            bookingData.bookingRef,
+            user._id,
+            cancellationData,
+          );
+          return Response.json({
+            success: false,
+            message:
+              "Your seat is taken by someone else, thus we have canceled your booking",
+          });
+        }
+      }
     }
     const stripe = initStripe();
     let idempotencyKey = bookingData.bookingRef;
