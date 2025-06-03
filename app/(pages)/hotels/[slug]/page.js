@@ -11,7 +11,7 @@ import { RATING_SCALE } from "@/lib/constants";
 import { RatingShow } from "@/components/local-ui/ratingShow";
 import { LikeButton } from "@/components/local-ui/likeButton";
 import { auth } from "@/lib/auth";
-import { FlightOrHotelReview } from "@/components/sections/FlightOrHotelReview";
+import FlightOrHotelReview from "@/components/sections/FlightOrHotelReview";
 export default async function HotelDetailsPage({ params }) {
   const session = await auth();
   const slug = params.slug;
