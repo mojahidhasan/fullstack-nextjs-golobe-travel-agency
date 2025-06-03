@@ -2,7 +2,7 @@ import { isLoggedIn } from "@/lib/auth";
 import { notFound, redirect } from "next/navigation";
 import routes from "@/data/routes.json";
 import { getOneDoc } from "@/lib/db/getOperationDB";
-import FlightTicket from "@/components/pages/user.my_bookings.flights.[bookingRef].ticket/ticket";
+import FlightTicket from "@/components/pages/user.my_bookings.flights.[bookingRef].ticket/Ticket";
 import { generateHMACSignature } from "@/lib/utils.server";
 export default async function FlightTicketPage({ params }) {
   const loggedIn = await isLoggedIn();
