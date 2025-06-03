@@ -133,7 +133,6 @@ function SearchStaysForm({ searchParams = {} }) {
             }}
             defaultSelected={stayFormData.destination}
             getSelected={(selected) => {
-              console.log(selected);
               dispatch(setStayForm({ destination: selected }));
             }}
           />

@@ -141,7 +141,6 @@ const ReviewBooking = ({
   const [preferences, setPreferences] = useState([]);
 
   useLayoutEffect(() => {
-    console.log("formsError", formsError);
     const passengersJSON = sessionStorage.getItem("passengersDetails") || "[]";
     const preferencesJSON =
       sessionStorage.getItem("passengersPreferences") || "[]";
