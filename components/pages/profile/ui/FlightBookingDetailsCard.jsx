@@ -11,18 +11,19 @@ import gate from "@/public/icons/door-closed-mint.svg";
 import plane from "@/public/icons/airplane-filled.svg";
 import lineLeft from "@/public/icons/line-left.svg";
 import lineRight from "@/public/icons/line-right.svg";
+import airplaneIcon from "@/public/icons/airplane-filled-mint.svg";
+
 import airlinesLogos from "@/data/airlinesLogos";
-import { formatInTimeZone } from "date-fns-tz";
-import { cookies } from "next/headers";
 import Link from "next/link";
+import NoSSR from "@/components/helpers/NoSSR";
+import ShowTimeInClientSide from "@/components/helpers/ShowTimeInClientSide";
 export function FlightBookingDetailsCard({ className, bookingData }) {
-  const tz = cookies().get("timeZone")?.value || "UTC";
-  const now = Date.now();
-  const canCancel = bookingData.bookingStatus !== "canceled";
+  const canCancel =
+    bookingData.bookingStatus === "confirmed" &&
+    bookingData.bookingStatus !== "canceled";
   const canRefund =
     bookingData.bookingStatus === "canceled" &&
-    bookingData.paymentStatus === "paid" &&
-    now < new Date(2026);
+    bookingData.paymentStatus === "paid";
 
   const flightData = bookingData.flightSnapshot;
   return (
@@ -79,14 +80,20 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
       <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
         <div className="flex flex-col font-semibold">
           <span>
-            {formatInTimeZone(+flightData.departure.scheduled, tz, "HH:mm")}
+            <NoSSR>
+              <ShowTimeInClientSide
+                date={+flightData.departure.scheduled}
+                formatStr="HH:mm"
+              />
+            </NoSSR>
           </span>{" "}
           <span>
-            {formatInTimeZone(
-              +flightData.departure.scheduled,
-              tz,
-              "d MMMM yyyy",
-            )}
+            <NoSSR>
+              <ShowTimeInClientSide
+                date={+flightData.departure.scheduled}
+                formatStr="d MMMM yyyy"
+              />
+            </NoSSR>
           </span>{" "}
           <span className="max-lg:text-[0.75rem]">
             {flightData.departure.airport.name} (
@@ -118,10 +125,20 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
         </div>
         <div className="flex flex-col font-semibold">
           <span>
-            {formatInTimeZone(+flightData.arrival.scheduled, tz, "HH:mm")}
+            <NoSSR>
+              <ShowTimeInClientSide
+                date={+flightData.arrival.scheduled}
+                formatStr="HH:mm"
+              />
+            </NoSSR>
           </span>{" "}
           <span>
-            {formatInTimeZone(+flightData.arrival.scheduled, tz, "d MMMM yyyy")}
+            <NoSSR>
+              <ShowTimeInClientSide
+                date={+flightData.arrival.scheduled}
+                formatStr="d MMMM yyyy"
+              />
+            </NoSSR>
           </span>{" "}
           <span className="max-lg:text-[0.75rem]">
             {flightData.arrival.airport.name} (
@@ -133,11 +150,14 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
         <SmallDataCard
           imgSrc={calender}
           title="Date"
-          data={formatInTimeZone(
-            +flightData.departure.scheduled,
-            tz,
-            "d MMMM yyyy",
-          )}
+          data={
+            <NoSSR>
+              <ShowTimeInClientSide
+                date={+flightData.departure.scheduled}
+                formatStr="d MMMM yyyy"
+              />
+            </NoSSR>
+          }
         />
         <SmallDataCard
           imgSrc={gate}
@@ -147,9 +167,20 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
         <SmallDataCard
           imgSrc={timer}
           title="Flight time"
-          data={formatInTimeZone(+flightData.totalDuration, tz, "HH:mm")}
+          data={
+            <NoSSR>
+              <ShowTimeInClientSide
+                date={+flightData.totalDuration}
+                formatStr="HH:mm"
+              />
+            </NoSSR>
+          }
         />
-        <SmallDataCard title="Terminal" data={flightData.departure.terminal} />
+        <SmallDataCard
+          imgSrc={airplaneIcon}
+          title="Terminal"
+          data={flightData.departure.terminal}
+        />
       </div>
 
       <div className="rounded-md bg-muted/50 p-4">
@@ -170,8 +201,8 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
                     .seatNumber
                 }
               </p>
-              <p className="text-sm text-muted-foreground">
-                Ticket ID: {p._id}
+              <p className="text-sm capitalize text-muted-foreground">
+                Seat class: {p.seatClass}
               </p>
             </div>
           ))}
@@ -179,7 +210,7 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
       </div>
 
       {/* Button will be made functional soon */}
-      <div className="mt-4 flex flex-wrap justify-between gap-3">
+      <div className="mt-4 flex flex-wrap gap-3">
         <Button className={"min-w-[100px]"} asChild>
           <Link href={`/user/my_bookings/flights/${bookingData.bookingRef}`}>
             View
@@ -187,13 +218,21 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
         </Button>
         {bookingData.bookingStatus === "pending" && (
           <Button className={"min-w-[100px]"} asChild>
-            <Link href={`/user/my_bookings/flights/${bookingData.bookingRef}`}>
+            <Link
+              href={`/user/my_bookings/flights/${bookingData.bookingRef}/payment`}
+            >
               Pay
             </Link>
           </Button>
         )}
         {bookingData.bookingStatus === "confirmed" && (
-          <Button className="text-wrap">Download Ticket</Button>
+          <Button className={"min-w-[100px]"} asChild>
+            <Link
+              href={`/user/my_bookings/flights/${bookingData.bookingRef}/ticket`}
+            >
+              Download Tickets
+            </Link>
+          </Button>
         )}
         {canCancel && <Button variant="destructive">Cancel Flight</Button>}
 
