@@ -9,7 +9,7 @@ import {
   parseFlightSearchParams,
   passengerStrToObject,
 } from "@/lib/utils";
-import { SetFlightFormState } from "@/components/helpers/SetFlightFromState";
+import SetFlightFormState from "@/components/helpers/SetFlightFormState";
 import SetCookies from "@/components/helpers/SetCookies";
 import SessionTimeoutCountdown from "@/components/local-ui/SessionTimeoutCountdown";
 import Jumper from "@/components/local-ui/Jumper";
