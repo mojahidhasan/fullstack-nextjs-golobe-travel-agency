@@ -39,7 +39,7 @@ export default async function FlightDetailsPage({ params }) {
     notFound();
   }
 
-  let hasFlightBooking = false;
+  let bookinRef = null;
   if (loggedIn) {
     const userDetails = await getUserDetails(0);
     metaData.isBookmarked = userDetails.flights.bookmarked.some((el) => {
@@ -50,13 +50,13 @@ export default async function FlightDetailsPage({ params }) {
       });
     });
 
-    const flightBookings = await FlightBooking.exists({
+    const flightBookings = await FlightBooking.findOne({
       "flightSnapshot.flightNumber": params.flightNumber,
       userId: userDetails._id,
       bookingStatus: "pending",
     });
 
-    hasFlightBooking = flightBookings !== null;
+    bookinRef = flightBookings?.bookingRef;
   }
   const FlightOrHotelReview = dynamic(
     () => import("@/components/sections/FlightOrHotelReview"),
@@ -76,11 +76,11 @@ export default async function FlightDetailsPage({ params }) {
           className={"mb-2 rounded-md shadow-lg"}
         />
         <div className="flex flex-col gap-3">
-          {hasFlightBooking && (
+          {bookinRef && (
             <div className="flex items-center justify-between rounded-lg p-5 font-bold shadow-lg">
               <p>You have a pending booking for this flight</p>
               <Button asChild>
-                <Link href={`/user/my_bookings/${params.flightNumber}`}>
+                <Link href={`/user/my_bookings/flights/${bookinRef}`}>
                   See this booking
                 </Link>
               </Button>
