@@ -1,11 +1,11 @@
 "use client";
 import { useEffect } from "react";
-import { deleteCookies } from "@/lib/actions";
+import { deleteCookiesAction } from "@/lib/actions";
 import routes from "@/data/routes.json";
 export default function DeleteLocalStorageAndCookies({ email }) {
   useEffect(() => {
     async function deletes() {
-      await deleteCookies(["ces", "sai"]);
+      await deleteCookiesAction(["ces", "sai"]);
       localStorage.removeItem("sendAgainAt");
       const emailsSent = JSON.parse(localStorage.getItem("emailsSent"));
 
