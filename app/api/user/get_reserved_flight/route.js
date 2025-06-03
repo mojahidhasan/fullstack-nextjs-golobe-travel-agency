@@ -1,10 +1,10 @@
 import { auth } from "@/lib/auth";
+import { cancelBooking, isSeatTakenByElse } from "@/lib/controllers/flights";
 import { getUserDetails } from "@/lib/controllers/user";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 
 export async function POST(req) {
   const body = await req.json();
-
   const session = await auth();
   if (!session?.user) {
     return Response.json(
@@ -15,7 +15,7 @@ export async function POST(req) {
 
   try {
     const user = await getUserDetails();
-    const reservedFlights = await getOneDoc(
+    const reservedFlight = await getOneDoc(
       "FlightBooking",
       {
         "flightSnapshot.flightNumber": body.flightNumber,
@@ -27,16 +27,34 @@ export async function POST(req) {
       0,
     );
 
-    if (Object.keys(reservedFlights).length === 0) {
+    if (Object.keys(reservedFlight).length === 0) {
       return Response.json({
         success: false,
-        message: "This flight is not reserved yet",
+        message: "Flight not reserved or got canceled",
       });
+    }
+
+    for (const seat of reservedFlight.seats) {
+      const isTaken = await isSeatTakenByElse(
+        reservedFlight.flightSnapshot.flightNumber,
+        seat,
+      );
+      if (isTaken) {
+        await cancelBooking(reservedFlight.bookingRef, user._id, {
+          reason: "Seat taken by another passenger due to expired reservation",
+          canceledAt: new Date(),
+          canceledBy: "system",
+        });
+        return Response.json({
+          success: false,
+          message: `This seat ${seat.seatNumber} is already taken by another passenger, thus the booking has been canceled`,
+        });
+      }
     }
 
     return Response.json({
       success: true,
-      data: reservedFlights,
+      data: reservedFlight,
       message: "Flight booking fetched successfully",
     });
   } catch (error) {
