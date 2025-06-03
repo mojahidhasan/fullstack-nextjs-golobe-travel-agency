@@ -4,23 +4,27 @@ import Link from "next/link";
 
 export default function SuccessPage({ searchParams }) {
   const title = searchParams.title || "Successful";
-  const message = searchParams.message || "Something is successful";
+  const message = searchParams.message || "Something is successful.";
   const callbackUrl = searchParams.callbackUrl || "/";
-  const callbackTitle = searchParams.callbackTitle || "Go to";
+  const callbackTitle = searchParams.callbackTitle || "Go Back";
+
   return (
-    <main className="mx-auto mb-[80px] mt-7 w-[90%] text-secondary">
-      <div
-        role="status"
-        className="mx-auto flex min-h-[400px] flex-col items-center justify-center gap-4 rounded-xl border border-primary bg-[#f3fbf8] p-6 text-primary shadow-md"
-      >
-        <div className="flex items-center gap-2 text-2xl font-semibold">
-          <CheckCircleIcon className="h-6 w-6" />
-          <span>{title}</span>
+    <main className="mx-auto my-[40px] flex min-h-[500px] w-[90%] items-center justify-center rounded-[20px] bg-primary/30 px-4 py-12 text-primary-foreground">
+      <div className="w-full max-w-md rounded-xl bg-primary p-10 text-center shadow-xl">
+        <div className="flex flex-col items-center gap-4">
+          <CheckCircleIcon
+            className="h-16 w-16 text-secondary"
+            strokeWidth={1.5}
+          />
+          <h1 className="text-3xl font-bold">{title}</h1>
+          <p className="text-base font-medium text-secondary">{message}</p>
+          <Button
+            className="mt-6 bg-secondary text-base font-semibold text-secondary-foreground hover:bg-secondary/80"
+            asChild
+          >
+            <Link href={callbackUrl}>{callbackTitle}</Link>
+          </Button>
         </div>
-        <div className="text-center text-base font-medium">{message}</div>
-        <Button className="min-w-[150px]" asChild>
-          <Link href={callbackUrl}>{callbackTitle}</Link>
-        </Button>
       </div>
     </main>
   );
