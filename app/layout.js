@@ -11,7 +11,7 @@ import mongoose from "mongoose";
 import dynamic from "next/dynamic";
 
 import openGraph from "./opengraph-image.jpg";
-import SetNecessaryCookies from "./_SetCookies";
+import SetNecessaryCookies from "@/components/helpers/SetCookies";
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",
@@ -76,6 +76,14 @@ export default async function RootLayout({ children }) {
       ssr: false,
     },
   );
+
+  const necessaryCookies = [
+    {
+      name: "timeZone",
+      value: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    },
+  ];
+
   return (
     <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
       <body className={monse.className}>
@@ -89,7 +97,7 @@ export default async function RootLayout({ children }) {
         </StoreProvider>
         <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
         <Toaster className="bg-secondary" />
-        <SetNecessaryCookies />
+        <SetNecessaryCookies cookies={necessaryCookies} />
       </body>
     </html>
   );
