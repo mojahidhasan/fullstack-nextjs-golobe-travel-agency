@@ -5,7 +5,10 @@ import MakePaymentSection from "@/components/sections/MakePaymentSection";
 import useFetch from "@/lib/hooks/useFetch";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/use-toast";
+import { useRouter } from "next/navigation";
 export default function BookingPayment({ flightNumber }) {
+  const router = useRouter();
   const {
     data: flightBookingData,
     loading: flightBookingLoading,
@@ -29,6 +32,54 @@ export default function BookingPayment({ flightNumber }) {
       }),
     },
   );
+
+  async function middleware(next = async () => {}) {
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/get_reserved_flight`,
+        {
+          method: "POST",
+          body: JSON.stringify({
+            flightNumber: flightNumber,
+          }),
+        },
+      );
+      if (!res.ok) {
+        throw new Error("Failed to load flight booking");
+      }
+
+      const data = await res.json();
+
+      if (data.success === false) {
+        throw new Error(data.message);
+      }
+
+      await next();
+    } catch (e) {
+      console.log(e);
+      toast({
+        title: "Failed confirming payment",
+        description: e.message,
+        variant: "destructive",
+      });
+    }
+  }
+
+  function onSuccess() {
+    toast({
+      title: "Payment successful",
+      description: "Your payment was successful",
+      variant: "default",
+    });
+    const searchParams = new URLSearchParams({
+      title: "Payment successful",
+      message: "Your payment was successful",
+      callbackUrl: `/user/my_bookings/flights/${flightBookingData.data.bookingRef}/ticket`,
+      callbackTitle: "Download ticket",
+    });
+    router.push(`/success?${searchParams.toString()}`);
+  }
+
   return flightBookingError ? (
     <div className="flex h-full min-h-[300px] flex-col items-center justify-center gap-6 rounded-md border border-red-300 bg-red-50 p-6 shadow-sm">
       <div className="flex items-center gap-2 text-red-600">
@@ -58,7 +109,7 @@ export default function BookingPayment({ flightNumber }) {
             <Countdown
               currentTimeMs={Date.now()}
               timeoutAtMs={new Date(
-                flightBookingData?.data?.expiresAt,
+                flightBookingData?.data?.temporaryReservationExpiresAt,
               )?.getTime()}
             />
           ) : (
@@ -67,6 +118,8 @@ export default function BookingPayment({ flightNumber }) {
         </div>
       </div>
       <MakePaymentSection
+        onSuccess={onSuccess}
+        middleware={middleware}
         loading={loading}
         error={error}
         retry={retry}
