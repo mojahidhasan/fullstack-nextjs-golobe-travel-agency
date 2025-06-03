@@ -1,7 +1,7 @@
 import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { isLoggedIn } from "@/lib/auth";
-import { redirect } from "next/dist/server/api-utils";
+import { redirect } from "next/navigation";
 import Image from "next/image";
 import routes from "@/data/routes.json";
 export default async function MyBookingsLayout({ flights, stays }) {
