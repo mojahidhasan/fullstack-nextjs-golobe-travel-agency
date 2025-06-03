@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { notFound, redirect } from "next/navigation";
-import { addYears } from "date-fns";
 import { formatInTimeZone } from "date-fns-tz";
 
 import { Button } from "@/components/ui/button";
@@ -13,6 +12,7 @@ import { getOneDoc } from "@/lib/db/getOperationDB";
 import { cn, minutesToHMFormat } from "@/lib/utils";
 import routes from "@/data/routes.json";
 import { isLoggedIn } from "@/lib/auth";
+import Link from "next/link";
 export default async function FlightBookingDetailsPage({ params }) {
   const loggedIn = await isLoggedIn();
 
@@ -24,21 +24,22 @@ export default async function FlightBookingDetailsPage({ params }) {
     );
   }
 
-  const bookingId = params.bookingRef;
+  const bookingRef = params.bookingRef;
   const bookingData = await getOneDoc("FlightBooking", {
-    bookingRef: bookingId,
+    bookingRef: bookingRef,
   });
 
   if (Object.keys(bookingData).length === 0) return notFound();
 
   const flight = bookingData.flightSnapshot;
   const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
-  const now = Date.now();
-  const canCancel = now < addYears(new Date(), 1).getTime();
+
+  const canCancel =
+    bookingData.bookingStatus === "confirmed" &&
+    bookingData.bookingStatus !== "canceled";
   const canRefund =
     bookingData.bookingStatus === "canceled" &&
-    bookingData.paymentStatus === "paid" &&
-    now < new Date(2026);
+    bookingData.paymentStatus === "paid";
 
   return (
     <main className="container mx-auto max-w-6xl px-6 py-12">
@@ -130,8 +131,21 @@ export default async function FlightBookingDetailsPage({ params }) {
       </section>
 
       <section className="flex flex-wrap justify-start gap-4">
+        {bookingData.bookingStatus === "pending" && (
+          <Button className={"min-w-[100px]"} asChild>
+            <Link
+              href={`/user/my_bookings/flights/${bookingData.bookingRef}/payment`}
+            >
+              Pay
+            </Link>
+          </Button>
+        )}
         {bookingData.bookingStatus === "confirmed" && (
-          <Button className="text-wrap">Download Ticket</Button>
+          <Button className="text-wrap" addYears>
+            <Link href={`/user/my_bookings/flights/${bookingRef}/ticket`}>
+              Download Ticket
+            </Link>
+          </Button>
         )}
         {canCancel && <Button variant="destructive">Cancel Flight</Button>}
         {canRefund && (
