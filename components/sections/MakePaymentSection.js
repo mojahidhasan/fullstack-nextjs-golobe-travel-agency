@@ -10,6 +10,10 @@ export default function MakePaymentSection({
   paymentIntents,
   paymentStatus,
   retry = () => {},
+  middleware = async (next = async () => {}) => {
+    await next();
+  }, // runs before confirming the payment
+  onSuccess = () => {},
 }) {
   return (
     <div
@@ -32,6 +36,8 @@ export default function MakePaymentSection({
         </TabsList>
         <TabsContent value="saved">
           <PayWithSavedCard
+            onSuccess={onSuccess}
+            middleware={middleware}
             loading={loading}
             error={error}
             retry={retry}
@@ -41,6 +47,8 @@ export default function MakePaymentSection({
         </TabsContent>
         <TabsContent value="new">
           <PayWithNewCardForm
+            onSuccess={onSuccess}
+            middleware={middleware}
             loading={loading}
             error={error}
             paymentIntents={paymentIntents}

@@ -17,6 +17,8 @@ import { toast } from "../ui/use-toast";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK);
 export default function PayWithSavedCard({
+  onSuccess = () => {},
+  middleware = async (next = () => {}) => {}, // runs before confirming the payment
   loading: paymentIntentsLoading,
   error,
   paymentIntents,
@@ -53,6 +55,8 @@ export default function PayWithSavedCard({
       }}
     >
       <TheForm
+        onSuccess={onSuccess}
+        middleware={middleware}
         cardData={cardData}
         amount={paymentIntents?.amount}
         currency={paymentIntents?.currency}
@@ -62,7 +66,14 @@ export default function PayWithSavedCard({
   );
 }
 
-function TheForm({ cardData, amount, currency, clientSecret }) {
+function TheForm({
+  onSuccess,
+  cardData,
+  amount,
+  currency,
+  clientSecret,
+  middleware,
+}) {
   const pathname = usePathname();
   const stripe = useStripe();
 
@@ -76,12 +87,18 @@ function TheForm({ cardData, amount, currency, clientSecret }) {
       return;
     }
     setPaying(true);
+
+    await middleware(async () => {
+      await confirmPayment(clientSecret, paymentMethodId);
+    });
+    setPaying(false);
+  };
+
+  async function confirmPayment(clientSecret, paymentMethodId) {
     const result = await stripe.confirmCardPayment(clientSecret, {
       payment_method: paymentMethodId,
       return_url: `${process.env.NEXT_PUBLIC_BASE_URL}${pathname}`,
     });
-    setPaying(false);
-
     if (result.error) {
       if (result.error.payment_intent.status === "succeeded") {
         window.location.reload();
@@ -95,9 +112,9 @@ function TheForm({ cardData, amount, currency, clientSecret }) {
         variant: "destructive",
       });
     } else {
-      window.location.reload();
+      onSuccess();
     }
-  };
+  }
   return (
     <>
       {!paymentMethodId && <ErrorMessage message="Please select a card" />}
@@ -204,7 +221,7 @@ function PaymentSuccessMessage({ children }) {
   return (
     <div
       role="status"
-      className="mx-auto flex flex-col items-center justify-center gap-4 rounded-xl border border-primary bg-[#f3fbf8] p-6 text-primary shadow-md"
+      className="mx-auto flex min-h-[200px] flex-col items-center justify-center gap-4 rounded-xl border border-primary bg-[#f3fbf8] p-6 text-primary shadow-md"
     >
       <div className="flex items-center gap-2 text-2xl font-semibold">
         <CheckCircleIcon className="h-6 w-6" />
@@ -213,9 +230,6 @@ function PaymentSuccessMessage({ children }) {
       <div className="text-center text-base font-medium">
         {children || "Payment successful"}
       </div>
-      <Button asChild>
-        <Link href="/profile">See your booking</Link>
-      </Button>
     </div>
   );
 }
