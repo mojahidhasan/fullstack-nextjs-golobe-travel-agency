@@ -15,9 +15,6 @@
   },
   "dependencies": {
     "@auth/mongodb-adapter": "^3.7.4",
-    "@firebase/app": "^0.10.8",
-    "@firebase/auth": "^1.7.6",
-    "@firebase/storage": "^0.12.6",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-avatar": "^1.0.4",
