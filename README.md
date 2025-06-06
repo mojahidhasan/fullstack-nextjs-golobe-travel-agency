@@ -205,5 +205,6 @@ To set up and run the project locally, follow these steps:
 - Implement price alert system
 - Add multi-language support
 - Create admin dashboard for content management
+- Adding websocket for real-time updates
 
 Note: Several smaller enhancements and bug fixes are also planned for optimal user experience.
