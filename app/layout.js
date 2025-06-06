@@ -80,7 +80,7 @@ export default async function RootLayout({ children }) {
       ssr: false,
     },
   );
-  
+
   const necessaryCookies = [
     {
       name: "timeZone",
@@ -97,24 +97,23 @@ export default async function RootLayout({ children }) {
     {
       revalidate: +revalidate,
       tags: ["websiteConfig"],
-    }
+    },
   )();
 
-  const maintenanceMode = websiteConfig?.maintenanceMode || {};
+  const maintenanceMode = websiteConfig?.maintenanceMode ?? { enabled: false };
   return (
     <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
       <body className={monse.className}>
-        {maintenanceMode.enabled === true && (
+        {maintenanceMode.enabled === true ? (
           <MaintenancePage
             message={maintenanceMode.message}
             startsAt={maintenanceMode.startsAt}
             endsAt={maintenanceMode.endsAt}
           />
-        )}
-        {maintenanceMode.enabled == false && (
+        ) : (
           <StoreProvider>
             <SessionProvider>
-              <div className="max-w-[1440px] mx-auto">
+              <div className="mx-auto max-w-[1440px]">
                 <Notification />
                 <MaintenanceNotice maintenanceMode={maintenanceMode} />
                 {children}
