@@ -18,7 +18,7 @@ export function ActiveNavLink({ className, ...props }) {
       <Button
         asChild
         variant={"link"}
-        className={"text-inherit rounded-none h-[inherit]"}
+        className={"h-[inherit] rounded-none text-inherit"}
       >
         <Link
           href={routes.flights.path}
@@ -42,7 +42,7 @@ export function ActiveNavLink({ className, ...props }) {
       <Button
         asChild
         variant="link"
-        className={"text-inherit rounded-none h-[inherit]"}
+        className={"h-[inherit] rounded-none text-inherit"}
       >
         <Link
           href={routes.hotels.path}

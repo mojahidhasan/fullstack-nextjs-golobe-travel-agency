@@ -1,5 +1,4 @@
 "use client";
-// import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/local-ui/input";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -11,39 +10,41 @@ import { authenticateAction } from "@/lib/actions";
 import { useFormState, useFormStatus } from "react-dom";
 
 import routes from "@/data/routes.json";
-export function LoginForm() {
+import { cn } from "@/lib/utils";
+import { useState } from "react";
+export function LoginForm({ className }) {
+  const [key, setKey] = useState(0);
   const [state, dispatch] = useFormState(authenticateAction, null);
-
+  // for resetting the form
+  if (state?.success === true) {
+    setKey((prev) => prev + 1);
+  }
   return (
-    <div className={ "bg-white p-7 rounded-lg shadow-lg" }>
-      <div
-        className={ "mb-5" }
-        aria-live="polite"
-        aria-atomic="true"
-      >
-        { state?.success === false && state?.message && (
-          <ErrorMessage message={ state?.message } />
-        ) }
-        { state?.success === true && state?.message && (
-          <SuccessMessage message={ state?.message } />
-        ) }
+    <div className={cn("rounded-lg bg-white p-7 shadow-lg", className)}>
+      <div className={"mb-5"} aria-live="polite" aria-atomic="true">
+        {state?.success === false && state?.message && (
+          <ErrorMessage message={state?.message} />
+        )}
+        {state?.success === true && state?.message && (
+          <SuccessMessage message={state?.message} />
+        )}
       </div>
-      <form action={ dispatch }>
+      <form action={dispatch} key={key}>
         <Input
           type="email"
           placeholder="Enter your email"
-          name={ "email" }
+          name={"email"}
           label="Email"
-          error={ state?.error?.email }
-          className={ "mb-[24px]" }
+          error={state?.error?.email}
+          className={"mb-[24px]"}
         />
         <Input
           type="password"
           placeholder="Enter your password"
-          name={ "password" }
+          name={"password"}
           label="Password"
-          error={ state?.error?.password }
-          className={ "mb-[24px]" }
+          error={state?.error?.password}
+          className={"mb-[24px]"}
         />
         <div className="flex justify-between">
           {/* <div>
@@ -55,22 +56,22 @@ export function LoginForm() {
           </div> */}
           <div className="grow">
             <Link
-              href={ routes["forgot-password"].path }
-              className="text-tertiary float-right text-[0.875rem]"
+              href={routes["forgot-password"].path}
+              className="float-right text-[0.875rem] text-tertiary"
             >
-              { routes["forgot-password"].title }
+              {routes["forgot-password"].title}
             </Link>
           </div>
         </div>
         <LoginBtn />
         <div className="mt-[16px] text-center text-[0.875rem] font-medium text-secondary">
-          Don&apos;t have an account?{ " " }
-          <Link href={ routes.signup.path } className="text-tertiary">
-            { routes.signup.title }
+          Don&apos;t have an account?{" "}
+          <Link href={routes.signup.path} className="text-tertiary">
+            {routes.signup.title}
           </Link>
         </div>
       </form>
-      <AuthenticateWith message={ "Or Login With" } />
+      <AuthenticateWith message={"Or Login With"} />
     </div>
   );
 }
@@ -78,8 +79,8 @@ export function LoginForm() {
 function LoginBtn() {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" className="w-full mt-10" disabled={ pending }>
-      { pending ? "Submitting..." : "Login" }
+    <Button type="submit" className="mt-10 w-full" disabled={pending}>
+      {pending ? "Submitting..." : "Login"}
     </Button>
   );
-};
+}

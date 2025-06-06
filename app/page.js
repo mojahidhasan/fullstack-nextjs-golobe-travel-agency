@@ -15,11 +15,11 @@ export default async function HomePage() {
       <header className="relative mb-20">
         <Nav
           type="home"
-          className={"absolute z-10 left-0 top-0"}
+          className={"absolute left-0 top-0 z-10"}
           session={session}
         />
         <section
-          className={`flex relative h-[600px] w-full items-center bg-home-header`}
+          className={`relative flex h-[600px] w-full items-center bg-home-header`}
         >
           <Image
             src={
@@ -28,24 +28,24 @@ export default async function HomePage() {
             alt="home-header"
             fill
             sizes="(max-width: 640px) 50vw, 90vw"
-            className="object-cover -z-10 object-[center_40%]"
+            className="-z-10 object-cover object-[center_40%]"
             loading={"eager"}
           />
           <div className="w-full text-center text-white">
-            <h2 className="leading-[5rem] text-2xl font-bold md:text-[2rem] lg:text-[2.8125rem]">
+            <h2 className="text-2xl font-bold leading-[5rem] md:text-[2rem] lg:text-[2.8125rem]">
               Helping Others
             </h2>
-            <h1 className="text-[3rem] md:tracking-[.15em] font-bold uppercase md:text-[4rem] lg:text-[5rem]">
+            <h1 className="text-[3rem] font-bold uppercase md:text-[4rem] md:tracking-[.15em] lg:text-[5rem]">
               Live & Travel
             </h1>
-            <p className="text-[1rem] font-semibold  lg:text-[1.25rem]">
+            <p className="text-[1rem] font-semibold lg:text-[1.25rem]">
               Special offers to suit your plan
             </p>
           </div>
         </section>
         <SearchFlightsAndStaysFormShortcut
           className={
-            "relative left-1/2 top-full w-[90%] -translate-x-1/2 -translate-y-[30%]"
+            "relative left-1/2 top-full w-[90%] -translate-x-1/2 -translate-y-[20%] lg:-translate-y-[25%] xl:-translate-y-[30%]"
           }
         />
       </header>

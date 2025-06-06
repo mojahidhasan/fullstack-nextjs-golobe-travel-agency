@@ -3,6 +3,12 @@
     "airline": "Emirates",
     "iataCode": "EK",
     "model": "Airbus A380",
+    "cruiseSpeed": {
+      "speedIn": "mi",
+      "per": "hour",
+      "value": 565
+    },
+
     "classes": ["first", "business", "premium_economy", "economy"],
     "description": "A380 Four Class Ultra Long Range",
     "total": 484,
@@ -525,6 +531,11 @@
     "airline": "Emirates",
     "iataCode": "EK",
     "model": "Boeing 777",
+    "cruiseSpeed": {
+      "speedIn": "mi",
+      "per": "hour",
+      "value": 553
+    },
     "classes": ["first", "business", "premium_economy", "economy"],
     "description": "B777 Four Class Ultra Long Range",
     "total": 324,
@@ -880,6 +891,11 @@
     "airline": "Etihad",
     "iataCode": "EY",
     "model": "Airbus A330",
+    "cruiseSpeed": {
+      "speedIn": "mi",
+      "per": "hour",
+      "value": 530
+    },
     "classes": ["first", "business", "economy"],
     "description": "A330 three Class",
     "total": 231,
@@ -1136,6 +1152,11 @@
     "airline": "Etihad",
     "iataCode": "EY",
     "model": "Boeing 787",
+    "cruiseSpeed": {
+      "speedIn": "mi",
+      "per": "hour",
+      "value": 650
+    },
     "classes": ["first", "business", "economy"],
     "description": "Boeing 787-9 (789) Layout 1",
     "total": 231,
@@ -1390,6 +1411,11 @@
     "airline": "FlyDubai",
     "iataCode": "FZ",
     "model": "Boeing 737",
+    "cruiseSpeed": {
+      "speedIn": "mi",
+      "per": "hour",
+      "value": 530
+    },
     "classes": ["business", "economy"],
     "description": "Boeing 737-800",
     "total": 174,

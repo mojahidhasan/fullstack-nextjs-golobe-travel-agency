@@ -6,18 +6,36 @@ import Image from "next/image";
 import error_icon from "@/public/icons/error.svg";
 import { cn } from "@/lib/utils";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import eye from "@/public/icons/eye.svg";
 import eyeOff from "@/public/icons/eye-closed.svg";
-import { SelectCountry } from "../pages/profile/ui/SelectCountry";
+import { SelectDialCode } from "../SelectDialCode";
 export function Input({
   label = "Label",
   error = null,
   className,
   type = "text",
+  onChange = () => {},
+  defaultPhoneValue,
   ...props
 }) {
   const [inputType, setInputType] = useState(type);
+  const [phoneData, setPhoneData] = useState({
+    number: "",
+    dialCode: "",
+  });
+
+  useEffect(() => {
+    if (type === "tel") {
+      const value = defaultPhoneValue;
+
+      if (value) {
+        const parsedValue = JSON.parse(value);
+        setPhoneData(parsedValue);
+      }
+    }
+  }, [defaultPhoneValue, type]);
+
   function toggleEye() {
     if (inputType === "password") {
       setInputType("text");
@@ -26,29 +44,56 @@ export function Input({
     }
   }
 
+  const handlePhoneChange = (e) => {
+    const newPhone = e.target.value;
+    const newPhoneData = { ...phoneData, number: newPhone };
+    setPhoneData(newPhoneData);
+    onChange({ target: { value: JSON.stringify(newPhoneData) } });
+  };
+
+  const handleDialCode = (dialCode) => {
+    const newPhoneData = { ...phoneData, dialCode: dialCode.value };
+    setPhoneData(newPhoneData);
+    onChange({ target: { value: JSON.stringify(newPhoneData) } });
+  };
+
   return (
     <>
       <Label className={cn("relative block h-auto", className)}>
-        <span className="absolute z-10 text-sm leading-4 font-normal -top-[8px] left-5 bg-background px-1">
-          {label}
-        </span>
-        <div className="h-auto relative">
+        <p className="absolute -top-[8px] left-5 z-10 bg-background px-1 text-sm font-normal leading-4">
+          <span>{label}</span>
+          {props.required === true && (
+            <span className="text-destructive"> *</span>
+          )}
+        </p>
+        <div className="relative h-auto">
           {type !== "textarea" ? (
             type === "tel" ? (
               <div
                 className={cn(
-                  "border-2 h-10 w-full lg:h-14 rounded-md flex border-black",
-                  error && "border-destructive"
+                  "flex h-10 w-full rounded-md border-2 border-black lg:h-14",
+                  error && "border-destructive",
                 )}
               >
-                <SelectCountry name={"callingCode"} />
+                <input
+                  type="hidden"
+                  value={JSON.stringify(phoneData)}
+                  {...props}
+                />
+                <SelectDialCode
+                  name={"callingCode"}
+                  getDialCode={handleDialCode}
+                  value={phoneData?.dialCode}
+                  className={"border-none bg-slate-300"}
+                />
                 <_Input
                   style={{
                     outline: "none",
                   }}
-                  type={inputType}
-                  className="h-full bg-inherit lg:h-full border-none"
-                  {...props}
+                  type="tel"
+                  defaultValue={phoneData?.number}
+                  className="h-full border-none bg-inherit lg:h-full"
+                  onChange={handlePhoneChange}
                 />
               </div>
             ) : (
@@ -58,9 +103,10 @@ export function Input({
                 }}
                 className={cn(
                   "border-2 border-black",
-                  error && "border-destructive"
+                  error && "border-destructive",
                 )}
                 type={inputType}
+                onChange={onChange}
                 {...props}
               />
             )
@@ -71,24 +117,24 @@ export function Input({
               }}
               // wrap
               className={cn(
-                "border-2 p-2 border-black w-full min-h-[100px] rounded-sm",
-                error && "border-destructive"
+                "min-h-[100px] w-full rounded-sm border-2 border-black p-2",
+                error && "border-destructive",
               )}
               {...props}
             ></textarea>
           )}
-          <div className="flex gap-[6px] w-auto absolute right-3 top-1/2 -translate-y-1/2">
+          <div className="absolute right-3 top-1/2 flex w-auto -translate-y-1/2 gap-[6px]">
             {type === "password" && (
               <button
                 type="button"
                 onClick={toggleEye}
-                className="w-auto h-auto"
+                className="h-auto w-auto"
               >
                 <Image
                   width={16}
                   height={16}
                   src={inputType === "password" ? eyeOff : eye}
-                  alt="error_icon"
+                  alt="eye_on_off_icon"
                 />
               </button>
             )}
@@ -97,7 +143,7 @@ export function Input({
             )}
           </div>
         </div>
-        <p className="pl-4 mt-1 text-destructive">{error}</p>
+        <p className="mt-1 pl-4 text-destructive">{error}</p>
       </Label>
     </>
   );

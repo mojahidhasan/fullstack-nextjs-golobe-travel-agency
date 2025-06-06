@@ -11,7 +11,7 @@ import mongoose from "mongoose";
 import dynamic from "next/dynamic";
 
 import openGraph from "./opengraph-image.jpg";
-import SetCookies from "./_setCookies";
+import SetNecessaryCookies from "@/components/helpers/SetCookies";
 import { unstable_cache } from "next/cache";
 import { WebsiteConfig } from "@/admin/db/models";
 import MaintenancePage from "./MaintenancePage";
@@ -70,7 +70,7 @@ export default async function RootLayout({ children }) {
     try {
       await mongoose.connect(process.env.MONGODB_URI);
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
     }
   }
 
@@ -78,9 +78,15 @@ export default async function RootLayout({ children }) {
     () => import("@/app/_notification").then((mod) => mod.Notification),
     {
       ssr: false,
-    }
+    },
   );
-
+  
+  const necessaryCookies = [
+    {
+      name: "timeZone",
+      value: Intl.DateTimeFormat().resolvedOptions().timeZone,
+    },
+  ];
   const revalidate = process.env.NEXT_PUBLIC_REVALIDATION_TIME || 600;
   const websiteConfig = await unstable_cache(
     async () => {
@@ -118,7 +124,7 @@ export default async function RootLayout({ children }) {
         )}
         <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
         <Toaster className="bg-secondary" />
-        <SetCookies />
+        <SetNecessaryCookies cookies={necessaryCookies} />
       </body>
     </html>
   );

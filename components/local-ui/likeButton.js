@@ -8,11 +8,11 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "../ui/use-toast";
 /**
  *
- * @param {{keys: object, liked: boolean, flightsOrHotels: string, className: string}} params keys object should contain data that you want to save or delete from db during like and unlike action
+ * @param {{keys: object, isBookmarked: boolean, flightsOrHotels: string, className: string}} params keys object should contain data that you want to save or delete from db during like and unlike action
  * @returns
  */
 export const LikeButton = ({
-  liked,
+  isBookmarked,
   keys,
   flightsOrHotels = "flights",
   className,
@@ -22,12 +22,12 @@ export const LikeButton = ({
   const searchParams = useSearchParams();
   const callbackPath = pathname + "?" + searchParams.toString();
 
-  const [isLiked, setIsliked] = useState(liked);
+  const [bookmarked, setBookmarked] = useState(isBookmarked);
   const [likeLoading, setLikeLoading] = useState(false);
 
   useEffect(() => {
-    setIsliked(liked);
-  }, [liked]);
+    setBookmarked(isBookmarked);
+  }, [isBookmarked]);
 
   async function handleClick(e) {
     setLikeLoading(true);
@@ -44,7 +44,7 @@ export const LikeButton = ({
         variant: "destructive",
       });
     } else {
-      setIsliked(!isLiked);
+      setBookmarked(!bookmarked);
     }
     setLikeLoading(false);
   }
@@ -52,7 +52,7 @@ export const LikeButton = ({
     <>
       {likeLoading ? (
         <Button className={cn(className)} variant={"outline"}>
-          <Loader2 className="animate-spin w-6 h-6" />
+          <Loader2 className="h-6 w-6 animate-spin" />
         </Button>
       ) : (
         <Button
@@ -73,7 +73,7 @@ export const LikeButton = ({
               strokeWidth="1.5"
               strokeLinecap="round"
               strokeLinejoin="round"
-              fill={isLiked ? "black" : "none"}
+              fill={bookmarked ? "black" : "none"}
             />
           </svg>
         </Button>

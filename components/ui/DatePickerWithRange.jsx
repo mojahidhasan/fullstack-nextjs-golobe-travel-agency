@@ -20,10 +20,9 @@ export function DatePickerWithRange({ name, className }) {
   const dispatch = useDispatch();
 
   const flightForm = useSelector((state) => state.flightForm.value);
-
   const rangeDate = {
-    from: flightForm.departDate ? new Date(flightForm.departDate) : "",
-    to: flightForm.returnDate ? new Date(flightForm.returnDate) : "",
+    from: flightForm.desiredDepartureDate ? new Date(flightForm.desiredDepartureDate) : "",
+    to: flightForm.desiredReturnDate ? new Date(flightForm.desiredReturnDate) : "",
   };
 
   useEffect(() => {
@@ -32,19 +31,19 @@ export function DatePickerWithRange({ name, className }) {
         next: { revalidate: 300 },
       });
       const data = await res.json();
-      dispatch(setFlightForm({ firstAvailableFlightDate: new Date(data.firstAvailableFlightDate).toString(), lastAvailableFlightDate: new Date(data.lastAvailableFlightDate).toString() }));
+      dispatch(setFlightForm({ firstAvailableFlightDate: new Date(data.firstAvailableFlightDate).toISOString(), lastAvailableFlightDate: new Date(data.lastAvailableFlightDate).toISOString() }));
     }
 
     getFlightDate();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const date = (flightForm.departDate ? new Date(flightForm.departDate) : "");
+  const date = (flightForm.desiredDepartureDate ? new Date(flightForm.desiredDepartureDate) : "");
 
   function setDate(date) {
     dispatch(
       setFlightForm({
-        departDate: date instanceof Date ? date.toString() : "",
+        desiredDepartureDate: date instanceof Date ? date.toISOString() : "",
       })
     );
   }
@@ -52,8 +51,8 @@ export function DatePickerWithRange({ name, className }) {
   function setRangeDate(date) {
     dispatch(
       setFlightForm({
-        departDate: date?.from instanceof Date ? date.from.toString() : "",
-        returnDate: date?.to instanceof Date ? date.to.toString() : "",
+        desiredDepartureDate: date?.from instanceof Date ? date.from.toISOString() : "",
+        desiredReturnDate: date?.to instanceof Date ? date.to.toISOString() : "",
       })
     );
   }
@@ -64,8 +63,8 @@ export function DatePickerWithRange({ name, className }) {
         onOpenChange={ (open) => {
           // dispatch(
           //   setFlightForm({
-          //     departDate: date.from instanceof Date ? date.from.toString() : "",
-          //     ...(flightForm.trip === "roundtrip" && { returnDate: date.to instanceof Date ? date.to.toString() : "" }),
+          //     desiredDepartureDate: date.from instanceof Date ? date.from.toISOString() : "",
+          //     ...(flightForm.tripType === "round_trip" && { desiredReturnDate: date.to instanceof Date ? date.to.toISOString() : "" }),
           //   })
           // );
         } }
@@ -91,10 +90,10 @@ export function DatePickerWithRange({ name, className }) {
               day_today: "border border-secondary",
             } }
             initialFocus
-            mode={ flightForm.trip === "roundtrip" ? "range" : "single" }
+            mode={ flightForm.tripType === "round_trip" ? "range" : "single" }
             defaultDay={ date ? new Date(date) : new Date() }
-            selected={ flightForm.trip === "roundtrip" ? rangeDate : date }
-            onSelect={ flightForm.trip === "roundtrip" ? setRangeDate : setDate }
+            selected={ flightForm.tripType === "round_trip" ? rangeDate : date }
+            onSelect={ flightForm.tripType === "round_trip" ? setRangeDate : setDate }
             numberOfMonths={ 1 }
             disabled={
               {

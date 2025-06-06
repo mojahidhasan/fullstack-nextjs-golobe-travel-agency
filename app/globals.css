@@ -93,7 +93,7 @@
   .active {
     @apply border-b-2 border-b-primary;
   }
-  .golobe-scrollbar{
+  .golobe-scrollbar {
     scrollbar-color: hsl(var(--primary)) hsl(var(--secondary));
     scrollbar-width: thin;
     scrollbar-gutter: none;
