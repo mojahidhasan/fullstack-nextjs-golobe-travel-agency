@@ -19,3 +19,13 @@ export default function Stays() {
     </div>
   );
 }
+function Empty() {
+  return (
+    <div className="flex h-[300px] flex-col items-center justify-center gap-4 rounded-xl border bg-gray-50 p-6 text-gray-700 shadow-inner">
+      <div className="text-2xl font-semibold">No Hotel Bookings yet</div>
+      <p className="max-w-md text-center text-base">
+        You haven&apos;t booked any hotel yet.
+      </p>
+    </div>
+  );
+}

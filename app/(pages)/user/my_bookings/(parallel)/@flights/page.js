@@ -9,6 +9,7 @@ export default async function FlightBookingDetailsPage() {
   const flightBookings = await getAllFlightBookings(userId);
   return (
     <div>
+      {flightBookings.length === 0 && <Empty />}
       {flightBookings.map((booking) => {
         return (
           <FlightBookingDetailsCard
@@ -18,6 +19,16 @@ export default async function FlightBookingDetailsPage() {
           />
         );
       })}
+    </div>
+  );
+}
+function Empty() {
+  return (
+    <div className="flex h-[300px] flex-col items-center justify-center gap-4 rounded-xl border bg-gray-50 p-6 text-gray-700 shadow-inner">
+      <div className="text-2xl font-semibold">No Flight Bookings</div>
+      <p className="max-w-md text-center text-base">
+        You haven&apos;t booked any flight yet.
+      </p>
     </div>
   );
 }
