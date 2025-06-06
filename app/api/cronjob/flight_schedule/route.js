@@ -1,12 +1,6 @@
 import generateOneDayFlight from "@/lib/db/generateForDB/flights/generateOneDayFlight";
-import {
-  Flight,
-  Airport,
-  Airplane,
-  Seat,
-  Airline,
-  Util,
-} from "@/lib/db/models";
+import { getManyDocs } from "@/lib/db/getOperationDB";
+import { Flight } from "@/lib/db/models";
 import mongoose from "mongoose";
 export async function GET(req) {
   if (
@@ -25,18 +19,22 @@ export async function GET(req) {
     }
   }
 
-  const airports = await Airport.find({});
-  const airlines = await Airline.find({});
-  const airplanes = await Airplane.find({});
+  const airports = await getManyDocs("Airport", {});
+  const airlines = await getManyDocs("Airline", {});
+  const airplanes = await getManyDocs("Airplane", {});
+  const airlineFlightPrices = await getManyDocs("AirlineFlightPrice", {});
 
   const lastFlight = await Flight.findOne({}).sort({
     "departure.scheduled": -1,
   });
+  const lastFlightDate =
+    lastFlight?.departure?.scheduled || new Date().getTime();
   const flights = generateOneDayFlight(
     airlines,
+    airlineFlightPrices,
     airports,
     airplanes,
-    new Date(+lastFlight.departure.scheduled)
+    new Date(+lastFlightDate),
   );
 
   try {
@@ -45,7 +43,7 @@ export async function GET(req) {
         insertOne: {
           document: flight,
         },
-      }))
+      })),
     );
 
     return new Response(JSON.stringify({ msg: "Success" }), {
