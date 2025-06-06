@@ -118,11 +118,12 @@ export default async function FlightBookingDetailsPage({ params }) {
                 <p className="font-medium">
                   {p.firstName} {p.lastName}
                 </p>
-                <p className="text-sm text-muted-foreground">
-                  Seat: {seat?.seatNumber}
+                <p className="text-sm capitalize text-muted-foreground">
+                  Type: {p.passengerType}
                 </p>
                 <p className="text-sm text-muted-foreground">
-                  Ticket ID: {p._id}
+                  {bookingData.bookingStatus === "confirmed" &&
+                    `Seat: ${seat?.seatNumber}`}
                 </p>
               </div>
             );
