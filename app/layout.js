@@ -12,6 +12,10 @@ import dynamic from "next/dynamic";
 
 import openGraph from "./opengraph-image.jpg";
 import SetCookies from "./_setCookies";
+import { unstable_cache } from "next/cache";
+import { WebsiteConfig } from "@/admin/db/models";
+import MaintenancePage from "./MaintenancePage";
+import { MaintenanceNotice } from "./MaintenanceNotice";
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",
@@ -76,17 +80,42 @@ export default async function RootLayout({ children }) {
       ssr: false,
     }
   );
+
+  const revalidate = process.env.NEXT_PUBLIC_REVALIDATION_TIME || 600;
+  const websiteConfig = await unstable_cache(
+    async () => {
+      const res = await WebsiteConfig.findOne({});
+      return res;
+    },
+    ["websiteConfig"],
+    {
+      revalidate: +revalidate,
+      tags: ["websiteConfig"],
+    }
+  )();
+
+  const maintenanceMode = websiteConfig?.maintenanceMode || {};
   return (
     <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
       <body className={monse.className}>
-        <StoreProvider>
-          <SessionProvider>
-            <div className="max-w-[1440px] mx-auto">
-              <Notification />
-              {children}
-            </div>
-          </SessionProvider>
-        </StoreProvider>
+        {maintenanceMode.enabled === true && (
+          <MaintenancePage
+            message={maintenanceMode.message}
+            startsAt={maintenanceMode.startsAt}
+            endsAt={maintenanceMode.endsAt}
+          />
+        )}
+        {maintenanceMode.enabled == false && (
+          <StoreProvider>
+            <SessionProvider>
+              <div className="max-w-[1440px] mx-auto">
+                <Notification />
+                <MaintenanceNotice maintenanceMode={maintenanceMode} />
+                {children}
+              </div>
+            </SessionProvider>
+          </StoreProvider>
+        )}
         <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
         <Toaster className="bg-secondary" />
         <SetCookies />
