@@ -22,8 +22,6 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 <img src="https://authjs.dev/favicon-32x32.png" width="16" height="16"> Next Auth v5
 
-<img src="https://www.gstatic.com/mobilesdk/240501_mobilesdk/firebase_96dp.png" width="16" height="16"> Firebase Cloud Storage
-
 <img src="https://assets.mailjet.com/lib/images/mailjetLogo/mj_logo_only_icon_color.png" width="16" height="16"> Mailjet
 
 ## Features
