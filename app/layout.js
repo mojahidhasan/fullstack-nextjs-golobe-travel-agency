@@ -11,11 +11,10 @@ import mongoose from "mongoose";
 import dynamic from "next/dynamic";
 
 import openGraph from "./opengraph-image.jpg";
-import SetNecessaryCookies from "@/components/helpers/SetCookies";
-import { unstable_cache } from "next/cache";
-import { WebsiteConfig } from "@/admin/db/models";
 import MaintenancePage from "./MaintenancePage";
 import { MaintenanceNotice } from "./MaintenanceNotice";
+import SetNecessaryCookies from "./SetNecessaryCookies";
+import { getOneDoc } from "@/lib/db/getOperationDB";
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",
@@ -81,24 +80,7 @@ export default async function RootLayout({ children }) {
     },
   );
 
-  const necessaryCookies = [
-    {
-      name: "timeZone",
-      value: Intl.DateTimeFormat().resolvedOptions().timeZone,
-    },
-  ];
-  const revalidate = process.env.NEXT_PUBLIC_REVALIDATION_TIME || 600;
-  const websiteConfig = await unstable_cache(
-    async () => {
-      const res = await WebsiteConfig.findOne({});
-      return res;
-    },
-    ["websiteConfig"],
-    {
-      revalidate: +revalidate,
-      tags: ["websiteConfig"],
-    },
-  )();
+  const websiteConfig = await getOneDoc("WebsiteConfig", {}, ["websiteConfig"]);
 
   const maintenanceMode = websiteConfig?.maintenanceMode ?? { enabled: false };
   return (
@@ -123,7 +105,7 @@ export default async function RootLayout({ children }) {
         )}
         <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
         <Toaster className="bg-secondary" />
-        <SetNecessaryCookies cookies={necessaryCookies} />
+        <SetNecessaryCookies />
       </body>
     </html>
   );
