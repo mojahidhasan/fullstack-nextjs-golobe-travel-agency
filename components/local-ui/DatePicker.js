@@ -1,95 +1,155 @@
 "use client";
-import * as React from "react";
-import { format } from "date-fns";
+import { format, isSameDay } from "date-fns";
 
 import { cn, isDateObjValid } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import DatePickerReact from "react-datepicker";
+
+import "./datepicker.css";
+import React, { forwardRef, useState } from "react";
 
 export function DatePicker({
+  customInput,
   className,
-  getDate = () => {},
-  getPopoverOpenState = () => {},
   date,
-  disabledDates = [],
+  setDate = () => {},
+  loading = false,
+  minDate = new Date(),
+  maxDate = new Date(),
   ...props
 }) {
-  const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  const years = [];
 
-  const { useState, useEffect } = React;
+  for (let i = minDate.getFullYear(); i <= maxDate.getFullYear(); i++) {
+    years.push(i);
+  }
 
-  const [value, setValue] = useState(date);
-  const [dateState, setDateState] = useState(date);
-  const [month, setMonth] = useState(date);
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+  ];
 
-  useEffect(() => {
-    getDate(dateState);
-    setValue(dateState);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dateState?.toString()]);
+  const [popperOpened, setPopperOpened] = useState(false);
+  const handleChange = (selected) => {
+    if (selected && date && isSameDay(date, selected)) {
+      setDate(null);
+    } else {
+      setDate(selected);
+    }
+  };
 
-  useEffect(() => {
-    setValue(date);
-    setDateState(date);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [date?.toString()]);
+  const CustomInput = forwardRef(({ value, onClick, className }, ref) => {
+    return isDateObjValid(value) ? (
+      <div
+        className={cn("h-full w-full", className)}
+        ref={ref}
+        onClick={onClick}
+      >
+        {format(value, "dd MMM yyyy")}
+      </div>
+    ) : (
+      <div
+        className={cn("h-full w-full", className)}
+        ref={ref}
+        onClick={onClick}
+      >
+        dd MMM yyyy
+      </div>
+    );
+  });
+
+  CustomInput.displayName = "CustomInput";
 
   return (
-    <Popover onOpenChange={(open) => getPopoverOpenState(open)}>
-      <PopoverTrigger asChild>
-        {isDateObjValid(value) ? (
-          <div className={"w-full h-full p-4"}>
-            <div className={"text-xl font-bold"}>
-              {format(value, "dd MMM yy")}
-            </div>
-            <div className={"text-md font-medium"}>{format(value, "EEEE")}</div>
-          </div>
-        ) : (
-          <div className={"w-full h-full p-4"}>
-            <div className={"text-xl font-bold"}>DD MMM YY</div>
-            <div className={"text-md font-medium"}>Weekday</div>
-          </div>
-        )}
-      </PopoverTrigger>
-      <PopoverContent className="w-auto p-0">
-        <Calendar
-          mode="single"
-          timeZone={timeZone}
-          showOutsideDays={true}
-          disabled={disabledDates}
-          className={"bg-primary/60"}
-          classNames={{
-            day_today: "border border-secondary",
-          }}
-          {...(isDateObjValid(date) && {
-            selected: date,
-            ...(month.getDate() === date.getDate() && {
-              month: date,
-            }),
-          })}
-          onSelect={setDateState}
-          onMonthChange={setMonth}
-          initialFocus
-          animate
-          required
-          {...props}
-        />
-        <Button
-          className="w-full rounded-none"
-          onClick={() => {
-            const now = new Date();
-            setMonth(now);
-            setDateState(now);
-          }}
-        >
-          Today
-        </Button>
-      </PopoverContent>
-    </Popover>
+    <DatePickerReact
+      customInput={customInput ? customInput : <CustomInput />}
+      renderCustomHeader={(props) => {
+        return <CustomHeader years={years} months={months} props={props} />;
+      }}
+      open={!loading && popperOpened}
+      onInputClick={() => setPopperOpened(!popperOpened)}
+      onClickOutside={() => setPopperOpened(false)}
+      selected={isDateObjValid(date) ? new Date(date) : ""}
+      onChange={(selected) => handleChange(selected)}
+      className={className}
+      minDate={minDate}
+      maxDate={maxDate}
+      {...props}
+    />
+  );
+}
+
+function CustomHeader({ years = [], months = [], props }) {
+  return (
+    <div className="flex h-fit items-center justify-center gap-1">
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        className="h-6 w-6 rounded-md"
+        onClick={props?.decreaseMonth}
+        disabled={props?.prevMonthButtonDisabled}
+      >
+        <ChevronLeft width={16} height={16} />
+      </Button>
+
+      <select
+        value={months[new Date(props?.date).getMonth()]}
+        onChange={({ target: { value } }) =>
+          props?.changeMonth(months.indexOf(value))
+        }
+        className="grow-0 rounded-sm bg-white p-1"
+      >
+        {months.map((option) => (
+          <option
+            style={{
+              fontFamily: "'Montserrat', Arial, sans-serif",
+            }}
+            key={option}
+            value={option}
+          >
+            {option}
+          </option>
+        ))}
+      </select>
+      <select
+        className="h-full grow-0 rounded-sm bg-white p-1"
+        value={new Date(props?.date).getFullYear()}
+        onChange={({ target: { value } }) => props?.changeYear(value)}
+      >
+        {years.map((option) => (
+          <option
+            style={{
+              fontFamily: "'Montserrat', Arial, sans-serif",
+            }}
+            key={option}
+            value={option}
+          >
+            {option}
+          </option>
+        ))}
+      </select>
+      <Button
+        type="button"
+        variant="outline"
+        size="icon"
+        className="h-6 w-6 rounded-md"
+        onClick={props?.increaseMonth}
+        disabled={props?.nextMonthButtonDisabled}
+      >
+        <ChevronRight width={16} height={16} />
+      </Button>
+    </div>
   );
 }
