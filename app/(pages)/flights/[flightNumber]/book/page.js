@@ -16,7 +16,7 @@ export default async function FlightBookPage({ params }) {
   const searchStateCookie = cookies().get("flightSearchState")?.value || "{}";
   const parsedSearchState = parseFlightSearchParams(searchStateCookie);
   const timeZone = cookies().get("timeZone")?.value || "UTC";
-  const flightClass = cookies().get("flightClass")?.value || "economy";
+  const flightClass = parsedSearchState.class;
   const metaData = {
     timeZone,
     flightClass,
@@ -41,7 +41,7 @@ export default async function FlightBookPage({ params }) {
   }
 
   if (loggedIn) {
-    const userDetails = await getUserDetails(0);
+    const userDetails = await getUserDetails(session.user.id, 0);
     metaData.isBookmarked = userDetails.flights.bookmarked.some((el) => {
       return objDeepCompare(el, {
         flightId: flight._id,
