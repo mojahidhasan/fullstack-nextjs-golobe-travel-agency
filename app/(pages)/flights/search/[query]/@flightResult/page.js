@@ -15,6 +15,7 @@ import SessionTimeoutCountdown from "@/components/local-ui/SessionTimeoutCountdo
 import Jumper from "@/components/local-ui/Jumper";
 import { SetLocalStorage } from "@/components/helpers/SetLocalStorage";
 import { defaultFlightFormValue } from "@/reduxStore/features/flightFormSlice";
+import { auth } from "@/lib/auth";
 async function FlightResultPage({ params }) {
   const decoded = decodeURIComponent(params.query);
   const searchParams = Object.fromEntries(new URLSearchParams(decoded));
@@ -67,7 +68,14 @@ async function FlightResultPage({ params }) {
   const formData = new FormData();
   Object.entries(data).forEach(([key, value]) => formData.append(key, value));
 
-  let userDetails = await getUserDetails();
+  const session = await auth();
+
+  let userDetails;
+
+  if (session?.user) {
+    userDetails = await getUserDetails(session.user.id);
+  }
+
   let airlinePrices = await getManyDocs("AirlineFlightPrice", {}, [
     "airlinePrices",
   ]);
@@ -97,11 +105,11 @@ async function FlightResultPage({ params }) {
       passengersObj: passengers,
     },
     airlinePrices,
-    userDetails.flights?.bookmarked,
+    userDetails?.flights?.bookmarked,
   );
   const metaData = {
     flightClass: flightClass,
-    timeZone: cookies().get("timeZone").value,
+    timeZone: cookies().get("timeZone")?.value || "UTC",
   };
 
   const sessionTimeout = cookies().get("sessionTimeoutAt")?.value || 0;
