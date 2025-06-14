@@ -12,13 +12,14 @@ import { getFlight } from "@/lib/controllers/flights";
 import dynamic from "next/dynamic";
 import FlightOrHotelReviewsSectionSkeleton from "@/components/local-ui/skeleton/FlightOrHotelReviewsSectionSkeleton";
 import { FareCard } from "@/components/FareCard";
-import { isLoggedIn } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { FlightBooking } from "@/lib/db/models";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 
 export default async function FlightDetailsPage({ params }) {
-  const loggedIn = await isLoggedIn();
+  const session = await auth();
+  const loggedIn = !!session?.user;
   const timeZone = cookies().get("timeZone")?.value || "UTC";
   const searchState = cookies().get("flightSearchState")?.value || "{}";
   const parsedSearchState = parseFlightSearchParams(searchState);
@@ -41,7 +42,7 @@ export default async function FlightDetailsPage({ params }) {
 
   let bookinRef = null;
   if (loggedIn) {
-    const userDetails = await getUserDetails(0);
+    const userDetails = await getUserDetails(session.user.id, 0);
     metaData.isBookmarked = userDetails.flights.bookmarked.some((el) => {
       return objDeepCompare(el, {
         flightId: flight._id,
@@ -94,7 +95,16 @@ export default async function FlightDetailsPage({ params }) {
           />
           <div className="w-full rounded-md bg-white p-6 shadow-lg">
             <h3 className="mb-3 text-xl font-bold">Fare Details</h3>
-            <FareCard className="shadow-none" fare={flight.price} />
+            <FareCard
+              className="shadow-none"
+              fare={flight.fareDetails}
+              passengersCountObj={{
+                adult: parsedSearchState?.passengers.adults,
+                child: parsedSearchState?.passengers.children,
+                infant: parsedSearchState?.passengers.infants,
+              }}
+              flightClass={metaData.flightClass}
+            />
           </div>
           {/* <EconomyFeatures />
         <div className="mb-[40px] rounded-[8px] bg-primary/60 p-[16px]">
