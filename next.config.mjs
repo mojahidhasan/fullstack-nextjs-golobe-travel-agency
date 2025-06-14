@@ -1,4 +1,4 @@
-/** @type {import('next').NextConfig} */
+import { join, resolve } from "path";
 const cspHeader = `
     default-src 'self';
     script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com;
@@ -12,8 +12,28 @@ const cspHeader = `
     frame-ancestors 'none';
     upgrade-insecure-requests;
 `;
+/** @type {import('next').NextConfig} */
+
+const helperDirName = join(process.cwd(), "lib/email/", "helpersHbs");
 
 const nextConfig = {
+  webpack: (config, { isServer }) => {
+    config.module.rules.push({
+      test: /\.hbs$/,
+      use: [
+        {
+          loader: "handlebars-loader",
+          options: {
+            strict: true,
+            noEscape: true,
+            helperDirs: [resolve(helperDirName)],
+          },
+        },
+      ],
+    });
+
+    return config;
+  },
   images: {
     remotePatterns: [
       {
