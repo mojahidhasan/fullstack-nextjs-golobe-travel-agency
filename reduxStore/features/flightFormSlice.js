@@ -2,7 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 import { addYears } from "date-fns";
 
 const d = new Date().toLocaleString("en-CA", {
-  timeZone: "UTC",
+  timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
   year: "numeric",
   month: "2-digit",
   day: "2-digit",
@@ -24,7 +24,7 @@ export const defaultFlightFormValue = {
   // helper props
   availableFlightDateRange: {
     from: Date.parse(d),
-    to: addYears(d, 100).getTime(),
+    to: addYears(Date.parse(d), 100).getTime(),
   },
   filters: {
     rates: [], // 1,2,3,4,5
