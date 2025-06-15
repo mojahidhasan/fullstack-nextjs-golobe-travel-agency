@@ -84,24 +84,39 @@ function SearchFlightsForm({ params = {} }) {
   const [isFormLoading, setIsFormLoading] = useState(false);
   useEffect(() => {
     async function searchState() {
-      let searchState = await getSearchState();
-      if (searchState) {
-        dispatch(setFlightForm({ ...defaultFlightFormValue, ...searchState }));
+      setIsFormLoading(true);
+      const p = getSearchStateParams();
+      if ("query" in params) {
+        const newFormData = { ...defaultFlightFormValue, ...p };
+        if (Object.keys(newFormData?.errors || {}).length > 0) {
+          dispatch(setFlightForm(newFormData));
+        } else {
+          dispatch(
+            setFlightForm({
+              ...defaultFlightFormValue,
+              ...parseFlightSearchParams(p),
+            }),
+          );
+        }
+        setIsFormLoading(false);
+        return;
       }
+
+      let searchState = await getSearchStateCookies();
+
+      if (Object.keys(searchState?.errors || {}).length > 0) {
+        dispatch(setFlightForm({ ...defaultFlightFormValue, ...searchState }));
+      } else {
+        dispatch(
+          setFlightForm({
+            ...defaultFlightFormValue,
+            ...parseFlightSearchParams(searchState),
+          }),
+        );
+      }
+      setIsFormLoading(false);
     }
-    const validateFlightForm = validateFlightSearchParams(
-      Object.fromEntries(sp),
-    );
-    if (validateFlightForm.success == false && pathname === "/flights/search") {
-      return;
-      // because this part is handled in flight/search page
-    }
-    if (validateFlightForm.success === true) {
-      const parse = parseFlightSearchParams(validateFlightForm.data);
-      dispatch(setFlightForm({ ...defaultFlightFormValue, ...parse }));
-    } else {
-      searchState();
-    }
+    searchState();
     setTimeout(() => {
       jumpTo("flightResult");
     }, 500);
