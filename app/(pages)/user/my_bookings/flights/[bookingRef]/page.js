@@ -11,11 +11,11 @@ import airplaneIcon from "@/public/icons/airplane-filled-mint.svg";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { cn, minutesToHMFormat } from "@/lib/utils";
 import routes from "@/data/routes.json";
-import { isLoggedIn } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import Link from "next/link";
 export default async function FlightBookingDetailsPage({ params }) {
-  const loggedIn = await isLoggedIn();
-
+  const session = await auth();
+  const loggedIn = !!session?.user;
   if (!loggedIn) {
     return redirect(
       routes.login.path +
@@ -27,6 +27,7 @@ export default async function FlightBookingDetailsPage({ params }) {
   const bookingRef = params.bookingRef;
   const bookingData = await getOneDoc("FlightBooking", {
     bookingRef: bookingRef,
+    userId: session.user.id,
   });
 
   if (Object.keys(bookingData).length === 0) return notFound();
@@ -124,6 +125,9 @@ export default async function FlightBookingDetailsPage({ params }) {
                 <p className="text-sm text-muted-foreground">
                   {bookingData.bookingStatus === "confirmed" &&
                     `Seat: ${seat?.seatNumber}`}
+                </p>
+                <p className="text-sm capitalize text-muted-foreground">
+                  Seat class: {p.seatClass}
                 </p>
               </div>
             );
