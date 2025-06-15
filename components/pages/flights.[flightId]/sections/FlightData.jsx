@@ -7,9 +7,22 @@ import { FLIGHT_CLASS_PLACEHOLDERS } from "@/lib/constants";
 
 import routes from "@/data/routes.json";
 import { cn } from "@/lib/utils";
+import { getPassengerFareDetails } from "@/lib/helpers/flights/priceCalculations";
 export function FlightData({ data, metaData, className }) {
-  const { flightNumber, price, _id } = data;
+  const { flightNumber, fareDetails, _id } = data;
   const { flightClass, isBookmarked } = metaData;
+
+  const fareBreakdown = getPassengerFareDetails(
+    "adult",
+    1,
+    metaData.flightClass,
+    fareDetails,
+  );
+
+  const totalPrice = fareBreakdown.totalBeforeDiscount;
+  const discountedPrice = fareBreakdown.discountedTotalPerPassenger;
+  const hasDiscount = totalPrice !== discountedPrice;
+
   return (
     <section
       className={cn(
@@ -25,7 +38,12 @@ export function FlightData({ data, metaData, className }) {
             </p>
 
             <p className="text-3xl font-bold text-primary">
-              ${price.metaData.subTotal}
+              {hasDiscount && (
+                <span className={"text-base text-black line-through"}>
+                  $ {(+totalPrice).toFixed(2)}
+                </span>
+              )}{" "}
+              <span>$ {(+discountedPrice).toFixed(2)}</span>
             </p>
           </div>
         </div>
