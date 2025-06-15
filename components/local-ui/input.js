@@ -1,15 +1,61 @@
 "use client";
 
-import { Label } from "@/components/ui/label";
 import { Input as _Input } from "@/components/ui/input";
 import Image from "next/image";
 import error_icon from "@/public/icons/error.svg";
-import { cn } from "@/lib/utils";
+import { cn, isDateObjValid } from "@/lib/utils";
 
-import { useEffect, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import eye from "@/public/icons/eye.svg";
 import eyeOff from "@/public/icons/eye-closed.svg";
 import { SelectDialCode } from "../SelectDialCode";
+import { DatePicker } from "./DatePicker";
+import { addYears, endOfYear, format, subYears } from "date-fns";
+
+const DatePickerCustomInput = forwardRef(
+  ({ value, onClick, className }, ref) => {
+    return isDateObjValid(value) ? (
+      <div
+        role="button"
+        className={cn(
+          "flex h-full w-full items-center justify-between px-2",
+          className,
+        )}
+        ref={ref}
+        onClick={onClick}
+      >
+        {format(value, "dd MMM yyyy")}
+        <Image
+          src={"/icons/calender.svg"}
+          alt="calendar_icon"
+          width={20}
+          height={20}
+        />
+      </div>
+    ) : (
+      <div
+        role="button"
+        className={cn(
+          "flex h-full w-full items-center justify-between px-2",
+          className,
+        )}
+        ref={ref}
+        onClick={onClick}
+      >
+        dd MMM yyyy
+        <Image
+          src={"/icons/calender.svg"}
+          alt="calendar_icon"
+          width={20}
+          height={20}
+        />
+      </div>
+    );
+  },
+);
+
+DatePickerCustomInput.displayName = "DatePickerCustomInput";
+
 export function Input({
   label = "Label",
   error = null,
@@ -24,7 +70,6 @@ export function Input({
     number: "",
     dialCode: "",
   });
-
   useEffect(() => {
     if (type === "tel") {
       const value = defaultPhoneValue;
@@ -59,7 +104,7 @@ export function Input({
 
   return (
     <>
-      <Label className={cn("relative block h-auto", className)}>
+      <div className={cn("relative block h-auto", className)}>
         <p className="absolute -top-[8px] left-5 z-10 bg-background px-1 text-sm font-normal leading-4">
           <span>{label}</span>
           {props.required === true && (
@@ -94,6 +139,39 @@ export function Input({
                   defaultValue={phoneData?.number}
                   className="h-full border-none bg-inherit lg:h-full"
                   onChange={handlePhoneChange}
+                />
+              </div>
+            ) : type === "date" ? (
+              <div
+                className={cn(
+                  "flex h-[40px] items-center rounded-md border-2 border-black lg:h-[56px]",
+                  error && "border-destructive",
+                )}
+              >
+                <DatePicker
+                  customInput={<DatePickerCustomInput />}
+                  date={props?.value || props?.defaultValue}
+                  minDate={props?.minDate || subYears(new Date(), 20)}
+                  maxDate={
+                    props?.maxDate || addYears(endOfYear(new Date()), 20)
+                  }
+                  setDate={(selected) => {
+                    console.log(selected);
+                    let d = "";
+                    if (selected) {
+                      d = new Date(selected).toLocaleString("en-CA", {
+                        timeZone:
+                          Intl.DateTimeFormat().resolvedOptions().timeZone,
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                      });
+                    }
+                    onChange({
+                      target: { value: d, name: props?.name },
+                    });
+                  }}
+                  className={className}
                 />
               </div>
             ) : (
@@ -144,7 +222,7 @@ export function Input({
           </div>
         </div>
         <p className="mt-1 pl-4 text-destructive">{error}</p>
-      </Label>
+      </div>
     </>
   );
 }
