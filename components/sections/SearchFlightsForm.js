@@ -172,39 +172,44 @@ function SearchFlightsForm({ params = {} }) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   async function handleSubmit(e) {
     e.preventDefault();
-
+    setIsSubmitting(true);
     const {
       success: sFForm,
       errors: eFForm,
       data: dFForm,
     } = validateFlightForm(flightFormData);
 
-    const searchStateCookie = await getCookiesAction(["flightSearchState"]);
-    const searchState = searchStateCookie[0]?.value || "{}";
+    let searchState = {};
+    if ("query" in params) searchState = getSearchStateParams();
+    else searchState = await getSearchStateCookies();
+
+    if (Object.keys(searchState?.errors).length > 0) {
+      dispatch(setFlightForm({ errors: { ...searchState.errors } }));
+      setIsSubmitting(false);
+      return;
+    }
+
     const {
       success: sSState,
       errors: eSState,
       data: dSState,
-    } = validateFlightForm(parseFlightSearchParams(JSON.parse(searchState)));
+    } = validateFlightForm(parseFlightSearchParams(searchState));
 
     if (sFForm === false) {
       dispatch(setFlightForm({ errors: { ...eFForm } }));
+      setIsSubmitting(false);
       return;
     }
+
     const sessionTimeout = localStorage.getItem("sessionTimeoutAt") || 0;
-    const currTime = new Date().getTime();
+    const currTime = Date.now();
 
     const areTheySame = objDeepCompare(dFForm, dSState);
-    const isEmptySParams = sp.size === 0;
     const isTimeouted = +currTime > +sessionTimeout;
     const shouldPreventFromSubmitting =
-      areTheySame === true && !isTimeouted && isEmptySParams === false;
+      areTheySame === true && !isTimeouted && "query" in params;
 
     if (shouldPreventFromSubmitting) {
-      if (!pathname.startsWith("/flights/search")) {
-        const searchParams = new URLSearchParams(dFForm);
-        window.location.href = "/flights/search?" + searchParams.toString();
-      }
       jumpTo("flightResult");
       const newSessionTimeoutAt = Date.now() + 1200 * 1000;
       localStorage.setItem("sessionTimeoutAt", newSessionTimeoutAt);
@@ -216,6 +221,7 @@ function SearchFlightsForm({ params = {} }) {
         },
       });
       window.dispatchEvent(event);
+      setIsSubmitting(false);
       return;
     }
 
@@ -226,6 +232,7 @@ function SearchFlightsForm({ params = {} }) {
     const res = await validateSearchStateAction(undefined, formData);
     if (res.success === false) {
       dispatch(setFlightForm({ errors: { ...res.errors } }));
+      setIsSubmitting(false);
       return;
     }
     if (res.success === true) {
@@ -244,7 +251,7 @@ function SearchFlightsForm({ params = {} }) {
       window.dispatchEvent(event);
       dispatch(setFlightForm({ errors: {} }));
       const searchParams = new URLSearchParams(res.data.latestSearchState);
-      router.replace(
+      router.push(
         "/flights/search/" + encodeURIComponent(searchParams.toString()),
         {
           scroll: false,
