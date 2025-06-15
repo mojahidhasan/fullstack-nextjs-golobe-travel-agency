@@ -23,12 +23,11 @@ import {
   parseFlightSearchParams,
 } from "@/lib/utils";
 import validateFlightSearchParams from "@/lib/zodSchemas/flightSearchParams";
-import { addDays } from "date-fns";
+import { addDays, format } from "date-fns";
 import swap from "@/public/icons/swap.svg";
-import Counter from "../local-ui/Counter";
 import { ErrorMessage } from "../local-ui/errorMessage";
-import { useEffect, useState } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { forwardRef, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { getCookiesAction, validateSearchStateAction } from "@/lib/actions";
 import Jumper, { jumpTo } from "../local-ui/Jumper";
 import { Skeleton } from "../ui/skeleton";
@@ -74,10 +73,8 @@ DatePickerCustomInput.displayName = "DatePickerCustomInput";
 
 function SearchFlightsForm({ params = {} }) {
   const dispatch = useDispatch();
-  const sp = useSearchParams();
-  const pathname = usePathname();
   const router = useRouter();
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [popperOpened, setPopperOpened] = useState(false);
   const flightFormData = useSelector((state) => state.flightForm.value);
   const errors = flightFormData?.errors || {};
 
@@ -123,14 +120,17 @@ function SearchFlightsForm({ params = {} }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const [isLoadingDateRange, setIsLoadingDateRange] = useState(false);
   useEffect(() => {
     const controller = new AbortController();
     async function getAvailableFlightDateRange() {
+      setIsLoadingDateRange(true);
       const getCachedFlight = sessionStorage.getItem("flightDateRange");
       if (getCachedFlight) {
         const { from, to, expireAt } = JSON.parse(getCachedFlight);
         if (Date.now() < expireAt) {
           dispatch(setFlightForm({ availableFlightDateRange: { from, to } }));
+          setIsLoadingDateRange(false);
           return;
         }
       }
@@ -152,7 +152,7 @@ function SearchFlightsForm({ params = {} }) {
             JSON.stringify({
               from,
               to,
-              expireAt: Date.now() + 60 * 1000,
+              expireAt: Date.now() + 10 * 60 * 1000,
             }),
           );
           dispatch(setFlightForm({ availableFlightDateRange: { from, to } }));
@@ -160,14 +160,16 @@ function SearchFlightsForm({ params = {} }) {
       } catch (e) {
         if (e.name === "AbortError") return;
       }
+      setIsLoadingDateRange(false);
     }
     getAvailableFlightDateRange();
 
     return () => {
       controller.abort();
+      setIsLoadingDateRange(false);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isDatePickerOpen]);
+  }, [popperOpened]);
 
   const [isSubmitting, setIsSubmitting] = useState(false);
   async function handleSubmit(e) {
