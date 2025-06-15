@@ -1,14 +1,18 @@
 import { cn } from "@/lib/utils";
-import { formatInTimeZone } from "date-fns-tz";
-import { ArrowRight, SquareArrowOutUpRight } from "lucide-react";
-import { cookies } from "next/headers";
+import {
+  ArrowRight,
+  Download,
+  HandCoins,
+  SquareArrowOutUpRight,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import NoSSR from "@/components/helpers/NoSSR";
+import ShowTimeInClientSide from "@/components/helpers/ShowTimeInClientSide";
 export default function FlightBookingDetailsCardSmall({
   className,
   bookingDetails,
 }) {
-  const tz = cookies().get("timeZone")?.value || "UTC";
   const flightInfo = bookingDetails.flightSnapshot;
 
   return (
@@ -41,6 +45,7 @@ export default function FlightBookingDetailsCardSmall({
             {bookingDetails.bookingStatus}
           </span>
           <Link
+            title="View Flight Details"
             href={`/user/my_bookings/flights/${bookingDetails.bookingRef}`}
             className="rounded-full p-1 hover:bg-gray-100"
           >
@@ -51,19 +56,20 @@ export default function FlightBookingDetailsCardSmall({
 
       {/* Booking Details */}
       <div className="space-y-1 text-sm text-gray-700">
-        <p>
+        <p className="font-bold">
           <span className="font-medium">Booked At:</span>{" "}
-          {formatInTimeZone(
-            bookingDetails.createdAt,
-            tz,
-            "dd MMM yyyy HH:mm:ss",
-          )}
+          <NoSSR>
+            <ShowTimeInClientSide
+              date={bookingDetails.createdAt}
+              formatStr="dd MMMM yyyy, hh:mm:ss a"
+            />
+          </NoSSR>
         </p>
-        <p>
+        <p className="font-bold">
           <span className="font-medium">Flight No:</span>{" "}
           {flightInfo.flightNumber}
         </p>
-        <p>
+        <p className="font-bold">
           <span className="font-medium">PNR:</span> {bookingDetails.bookingRef}
         </p>
       </div>
@@ -78,19 +84,49 @@ export default function FlightBookingDetailsCardSmall({
       {/* Optional Additional Info (time or passenger summary) */}
       {/* Example: */}
       <div className="text-sm text-gray-600">
-        <p>
-          <span className="font-medium">Departure:</span> 06:00 (4 jan 2026)
+        <p className="font-bold">
+          <span className="font-medium">Departure:</span>{" "}
+          <NoSSR>
+            <ShowTimeInClientSide
+              date={+flightInfo.departure.scheduled}
+              formatStr="dd MMMM yyyy, hh:mm a"
+            />
+          </NoSSR>
         </p>
-        <p>
-          <span className="font-medium">Arrival:</span> 20:00 (4 jan 2026)
+        <p className="font-bold">
+          <span className="font-medium">Arrival:</span>{" "}
+          <NoSSR>
+            <ShowTimeInClientSide
+              date={+flightInfo.arrival.scheduled}
+              formatStr="dd MMMM yyyy, hh:mm a"
+            />
+          </NoSSR>
         </p>
       </div>
-      <div>
-        <Button className="text-sm font-semibold" size="sm" asChild>
-          <Link href={`/flights/${flightInfo.flightNumber}/book?tag=payment`}>
-            Pay
-          </Link>
-        </Button>
+      <div className="flex items-center gap-2">
+        {bookingDetails.bookingStatus === "pending" && (
+          <Button title="Pay Now" size="sm" asChild>
+            <Link
+              href={`/user/my_bookings/flights/${bookingDetails.bookingRef}/payment`}
+            >
+              <HandCoins className="h-4 w-4" />
+            </Link>
+          </Button>
+        )}
+        {bookingDetails.bookingStatus === "confirmed" && (
+          <Button
+            title="Download Ticket"
+            asChild
+            size="sm"
+            className="text-wrap"
+          >
+            <Link
+              href={`/user/my_bookings/flights/${bookingDetails.bookingRef}/ticket`}
+            >
+              <Download className="h-4 w-4" />
+            </Link>
+          </Button>
+        )}
       </div>
     </div>
   );
