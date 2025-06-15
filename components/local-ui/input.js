@@ -156,7 +156,6 @@ export function Input({
                     props?.maxDate || addYears(endOfYear(new Date()), 20)
                   }
                   setDate={(selected) => {
-                    console.log(selected);
                     let d = "";
                     if (selected) {
                       d = new Date(selected).toLocaleString("en-CA", {

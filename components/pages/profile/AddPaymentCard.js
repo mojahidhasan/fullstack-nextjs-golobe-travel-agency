@@ -78,7 +78,6 @@ export function AddPaymentCard({ className, reloadSection = () => {} }) {
           });
           return;
         }
-        console.log(data);
         setSetupIntentData({
           clientSecret: data.data.clientSecret,
           customerId: data.data.customerId,
