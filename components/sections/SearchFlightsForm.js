@@ -254,13 +254,31 @@ function SearchFlightsForm({ params = {} }) {
     }
   }
 
-  async function getSearchState() {
-    const searchState =
+  async function getSearchStateCookies() {
+    const state =
       (await getCookiesAction(["flightSearchState"]))[0]?.value || "{}";
-    if (searchState) {
-      return parseFlightSearchParams(searchState);
-    }
-    return null;
+    const validate = validateFlightSearchParams(JSON.parse(state));
+
+    const data = validate?.data || {};
+    const errors = validate?.errors || {};
+    let flightFormData = {
+      ...data,
+      errors,
+    };
+    return flightFormData;
+  }
+  function getSearchStateParams() {
+    const p = new URLSearchParams(decodeURIComponent(params?.query));
+    const objP = Object.fromEntries(p);
+    const validateFlightForm = validateFlightSearchParams(objP);
+
+    const data = validateFlightForm?.data || {};
+    const errors = validateFlightForm?.errors || {};
+    let flightFormData = {
+      ...data,
+      errors,
+    };
+    return flightFormData;
   }
 
   function validateFlightForm(flightFormDataObj) {
