@@ -169,6 +169,7 @@ function SearchFlightsForm({ params = {} }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isDatePickerOpen]);
 
+  const [isSubmitting, setIsSubmitting] = useState(false);
   async function handleSubmit(e) {
     e.preventDefault();
 
