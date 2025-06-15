@@ -39,7 +39,7 @@ export async function POST(req) {
   }
 
   try {
-    const user = await getUserDetails();
+    const user = await getUserDetails(session.user.id, 0);
     let customerId = user?.customerId;
     if (!customerId) {
       const customer = await createUniqueCustomer(
@@ -105,9 +105,10 @@ export async function POST(req) {
     }
     const stripe = initStripe();
     let idempotencyKey = bookingData.bookingRef;
+    const price = parseInt(usdToCents(+bookingData.totalPrice));
     const paymentIntents = await stripe.paymentIntents.create(
       {
-        amount: usdToCents(+bookingData.totalPrice),
+        amount: price,
         currency: bookingData.currency,
         payment_method: body.paymentMethodId || undefined,
         customer: customerId,
@@ -116,10 +117,12 @@ export async function POST(req) {
         },
         receipt_email: user.email,
         metadata: {
+          type: "flightBooking",
           flightNumber: bookingData.flightSnapshot.flightNumber,
           flightBookingId: bookingData._id.toString(),
           bookingRef: bookingData.bookingRef,
           userId: user._id.toString(),
+          userEmail: user.email,
         },
       },
       { idempotencyKey },
@@ -138,10 +141,14 @@ export async function POST(req) {
     );
   } catch (error) {
     console.log(error);
-    return Response.json(
-      { success: false, message: error.message },
-      { status: 500 },
-    );
+    const resObj = {
+      success: false,
+      message: "Something went wrong",
+    };
+    if (error.type === "StripeConnectionError")
+      resObj.message = "Unable to connect";
+
+    return Response.json(resObj, { status: 500 });
   }
 }
 
