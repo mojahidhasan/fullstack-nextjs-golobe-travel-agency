@@ -1,6 +1,10 @@
+import emailDefaultData from "@/data/emailDefaultData";
 import { assignSeatsToFlightBooking } from "@/lib/controllers/flights";
 import { createOneDoc } from "@/lib/db/createOperationDB";
+import { getOneDoc } from "@/lib/db/getOperationDB";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
+import sendEmail from "@/lib/email/sendEmail";
+import { flightBookingConfirmedEmailTemplate } from "@/lib/email/templates";
 import initStripe from "@/lib/paymentIntegration/stripe";
 
 const stripe = initStripe();
@@ -39,22 +43,53 @@ export async function POST(req) {
         receiptUrl: charge.receipt_url,
       };
       try {
-        const paymentInfo = await createOneDoc("FlightPayment", flightPayment);
-        const bookingInfo = await updateOneDoc(
-          "FlightBooking",
-          {
+        if (charge.metadata?.type === "flightBooking") {
+          const paymentInfo = await createOneDoc(
+            "FlightPayment",
+            flightPayment,
+          );
+          const bookingInfo = await updateOneDoc(
+            "FlightBooking",
+            {
+              _id: charge.metadata.flightBookingId,
+            },
+            {
+              bookingStatus: "confirmed",
+              paymentStatus: "paid",
+              paymentId: paymentInfo._id,
+            },
+          );
+          await assignSeatsToFlightBooking(
+            charge.metadata.flightBookingId,
+            "permanent",
+          );
+
+          const getBookingInfo = await getOneDoc("FlightBooking", {
             _id: charge.metadata.flightBookingId,
-          },
-          {
-            bookingStatus: "confirmed",
-            paymentStatus: "paid",
-            paymentId: paymentInfo._id,
-          },
-        );
-        await assignSeatsToFlightBooking(
-          charge.metadata.flightBookingId,
-          "permanent",
-        );
+          });
+
+          const flight = getBookingInfo.flightSnapshot;
+          const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
+
+          const htmlEmail = flightBookingConfirmedEmailTemplate({
+            ...emailDefaultData,
+            main: {
+              manageBookingUrl:
+                baseUrl +
+                `/user/my_bookings/flights/${getBookingInfo.bookingRef}`,
+              downloadTicketUrl:
+                baseUrl +
+                `/user/my_bookings/flights/${getBookingInfo.bookingRef}/ticket`,
+              flightDetails: flight,
+              bookingDetails: getBookingInfo,
+            },
+          });
+          await sendEmail(
+            [{ Email: charge.metadata.userEmail }],
+            "Thank you for booking flight with golobe",
+            htmlEmail,
+          );
+        }
         console.log("Received webhook:", event.type);
         return Response.json({ success: true, message: "Success" });
       } catch (err) {
