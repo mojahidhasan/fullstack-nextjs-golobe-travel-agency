@@ -33,6 +33,7 @@ export async function POST(req) {
           id: charge.payment_method,
           methodType: methodtype,
           brand: charge.payment_method_details[methodtype].brand,
+          last4: charge.payment_method_details[methodtype].last4,
         },
         amount: charge.amount,
         receiptUrl: charge.receipt_url,
