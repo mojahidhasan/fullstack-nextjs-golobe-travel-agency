@@ -10,6 +10,7 @@ import { RatingShow } from "@/components/local-ui/ratingShow";
 import { cn } from "@/lib/utils";
 import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
+import { getPassengerFareDetails } from "@/lib/helpers/flights/priceCalculations";
 export function FlightResultCard({ data, metaData }) {
   let flightSegments = [];
 
@@ -57,6 +58,17 @@ export function FlightResultCard({ data, metaData }) {
     });
   }
 
+  const fareBreakdown = getPassengerFareDetails(
+    "adult",
+    1,
+    metaData.flightClass,
+    data.fareDetails,
+  );
+
+  const totalPrice = fareBreakdown.totalBeforeDiscount;
+  const discountedPrice = fareBreakdown.discountedTotalPerPassenger;
+  const hasDiscount = totalPrice !== discountedPrice;
+
   return (
     <div
       className={cn(
@@ -89,14 +101,15 @@ export function FlightResultCard({ data, metaData }) {
                 starting from
               </p>
               <p className="flex items-center gap-1 text-right text-[1.5rem] font-bold text-tertiary">
-                {Math.abs(data.price.totalDiscount) > 0 && (
+                {hasDiscount && (
                   <span className={"text-base text-black line-through"}>
-                    $
-                    {data.price.metaData.subTotal +
-                      Math.abs(data.price.totalDiscount)}
+                    $ {(+totalPrice).toFixed(2)}
                   </span>
                 )}
-                <span>${+data.price.metaData.subTotal}</span>
+                <span>$ {(+discountedPrice).toFixed(2)}</span>
+              </p>
+              <p className="text-right text-xs text-secondary/60">
+                + taxes & fees
               </p>
             </div>
           </div>
