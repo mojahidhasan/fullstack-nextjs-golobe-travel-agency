@@ -5,9 +5,10 @@ import initStripe, { createCustomer } from "@/lib/paymentIntegration/stripe";
 
 export async function GET() {
   const session = await auth();
-  if (!session.user) return { success: false, message: "Unauthenticated" };
+  if (!session?.user)
+    return Response.json({ success: false, message: "Unauthenticated" });
 
-  const user = await getUserDetails();
+  const user = await getUserDetails(session.user.id, 0);
   let customerId = user?.customerId;
 
   if (!customerId) {
@@ -17,16 +18,15 @@ export async function GET() {
     });
     customerId = customer.id;
     await updateOneDoc("User", { _id: user._id }, { customerId: customer.id });
-    return {
+    return Response.json({
       success: true,
       data: [],
       message: "Payment methods fetched successfully",
-    };
+    });
   }
   try {
     const stripe = initStripe();
     const payment = await stripe.paymentMethods.list({ customer: customerId });
-
     return Response.json(
       {
         success: true,
