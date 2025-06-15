@@ -194,6 +194,9 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
               className="min-w-fit grow rounded-md bg-white p-3 shadow-sm"
             >
               <p className="font-medium">{p.firstName + " " + p.lastName}</p>
+              <p className="text-sm capitalize text-muted-foreground">
+                Type: {p.passengerType}
+              </p>
               <p className="text-sm text-muted-foreground">
                 Seat:{" "}
                 {
