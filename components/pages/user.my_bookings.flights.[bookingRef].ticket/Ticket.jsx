@@ -93,7 +93,7 @@ export default function FlightTicket({ bookingData, qrCodeStr }) {
     <main className="mx-auto mb-[80px] mt-7 w-[90%] text-secondary">
       <div className="my-6 flex flex-col items-center space-y-2">
         <h3 className="text-2xl font-bold text-gray-800">
-          Total: ${bookingData.totalPrice}
+          Total paid: ${Number(bookingData.totalPrice).toFixed(2)}
         </h3>
         <Button
           onClick={downloadAll}
