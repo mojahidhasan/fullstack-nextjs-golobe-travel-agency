@@ -68,16 +68,19 @@ export default function BookingPayment({ flightNumber }) {
   function onSuccess() {
     toast({
       title: "Payment successful",
-      description: "Your payment was successful",
+      description: "Your payment was successful, redirecting...",
       variant: "default",
     });
-    const searchParams = new URLSearchParams({
-      title: "Payment successful",
-      message: "Your payment was successful",
-      callbackUrl: `/user/my_bookings/flights/${flightBookingData.data.bookingRef}/ticket`,
-      callbackTitle: "Download ticket",
-    });
-    router.push(`/success?${searchParams.toString()}`);
+
+    setTimeout(() => {
+      const searchParams = new URLSearchParams({
+        title: "Payment successful",
+        message: "Your payment was successful",
+        callbackUrl: `/user/my_bookings/flights/${flightBookingData.data.bookingRef}/ticket`,
+        callbackTitle: "Download ticket",
+      });
+      router.push(`/success?${searchParams.toString()}`);
+    }, 2000);
   }
 
   return flightBookingError ? (
