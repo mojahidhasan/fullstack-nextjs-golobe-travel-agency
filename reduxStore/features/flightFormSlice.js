@@ -13,7 +13,7 @@ export const defaultFlightFormValue = {
   from: {},
   to: {},
   tripType: "one_way",
-  desiredDepartureDate: d,
+  desiredDepartureDate: "",
   desiredReturnDate: "",
   passengers: {
     adults: 1,
