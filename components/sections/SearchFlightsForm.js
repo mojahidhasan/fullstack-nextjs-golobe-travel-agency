@@ -548,14 +548,24 @@ function SearchFlightsForm({ params = {} }) {
           </div>
         </div>
         <div className="flex flex-wrap justify-end gap-[24px]">
-          <Button type="submit" className="gap-1">
-            <Image
-              width={24}
-              height={24}
-              src={"/icons/paper-plane-filled.svg"}
-              alt={"paper_plane_icon"}
-            />
-            <span>Show Flights</span>
+          <Button
+            disabled={isSubmitting}
+            type="submit"
+            className="w-[150px] gap-1"
+          >
+            {isSubmitting ? (
+              <Loader className="animate-spin" />
+            ) : (
+              <>
+                <Image
+                  width={24}
+                  height={24}
+                  src={"/icons/paper-plane-filled.svg"}
+                  alt={"paper_plane_icon"}
+                />
+                <span>Show Flights</span>
+              </>
+            )}
           </Button>
         </div>
       </form>
