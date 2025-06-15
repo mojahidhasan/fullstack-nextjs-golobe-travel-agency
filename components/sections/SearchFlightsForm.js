@@ -31,13 +31,48 @@ import { useEffect, useState } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { getCookiesAction, validateSearchStateAction } from "@/lib/actions";
 import Jumper, { jumpTo } from "../local-ui/Jumper";
-function SearchFlightsForm() {
-  const classPlaceholders = {
-    economy: "Economy",
-    premium_economy: "Premium Economy",
-    business: "Business",
-    first: "First class",
-  };
+import { Skeleton } from "../ui/skeleton";
+import { Loader } from "lucide-react";
+
+const DatePickerCustomInput = forwardRef(
+  ({ loading, open, setOpen, value, onClick, className }, ref) => {
+    return loading ? (
+      <div className="h-full w-full p-4">
+        <Skeleton className={"mb-2 h-8 w-[130px]"} />
+        <Skeleton className={"h-4 w-[100px]"} />
+      </div>
+    ) : isDateObjValid(value) ? (
+      <div
+        onClick={(e) => {
+          onClick(e);
+          setOpen(!open);
+        }}
+        className={cn("h-full w-full p-4", className)}
+      >
+        <div className={"text-xl font-bold"}>
+          {format(new Date(value), "dd MMM yy")}
+        </div>
+        <div className={"text-md font-medium"}>
+          {format(new Date(value), "EEEE")}
+        </div>
+      </div>
+    ) : (
+      <div
+        onClick={(e) => {
+          onClick(e);
+          setOpen(!open);
+        }}
+        className={cn("h-full w-full p-4", className)}
+      >
+        <div className={"text-xl font-bold"}>DD MMM YY</div>
+        <div className={"text-md font-medium"}>Weekday</div>
+      </div>
+    );
+  },
+);
+DatePickerCustomInput.displayName = "DatePickerCustomInput";
+
+function SearchFlightsForm({ params = {} }) {
   const dispatch = useDispatch();
   const sp = useSearchParams();
   const pathname = usePathname();
@@ -398,22 +433,23 @@ function SearchFlightsForm() {
               )}
             >
               <DatePicker
-                date={new Date(flightFormData.desiredDepartureDate)}
-                disabledDates={[
-                  {
-                    before: new Date(
-                      flightFormData.availableFlightDateRange.from,
-                    ),
-                    after: new Date(flightFormData.availableFlightDateRange.to),
-                  },
-                ]}
-                getDate={(date) => {
-                  const d = date.toLocaleString("en-CA", {
-                    year: "numeric",
-                    month: "2-digit",
-                    day: "2-digit",
-                  });
-
+                date={flightFormData.desiredDepartureDate}
+                loading={isLoadingDateRange || isFormLoading}
+                minDate={
+                  new Date(+flightFormData.availableFlightDateRange.from)
+                }
+                maxDate={new Date(+flightFormData.availableFlightDateRange.to)}
+                setDate={(date) => {
+                  let d = null;
+                  if (isDateObjValid(date)) {
+                    d = date.toLocaleString("en-CA", {
+                      timeZone:
+                        Intl.DateTimeFormat().resolvedOptions().timeZone,
+                      year: "numeric",
+                      month: "2-digit",
+                      day: "2-digit",
+                    });
+                  }
                   dispatch(
                     setFlightForm({
                       ...flightFormData,
@@ -426,7 +462,13 @@ function SearchFlightsForm() {
                     }),
                   );
                 }}
-                getPopoverOpenState={setIsDatePickerOpen}
+                customInput={
+                  <DatePickerCustomInput
+                    open={popperOpened}
+                    setOpen={setPopperOpened}
+                    loading={isLoadingDateRange || isFormLoading}
+                  />
+                }
               />
             </div>
             <div
@@ -436,20 +478,22 @@ function SearchFlightsForm() {
               )}
             >
               <DatePicker
-                date={new Date(flightFormData.desiredReturnDate)}
+                className={"!h-full !w-full"}
+                date={flightFormData.desiredReturnDate}
+                loading={isLoadingDateRange || isFormLoading}
                 required={false}
-                disabledDates={[
-                  {
-                    before: new Date(
-                      flightFormData.desiredDepartureDate ||
-                        flightFormData.availableFlightDateRange.from,
-                    ),
-                    after: new Date(flightFormData.availableFlightDateRange.to),
-                  },
-                ]}
-                getDate={(date) => {
+                minDate={
+                  new Date(
+                    flightFormData.desiredDepartureDate ||
+                      +flightFormData.availableFlightDateRange.from,
+                  )
+                }
+                maxDate={new Date(+flightFormData.availableFlightDateRange.to)}
+                setDate={(date) => {
                   if (isDateObjValid(date)) {
-                    const d = date.toLocaleString("en-CA", {
+                    const d = date?.toLocaleString("en-CA", {
+                      timeZone:
+                        Intl.DateTimeFormat().resolvedOptions().timeZone,
                       year: "numeric",
                       month: "2-digit",
                       day: "2-digit",
@@ -458,7 +502,7 @@ function SearchFlightsForm() {
                       setFlightForm({
                         ...flightFormData,
                         // tripType: "round_trip",
-                        desiredReturnDate: "", //d,
+                        desiredReturnDate: d,
                       }),
                     );
                   } else {
@@ -471,7 +515,13 @@ function SearchFlightsForm() {
                     );
                   }
                 }}
-                getPopoverOpenState={setIsDatePickerOpen}
+                customInput={
+                  <DatePickerCustomInput
+                    open={popperOpened}
+                    setOpen={setPopperOpened}
+                    loading={isLoadingDateRange || isFormLoading}
+                  />
+                }
               />
             </div>
           </div>
