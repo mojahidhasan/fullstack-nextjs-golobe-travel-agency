@@ -3,13 +3,17 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { minutesToHMFormat } from "@/lib/utils";
 export async function FlightResult({ flightResults, metaData }) {
   const sortByCheapest = flightResults.slice(0).sort((a, b) => {
-    const aTotalPrice = a.price.metaData.subTotal;
-    const bTotalPrice = b.price.metaData.subTotal;
+    const aTotalPrice = a.fareDetails.basePrice[metaData.flightClass].adult;
+    const bTotalPrice = b.fareDetails.basePrice[metaData.flightClass].adult;
     return +aTotalPrice - +bTotalPrice;
   });
   const sortByQuickest = [...flightResults].sort((a, b) => {
     return +a.totalDuration - b.totalDuration;
   });
+
+  const mostCheap =
+    sortByCheapest[0]?.fareDetails.basePrice[metaData.flightClass].adult;
+  const mostQuick = sortByQuickest[0]?.totalDuration;
   return (
     <div className="flex grow flex-col gap-[32px]">
       <Tabs defaultValue="cheapest" className="w-full">
@@ -21,7 +25,7 @@ export async function FlightResult({ flightResults, metaData }) {
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Cheapest</p>
               <p className={"text-sm text-gray-500"}>
-                ${sortByCheapest[0]?.price.metaData.subTotal}
+                $ {(+mostCheap).toFixed(2)}
               </p>
             </div>
           </TabsTrigger>
@@ -32,7 +36,7 @@ export async function FlightResult({ flightResults, metaData }) {
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Quickest</p>
               <p className="text-sm text-gray-500">
-                {minutesToHMFormat(sortByQuickest[0]?.totalDuration || 0)}
+                {minutesToHMFormat(mostQuick || 0)}
               </p>
             </div>
           </TabsTrigger>
