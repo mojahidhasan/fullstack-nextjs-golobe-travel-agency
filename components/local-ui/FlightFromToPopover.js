@@ -4,25 +4,34 @@ import { ApiSearchInputPopover } from "./ApiSearchInputPopover";
 import { cn, objDeepCompare } from "@/lib/utils";
 import Image from "next/image";
 import planeIcon from "@/public/icons/airplane-filled.svg";
+import { Skeleton } from "../ui/skeleton";
 export function FlightFromToPopover({
   className,
   fetchInputs,
   defaultSelected,
   excludeVals,
+  isLoading,
   getSelected = () => {},
 }) {
   function renderSelectedResult(obj) {
+    if (isLoading)
+      return (
+        <div disabled={true} className={cn("rounded border p-2", className)}>
+          <Skeleton className={"mb-2 h-8 w-[130px]"} />
+          <Skeleton className={"h-4 w-[100px]"} />
+        </div>
+      );
     if (Object.keys(obj).length > 0) {
       return (
-        <div className={cn("border rounded p-2", className)}>
-          <div className={"font-bold text-2xl"}>{obj.city}</div>
+        <div className={cn("rounded border p-2", className)}>
+          <div className={"text-2xl font-bold"}>{obj.city}</div>
           <div className={"text-sm"}>{obj.name}</div>
         </div>
       );
     }
     return (
-      <div className={cn("border rounded p-2", className)}>
-        <div className={"font-bold text-2xl"}>{"City"}</div>
+      <div className={cn("rounded border p-2", className)}>
+        <div className={"text-2xl font-bold"}>{"City"}</div>
         <div className={"text-sm"}>{"Airport name"}</div>
       </div>
     );
@@ -31,11 +40,11 @@ export function FlightFromToPopover({
   function renderSearchResults(
     result,
     setOpen = () => {},
-    setSelected = () => {}
+    setSelected = () => {},
   ) {
     if (result.success === false) {
       return (
-        <div className="p-2 font-bold h-full flex items-center justify-center text-center text-sm">
+        <div className="flex h-full items-center justify-center p-2 text-center text-sm font-bold">
           {result.message}
         </div>
       );
@@ -46,7 +55,7 @@ export function FlightFromToPopover({
 
     if (filteredResultArr.length === 0) {
       return (
-        <div className="p-2 font-bold h-full flex items-center justify-center text-center text-sm">
+        <div className="flex h-full items-center justify-center p-2 text-center text-sm font-bold">
           No results found
         </div>
       );
@@ -59,7 +68,7 @@ export function FlightFromToPopover({
           setOpen(false);
         }}
         key={i}
-        className="cursor-pointer gap-2 p-2 hover:bg-muted border rounded-md flex items-center"
+        className="flex cursor-pointer items-center gap-2 rounded-md border p-2 hover:bg-muted"
       >
         <div>
           <Image
@@ -67,15 +76,15 @@ export function FlightFromToPopover({
             height={24}
             src={planeIcon}
             alt="location_icon"
-            className={"min-w-6 min-h-6"}
+            className={"min-h-6 min-w-6"}
           />
         </div>
         <div className={"flex-1"}>
-          <div className={"font-bold text-md"}>{obj.city}</div>
+          <div className={"text-md font-bold"}>{obj.city}</div>
           <div className={"text-xs"}>{obj.name}</div>
         </div>
         <div>
-          <div className={"font-bold text-gray-600 text-xs"}>
+          <div className={"text-xs font-bold text-gray-600"}>
             {obj.iataCode}
           </div>
         </div>
@@ -85,6 +94,7 @@ export function FlightFromToPopover({
   return (
     <ApiSearchInputPopover
       className={cn(className)}
+      isLoading={isLoading}
       fetchInputs={fetchInputs}
       defaultSelected={defaultSelected}
       getSelectedResult={getSelected}

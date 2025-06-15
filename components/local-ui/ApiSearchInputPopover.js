@@ -16,6 +16,7 @@ export function ApiSearchInputPopover({
   className,
   defaultSelected = {},
   fetchInputs,
+  isLoading = false,
   getSelectedResult = () => {},
   renderSelectedResult = () => {},
   getSearchResults = () => {},
@@ -36,7 +37,11 @@ export function ApiSearchInputPopover({
   }, [JSON.stringify(defaultSelected)]);
   return (
     <>
-      <Popover className="relative" open={open} onOpenChange={setOpen}>
+      <Popover
+        className="relative"
+        open={open}
+        onOpenChange={(open) => !isLoading && setOpen(open)}
+      >
         <PopoverTrigger asChild className={cn("cursor-pointer", className)}>
           {renderSelectedResult(val)}
         </PopoverTrigger>
