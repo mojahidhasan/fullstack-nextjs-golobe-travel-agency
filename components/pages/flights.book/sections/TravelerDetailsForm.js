@@ -7,8 +7,8 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { cn, debounce } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { defaultPassengerFormValue } from "@/reduxStore/features/singlePassengerFormSlice";
+import { addMonths, addYears } from "date-fns";
 
-// import { Option, Select } from "@/components/local-ui/Select";
 export default function TravelerDetailsForm({
   errors,
   className,
@@ -16,7 +16,7 @@ export default function TravelerDetailsForm({
   travelerCount,
   primaryTraveler = false,
   primaryPassengerEmail,
-  flightClass,
+  metaData,
 }) {
   const travelerKey = `${travelerType}-${travelerCount}`;
   const [thisPassenger, setThisPassenger] = useState(defaultPassengerFormValue);
@@ -139,7 +139,10 @@ export default function TravelerDetailsForm({
         required
         onChange={handleOnChange}
         error={errors?.dateOfBirth}
+        minDate={new Date(1900, 0, 1)}
+        maxDate={new Date()}
       />
+
       <Input
         defaultValue={thisPassenger?.passportNumber}
         type="text"
@@ -160,6 +163,8 @@ export default function TravelerDetailsForm({
           required
           onChange={handleOnChange}
           error={errors?.passportExpiryDate}
+          minDate={addMonths(new Date(metaData?.departureDate), 6)}
+          maxDate={addYears(new Date(), 15)}
         />
         <p className="mt-2 text-xs font-bold text-destructive">
           Note: Passport must be valid for at least 6 months from the date of
@@ -217,17 +222,6 @@ export default function TravelerDetailsForm({
           <p className="mt-1 pl-4 text-destructive">{errors.gender}</p>
         )}
       </div>
-      {/* <div className="relative block h-auto">
-        <span className="absolute -top-[8px] left-5 z-10 bg-background px-1 text-sm font-normal leading-4">
-          Flight Class <span className="text-destructive">*</span>
-        </span>
-        <Select name={travelerKey + "-" + "flightClass"} value={flightClass}>
-          <Option value="economy">Economy</Option>
-          <Option value="premium_economy">Premium Economy</Option>
-          <Option value="business">Business</Option>
-          <Option value="first">First Class</Option>
-        </Select>
-      </div> */}
 
       <div className="mt-3 flex flex-col gap-6">
         <h3 className="mb-2 text-xl font-bold">Frequent Flyer</h3>

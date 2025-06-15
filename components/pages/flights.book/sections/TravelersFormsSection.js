@@ -1,7 +1,7 @@
 "use client";
 import { Dropdown } from "@/components/local-ui/Dropdown";
 import TravelerDetailsForm from "./TravelerDetailsForm";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Loader2Icon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import validatePassengerDetails from "@/lib/zodSchemas/passengerDetailsValidation";
@@ -11,9 +11,9 @@ export default function TravelersFormsSection({
   errors,
   setErrors = () => {},
   primaryPassengerEmail,
-  flightClass,
   passengersCountObj,
   nextStep,
+  metaData,
 }) {
   let travelerCount = 0;
 
@@ -26,7 +26,6 @@ export default function TravelersFormsSection({
   const pathname = usePathname();
 
   const [loading, setLoading] = useState(false);
-  console.log(errors);
   function setNextStep(step) {
     router.push(`${pathname}?tab=${step}`);
   }
@@ -78,7 +77,7 @@ export default function TravelersFormsSection({
                   primaryPassengerEmail={
                     travelerCount === 1 ? primaryPassengerEmail : ""
                   }
-                  flightClass={flightClass}
+                  metaData={metaData}
                 />
               </Dropdown>
             );
