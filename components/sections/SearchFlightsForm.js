@@ -81,6 +81,7 @@ function SearchFlightsForm({ params = {} }) {
   const flightFormData = useSelector((state) => state.flightForm.value);
   const errors = flightFormData?.errors || {};
 
+  const [isFormLoading, setIsFormLoading] = useState(false);
   useEffect(() => {
     async function searchState() {
       let searchState = await getSearchState();
@@ -293,31 +294,35 @@ function SearchFlightsForm({ params = {} }) {
             >
               Trip Type
             </span>
-            <TripTypeRadioGroup
-              defaultValue={flightFormData.tripType}
-              getValue={(value) => {
-                if (value === "round_trip") {
-                  dispatch(
-                    setFlightForm({
-                      ...flightFormData,
-                      tripType: value,
-                      desiredReturnDate: addDays(
-                        new Date(flightFormData.desiredDepartureDate),
-                        1,
-                      ).toISOString(),
-                    }),
-                  );
-                } else {
-                  dispatch(
-                    setFlightForm({
-                      ...flightFormData,
-                      tripType: value,
-                      desiredReturnDate: "",
-                    }),
-                  );
-                }
-              }}
-            />
+            {isFormLoading ? (
+              <Skeleton className={"h-4 w-[80%]"} />
+            ) : (
+              <TripTypeRadioGroup
+                defaultValue={flightFormData.tripType}
+                getValue={(value) => {
+                  if (value === "round_trip") {
+                    dispatch(
+                      setFlightForm({
+                        ...flightFormData,
+                        tripType: value,
+                        desiredReturnDate: addDays(
+                          new Date(flightFormData.desiredDepartureDate),
+                          1,
+                        ).toISOString(),
+                      }),
+                    );
+                  } else {
+                    dispatch(
+                      setFlightForm({
+                        ...flightFormData,
+                        tripType: value,
+                        desiredReturnDate: "",
+                      }),
+                    );
+                  }
+                }}
+              />
+            )}
           </div>
           <div
             className={cn(
@@ -338,6 +343,7 @@ function SearchFlightsForm({ params = {} }) {
                 "h-auto max-h-[100px] min-h-[100px] max-w-full grow rounded-none border-0 border-primary p-4 max-md:mx-1 max-md:border-b-2 md:my-1 md:w-1/2 md:border-r-2",
                 errors?.from && "border-destructive",
               )}
+              isLoading={isFormLoading}
               fetchInputs={{
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_airports`,
                 method: "GET",
@@ -387,6 +393,7 @@ function SearchFlightsForm({ params = {} }) {
                 "h-auto max-h-[100px] min-h-[100px] max-w-full grow rounded-none border-0 border-primary p-4 max-md:mx-1 max-md:border-t-2 md:my-1 md:w-1/2 md:border-l-2",
                 errors?.to && "border-destructive",
               )}
+              isLoading={isFormLoading}
               fetchInputs={{
                 url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/flights/available_airports`,
                 method: "GET",
