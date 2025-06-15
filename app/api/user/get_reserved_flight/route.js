@@ -1,6 +1,5 @@
 import { auth } from "@/lib/auth";
 import { cancelBooking, isSeatTakenByElse } from "@/lib/controllers/flights";
-import { getUserDetails } from "@/lib/controllers/user";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 
 export async function POST(req) {
@@ -14,12 +13,11 @@ export async function POST(req) {
   }
 
   try {
-    const user = await getUserDetails();
     const reservedFlight = await getOneDoc(
       "FlightBooking",
       {
         "flightSnapshot.flightNumber": body.flightNumber,
-        userId: user._id,
+        userId: session.user.id,
         paymentStatus: "pending",
         bookingStatus: "pending",
       },
@@ -40,7 +38,7 @@ export async function POST(req) {
         seat,
       );
       if (isTaken) {
-        await cancelBooking(reservedFlight.bookingRef, user._id, {
+        await cancelBooking(reservedFlight.bookingRef, session.user.id, {
           reason: "Seat taken by another passenger due to expired reservation",
           canceledAt: new Date(),
           canceledBy: "system",
