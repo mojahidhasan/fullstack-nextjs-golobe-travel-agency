@@ -11,7 +11,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { flightReserveAction } from "@/lib/actions/flightReserveAction";
 import { useRouter } from "next/navigation";
 import BookingPayment from "./sections/BookingPayment";
-import { passengerFareBreakdowns } from "@/lib/helpers/flights/priceCalculations";
+import { multiSegmentCombinedFareBreakDown } from "@/lib/db/schema/flightItineraries";
 
 export default function BookingSteps({ flight, metaData, searchStateObj }) {
   const pathname = usePathname();
@@ -48,11 +48,12 @@ export default function BookingSteps({ flight, metaData, searchStateObj }) {
     child: passengersObj.children,
     infant: passengersObj.infants,
   };
-  const { fareBreakdowns, total: computedTotal } = passengerFareBreakdowns(
-    flight.fareDetails,
-    passengerCountObj,
-    metaData.flightClass,
-  );
+  const { fareBreakdowns, total: computedTotal } =
+    multiSegmentCombinedFareBreakDown(
+      flight.segmentIds,
+      passengerCountObj,
+      metaData.flightClass,
+    );
 
   function showErrorToast(message) {
     toast({
@@ -95,7 +96,8 @@ export default function BookingSteps({ flight, metaData, searchStateObj }) {
     formData.append(
       "metaData",
       JSON.stringify({
-        flightNumber: flight.flightNumber,
+        flightNumber: flight.flightCode,
+        date: flight.date,
         fareBreakdowns,
         totalPrice: computedTotal,
         timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -144,10 +146,8 @@ export default function BookingSteps({ flight, metaData, searchStateObj }) {
             passengersCountObj={passengersObj}
             primaryPassengerEmail={metaData.userEmail}
             flightClass={metaData.flightClass}
+            departureDate={new Date(flight.date)}
             nextStep={"passenger_preferences"}
-            metaData={{
-              departureDate: new Date(Number(flight.departure.scheduled)),
-            }}
           />
         );
       case "passenger_preferences":
@@ -165,7 +165,12 @@ export default function BookingSteps({ flight, metaData, searchStateObj }) {
           />
         );
       case "payment":
-        return <BookingPayment flightNumber={flight.flightNumber} />;
+        return (
+          <BookingPayment
+            flightNumber={flight.flightCode}
+            flightDateTimestamp={new Date(flight.date).getTime()}
+          />
+        );
       default:
         return (
           <TravelersFormsSection
@@ -174,10 +179,8 @@ export default function BookingSteps({ flight, metaData, searchStateObj }) {
             passengersCountObj={passengersObj}
             primaryPassengerEmail={metaData.userEmail}
             flightClass={metaData.flightClass}
+            departureDate={new Date(flight.date)}
             nextStep={"passenger_preferences"}
-            metaData={{
-              departureDate: new Date(Number(flight.departure.scheduled)),
-            }}
           />
         );
     }
@@ -210,7 +213,7 @@ export default function BookingSteps({ flight, metaData, searchStateObj }) {
             <h3 className="mb-3 text-2xl font-bold">Fare Summary</h3>
             <FareCard
               className="p-0 shadow-none"
-              fare={flight.fareDetails}
+              segments={flight.segmentIds}
               passengersCountObj={passengerCountObj}
               flightClass={metaData.flightClass}
             />
