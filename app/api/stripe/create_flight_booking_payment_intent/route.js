@@ -28,9 +28,7 @@ export async function POST(req) {
    * @type {PaymentIntentBody}
    */
   const body = await req.json();
-
   const validationBody = validateReqBody(body);
-
   if (validationBody.success === false) {
     return Response.json({
       success: false,
@@ -54,18 +52,26 @@ export async function POST(req) {
       await updateOneDoc("User", { _id: user._id }, { customerId });
     }
 
+    const flightItinerary = await getOneDoc(
+      "FlightItinerary",
+      {
+        flightCode: body.flightNumber,
+        date: new Date(body.flightDateTimestamp),
+      },
+      ["flight"],
+      0,
+    );
     const bookingData = await getOneDoc(
       "FlightBooking",
       {
-        "flightSnapshot.flightNumber": body.flightNumber,
-        userId: user._id.toString(),
+        flightItineraryId: flightItinerary._id,
+        userId: user._id,
         paymentStatus: "pending",
-        bookingStatus: "pending",
+        ticketStatus: "pending",
       },
       ["userFlightBooking"],
       0,
     );
-
     if (Object.keys(bookingData).length < 1) {
       return Response.json({
         success: false,
@@ -73,43 +79,34 @@ export async function POST(req) {
       });
     }
 
-    const isExpired = bookingData.temporaryReservationExpiresAt < new Date();
+    const isSeatTakenPromise = bookingData.selectedSeats.map(async (el) => {
+      return await isSeatTakenByElse(el.seatId, el.passengerId);
+    });
 
-    if (isExpired) {
-      for (const seat of bookingData.seats) {
-        const isSeatTaken = await isSeatTakenByElse(
-          bookingData.flightSnapshot.flightNumber,
-          seat,
-        );
+    const isTaken = (await Promise.all(isSeatTakenPromise)).some(Boolean);
 
-        if (isSeatTaken) {
-          const cancellationData = {
-            reason:
-              "Seat taken by another passenger due to expired reservation",
-            canceledAt: new Date(),
-            canceledBy: "system",
-          };
+    if (isTaken) {
+      const cancellationData = {
+        reason: "Seat taken by another passenger due to expired reservation",
+        canceledAt: new Date(),
+        canceledBy: "system",
+      };
 
-          await cancelBooking(
-            bookingData.bookingRef,
-            user._id,
-            cancellationData,
-          );
-          return Response.json({
-            success: false,
-            message:
-              "Your seat is taken by someone else, thus we have canceled your booking",
-          });
-        }
-      }
+      await cancelBooking(bookingData.pnrCode, cancellationData);
+      return Response.json({
+        success: false,
+        message:
+          "Your seat is taken by someone else, thus we have canceled your booking",
+      });
     }
+
     const stripe = initStripe();
-    let idempotencyKey = bookingData.bookingRef;
-    const price = parseInt(usdToCents(+bookingData.totalPrice));
+    let idempotencyKey = bookingData.pnrCode;
+    const price = parseInt(usdToCents(+bookingData.totalFare));
     const paymentIntents = await stripe.paymentIntents.create(
       {
         amount: price,
-        currency: bookingData.currency,
+        currency: bookingData.currency || "usd",
         payment_method: body.paymentMethodId || undefined,
         customer: customerId,
         automatic_payment_methods: {
@@ -118,9 +115,9 @@ export async function POST(req) {
         receipt_email: user.email,
         metadata: {
           type: "flightBooking",
-          flightNumber: bookingData.flightSnapshot.flightNumber,
+          flightItineraryId: flightItinerary._id.toString(),
           flightBookingId: bookingData._id.toString(),
-          bookingRef: bookingData.bookingRef,
+          pnrCode: bookingData.pnrCode,
           userId: user._id.toString(),
           userEmail: user.email,
         },
@@ -157,6 +154,7 @@ function validateReqBody(data) {
     .object({
       paymentMethodId: z.string().optional(),
       flightNumber: z.string(),
+      flightDateTimestamp: z.union([z.string(), z.number()]),
       shouldSavePaymentMethod: z.boolean().optional(),
     })
     .safeParse(data);
