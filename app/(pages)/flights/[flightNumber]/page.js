@@ -1,14 +1,12 @@
 import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
 import { FlightData } from "@/components/pages/flights.[flightId]/sections/FlightData";
-import { EconomyFeatures } from "@/components/pages/flights.[flightId]/sections/EconomyFeatures";
 import { FlightDetails } from "@/components/pages/flights.[flightId]/sections/FlightsSchedule";
-import { getManyDocs } from "@/lib/db/getOperationDB";
+import { getOneDoc } from "@/lib/db/getOperationDB";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getUserDetails } from "@/lib/controllers/user";
-import { objDeepCompare, parseFlightSearchParams } from "@/lib/utils";
+import { parseFlightSearchParams } from "@/lib/utils";
 import SessionTimeoutCountdown from "@/components/local-ui/SessionTimeoutCountdown";
-import { getFlight } from "@/lib/controllers/flights";
 import dynamic from "next/dynamic";
 import FlightOrHotelReviewsSectionSkeleton from "@/components/local-ui/skeleton/FlightOrHotelReviewsSectionSkeleton";
 import { FareCard } from "@/components/FareCard";
@@ -16,6 +14,7 @@ import { auth } from "@/lib/auth";
 import { FlightBooking } from "@/lib/db/models";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { getAvailableSeats } from "@/lib/controllers/flights";
 
 export default async function FlightDetailsPage({ params }) {
   const session = await auth();
@@ -25,39 +24,49 @@ export default async function FlightDetailsPage({ params }) {
   const parsedSearchState = parseFlightSearchParams(searchState);
   const flightClass = parsedSearchState?.class || "economy";
   const metaData = { timeZone, flightClass, isBookmarked: false };
-  const alirlinePrices = await getManyDocs("AirlineFlightPrice", {}, [
-    "airlinePrices",
-  ]);
-  const flight = await getFlight(
-    {
-      flightNumber: params.flightNumber,
-      flightClass: flightClass,
-      passengersObj: parsedSearchState?.passengers,
-    },
-    alirlinePrices,
+
+  const p = params.flightNumber.split("_");
+  const flightCode = p[0];
+  const date = !isNaN(+p[1]) ? +p[1] : p[1];
+
+  const flight = await getOneDoc(
+    "FlightItinerary",
+    { flightCode, date: new Date(date) },
+    ["flight"],
   );
+
   if (Object.keys(flight).length === 0) {
     notFound();
   }
 
-  let bookinRef = null;
+  const isFlightExpired = flight.expireAt < new Date();
+  let isSeatsAvailable = true;
+
+  for (const segment of flight.segmentIds) {
+    const availableSeats = await getAvailableSeats(segment._id, flightClass);
+    if (availableSeats.length === 0) {
+      isSeatsAvailable = false;
+      break;
+    }
+  }
+
+  metaData.isFlightExpired = isFlightExpired;
+  metaData.isSeatsAvailable = isSeatsAvailable;
+  const bookingDisabled = isFlightExpired || !isSeatsAvailable;
+  let bookingId = null;
   if (loggedIn) {
     const userDetails = await getUserDetails(session.user.id, 0);
     metaData.isBookmarked = userDetails.flights.bookmarked.some((el) => {
-      return objDeepCompare(el, {
-        flightId: flight._id,
-        flightNumber: flight.flightNumber,
-        flightClass: metaData.flightClass,
-      });
+      return el.flightId._id === flight._id;
     });
 
     const flightBookings = await FlightBooking.findOne({
-      "flightSnapshot.flightNumber": params.flightNumber,
+      flightItineraryId: flight._id,
       userId: userDetails._id,
-      bookingStatus: "pending",
+      ticketStatus: "pending",
     });
 
-    bookinRef = flightBookings?.bookingRef;
+    bookingId = flightBookings?._id;
   }
   const FlightOrHotelReview = dynamic(
     () => import("@/components/sections/FlightOrHotelReview"),
@@ -66,28 +75,48 @@ export default async function FlightDetailsPage({ params }) {
       loading: () => <FlightOrHotelReviewsSectionSkeleton />,
     },
   );
+
   return (
     <>
       <main className="mx-auto mb-20 mt-[40px] w-[90%]">
         <div className="my-[40px] w-full">
           <BreadcrumbUI />
         </div>
-        <SessionTimeoutCountdown
-          redirectionLink="/flights"
-          className={"mb-2 rounded-md shadow-lg"}
-        />
+        {bookingDisabled ? (
+          <p className="mb-2 rounded-md bg-red-500 p-3 text-center font-bold text-white shadow-lg">
+            {isFlightExpired && "Flight is expired. "}
+            {!isSeatsAvailable && "No seats available."}
+          </p>
+        ) : (
+          <SessionTimeoutCountdown
+            redirectionLink="/flights"
+            className={"mb-2 rounded-md shadow-lg"}
+          />
+        )}
         <div className="flex flex-col gap-3">
-          {bookinRef && (
+          {bookingId && (
             <div className="flex items-center justify-between rounded-lg p-5 font-bold shadow-lg">
               <p>You have a pending booking for this flight</p>
               <Button asChild>
-                <Link href={`/user/my_bookings/flights/${bookinRef}`}>
+                <Link href={`/user/my_bookings/flights/${bookingId}`}>
                   See this booking
                 </Link>
               </Button>
             </div>
           )}
-          <FlightData className={"w-full"} data={flight} metaData={metaData} />
+          <FlightData
+            className={"w-full"}
+            data={flight}
+            searchState={{
+              ...parsedSearchState,
+              passengers: {
+                adult: parsedSearchState?.passengers.adults,
+                child: parsedSearchState?.passengers.children,
+                infant: parsedSearchState?.passengers.infants,
+              },
+            }}
+            metaData={metaData}
+          />
           <FlightDetails
             className={"w-full"}
             flight={flight}
@@ -97,7 +126,7 @@ export default async function FlightDetailsPage({ params }) {
             <h3 className="mb-3 text-xl font-bold">Fare Details</h3>
             <FareCard
               className="shadow-none"
-              fare={flight.fareDetails}
+              segments={flight.segmentIds}
               passengersCountObj={{
                 adult: parsedSearchState?.passengers.adults,
                 child: parsedSearchState?.passengers.children,
@@ -106,44 +135,14 @@ export default async function FlightDetailsPage({ params }) {
               flightClass={metaData.flightClass}
             />
           </div>
-          {/* <EconomyFeatures />
-        <div className="mb-[40px] rounded-[8px] bg-primary/60 p-[16px]">
-        <h3 className="mb-[16px] font-tradeGothic text-[1.5rem] font-bold">
-        Emirates Airlines Policies
-        </h3>
-        <div className="flex gap-[16px] font-medium leading-5">
-            <div className="flex grow items-start gap-[8px]">
-            <Image
-            src={stopwatch}
-            height={20}
-            width={20}
-            alt="stopwatch_icon"
-            />
-              <p className="opacity-75">
-              Pre-flight cleaning, installation of cabin HEPA filters.
-              </p>
-            </div>
-            <div className="flex grow items-start gap-[8px]">
-            <Image
-                src={stopwatch}
-                height={20}
-                width={20}
-                alt="stopwatch_icon"
-              />
-              <p className="opacity-75">
-                Pre-flight health screening questions.
-              </p>
-            </div>
-          </div>
-          </div> */}
 
           <FlightOrHotelReview
             className={"w-full"}
-            airlineId={flight.airlineId._id}
-            departureAirportId={flight.departure.airport._id}
-            arrivalAirportId={flight.arrival.airport._id}
-            airplaneModelName={flight.airplaneId.model}
-            flightNumber={flight.flightNumber}
+            reviewType={"flight"}
+            data={{
+              flightNumber: params.flightNumber,
+              segments: flight.segmentIds,
+            }}
           />
         </div>
       </main>
