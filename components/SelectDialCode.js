@@ -8,6 +8,7 @@ export function SelectDialCode({
   getDialCode = () => {},
   value,
   className,
+  placeholder,
 }) {
   return (
     <Select
@@ -15,6 +16,7 @@ export function SelectDialCode({
       value={value}
       onValueChange={getDialCode}
       className={cn("h-auto max-w-[110px] lg:h-auto", className)}
+      placeholder={placeholder}
     >
       {countryInfo.map((item, i) => (
         <Option
