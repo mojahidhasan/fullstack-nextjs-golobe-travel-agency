@@ -3,7 +3,7 @@ import React, { useLayoutEffect, useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { isObject } from "@/lib/utils";
+import { isObject, minutesToHMFormat } from "@/lib/utils";
 import validatePassengerDetails from "@/lib/zodSchemas/passengerDetailsValidation";
 import validatePassengerPreferences from "@/lib/zodSchemas/passengersPreferencesValidation";
 import { AlertTriangle } from "lucide-react";
@@ -29,24 +29,23 @@ const FlightDetails = ({ flight }) => {
         <div>
           <p className="text-gray-600">Departure</p>
           <div className="font-semibold">
-            <NoSSR>
-              {format(+flight.departure.scheduled, "eee, MMM d, yyyy")}
+            <NoSSR fallback={"eee, MMM d, yyyy"}>
+              {format(+flight.from.scheduledDeparture, "eee, MMM d, yyyy")}
             </NoSSR>
           </div>
           <p className="text-sm text-gray-500">
-            {flight.departure.airport.name} - Terminal{" "}
-            {flight.departure.terminal}
+            {flight.from.airport.name} - Terminal {flight.from.terminal}
           </p>
         </div>
         <div>
           <p className="text-gray-600">Arrival</p>
           <div className="font-semibold">
-            <NoSSR>
-              {format(+flight.departure.scheduled, "eee, MMM d, yyyy")}
+            <NoSSR fallback={"eee, MMM d, yyyy"}>
+              {format(+flight.to.scheduledArrival, "eee, MMM d, yyyy")}
             </NoSSR>
           </div>
           <p className="text-sm text-gray-500">
-            {flight.arrival.airport.name} - Terminal {flight.arrival.terminal}
+            {flight.to.airport.name} - Terminal {flight.to.terminal}
           </p>
         </div>
       </div>
@@ -296,7 +295,24 @@ const ReviewBooking = ({
       {/* Flight Details Section */}
       <div className="flex flex-col gap-3">
         <SectionHeader title="Flight Details" />
-        <FlightDetails flight={flight} />
+        {flight.segmentIds.map((segment, index) => {
+          return (
+            <>
+              <FlightDetails flight={segment} />
+              {index !== flight.segmentIds.length - 1 &&
+                flight.segmentIds.length > 1 && (
+                  <div className="w-fit self-center rounded-md bg-tertiary px-5 py-1 text-center font-bold text-white">
+                    Layover{" "}
+                    {minutesToHMFormat(
+                      flight?.layovers?.find(
+                        (layover) => +layover.fromSegmentIndex === index,
+                      )?.durationMinutes,
+                    )}
+                  </div>
+                )}
+            </>
+          );
+        })}
       </div>
 
       {/* Passengers Section */}
