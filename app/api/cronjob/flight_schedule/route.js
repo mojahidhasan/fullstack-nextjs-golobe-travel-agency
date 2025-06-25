@@ -1,64 +1,69 @@
+import { createManyDocs } from "@/lib/db/createOperationDB";
 import generateOneDayFlight from "@/lib/db/generateForDB/flights/generateOneDayFlight";
 import { getManyDocs } from "@/lib/db/getOperationDB";
-import { Flight } from "@/lib/db/models";
+import { FlightItinerary } from "@/lib/db/models";
 import mongoose from "mongoose";
 export async function GET(req) {
   if (
     req.headers.get("Authorization") !== `Bearer ${process.env.CRON_SECRET}`
   ) {
-    return new Response("401", {
-      status: 401,
-    });
+    return new Response("401", { status: 401 });
   }
 
-  if (mongoose.connection.readyState === 0) {
-    try {
-      await mongoose.connect(process.env.MONGODB_URI);
-    } catch (e) {
-      console.log(e.message);
-    }
+  const pre = performance.now();
+
+  if (mongoose.connection.readyState !== 1) {
+    await mongoose.connect(process.env.MONGODB_URI);
   }
 
-  const airports = await getManyDocs("Airport", {});
-  const airlines = await getManyDocs("Airline", {});
-  const airplanes = await getManyDocs("Airplane", {});
-  const airlineFlightPrices = await getManyDocs("AirlineFlightPrice", {});
+  const [airports, airlines, airplanes, airlineFlightPrices] =
+    await Promise.all([
+      getManyDocs("Airport", {}),
+      getManyDocs("Airline", {}),
+      getManyDocs("Airplane", {}),
+      getManyDocs("AirlineFlightPrice", {}),
+    ]);
 
-  const lastFlight = await Flight.findOne({}).sort({
-    "departure.scheduled": -1,
-  });
-  const lastFlightDate =
-    lastFlight?.departure?.scheduled || new Date().getTime();
+  const lastFlight = await FlightItinerary.findOne({})
+    .sort({ date: -1 })
+    .lean();
+
+  const lastFlightDate = lastFlight?.from?.scheduledDeparture || new Date();
   const flights = generateOneDayFlight(
     airlines,
     airlineFlightPrices,
     airports,
     airplanes,
-    new Date(+lastFlightDate),
+    lastFlightDate,
   );
 
+  const data = {
+    FlightItinerary: flights.flightItinerary,
+    FlightSegment: flights.flightSegments,
+    FlightSeat: flights.flightSeats,
+  };
+
+  const session = await mongoose.startSession();
+  session.startTransaction();
+
   try {
-    await Flight.bulkWrite(
-      flights.map((flight) => ({
-        insertOne: {
-          document: flight,
-        },
-      })),
+    await Promise.all(
+      Object.entries(data).map(([key, value]) =>
+        createManyDocs(key, value, { ordered: false }),
+      ),
     );
 
-    return new Response(JSON.stringify({ msg: "Success" }), {
+    const post = performance.now();
+    console.log(`Execution time: ${post - pre} ms`);
+    return new Response(JSON.stringify({ success: true, message: "Success" }), {
       status: 200,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.log(error);
-    return new Response(JSON.stringify({ msg: "Error" }), {
+    console.error(error);
+    return new Response(JSON.stringify({ success: false, message: "Error" }), {
       status: 500,
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
     });
   }
 }
