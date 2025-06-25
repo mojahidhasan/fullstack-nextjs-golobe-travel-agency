@@ -8,67 +8,26 @@ import { RATING_SCALE } from "@/lib/constants";
 import { minutesToHMFormat } from "@/lib/utils";
 import { RatingShow } from "@/components/local-ui/ratingShow";
 import { cn } from "@/lib/utils";
-import { formatInTimeZone } from "date-fns-tz";
 import Link from "next/link";
-import { getPassengerFareDetails } from "@/lib/helpers/flights/priceCalculations";
-export function FlightResultCard({ data, metaData }) {
-  let flightSegments = [];
+import { multiSegmentCombinedFareBreakDown } from "@/lib/db/schema/flightItineraries";
+import NoSSR from "@/components/helpers/NoSSR";
+import ShowTimeInClientSide from "@/components/helpers/ShowTimeInClientSide";
+export function FlightResultCard({ data, searchState, metaData }) {
+  let flightSegments = data.segmentIds;
 
-  let currentDeparture = data.departure,
-    currentArrival = data.arrival,
-    currentDepartureAirline = data.airlineId,
-    duration = data.totalDuration,
-    airplane = data.airplaneId;
-
-  if (data?.stopovers?.length > 0) {
-    for (let i = 0; i <= data.stopovers.length; i++) {
-      if (i < data.stopovers.length) {
-        currentArrival = data.stopovers[i].arrival;
-        duration = data.stopovers[i].duration.arrivalFromOrigin;
-      }
-
-      flightSegments.push({
-        departure: currentDeparture,
-        arrival: currentArrival,
-        duration,
-        airline: currentDepartureAirline,
-        airplane,
-      });
-
-      if (i < data.stopovers.length) {
-        currentDeparture = {
-          ...currentArrival,
-          scheduled: +data.stopovers[i].departure.scheduled,
-        };
-        duration = data.stopovers[i].duration.arrivalToDestination;
-        airplane = data.stopovers[i].airplaneId;
-      }
-
-      if (i === data.stopovers.length - 1) {
-        currentArrival = data.arrival;
-      }
-    }
-  } else {
-    flightSegments.push({
-      departure: currentDeparture,
-      arrival: currentArrival,
-      duration,
-      airline: currentDepartureAirline,
-      airplane,
-    });
-  }
-
-  const fareBreakdown = getPassengerFareDetails(
-    "adult",
-    1,
+  const { fareBreakdowns, total } = multiSegmentCombinedFareBreakDown(
+    data.segmentIds,
+    searchState.passengers,
     metaData.flightClass,
-    data.fareDetails,
   );
-
-  const totalPrice = fareBreakdown.totalBeforeDiscount;
-  const discountedPrice = fareBreakdown.discountedTotalPerPassenger;
+  const totalPrice = Object.values(fareBreakdowns).reduce(
+    (acc, item) => acc + +item.totalBeforeDiscount,
+    0,
+  );
+  const discountedPrice = total;
   const hasDiscount = totalPrice !== discountedPrice;
 
+  const dateTimestamp = new Date(data.date).getTime();
   return (
     <div
       className={cn(
@@ -80,8 +39,8 @@ export function FlightResultCard({ data, metaData }) {
           width={300}
           height={300}
           className="h-full w-full rounded-l-[12px] object-contain p-5 max-md:rounded-r-[8px]"
-          src={airlinesLogos[data?.airlineId._id]}
-          alt={data?.airlineId._id}
+          src={airlinesLogos[data?.carrierInCharge._id]}
+          alt={data?.carrierInCharge._id}
         />
       </div>
       <div className="h-min w-full p-[24px]">
@@ -103,59 +62,81 @@ export function FlightResultCard({ data, metaData }) {
               <p className="flex items-center gap-1 text-right text-[1.5rem] font-bold text-tertiary">
                 {hasDiscount && (
                   <span className={"text-base text-black line-through"}>
-                    $ {(+totalPrice).toFixed(2)}
+                    ${(+totalPrice).toFixed(2)}
                   </span>
                 )}
-                <span>$ {(+discountedPrice).toFixed(2)}</span>
+                <span>${(+discountedPrice).toFixed(2)}</span>
               </p>
               <p className="text-right text-xs text-secondary/60">
                 + taxes & fees
               </p>
             </div>
           </div>
+
           {flightSegments.map((segment, index) => {
+            const availableSeatsCount = data.availableSeatsCount.find(
+              (el) => el.segmentId === segment._id,
+            ).availableSeats;
             return (
-              <div
-                key={segment.departure.airport.iataCode + index}
-                className="mb-[16px] flex gap-[40px]"
-              >
-                <div className="flex gap-[12px]">
-                  <div className="mt-1 h-[18px] min-h-[18px] w-[18px] min-w-[18px] rounded-sm border-2 border-secondary/25"></div>
-                  <div>
-                    <p className="text-[1rem] font-semibold">
-                      {formatInTimeZone(
-                        +segment?.departure?.scheduled,
-                        metaData.timeZone,
-                        "hh:mm aaa",
-                      )}{" "}
-                      {"- "}
-                      {formatInTimeZone(
-                        +segment?.arrival?.scheduled,
-                        metaData.timeZone,
-                        "hh:mm aaa",
-                      )}
+              <div key={segment.from.airport.iataCode + index}>
+                <div className="mb-[16px]">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="flex gap-[12px]">
+                      <div className="mt-1 h-[18px] min-h-[18px] w-[18px] min-w-[18px] rounded-sm border-2 border-secondary/25"></div>
+                      <div>
+                        <p className="text-[1rem] font-semibold">
+                          <NoSSR fallback={"hh:mm aaa"}>
+                            <ShowTimeInClientSide
+                              date={new Date(segment?.from?.scheduledDeparture)}
+                              formatStr="hh:mm aaa"
+                            />
+                          </NoSSR>
+                          {"- "}
+                          <NoSSR fallback={"hh:mm aaa"}>
+                            <ShowTimeInClientSide
+                              date={new Date(segment?.to?.scheduledArrival)}
+                              formatStr="hh:mm aaa"
+                            />
+                          </NoSSR>
+                        </p>
+                        <p className="text-[0.875rem] text-secondary/40">
+                          {segment.airlineId._id}
+                        </p>
+                      </div>
+                    </div>
+                    <p className="font-semibold text-secondary/75">
+                      {flightSegments.length === 1 && "non stop"}
                     </p>
-                    <p className="text-[0.875rem] text-secondary/40">
-                      {segment.airline._id}
-                    </p>
+                    <div>
+                      <p className="text-right font-bold text-secondary/75">
+                        {minutesToHMFormat(+segment?.durationMinutes)}
+                      </p>
+                      <p className="text-[0.875rem] text-secondary/40">
+                        {segment?.from?.airport?.iataCode}-
+                        {segment?.to?.airport?.iataCode}
+                      </p>
+                    </div>
                   </div>
-                </div>
-                <div>
-                  <p className="font-semibold text-secondary/75">
-                    {flightSegments.length > 1
-                      ? flightSegments.length - 1 + " stop(s)"
-                      : "non stop"}
+                  <p className="text-right font-bold text-destructive">
+                    {availableSeatsCount} seat(s) available
                   </p>
                 </div>
-                <div>
-                  <p className="text-secondary/75">
-                    {minutesToHMFormat(segment?.duration)}
-                  </p>
-                  <p className="text-[0.875rem] text-secondary/40">
-                    {segment?.departure?.airport?.iataCode}-
-                    {segment?.arrival?.airport?.iataCode}
-                  </p>
-                </div>
+                {index !== flightSegments.length - 1 &&
+                  flightSegments.length > 1 && (
+                    <div className="text-center">
+                      <p className="font-semibold text-secondary/75">
+                        {`${flightSegments.length - 1} stop(s)`}
+                      </p>
+                      <p>
+                        {minutesToHMFormat(
+                          data?.layovers?.find(
+                            (layover) => +layover.fromSegmentIndex === index,
+                          )?.durationMinutes,
+                        )}{" "}
+                        layover
+                      </p>
+                    </div>
+                  )}
               </div>
             );
           })}
@@ -166,13 +147,15 @@ export function FlightResultCard({ data, metaData }) {
             isBookmarked={metaData?.isBookmarked}
             keys={{
               flightId: data?._id,
-              flightNumber: data?.flightNumber,
-              flightClass: metaData?.flightClass,
+              searchState: searchState,
             }}
-            flightsOrHotels={"flights"}
+            flightsOrHotels={"flight"}
           />
           <Button className={"w-full"} asChild>
-            <Link target="_blank" href={`/flights/${data.flightNumber}`}>
+            <Link
+              target="_blank"
+              href={`/flights/${data.flightCode}_${dateTimestamp}`}
+            >
               View Deals
             </Link>
           </Button>
