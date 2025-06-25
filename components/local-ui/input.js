@@ -5,7 +5,7 @@ import Image from "next/image";
 import error_icon from "@/public/icons/error.svg";
 import { cn, isDateObjValid } from "@/lib/utils";
 
-import { forwardRef, useEffect, useState } from "react";
+import { forwardRef, useEffect, useRef, useState } from "react";
 import eye from "@/public/icons/eye.svg";
 import eyeOff from "@/public/icons/eye-closed.svg";
 import { SelectDialCode } from "../SelectDialCode";
@@ -63,6 +63,7 @@ export function Input({
   type = "text",
   onChange = () => {},
   defaultPhoneValue,
+  dialCodePlaceholder,
   ...props
 }) {
   const [inputType, setInputType] = useState(type);
@@ -126,19 +127,22 @@ export function Input({
                   {...props}
                 />
                 <SelectDialCode
-                  name={"callingCode"}
+                  name={"dialCode"}
                   getDialCode={handleDialCode}
                   value={phoneData?.dialCode}
                   className={"border-none bg-slate-300"}
+                  placeholder={dialCodePlaceholder}
                 />
                 <_Input
                   style={{
                     outline: "none",
                   }}
                   type="tel"
+                  name="number"
                   defaultValue={phoneData?.number}
                   className="h-full border-none bg-inherit lg:h-full"
                   onChange={handlePhoneChange}
+                  placeholder={props?.placeholder}
                 />
               </div>
             ) : type === "date" ? (
@@ -148,6 +152,11 @@ export function Input({
                   error && "border-destructive",
                 )}
               >
+                <input
+                  type="hidden"
+                  value={props?.value || props?.defaultValue}
+                  {...props}
+                />
                 <DatePicker
                   customInput={<DatePickerCustomInput />}
                   date={props?.value || props?.defaultValue}
@@ -220,7 +229,9 @@ export function Input({
             )}
           </div>
         </div>
-        <p className="mt-1 pl-4 text-destructive">{error}</p>
+        <p className="mt-1 pl-4 text-sm font-medium text-destructive">
+          {error}
+        </p>
       </div>
     </>
   );
