@@ -13,41 +13,41 @@ export async function POST(req) {
   }
 
   try {
+    const flightItinerary = await getOneDoc("FlightItinerary", {
+      flightCode: body.flightNumber,
+      date: new Date(body.flightDateTimestamp),
+    });
     const reservedFlight = await getOneDoc(
       "FlightBooking",
       {
-        "flightSnapshot.flightNumber": body.flightNumber,
+        flightItineraryId: flightItinerary._id,
         userId: session.user.id,
         paymentStatus: "pending",
-        bookingStatus: "pending",
+        ticketStatus: "pending",
       },
       ["userFlightBooking"],
       0,
     );
-
     if (Object.keys(reservedFlight).length === 0) {
       return Response.json({
         success: false,
         message: "Flight not reserved or got canceled",
       });
     }
-
-    for (const seat of reservedFlight.seats) {
-      const isTaken = await isSeatTakenByElse(
-        reservedFlight.flightSnapshot.flightNumber,
-        seat,
-      );
-      if (isTaken) {
-        await cancelBooking(reservedFlight.bookingRef, session.user.id, {
-          reason: "Seat taken by another passenger due to expired reservation",
-          canceledAt: new Date(),
-          canceledBy: "system",
-        });
-        return Response.json({
-          success: false,
-          message: `This seat ${seat.seatNumber} is already taken by another passenger, thus the booking has been canceled`,
-        });
-      }
+    const isSeatTakenPromise = reservedFlight.selectedSeats.map(async (el) => {
+      return await isSeatTakenByElse(el.seatId, el.passengerId);
+    });
+    const isTaken = (await Promise.all(isSeatTakenPromise)).some(Boolean);
+    if (isTaken) {
+      await cancelBooking(reservedFlight.pnrCode, {
+        reason: "Seat taken by another passenger due to expired reservation",
+        canceledAt: new Date(),
+        canceledBy: "system",
+      });
+      return Response.json({
+        success: false,
+        message: `Seat is already taken by another passenger, thus the booking has been canceled`,
+      });
     }
 
     return Response.json({
