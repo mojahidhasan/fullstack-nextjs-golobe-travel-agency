@@ -23,7 +23,7 @@ export default function MaintenancePage({ message, startsAt, endsAt }) {
 
         const minutes = Math.floor(diff / 60000);
         const seconds = Math.floor((diff % 60000) / 1000);
-        setCountdown(`Estimated ${minutes}m ${seconds}s remaining`);
+        setCountdown(`${minutes}m ${seconds}s`);
       };
 
       updateCountdown();
@@ -33,19 +33,19 @@ export default function MaintenancePage({ message, startsAt, endsAt }) {
   }, [endsAt]);
 
   return (
-    <main className="flex mx-auto items-center justify-center min-h-screen w-[95%] sm:w-[90%]">
-      <div className="my-[40px] grow flex min-h-[80%] items-center justify-center rounded-[20px] bg-primary/30 px-4 py-12 text-primary-foreground">
-        <div className="relative w-full max-w-lg rounded-2xl bg-primary p-8 text-center shadow-xl backdrop-blur-md border border-primary/20">
+    <main className="mx-auto flex min-h-screen w-[95%] items-center justify-center sm:w-[90%]">
+      <div className="my-[40px] flex min-h-[80%] grow items-center justify-center rounded-[20px] bg-primary/30 px-4 py-12 text-primary-foreground">
+        <div className="relative w-full max-w-lg rounded-2xl border border-primary/20 bg-primary p-8 text-center shadow-xl backdrop-blur-md">
           {/* Logo / Branding */}
 
-          <div className="absolute flex justify-center items-center w-[60px] h-[60px] bg-white rounded-full left-1/2 top-[-30px] -translate-x-1/2">
+          <div className="absolute left-1/2 top-[-30px] flex h-[60px] w-[60px] -translate-x-1/2 items-center justify-center rounded-full bg-white">
             <svg
               width="233"
               height="212"
               viewBox="0 0 233 212"
               fill="#8DD3BB"
               xmlns="http://www.w3.org/2000/svg"
-              className="w-[40px] h-[40px] hover:fill-[#112211] transition-all"
+              className="h-[40px] w-[40px] transition-all hover:fill-[#112211]"
             >
               <path
                 fill-rule="evenodd"
@@ -56,7 +56,7 @@ export default function MaintenancePage({ message, startsAt, endsAt }) {
             </svg>
           </div>
 
-          <div className="mt-8 mb-4 flex flex-col items-center gap-2">
+          <div className="mb-4 mt-8 flex flex-col items-center gap-2">
             <Loader className="animate-spin text-secondary" size={48} />
             <h1 className="text-4xl font-bold text-white">
               Scheduled Maintenance
@@ -68,18 +68,23 @@ export default function MaintenancePage({ message, startsAt, endsAt }) {
               "We're performing essential updates to improve your experience. Please check back soon."}
           </p>
 
-          <div className="text-sm text-secondary mb-4 space-y-1">
+          <div className="mb-4 space-y-1 text-sm text-secondary">
             {countdown && (
-              <p className="text-black font-bold text-xl pt-2">
-                ⏳ {countdown}
-              </p>
+              <>
+                <p className="text-xl font-bold text-black">
+                  Estimated maintenance ends in:
+                </p>
+                <p className="mx-auto w-fit rounded-md bg-white p-2 text-xl font-bold text-black">
+                  {countdown}
+                </p>
+              </>
             )}
           </div>
 
           <div className="mt-6 flex justify-center">
             <Button
               asChild
-              className="bg-secondary text-secondary-foreground hover:bg-secondary/90 text-sm font-medium px-6 py-2"
+              className="bg-secondary px-6 py-2 text-sm font-medium text-secondary-foreground hover:bg-secondary/90"
             >
               <Link href="/support">
                 <MailIcon className="mr-2 h-4 w-4" />
