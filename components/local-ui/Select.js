@@ -63,7 +63,7 @@ const SelectPopover = forwardRef(
           width: width,
         }}
         className={cn(
-          "golobe-scrollbar z-10 flex h-96 min-w-[300px] flex-col gap-3 overflow-y-scroll rounded-lg border bg-white p-3 shadow-lg transition-[opacity,_visibility] duration-300 ease-in-out",
+          "golobe-scrollbar z-[9999] flex h-96 min-w-[300px] flex-col gap-3 overflow-y-scroll rounded-lg border bg-white p-3 shadow-lg transition-[opacity,_visibility] duration-300 ease-in-out",
           className,
           cntx.isOpen ? "visible opacity-100" : "invisible opacity-0",
         )}
@@ -98,7 +98,7 @@ const SelectPopover = forwardRef(
           }
         })}
       </div>,
-      containerDomObjRef || document?.body,
+      containerDomObjRef,
     );
   },
 );
@@ -175,6 +175,7 @@ const Select = forwardRef(
       triggerRef,
       options,
       setOptions,
+      placeholder,
     };
 
     const buttonTitle =
@@ -210,7 +211,7 @@ const Select = forwardRef(
         {children && isMounted && (
           <SelectPopover
             {...popoverAttributes}
-            containerDomObjRef={document.body}
+            containerDomObjRef={triggerRef.current}
           >
             {children}
           </SelectPopover>
@@ -263,8 +264,8 @@ const Option = forwardRef(
 
           if (cntx.value.value === v.value) {
             // de-select
-            cntx.setValue({ value: "", placeholder: "Select a value" });
-            cntx.onValueChange({ value: "", placeholder: "Select a value" });
+            cntx.setValue({ value: "", placeholder: cntx.placeholder });
+            cntx.onValueChange({ value: "", placeholder: cntx.placeholder });
           } else {
             // select
             cntx.setValue(v);
