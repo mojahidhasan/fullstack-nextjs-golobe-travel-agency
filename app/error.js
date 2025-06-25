@@ -2,7 +2,7 @@
 
 import { AlertTriangle } from "lucide-react";
 
-export default function Error({ error, reset }) {
+export default function Error({ error, reset = () => {} }) {
   return (
     <div className="flex h-screen w-full flex-col items-center justify-center bg-gradient-to-br from-red-100 to-red-200 px-4 text-center dark:from-red-900 dark:to-red-800">
       <div className="flex w-full max-w-md flex-col items-center justify-center gap-4 rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-950">
