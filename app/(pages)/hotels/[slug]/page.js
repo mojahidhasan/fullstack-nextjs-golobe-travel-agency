@@ -321,7 +321,7 @@ export default async function HotelDetailsPage({ params }) {
 
       <Separator className="my-[40px]" />
       <FlightOrHotelReview
-        flightOrHotel="hotels"
+        flightOrHotel="hotel"
         reviewKeys={{ hotelId: hotelDetails._id, slug: hotelDetails.slug }}
         reviews={reviews}
         rating={totalReviewsCount ? rating.toFixed(1) : "N/A"}
