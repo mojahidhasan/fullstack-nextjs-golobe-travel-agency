@@ -23,7 +23,7 @@ export async function POST(req) {
     );
 
   try {
-    const user = await getUserDetails();
+    const user = await getUserDetails(session.user.id);
     let idempotencyKey = body?.idempotencyKey ?? Date.now().toString();
     let customerId = user?.customerId;
     const stripe = initStripe();
