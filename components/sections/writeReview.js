@@ -16,7 +16,7 @@ export function WriteReview({
   isAlreadyReviewed,
   reviewKeys,
   userReviewObj,
-  flightOrHotel = "flights",
+  flightOrHotel = "flight",
 }) {
   const extendedWriteReviewAction = writeReviewAction.bind(
     null,

@@ -8,41 +8,52 @@ import { RATING_SCALE } from "@/lib/constants";
 import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalculation";
 import { cn } from "@/lib/utils";
 export default async function FlightOrHotelReview({
-  airlineId,
-  departureAirportId,
-  arrivalAirportId,
-  airplaneModelName,
-  flightNumber,
+  reviewType = "flight",
+  data,
   className,
   ...props
 }) {
   const session = await auth();
   const isLoggedIn = !!session?.user;
-  const flightReviews = await getManyDocs(
-    "FlightReview",
-    {
-      airlineId,
-      departureAirportId,
-      arrivalAirportId,
-      airplaneModelName,
-    },
-    [flightNumber + "_review", "flightReviews"],
-  );
-  const rating = flightRatingCalculation(flightReviews);
-  const isAlreadyReviewed = flightReviews.some(
-    (review) => review.reviewer.toString() === session?.user.id,
-  );
-  const userReviewObj = flightReviews.find(
-    (review) => review.reviewer === session?.user.id,
-  );
+  let flightReviews = [];
+  let hotelReviews = [];
 
-  const reviewKeys = {
-    flightNumber,
-    airlineId,
-    departureAirportId,
-    arrivalAirportId,
-    airplaneModelName,
-  };
+  let userReviewObj = {};
+  let rating = 0;
+  let isAlreadyReviewed = false;
+  let reviewKeys = {};
+
+  if (reviewType === "flight") {
+    const segment = data.segments[0];
+    flightReviews = await getManyDocs(
+      "FlightReview",
+      {
+        airlineId: segment.airlineId._id,
+        departureAirportId: segment.from.airport._id,
+        arrivalAirportId: segment.to.airport._id,
+        airplaneModelName: segment.airplaneId.model,
+      },
+      [data.flightNumber + "_review", "flightReviews"],
+    );
+    userReviewObj = flightReviews.find(
+      (review) => review.reviewer === session?.user.id,
+    );
+    rating = flightRatingCalculation(flightReviews);
+    isAlreadyReviewed = flightReviews.some(
+      (review) => review.reviewer.toString() === session?.user.id,
+    );
+    reviewKeys = {
+      flightNumber: data.flightNumber,
+      airlineId: segment.airlineId._id,
+      departureAirportId: segment.from.airport._id,
+      arrivalAirportId: segment.to.airport._id,
+      airplaneModelName: segment.airplaneId.model,
+    };
+  }
+
+  if (reviewType === "hotel") {
+    // hotelReviews
+  }
 
   return (
     <div
@@ -51,13 +62,15 @@ export default async function FlightOrHotelReview({
     >
       <div className="mb-[32px]">
         <h2 className="inline-block text-2xl font-bold">Reviews</h2>
-        <WriteReview
-          userReviewObj={userReviewObj}
-          isLoggedIn={isLoggedIn}
-          isAlreadyReviewed={isAlreadyReviewed}
-          reviewKeys={reviewKeys}
-          flightOrHotel={"flights"}
-        />
+        {
+          <WriteReview
+            userReviewObj={userReviewObj}
+            isLoggedIn={isLoggedIn}
+            isAlreadyReviewed={isAlreadyReviewed}
+            reviewKeys={reviewKeys}
+            flightOrHotel={reviewType}
+          />
+        }
       </div>
       <div className="flex items-end gap-[16px]">
         <p className="text-4xl font-bold">
@@ -74,7 +87,11 @@ export default async function FlightOrHotelReview({
       </div>
       <Separator className="my-[24px]" />
       <div>
-        {flightReviews.length === 0 ? (
+        {flightReviews.length > 0 ? (
+          <FlightOrHotelReviewList session={session} reviews={flightReviews} />
+        ) : hotelReviews.length > 0 ? (
+          <FlightOrHotelReviewList session={session} reviews={hotelReviews} />
+        ) : (
           <p
             className={
               "flex h-52 items-center justify-center text-center text-xl font-bold"
@@ -82,8 +99,6 @@ export default async function FlightOrHotelReview({
           >
             No reviews yet
           </p>
-        ) : (
-          <FlightOrHotelReviewList session={session} reviews={flightReviews} />
         )}
       </div>
     </div>
