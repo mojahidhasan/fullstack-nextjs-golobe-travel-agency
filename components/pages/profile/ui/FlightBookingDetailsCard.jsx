@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn, minutesToHMFormat } from "@/lib/utils";
 
 import { SmallDataCard } from "@/components/pages/profile/ui/SmallDataCard";
 import { Button } from "@/components/ui/button";
@@ -18,14 +18,20 @@ import Link from "next/link";
 import NoSSR from "@/components/helpers/NoSSR";
 import ShowTimeInClientSide from "@/components/helpers/ShowTimeInClientSide";
 export function FlightBookingDetailsCard({ className, bookingData }) {
-  const canCancel =
-    bookingData.bookingStatus === "confirmed" &&
-    bookingData.bookingStatus !== "canceled";
-  const canRefund =
-    bookingData.bookingStatus === "canceled" &&
-    bookingData.paymentStatus === "paid";
+  const {
+    key,
+    bookingStatus,
+    paymentStatus,
+    bookedAt,
+    itineraryFlightNumber,
+    pnrCode,
+    passengers,
+    segments,
+  } = bookingData;
 
-  const flightData = bookingData.flightSnapshot;
+  const canCancel = bookingStatus !== "canceled";
+  const canRefund = bookingStatus === "canceled" && paymentStatus === "paid";
+
   return (
     <div
       className={cn(
@@ -34,175 +40,169 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
       )}
     >
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div className="flex min-w-[200px] items-center gap-4">
-          <Image
-            className="h-16 w-16 rounded-lg border border-primary object-contain p-2"
-            src={airlinesLogos[flightData.airlineId.iataCode]}
-            height={64}
-            width={64}
-            alt="airline logo"
-          />
-          <div>
-            <p className="text-sm text-muted-foreground">
-              {flightData.airlineId.name}
-            </p>
-            <p className="font-medium">{flightData.airplaneId.model}</p>
-          </div>
-        </div>
         <div>
-          <div className="mb-3 flex justify-end">
-            <span
-              className={cn(
-                "rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
-                bookingData.bookingStatus === "confirmed" &&
-                  "bg-green-100 text-green-700",
-                bookingData.bookingStatus === "pending" &&
-                  "bg-yellow-100 text-yellow-700",
-                bookingData.bookingStatus === "canceled" &&
-                  "bg-red-100 text-red-700",
-              )}
-            >
-              {bookingData.bookingStatus}
+          <p className="font-bold">
+            <span className="font-normal">Booked At:</span>{" "}
+            <NoSSR fallback={"dd MMMM yyyy, hh:mm:ss a"}>
+              <ShowTimeInClientSide
+                date={bookedAt}
+                formatStr="dd MMMM yyyy, hh:mm:ss a"
+              />
+            </NoSSR>
+          </p>
+          <p>
+            Flight No:{" "}
+            <span className="font-semibold" title="Flight Number">
+              {itineraryFlightNumber}
             </span>
-          </div>
-          <div>
-            <p>
-              Flight No:{" "}
-              <span className="font-semibold">{flightData.flightNumber}</span>
-            </p>
-            <p>
-              PNR:{" "}
-              <span className="font-semibold">{bookingData.bookingRef}</span>
-            </p>
-          </div>
+          </p>
+          <p>
+            PNR: <span className="font-semibold">{pnrCode}</span>
+          </p>
         </div>
-      </div>
-      <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
-        <div className="flex flex-col font-semibold">
-          <span>
-            <NoSSR>
-              <ShowTimeInClientSide
-                date={+flightData.departure.scheduled}
-                formatStr="HH:mm"
-              />
-            </NoSSR>
-          </span>{" "}
-          <span>
-            <NoSSR>
-              <ShowTimeInClientSide
-                date={+flightData.departure.scheduled}
-                formatStr="d MMMM yyyy"
-              />
-            </NoSSR>
-          </span>{" "}
-          <span className="max-lg:text-[0.75rem]">
-            {flightData.departure.airport.name} (
-            {flightData.departure.airport.iataCode})
-          </span>
-        </div>
-        <div className="flex grow items-center justify-center gap-4 max-md:flex-col">
-          <Image
-            src={lineLeft}
-            width={36}
-            height={36}
-            className="min-h-[36px] min-w-[36px] max-md:rotate-90"
-            alt="lineleft_icon"
-          />
-          <Image
-            src={plane}
-            alt="plane_icon"
-            className="min-h-[48px] min-w-[48px] max-md:rotate-90"
-            height={48}
-            width={48}
-          />
-          <Image
-            className="min-h-[36px] min-w-[36px] max-md:rotate-90"
-            width={36}
-            height={36}
-            src={lineRight}
-            alt="lineright_icon"
-          />
-        </div>
-        <div className="flex flex-col font-semibold">
-          <span>
-            <NoSSR>
-              <ShowTimeInClientSide
-                date={+flightData.arrival.scheduled}
-                formatStr="HH:mm"
-              />
-            </NoSSR>
-          </span>{" "}
-          <span>
-            <NoSSR>
-              <ShowTimeInClientSide
-                date={+flightData.arrival.scheduled}
-                formatStr="d MMMM yyyy"
-              />
-            </NoSSR>
-          </span>{" "}
-          <span className="max-lg:text-[0.75rem]">
-            {flightData.arrival.airport.name} (
-            {flightData.arrival.airport.iataCode})
+        <div className="mb-3 flex justify-end">
+          <span
+            className={cn(
+              "rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
+              bookingStatus === "confirmed" && "bg-green-100 text-green-700",
+              bookingStatus === "pending" && "bg-yellow-100 text-yellow-700",
+              bookingStatus === "canceled" && "bg-red-100 text-red-700",
+            )}
+          >
+            {bookingStatus}
           </span>
         </div>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <SmallDataCard
-          imgSrc={calender}
-          title="Date"
-          data={
-            <NoSSR>
-              <ShowTimeInClientSide
-                date={+flightData.departure.scheduled}
-                formatStr="d MMMM yyyy"
+      {segments.map((s) => (
+        <div key={s.key} className="mb-2 rounded-md border p-3">
+          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
+            <div className="mb-3 flex min-w-[200px] items-center gap-4">
+              <Image
+                className="h-16 w-16 rounded-lg border border-primary object-contain p-2"
+                src={airlinesLogos[s.airlineIataCode]}
+                height={64}
+                width={64}
+                alt="airline logo"
               />
-            </NoSSR>
-          }
-        />
-        <SmallDataCard
-          imgSrc={gate}
-          title="Gate"
-          data={flightData.departure.gate}
-        />
-        <SmallDataCard
-          imgSrc={timer}
-          title="Flight time"
-          data={
-            <NoSSR>
-              <ShowTimeInClientSide
-                date={+flightData.totalDuration}
-                formatStr="HH:mm"
+              <div>
+                <p className="text-lg font-semibold">{s.airlineName}</p>
+                <p className="font-medium">{s.airlineIataCode}</p>
+              </div>
+            </div>
+            <div>
+              <p className="text-lg font-semibold" title="Flight Number">
+                {s.flightNumber}
+              </p>
+              <p className="font-medium">{s.airplaneModelName}</p>
+            </div>
+          </div>
+          <div className="mb-3 flex flex-col items-start justify-between gap-3 md:flex-row md:items-center">
+            <div className="mb-3 flex flex-col font-semibold">
+              <span>
+                <NoSSR fallback={"hh:mm aaa"}>
+                  <ShowTimeInClientSide
+                    date={s.departureDateTime}
+                    formatStr="hh:mm aaa"
+                  />
+                </NoSSR>
+              </span>{" "}
+              <span>
+                <NoSSR fallback={"dd MMMM yyyy"}>
+                  <ShowTimeInClientSide
+                    date={s.departureDateTime}
+                    formatStr="d MMMM yyyy"
+                  />
+                </NoSSR>
+              </span>{" "}
+              <span className="max-lg:text-[0.75rem]">
+                {s.departureAirportName} ({s.departureAirportIataCode})
+              </span>
+            </div>
+            <div className="flex grow items-center justify-center gap-4 max-md:flex-col">
+              <Image
+                src={lineLeft}
+                width={36}
+                height={36}
+                className="min-h-[36px] min-w-[36px] max-md:rotate-90"
+                alt="lineleft_icon"
               />
-            </NoSSR>
-          }
-        />
-        <SmallDataCard
-          imgSrc={airplaneIcon}
-          title="Terminal"
-          data={flightData.departure.terminal}
-        />
-      </div>
-
+              <Image
+                src={plane}
+                alt="plane_icon"
+                className="min-h-[48px] min-w-[48px] max-md:rotate-90"
+                height={48}
+                width={48}
+              />
+              <Image
+                className="min-h-[36px] min-w-[36px] max-md:rotate-90"
+                width={36}
+                height={36}
+                src={lineRight}
+                alt="lineright_icon"
+              />
+            </div>
+            <div className="flex flex-col font-semibold">
+              <span>
+                <NoSSR fallback={"hh:mm aaa"}>
+                  <ShowTimeInClientSide
+                    date={s.arrivalDateTime}
+                    formatStr="hh:mm aaa"
+                  />
+                </NoSSR>
+              </span>{" "}
+              <span>
+                <NoSSR fallback={"dd MMMM yyyy"}>
+                  <ShowTimeInClientSide
+                    date={s.arrivalDateTime}
+                    formatStr="d MMMM yyyy"
+                  />
+                </NoSSR>
+              </span>{" "}
+              <span className="max-lg:text-[0.75rem]">
+                {s.arrivalAirportName} ({s.arrivalAirportIataCode})
+              </span>
+            </div>
+          </div>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <SmallDataCard
+              imgSrc={calender}
+              title="Date"
+              data={
+                <NoSSR fallback={"dd MMMM yyyy"}>
+                  <ShowTimeInClientSide
+                    date={s.departureDateTime}
+                    formatStr="d MMMM yyyy"
+                  />
+                </NoSSR>
+              }
+            />
+            <SmallDataCard imgSrc={gate} title="Gate" data={s.gate} />
+            <SmallDataCard
+              imgSrc={timer}
+              title="Flight time"
+              data={minutesToHMFormat(+s.flightDurationMinutes)}
+            />
+            <SmallDataCard
+              imgSrc={airplaneIcon}
+              title="Terminal"
+              data={s.terminal}
+            />
+          </div>
+        </div>
+      ))}
       <div className="rounded-md bg-muted/50 p-4">
         <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
           Passengers
         </h3>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {bookingData.passengers.map((p) => (
+          {passengers.map((p) => (
             <div
-              key={p._id}
+              key={p.key}
               className="min-w-fit grow rounded-md bg-white p-3 shadow-sm"
             >
-              <p className="font-medium">{p.firstName + " " + p.lastName}</p>
+              <p className="font-medium">{p.fullName}</p>
               <p className="text-sm capitalize text-muted-foreground">
                 Type: {p.passengerType}
-              </p>
-              <p className="text-sm text-muted-foreground">
-                Seat:{" "}
-                {
-                  bookingData.seats.find((s) => s.reservation.for === p._id)
-                    .seatNumber
-                }
               </p>
               <p className="text-sm capitalize text-muted-foreground">
                 Seat class: {p.seatClass}
@@ -215,24 +215,16 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
       {/* Button will be made functional soon */}
       <div className="mt-4 flex flex-wrap gap-3">
         <Button className={"min-w-[100px]"} asChild>
-          <Link href={`/user/my_bookings/flights/${bookingData.bookingRef}`}>
-            View
-          </Link>
+          <Link href={`/user/my_bookings/flights/${key}`}>View</Link>
         </Button>
-        {bookingData.bookingStatus === "pending" && (
+        {paymentStatus === "pending" && (
           <Button className={"min-w-[100px]"} asChild>
-            <Link
-              href={`/user/my_bookings/flights/${bookingData.bookingRef}/payment`}
-            >
-              Pay
-            </Link>
+            <Link href={`/user/my_bookings/flights/${key}/payment`}>Pay</Link>
           </Button>
         )}
-        {bookingData.bookingStatus === "confirmed" && (
+        {paymentStatus === "confirmed" && (
           <Button className={"min-w-[100px]"} asChild>
-            <Link
-              href={`/user/my_bookings/flights/${bookingData.bookingRef}/ticket`}
-            >
+            <Link href={`/user/my_bookings/flights/${key}/ticket`}>
               Download Tickets
             </Link>
           </Button>
