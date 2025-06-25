@@ -8,6 +8,7 @@ import { auth } from "@/lib/auth";
 import { getAllFlightBookings } from "@/lib/controllers/flights";
 import Link from "next/link";
 import FlightBookingDetailsCardSmall from "./ui/FlightBookingDetailsCardSmall";
+import { getOneDoc } from "@/lib/db/getOperationDB";
 export async function TicketsOrBookings() {
   const session = await auth();
 
@@ -67,13 +68,56 @@ export async function TicketsOrBookings() {
             {!flightBookings.length && <NoSavedCardsMessage />}
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-              {flightBookings.map((booking) => (
-                <FlightBookingDetailsCardSmall
-                  key={booking._id}
-                  bookingDetails={booking}
-                  className={"mx-auto"}
-                />
-              ))}
+              {flightBookings.map(async (booking) => {
+                const flightData = await getOneDoc("FlightItinerary", {
+                  _id: booking.flightItineraryId,
+                });
+                const bookingDetails = {
+                  key: booking._id,
+                  bookingStatus: booking.ticketStatus,
+                  paymentStatus: booking.paymentStatus,
+                  bookedAt: booking.createdAt,
+                  itineraryFlightNumber: flightData.flightCode,
+                  pnrCode: booking.pnrCode,
+                  passengers: booking.passengers.map((p) => {
+                    const seatDetails = booking.selectedSeats.find(
+                      (s) => s.passengerId === p._id,
+                    );
+                    return {
+                      key: p._id,
+                      fullName: p.firstName + " " + p.lastName,
+                      passengerType: p.passengerType,
+                      seatNumber: seatDetails.seatId.seatNumber,
+                      seatClass: seatDetails.seatId.class,
+                    };
+                  }),
+                  segments: flightData.segmentIds.map((s) => {
+                    return {
+                      key: s._id,
+                      flightNumber: s.flightNumber,
+                      airplaneModelName: s.airplaneId.model,
+                      airlineName: s.airlineId.name,
+                      airlineIataCode: s.airlineId.iataCode,
+                      departureDateTime: s.from.scheduledDeparture,
+                      departureAirportIataCode: s.from.airport.iataCode,
+                      departureAirportName: s.from.airport.name,
+                      arrivalDateTime: s.to.scheduledArrival,
+                      arrivalAirportIataCode: s.to.airport.iataCode,
+                      arrivalAirportName: s.to.airport.name,
+                      flightDurationMinutes: s.durationMinutes,
+                      gate: s.from.gate,
+                      terminal: s.from.terminal,
+                    };
+                  }),
+                };
+                return (
+                  <FlightBookingDetailsCardSmall
+                    key={bookingDetails.key}
+                    bookingDetails={bookingDetails}
+                    className={"mx-auto"}
+                  />
+                );
+              })}
             </div>
           </TabsContent>
           <TabsContent value="stays">
