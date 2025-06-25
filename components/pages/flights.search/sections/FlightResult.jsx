@@ -1,19 +1,33 @@
 import { FlightResultList } from "./FlightResultList";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
+import { multiSegmentCombinedFareBreakDown } from "@/lib/db/schema/flightItineraries";
 import { minutesToHMFormat } from "@/lib/utils";
-export async function FlightResult({ flightResults, metaData }) {
+export async function FlightResult({ flightResults, searchState, metaData }) {
   const sortByCheapest = flightResults.slice(0).sort((a, b) => {
-    const aTotalPrice = a.fareDetails.basePrice[metaData.flightClass].adult;
-    const bTotalPrice = b.fareDetails.basePrice[metaData.flightClass].adult;
+    const aTotalPrice = multiSegmentCombinedFareBreakDown(
+      a.segmentIds,
+      searchState.passengers,
+      metaData.flightClass,
+    ).total;
+    const bTotalPrice = multiSegmentCombinedFareBreakDown(
+      b.segmentIds,
+      searchState.passengers,
+      metaData.flightClass,
+    ).total;
     return +aTotalPrice - +bTotalPrice;
   });
   const sortByQuickest = [...flightResults].sort((a, b) => {
-    return +a.totalDuration - b.totalDuration;
+    return +a.totalDurationMinutes - b.totalDurationMinutes;
   });
 
   const mostCheap =
-    sortByCheapest[0]?.fareDetails.basePrice[metaData.flightClass].adult;
-  const mostQuick = sortByQuickest[0]?.totalDuration;
+    multiSegmentCombinedFareBreakDown(
+      sortByCheapest[0]?.segmentIds,
+      searchState.passengers,
+      metaData.flightClass,
+    ).total || 0;
+
+  const mostQuick = sortByQuickest[0]?.totalDurationMinutes;
   return (
     <div className="flex grow flex-col gap-[32px]">
       <Tabs defaultValue="cheapest" className="w-full">
@@ -42,10 +56,18 @@ export async function FlightResult({ flightResults, metaData }) {
           </TabsTrigger>
         </TabsList>
         <TabsContent value="cheapest">
-          <FlightResultList data={sortByCheapest} metaData={metaData} />
+          <FlightResultList
+            searchState={searchState}
+            data={sortByCheapest}
+            metaData={metaData}
+          />
         </TabsContent>
         <TabsContent value="quickest">
-          <FlightResultList data={sortByQuickest} metaData={metaData} />
+          <FlightResultList
+            searchState={searchState}
+            data={sortByQuickest}
+            metaData={metaData}
+          />
         </TabsContent>
       </Tabs>
     </div>
