@@ -3,10 +3,10 @@ import { capitalize, cn } from "@/lib/utils";
 import { Dropdown } from "./local-ui/Dropdown";
 import { useEffect, useState } from "react";
 import { Loader2Icon } from "lucide-react";
-import { passengerFareBreakdowns } from "@/lib/helpers/flights/priceCalculations";
+import { multiSegmentCombinedFareBreakDown } from "@/lib/db/schema/flightItineraries";
 
 export function FareCard({
-  fare = {},
+  segments = [],
   passengersCountObj,
   flightClass,
   className = "",
@@ -25,11 +25,12 @@ export function FareCard({
     }, 500);
   }, []);
 
-  const { fareBreakdowns, total: computedTotal } = passengerFareBreakdowns(
-    fare,
-    passengersCountObj,
-    flightClass,
-  );
+  const { fareBreakdowns, total: computedTotal } =
+    multiSegmentCombinedFareBreakDown(
+      segments,
+      passengersCountObj,
+      flightClass,
+    );
 
   return (
     <div
