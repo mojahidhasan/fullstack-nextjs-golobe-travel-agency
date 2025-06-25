@@ -37,8 +37,17 @@
         max-width: 0;
       "
     >
-      Your flight booking with Golobe has been confirmed. Booking reference:
-      {{main.bookingDetails.bookingRef}}
+      Your flight booking with Golobe has been confirmed.
+      <br />
+      PNR:
+      {{main.bookingDetails.pnrCode}}
+      <br />
+      Booked At:
+      {{formatDate
+        main.bookingDetails.bookedAt
+        main.bookingDetails.userTimeZone
+        "dd MMMM yyyy, hh:mm a"
+      }}
     </div>
 
     <!-- Main email container -->
@@ -90,180 +99,182 @@
             Your Flight is Confirmed!
           </h1>
           <p style="font-size: 16px; color: #4a4a4a; margin: 0">
-            Booking reference:
-            <strong>{{main.bookingDetails.bookingRef}}</strong>
+            PNR:
+            <strong>{{main.bookingDetails.pnrCode}}</strong>
           </p>
         </td>
       </tr>
 
       <!-- Flight summary -->
-      <tr>
-        <td style="background-color: #ffffff; padding: 0 30px 20px">
-          <table
-            width="100%"
-            border="0"
-            cellpadding="0"
-            cellspacing="0"
-            role="presentation"
-          >
-            <tr>
-              <td
-                style="
+      {{#each main.flightDetails.segments as |segment|}}
+        <tr>
+          <td style="background-color: #ffffff; padding: 0 30px 20px">
+            <table
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+            >
+              <tr>
+                <td
+                  style="
                   background-color: #f1f8f5;
                   border-radius: 8px;
                   padding: 20px;
                 "
-              >
-                <table
-                  width="100%"
-                  border="0"
-                  cellpadding="0"
-                  cellspacing="0"
-                  role="presentation"
                 >
-                  <!-- Flight details -->
-                  <tr>
-                    <td style="padding-bottom: 15px">
-                      <h2
-                        style="
+                  <table
+                    width="100%"
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                    role="presentation"
+                  >
+                    <!-- Flight details -->
+                    <tr>
+                      <td style="padding-bottom: 15px">
+                        <h2
+                          style="
                           font-size: 18px;
                           font-weight: 600;
                           color: #2d3436;
                           margin: 0 0 5px;
                         "
-                      >
-                        {{main.flightDetails.airlineId.name}}
-                        <br />
-                        Flight No:
-                        {{main.flightDetails.flightNumber}}
-                      </h2>
-                    </td>
-                  </tr>
+                        >
+                          {{segment.airlineName}}
+                          <br />
+                          Flight No:
+                          {{segment.flightNumber}}
+                        </h2>
+                      </td>
+                    </tr>
 
-                  <!-- Departure and arrival times -->
-                  <tr>
-                    <td style="padding-bottom: 15px">
-                      <table
-                        width="100%"
-                        border="0"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                      >
-                        <tr>
-                          <td style="width: 45%">
-                            <p
-                              style="
+                    <!-- Departure and arrival times -->
+                    <tr>
+                      <td style="padding-bottom: 15px">
+                        <table
+                          width="100%"
+                          border="0"
+                          cellpadding="0"
+                          cellspacing="0"
+                          role="presentation"
+                        >
+                          <tr>
+                            <td style="width: 45%">
+                              <p
+                                style="
                                 font-size: 24px;
                                 font-weight: 700;
                                 color: #2d3436;
                                 margin: 0 0 5px;
                               "
-                            >
-                              {{formatDate
-                                main.flightDetails.departure.scheduled
-                                main.bookingDetails.timeZone
-                                "hh:mm a"
-                              }}
-                            </p>
-                            <p
-                              style="font-size: 14px; color: #636e72; margin: 0"
-                            >
-                              {{formatDate
-                                main.flightDetails.departure.scheduled
-                                main.bookingDetails.timeZone
-                                "dd MMMM yyyy"
-                              }}
-                            </p>
-                            <p
-                              style="
+                              >
+                                {{formatDate
+                                  segment.departureDateTime
+                                  main.bookingDetails.userTimeZone
+                                  "hh:mm a"
+                                }}
+                              </p>
+                              <p
+                                style="font-size: 14px; color: #636e72; margin: 0"
+                              >
+                                {{formatDate
+                                  segment.departureDateTime
+                                  main.bookingDetails.userTimeZone
+                                  "dd MMMM yyyy"
+                                }}
+                              </p>
+                              <p
+                                style="
                                 font-size: 14px;
                                 color: #636e72;
                                 margin: 5px 0 0;
                               "
-                            >
-                              {{main.flightDetails.departure.airport.name}}
-                              ({{main.flightDetails.departure.airport.iataCode}})
-                            </p>
-                          </td>
+                              >
+                                {{segment.departureAirportName}}
+                                ({{segment.departureAirportIataCode}})
+                              </p>
+                            </td>
 
-                          <td style="width: 45%; text-align: right">
-                            <p
-                              style="
+                            <td style="width: 45%; text-align: right">
+                              <p
+                                style="
                                 font-size: 24px;
                                 font-weight: 700;
                                 color: #2d3436;
                                 margin: 0 0 5px;
                               "
-                            >
-                              {{formatDate
-                                main.flightDetails.arrival.scheduled
-                                main.bookingDetails.timeZone
-                                "hh:mm a"
-                              }}
-                            </p>
-                            <p
-                              style="font-size: 14px; color: #636e72; margin: 0"
-                            >
-                              {{formatDate
-                                main.flightDetails.arrival.scheduled
-                                main.bookingDetails.timeZone
-                                "dd MMMM yyyy"
-                              }}
-                            </p>
-                            <p
-                              style="
+                              >
+                                {{formatDate
+                                  segment.arrivalDateTime
+                                  main.bookingDetails.userTimeZone
+                                  "hh:mm a"
+                                }}
+                              </p>
+                              <p
+                                style="font-size: 14px; color: #636e72; margin: 0"
+                              >
+                                {{formatDate
+                                  segment.arrivalDateTime
+                                  main.bookingDetails.userTimeZone
+                                  "dd MMMM yyyy"
+                                }}
+                              </p>
+                              <p
+                                style="
                                 font-size: 14px;
                                 color: #636e72;
                                 margin: 5px 0 0;
                               "
-                            >
-                              {{main.flightDetails.arrival.airport.name}}
-                              ({{main.flightDetails.arrival.airport.iataCode}})
-                            </p>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
+                              >
+                                {{segment.arrivalAirportName}}
+                                ({{segment.arrivalAirportIataCode}})
+                              </p>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
 
-                  <!-- Duration and aircraft -->
-                  <tr>
-                    <td style="padding-bottom: 15px">
-                      <table
-                        width="100%"
-                        border="0"
-                        cellpadding="0"
-                        cellspacing="0"
-                        role="presentation"
-                      >
-                        <tr>
-                          <td style="width: 50%">
-                            <p
-                              style="font-size: 14px; color: #636e72; margin: 0"
-                            >
-                              <strong>Duration:</strong>
-                              {{minToHM main.flightDetails.totalDuration}}
-                            </p>
-                          </td>
-                          <td style="width: 50%; text-align: right">
-                            <p
-                              style="font-size: 14px; color: #636e72; margin: 0"
-                            >
-                              <strong>Aircraft:</strong>
-                              {{main.flightDetails.airplaneId.model}}
-                            </p>
-                          </td>
-                        </tr>
-                      </table>
-                    </td>
-                  </tr>
-                </table>
-              </td>
-            </tr>
-          </table>
-        </td>
-      </tr>
+                    <!-- Duration and aircraft -->
+                    <tr>
+                      <td style="padding-bottom: 15px">
+                        <table
+                          width="100%"
+                          border="0"
+                          cellpadding="0"
+                          cellspacing="0"
+                          role="presentation"
+                        >
+                          <tr>
+                            <td style="width: 50%">
+                              <p
+                                style="font-size: 14px; color: #636e72; margin: 0"
+                              >
+                                <strong>Duration:</strong>
+                                {{minToHM segment.totalDurationMinutes}}
+                              </p>
+                            </td>
+                            <td style="width: 50%; text-align: right">
+                              <p
+                                style="font-size: 14px; color: #636e72; margin: 0"
+                              >
+                                <strong>Aircraft:</strong>
+                                {{segment.airplaneModelName}}
+                              </p>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      {{/each}}
 
       <!-- Passenger details -->
       <tr>
@@ -278,12 +289,7 @@
           >
             Passenger Details
           </h2>
-          {{#each
-            (passengers
-              main.bookingDetails.passengers main.bookingDetails.seats
-            )
-            as |p|
-          }}
+          {{#each main.bookingDetails.passengers as |p|}}
             <table
               width="100%"
               border="0"
@@ -330,7 +336,7 @@
                   "
                   >
                     <strong>Type</strong>
-                    {{p.type}}
+                    {{p.passengerType}}
                   </p>
                   <p style="font-size: 14px; color: #636e72; margin: 0">
                     <strong>Seat:</strong>
@@ -415,9 +421,9 @@
                     font-weight: 500;
                   "
                 >
-                  <strong>{{main.bookingDetails.paymentId.paymentMethod.brand}}
+                  <strong>{{main.bookingDetails.paymentMethod.brand}}
                     ****
-                    {{main.bookingDetails.paymentId.paymentMethod.last4}}</strong>
+                    {{main.bookingDetails.paymentMethod.last4}}</strong>
                 </p>
               </td>
             </tr>
@@ -427,7 +433,7 @@
                   Receipt
                 </p>
                 <a
-                  href="{{main.bookingDetails.paymentId.receiptUrl}}"
+                  href="{{main.bookingDetails.paymentMethod.receiptUrl}}"
                   target="_blank"
                   style="
                     font-size: 14px;
@@ -453,7 +459,7 @@
                   "
                 >
                   {{formatCurrency
-                    main.bookingDetails.totalPrice
+                    main.bookingDetails.totalfare
                     main.bookingDetails.currency
                   }}
                 </p>
