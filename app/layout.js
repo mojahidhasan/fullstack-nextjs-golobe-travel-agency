@@ -15,6 +15,8 @@ import MaintenancePage from "./MaintenancePage";
 import { MaintenanceNotice } from "./MaintenanceNotice";
 import SetNecessaryCookies from "./SetNecessaryCookies";
 import { getOneDoc } from "@/lib/db/getOperationDB";
+import { headers } from "next/headers";
+
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",
@@ -83,10 +85,17 @@ export default async function RootLayout({ children }) {
   const websiteConfig = await getOneDoc("WebsiteConfig", {}, ["websiteConfig"]);
 
   const maintenanceMode = websiteConfig?.maintenanceMode ?? { enabled: false };
+
+  const alloweRoutesWhileMaintenance = maintenanceMode?.allowlistedRoutes ?? [];
+  const currentPathname = headers().get("x-pathname");
+
   return (
     <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
       <body className={monse.className}>
-        {maintenanceMode.enabled === true ? (
+        {maintenanceMode.enabled === true &&
+        !alloweRoutesWhileMaintenance.some((path) =>
+          path.startsWith(currentPathname),
+        ) ? (
           <MaintenancePage
             message={maintenanceMode.message}
             startsAt={maintenanceMode.startsAt}
