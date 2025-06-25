@@ -7,7 +7,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
 import { useRouter } from "next/navigation";
-export default function BookingPayment({ flightNumber }) {
+export default function BookingPayment({ flightNumber, flightDateTimestamp }) {
   const router = useRouter();
   const {
     data: flightBookingData,
@@ -18,8 +18,10 @@ export default function BookingPayment({ flightNumber }) {
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/user/get_reserved_flight`,
     {
       method: "POST",
+      contentType: "application/json",
       body: JSON.stringify({
-        flightNumber: flightNumber,
+        flightNumber,
+        flightDateTimestamp,
       }),
     },
   );
@@ -27,12 +29,13 @@ export default function BookingPayment({ flightNumber }) {
     `${process.env.NEXT_PUBLIC_BASE_URL}/api/stripe/create_flight_booking_payment_intent`,
     {
       method: "POST",
+      contentType: "application/json",
       body: JSON.stringify({
-        flightNumber: flightNumber,
+        flightNumber,
+        flightDateTimestamp,
       }),
     },
   );
-
   async function middleware(next = async () => {}) {
     try {
       const res = await fetch(
@@ -41,6 +44,7 @@ export default function BookingPayment({ flightNumber }) {
           method: "POST",
           body: JSON.stringify({
             flightNumber: flightNumber,
+            flightDateTimestamp,
           }),
         },
       );
@@ -76,7 +80,7 @@ export default function BookingPayment({ flightNumber }) {
       const searchParams = new URLSearchParams({
         title: "Payment successful",
         message: "Your payment was successful",
-        callbackUrl: `/user/my_bookings/flights/${flightBookingData.data.bookingRef}/ticket`,
+        callbackUrl: `/user/my_bookings/flights/${flightBookingData.data._id}/ticket`,
         callbackTitle: "Download ticket",
       });
       router.push(`/success?${searchParams.toString()}`);
@@ -111,9 +115,11 @@ export default function BookingPayment({ flightNumber }) {
           {!flightBookingLoading ? (
             <Countdown
               currentTimeMs={Date.now()}
-              timeoutAtMs={new Date(
-                flightBookingData?.data?.temporaryReservationExpiresAt,
-              )?.getTime()}
+              timeoutAtMs={
+                new Date(
+                  flightBookingData?.data?.guaranteedReservationUntil,
+                )?.getTime() || 0
+              }
             />
           ) : (
             <Skeleton className="h-4 w-20" />
