@@ -1,6 +1,7 @@
 import { FlightBookingDetailsCard } from "@/components/pages/profile/ui/FlightBookingDetailsCard";
 import { auth } from "@/lib/auth";
 import { getAllFlightBookings } from "@/lib/controllers/flights";
+import { getOneDoc } from "@/lib/db/getOperationDB";
 
 export default async function FlightBookingDetailsPage() {
   const session = await auth();
@@ -10,12 +11,55 @@ export default async function FlightBookingDetailsPage() {
   return (
     <div>
       {flightBookings.length === 0 && <Empty />}
-      {flightBookings.map((booking) => {
+      {flightBookings.map(async (booking) => {
+        const flightData = await getOneDoc("FlightItinerary", {
+          _id: booking.flightItineraryId,
+        });
+
+        const bookingCardData = {
+          key: booking._id,
+          bookingStatus: booking.ticketStatus,
+          paymentStatus: booking.paymentStatus,
+          bookedAt: booking.createdAt,
+          itineraryFlightNumber: flightData.flightCode,
+          pnrCode: booking.pnrCode,
+          passengers: booking.passengers.map((p) => {
+            const seatDetails = booking.selectedSeats.find(
+              (s) => s.passengerId === p._id,
+            );
+            return {
+              key: p._id,
+              fullName: p.firstName + " " + p.lastName,
+              passengerType: p.passengerType,
+              seatNumber: seatDetails.seatId.seatNumber,
+              seatClass: seatDetails.seatId.class,
+            };
+          }),
+          segments: flightData.segmentIds.map((s) => {
+            return {
+              key: s._id,
+              flightNumber: s.flightNumber,
+              airplaneModelName: s.airplaneId.model,
+              airlineName: s.airlineId.name,
+              airlineIataCode: s.airlineId.iataCode,
+              departureDateTime: s.from.scheduledDeparture,
+              departureAirportIataCode: s.from.airport.iataCode,
+              departureAirportName: s.from.airport.name,
+              arrivalDateTime: s.to.scheduledArrival,
+              arrivalAirportIataCode: s.to.airport.iataCode,
+              arrivalAirportName: s.to.airport.name,
+              flightDurationMinutes: s.durationMinutes,
+              gate: s.from.gate,
+              terminal: s.from.terminal,
+            };
+          }),
+        };
+
         return (
           <FlightBookingDetailsCard
             className="mb-3"
-            key={booking._id}
-            bookingData={booking}
+            key={bookingCardData._id}
+            bookingData={bookingCardData}
           />
         );
       })}
