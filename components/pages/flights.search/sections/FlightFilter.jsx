@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { FilterRating } from "@/components/local-ui/FilterRating";
 
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 
@@ -16,15 +16,39 @@ import {
   setFlightFormFilters,
   resetFilters,
   defaultFlightFormValue,
+  setFlightForm,
 } from "@/reduxStore/features/flightFormSlice";
 
 // does not work after new flight search, fix later
-export function FlightsFilter({ className }) {
+export function FlightsFilter({ filterObj, className }) {
   const dispatch = useDispatch();
-  const flightFilterState = useSelector(
-    (selector) => selector.flightForm.value.filters,
-  );
+  const flightState = useSelector((selector) => selector.flightForm.value);
+  const flightFilterState = flightState.filters;
+  const defaultFilterState = flightState.filterOptions;
+
   const [filter, setFilter] = useState(false);
+
+  const airlineFullName = {
+    EK: "Emirates",
+    EY: "Etihad",
+    FZ: "Fly Dubai",
+  };
+
+  useEffect(() => {
+    dispatch(
+      setFlightForm({
+        filterOptions: {
+          ...defaultFlightFormValue.filterOptions,
+          ...filterObj,
+        },
+      }),
+    );
+    dispatch(
+      setFlightFormFilters({
+        priceRange: filterObj.defaultPriceRange,
+      }),
+    );
+  }, [JSON.stringify(filterObj)]);
 
   function handleCheckboxChange(checked, groupName, name) {
     if (checked) {
@@ -123,8 +147,8 @@ export function FlightsFilter({ className }) {
             <div className="my-5">
               <Slider
                 name="price-slider"
-                min={defaultFlightFormValue.filters.priceRange[0]}
-                max={defaultFlightFormValue.filters.priceRange[1]}
+                min={defaultFilterState.defaultPriceRange[0]}
+                max={defaultFilterState.defaultPriceRange[1]}
                 value={flightFilterState.priceRange}
                 onValueChange={(value) => {
                   dispatch(setFlightFormFilters({ priceRange: value }));
@@ -140,8 +164,8 @@ export function FlightsFilter({ className }) {
             <div className="my-5">
               <Slider
                 name="departure-time-slider"
-                min={defaultFlightFormValue.filters.departureTime[0]}
-                max={defaultFlightFormValue.filters.departureTime[1]}
+                min={defaultFilterState.departureTime[0]}
+                max={defaultFilterState.departureTime[1]}
                 value={flightFilterState.departureTime}
                 onValueChange={(value) => {
                   dispatch(setFlightFormFilters({ departureTime: value }));
@@ -174,21 +198,17 @@ export function FlightsFilter({ className }) {
           </Dropdown>
           <Dropdown title={"Airlines"} open>
             <div className="flex flex-col gap-3">
-              {[
-                ["Emirates", "EK"],
-                ["Fly-Dubai", "FZ"],
-                ["Etihad", "EY"],
-              ].map((name) => {
+              {defaultFilterState.airlines.map((name) => {
                 return (
                   <Checkbox
-                    key={name[0]}
+                    key={name}
                     onCheckedChange={(checked) =>
-                      handleCheckboxChange(checked, "airlines", name[1])
+                      handleCheckboxChange(checked, "airlines", name)
                     }
-                    name={name[1]}
-                    id={name[1]}
-                    label={name[0]}
-                    checked={flightFilterState.airlines.includes(name[1])}
+                    name={name}
+                    id={name}
+                    label={airlineFullName[name]}
+                    checked={flightFilterState.airlines.includes(name)}
                   />
                 );
               })}

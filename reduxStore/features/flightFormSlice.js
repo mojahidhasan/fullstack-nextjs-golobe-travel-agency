@@ -30,6 +30,12 @@ export const defaultFlightFormValue = {
     rates: [], // 1,2,3,4,5
     airlines: [], // EK, FZ, EY
     priceRange: [400, 2000], // min, max
+    defaultPriceRange: [400, 2000],
+    departureTime: [0, 86340000], // 24 hours in milliseconds , min and max
+  },
+  filterOptions: {
+    airlines: [], // EK, FZ, EY
+    defaultPriceRange: [400, 2000],
     departureTime: [0, 86340000], // 24 hours in milliseconds , min and max
   },
   errors: {},
