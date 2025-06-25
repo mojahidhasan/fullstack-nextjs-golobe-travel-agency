@@ -28,16 +28,28 @@ export function MaintenanceNotice({ maintenanceMode }) {
     }
   }, [maintenanceMode?.startsAt]);
 
-  if (countdown === "Maintenance is starting soon") {
+  if (maintenanceMode?.enabled) {
     return (
-      <div className="text-xl font-semibold text-center !text-tertiary p-2 bg-secondary text-white">
+      <div className="bg-secondary p-2 text-center text-xl font-semibold !text-tertiary text-white">
+        <div>Server is in maintenance</div>
+      </div>
+    );
+  }
+
+  if (
+    !maintenanceMode?.enabled &&
+    countdown === "Maintenance is starting soon"
+  ) {
+    return (
+      <div className="bg-secondary p-2 text-center text-xl font-semibold !text-tertiary text-white">
         <div>Maintenance is starting soon</div>
       </div>
     );
   }
-  if (countdown) {
+
+  if (!maintenanceMode?.enabled && countdown) {
     return (
-      <div className="text-xl !text-tertiary font-semibold text-center p-2 bg-secondary text-white">
+      <div className="bg-secondary p-2 text-center text-xl font-semibold !text-tertiary text-white">
         Maintenance is starting in {countdown}
         <p className="text-sm text-secondary-foreground">
           The website will be down soon
