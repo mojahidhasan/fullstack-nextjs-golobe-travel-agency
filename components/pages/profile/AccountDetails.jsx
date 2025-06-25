@@ -13,7 +13,7 @@ export function AccountDetails({ userDetails }) {
   const accountDetails = {
     name: userDetails.firstName + " " + userDetails.lastName,
     emails: userDetails.emails,
-    phone: userDetails?.phone,
+    phone: userDetails?.phoneNumbers,
     address: userDetails?.address,
     dateOfBirth: userDetails?.dateOfBirth,
   };
@@ -77,7 +77,11 @@ export function AccountDetails({ userDetails }) {
           <h4 className="opacity-75">Phone</h4>
           <div className="flex items-center justify-between">
             <p className="text-[1.25rem] font-semibold">
-              {accountDetails.phone ?? "N/A"}
+              {accountDetails.phone.length
+                ? accountDetails.phone[0].dialCode +
+                  " " +
+                  accountDetails.phone[0].number
+                : "N/A"}
             </p>
             <ChangePhonePopup />
           </div>

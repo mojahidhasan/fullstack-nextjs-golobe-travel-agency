@@ -36,7 +36,7 @@ export default async function ProfilePage({ searchParams }) {
           userDetails={{
             ...userDetails,
             dateOfBirth: userDetails.dateOfBirth
-              ? format(userDetails.dateOfBirth, "dd-MM-yyyy")
+              ? format(userDetails.dateOfBirth, "dd MMM yyyy")
               : null,
           }}
         />

@@ -9,8 +9,8 @@ export function FilterRating({ className, value, setValue }) {
       }}
       value={value}
       className={cn(
-        "w-full [&_button[data-state=on]]:bg-primary/20 [&_button]:border [&_button[data-state=on]]:border-primary",
-        className
+        "w-full [&_button[data-state=on]]:border-primary [&_button[data-state=on]]:bg-primary/20 [&_button]:border",
+        className,
       )}
     >
       <ToggleGroupItem

@@ -47,7 +47,7 @@ export function PaymentCard({ card, tryAgain = () => {} }) {
         </div>
 
         <AlertDialog>
-          <AlertDialogTrigger>
+          <AlertDialogTrigger asChild title="Delete Payment Method">
             <Button
               variant="icon"
               className={"h-auto w-auto p-1 hover:text-destructive"}

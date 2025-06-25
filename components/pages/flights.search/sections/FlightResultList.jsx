@@ -4,7 +4,12 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { cn } from "@/lib/utils";
 
-export function FlightResultList({ data, metaData, resultType = "result(s)" }) {
+export function FlightResultList({
+  data,
+  searchState,
+  metaData,
+  resultType = "result(s)",
+}) {
   const maxResultPerPage = 4;
   const [shownTill, setShownTill] = useState(
     data.length < maxResultPerPage ? data.length : maxResultPerPage,
@@ -35,6 +40,7 @@ export function FlightResultList({ data, metaData, resultType = "result(s)" }) {
           {data.slice(0, shownTill).map((item, i) => (
             <FlightResultCard
               key={item._id}
+              searchState={searchState}
               data={item}
               metaData={{ ...metaData, isBookmarked: item.isBookmarked }}
             />

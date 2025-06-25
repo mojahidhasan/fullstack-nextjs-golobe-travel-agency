@@ -35,7 +35,7 @@ export function ChangeDateOfBirthPopup() {
   const [state, dispatch] = useFormState(updateDateOfBirthAction, null);
   const [opened, setOpened] = useState(false);
   const { toast } = useToast();
-
+  const [dateOfBirth, setDateOfBirth] = useState(undefined);
   useEffect(() => {
     if (state?.success === true) {
       setTimeout(() => {
@@ -95,6 +95,8 @@ export function ChangeDateOfBirthPopup() {
               label="Date of Birth"
               placeholder="Enter date of birth"
               error={state?.error?.dateOfBirth}
+              defaultValue={dateOfBirth}
+              onChange={(e) => setDateOfBirth(e.target.value)}
               type={"date"}
               className={"w-full"}
             />

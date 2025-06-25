@@ -9,11 +9,11 @@ export function FavouritesFlightAndPlacesTab({
   return (
     <Tabs defaultValue={"flights"} className={"w-full"}>
       <TabsList
-        className={"flex flex-col sm:flex-row gap-4 h-auto mb-6 bg-transparent"}
+        className={"mb-6 flex h-auto flex-col gap-4 bg-transparent sm:flex-row"}
       >
         <TabsTrigger value="flights">
           <div className="text-left">
-            <p className="font-semibold text-base">Flights</p>
+            <p className="text-base font-semibold">Flights</p>
             <p className="text-sm text-gray-500">
               {favouriteFlights.length} marked
             </p>
@@ -21,7 +21,7 @@ export function FavouritesFlightAndPlacesTab({
         </TabsTrigger>
         <TabsTrigger value="hotels">
           <div className="text-left">
-            <p className="font-semibold text-base">Hotels</p>
+            <p className="text-base font-semibold">Hotels</p>
             <p className="text-sm text-gray-500">
               {favouriteHotels.length} marked
             </p>

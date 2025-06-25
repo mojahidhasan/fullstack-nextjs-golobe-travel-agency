@@ -19,6 +19,7 @@ export function FavouriteFlightListSection({ favouriteFlights }) {
           <FlightResultCard
             key={flight._id}
             data={flight}
+            searchState={flight.searchState}
             metaData={flight.metaData}
           />
         );
