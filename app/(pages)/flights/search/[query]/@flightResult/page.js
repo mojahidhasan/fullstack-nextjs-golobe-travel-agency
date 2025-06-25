@@ -61,7 +61,7 @@ async function FlightResultPage({ params }) {
   const session = await auth();
 
   let userDetails;
-
+  const timeZone = cookies().get("timeZone")?.value || "UTC";
   if (session?.user) {
     userDetails = await getUserDetails(session.user.id);
   }
@@ -91,10 +91,13 @@ async function FlightResultPage({ params }) {
       passengersObj: passengers,
     },
     userDetails?.flights?.bookmarked,
+    {
+      timeZone,
+    },
   );
   const metaData = {
     flightClass: flightClass,
-    timeZone: cookies().get("timeZone")?.value || "UTC",
+    timeZone,
   };
 
   const sessionTimeout = cookies().get("sessionTimeoutAt")?.value || 0;
@@ -156,7 +159,18 @@ async function FlightResultPage({ params }) {
           className={"mb-2 rounded-md"}
           jumpToId={"flightFormJump"}
         />
-        <FlightResult flightResults={flightResults} metaData={metaData} />
+        <FlightResult
+          flightResults={flightResults}
+          searchState={{
+            ...parsedSearchParams,
+            passengers: {
+              adult: passengers.adults,
+              child: passengers.children,
+              infant: passengers.infants,
+            },
+          }}
+          metaData={metaData}
+        />
       </div>
     </>
   );
