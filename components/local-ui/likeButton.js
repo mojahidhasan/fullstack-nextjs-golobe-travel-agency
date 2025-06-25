@@ -8,13 +8,13 @@ import { Loader2 } from "lucide-react";
 import { useToast } from "../ui/use-toast";
 /**
  *
- * @param {{keys: object, isBookmarked: boolean, flightsOrHotels: string, className: string}} params keys object should contain data that you want to save or delete from db during like and unlike action
+ * @param {{keys: object, isBookmarked: boolean, flightOrHotel: string, className: string}} params keys object should contain data that you want to save or delete from db during like and unlike action
  * @returns
  */
 export const LikeButton = ({
   isBookmarked,
   keys,
-  flightsOrHotels = "flights",
+  flightOrHotel = "flight",
   className,
 }) => {
   const { toast } = useToast();
@@ -33,7 +33,7 @@ export const LikeButton = ({
     setLikeLoading(true);
     const res = await likeOrUnlikeAction({
       keys,
-      flightsOrHotels,
+      flightOrHotel,
       callbackPath,
     });
 
