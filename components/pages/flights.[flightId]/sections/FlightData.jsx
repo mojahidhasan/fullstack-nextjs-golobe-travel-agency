@@ -7,21 +7,25 @@ import { FLIGHT_CLASS_PLACEHOLDERS } from "@/lib/constants";
 
 import routes from "@/data/routes.json";
 import { cn } from "@/lib/utils";
-import { getPassengerFareDetails } from "@/lib/helpers/flights/priceCalculations";
-export function FlightData({ data, metaData, className }) {
-  const { flightNumber, fareDetails, _id } = data;
+import { multiSegmentCombinedFareBreakDown } from "@/lib/db/schema/flightItineraries";
+export function FlightData({ data, searchState, metaData, className }) {
+  const { flightCode, _id } = data;
   const { flightClass, isBookmarked } = metaData;
-
-  const fareBreakdown = getPassengerFareDetails(
-    "adult",
-    1,
+  const { fareBreakdowns, total } = multiSegmentCombinedFareBreakDown(
+    data.segmentIds,
+    searchState.passengers,
     metaData.flightClass,
-    fareDetails,
   );
-
-  const totalPrice = fareBreakdown.totalBeforeDiscount;
-  const discountedPrice = fareBreakdown.discountedTotalPerPassenger;
+  const totalPrice = Object.values(fareBreakdowns).reduce(
+    (acc, item) => acc + +item.totalBeforeDiscount,
+    0,
+  );
+  const discountedPrice = total;
   const hasDiscount = totalPrice !== discountedPrice;
+  const isFlightExpired = metaData.isFlightExpired;
+  const isSeatsAvailable = metaData.isSeatsAvailable;
+
+  const bookingDisabled = isFlightExpired || !isSeatsAvailable;
 
   return (
     <section
@@ -40,10 +44,10 @@ export function FlightData({ data, metaData, className }) {
             <p className="text-3xl font-bold text-primary">
               {hasDiscount && (
                 <span className={"text-base text-black line-through"}>
-                  $ {(+totalPrice).toFixed(2)}
+                  ${(+totalPrice).toFixed(2)}
                 </span>
               )}{" "}
-              <span>$ {(+discountedPrice).toFixed(2)}</span>
+              <span>${(+discountedPrice).toFixed(2)}</span>
             </p>
           </div>
         </div>
@@ -53,10 +57,9 @@ export function FlightData({ data, metaData, className }) {
               isBookmarked={isBookmarked}
               keys={{
                 flightId: _id,
-                flightNumber,
-                flightClass,
+                searchState: searchState,
               }}
-              flightsOrHotels="flights"
+              flightsOrHotels="flight"
               className={"p-3"}
             />
             <Button
@@ -66,46 +69,20 @@ export function FlightData({ data, metaData, className }) {
               <Image className="min-h-5 min-w-5" src={share} alt="Share icon" />
             </Button>
           </div>
-          <Button
-            asChild
-            className="hover:bg-primary-dark grow rounded-lg bg-primary px-4 py-2 transition duration-200"
-          >
-            <Link href={`${routes.flights.path}/${flightNumber}/book`}>
-              Book Now
-            </Link>
-          </Button>
+          {!bookingDisabled && (
+            <Button
+              asChild
+              className="hover:bg-primary-dark grow rounded-lg bg-primary px-4 py-2 transition duration-200"
+            >
+              <Link
+                href={`${routes.flights.path}/${flightCode}_${new Date(data.date).getTime()}/book`}
+              >
+                Book Now
+              </Link>
+            </Button>
+          )}
         </div>
       </div>
-      {/* <div className={"rounded-lg"}>
-        {Array.isArray(airplaneId.images) && airplaneId.images.length > 1 ? (
-          <Carousel className={"rounded-lg w-full h-auto max-h-[700px]"}>
-            <CarouselContent indicator={false}>
-              {airplaneId.images.map((image, index) => (
-                <CarouselItem key={index}>
-                  <Image
-                    className="h-full w-full object-cover object-center"
-                    src={image}
-                    width={700}
-                    height={500}
-                    alt="airplane image"
-                    sizes={
-                      "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    }
-                  />
-                </CarouselItem>
-              ))}
-            </CarouselContent>
-          </Carousel>
-        ) : (
-          <Image
-            className="h-full mx-auto max-w-full max-h-[700px]"
-            width={700}
-            height={700}
-            src={dummyAirplane}
-            alt="dummy airplane"
-          />
-        )}
-      </div> */}
     </section>
   );
 }
