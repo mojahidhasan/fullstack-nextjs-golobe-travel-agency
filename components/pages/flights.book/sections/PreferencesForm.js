@@ -157,7 +157,7 @@ const PreferencesForm = ({ passenger, index }) => {
               id={`p-${index}-quiteZone`}
               name={"quietZone"}
               label={"Quiet Zone"}
-              checked={preferences?.seating?.quietZone}
+              checked={preferences?.seating?.quietZone || false}
               onChange={(e) => {
                 const update = {
                   ...preferences,
@@ -207,7 +207,7 @@ const PreferencesForm = ({ passenger, index }) => {
             <Checkbox
               id={`p-${index}-extraBaggage`}
               label="Extra Baggage Allowance"
-              checked={preferences?.baggage?.extraAllowance}
+              checked={preferences?.baggage?.extraAllowance || false}
               onChange={(e) => {
                 const update = {
                   ...preferences,
@@ -275,7 +275,7 @@ const PreferencesForm = ({ passenger, index }) => {
               <div key={item} className="flex items-center space-x-2">
                 <Checkbox
                   id={`p-${index}-${item}`}
-                  checked={preferences?.specialAssistance?.[item]}
+                  checked={preferences?.specialAssistance?.[item] || false}
                   label={
                     <span className="capitalize">
                       {item.replace(/([A-Z])/g, " $1").trim()}
@@ -307,7 +307,7 @@ const PreferencesForm = ({ passenger, index }) => {
               <div key={item} className="flex items-center space-x-2">
                 <Checkbox
                   id={`p-${index}-${item}`}
-                  checked={preferences?.other?.[item]}
+                  checked={preferences?.other?.[item] || false}
                   onChange={(e) => {
                     const update = {
                       ...preferences,
