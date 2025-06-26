@@ -274,7 +274,7 @@ function SearchFlightsForm({ params = {} }) {
       ...data,
       errors,
     };
-    return flightFormData;
+    return state === "{}" ? { errors: {} } : flightFormData;
   }
   function getSearchStateParams() {
     const p = new URLSearchParams(decodeURIComponent(params?.query));
