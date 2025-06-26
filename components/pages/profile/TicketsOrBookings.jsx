@@ -9,6 +9,7 @@ import { getAllFlightBookings } from "@/lib/controllers/flights";
 import Link from "next/link";
 import FlightBookingDetailsCardSmall from "./ui/FlightBookingDetailsCardSmall";
 import { getOneDoc } from "@/lib/db/getOperationDB";
+import { strToObjectId } from "@/lib/db/utilsDB";
 export async function TicketsOrBookings() {
   const session = await auth();
 
@@ -69,9 +70,13 @@ export async function TicketsOrBookings() {
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {flightBookings.map(async (booking) => {
-                const flightData = await getOneDoc("FlightItinerary", {
-                  _id: booking.flightItineraryId,
-                });
+                const flightData = await getOneDoc(
+                  "FlightItinerary",
+                  {
+                    _id: strToObjectId(booking.flightItineraryId),
+                  },
+                  ["flight"],
+                );
                 const bookingDetails = {
                   key: booking._id,
                   bookingStatus: booking.ticketStatus,

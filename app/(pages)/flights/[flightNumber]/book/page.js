@@ -13,6 +13,7 @@ import { getAvailableSeats } from "@/lib/controllers/flights";
 import InfoPage from "@/components/InfoPage";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
+import { strToObjectId } from "@/lib/db/utilsDB";
 
 export default async function FlightBookPage({ params }) {
   const session = await auth();
@@ -61,15 +62,14 @@ export default async function FlightBookPage({ params }) {
     const booking = await getOneDoc(
       "FlightBooking",
       {
-        flightItineraryId: flight._id,
-        userId: session.user.id,
+        flightItineraryId: strToObjectId(flight._id),
+        userId: strToObjectId(session.user.id),
         paymentStatus: "pending",
         ticketStatus: "pending",
       },
       ["userFlightBooking"],
       0,
     );
-
     bookingId = booking._id;
     hasPendingBooking = Object.keys(booking).length !== 0;
   }
@@ -78,7 +78,7 @@ export default async function FlightBookPage({ params }) {
   let isSeatsAvailable = true;
 
   for (const segment of flight.segmentIds) {
-    const availableSeats = await getAvailableSeats(segment._id, flightClass);
+    const availableSeats = await getAvailableSeats(segment._id, flightClass, 0);
     if (availableSeats.length === 0) {
       isSeatsAvailable = false;
       break;

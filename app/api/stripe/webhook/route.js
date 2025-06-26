@@ -3,10 +3,12 @@ import { assignSeatsToFlightBooking } from "@/lib/controllers/flights";
 import { createOneDoc } from "@/lib/db/createOperationDB";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
+import { strToObjectId } from "@/lib/db/utilsDB";
 import sendEmail from "@/lib/email/sendEmail";
 import { flightBookingConfirmedEmailTemplate } from "@/lib/email/templates";
 import initStripe from "@/lib/paymentIntegration/stripe";
 import mongoose from "mongoose";
+import { revalidateTag } from "next/cache";
 
 const stripe = initStripe();
 const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
@@ -51,7 +53,7 @@ export async function POST(req) {
           const booking = await getOneDoc(
             "FlightBooking",
             {
-              _id: charge.metadata.flightBookingId,
+              _id: strToObjectId(charge.metadata.flightBookingId),
             },
             ["userFlightBooking"],
             0,
@@ -86,11 +88,17 @@ export async function POST(req) {
             return Response.json({ success: false, message: err.message });
           } finally {
             await session.endSession();
+            revalidateTag("userFlightBooking");
           }
 
-          const flight = await getOneDoc("FlightItinerary", {
-            _id: booking.flightItineraryId,
-          });
+          const flight = await getOneDoc(
+            "FlightItinerary",
+            {
+              _id: strToObjectId(booking.flightItineraryId),
+            },
+            ["flight"],
+            0,
+          );
           const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
           const { emailFlightDetails, emailBookingDetails } =

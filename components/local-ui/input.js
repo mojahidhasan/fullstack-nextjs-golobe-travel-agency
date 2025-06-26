@@ -204,6 +204,9 @@ export function Input({
                 "min-h-[100px] w-full rounded-sm border-2 border-black p-2",
                 error && "border-destructive",
               )}
+              value={value}
+              defaultValue={defaultValue}
+              onChange={onChange}
               {...props}
             ></textarea>
           )}

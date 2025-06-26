@@ -1,7 +1,7 @@
 import { auth } from "@/lib/auth";
 import { cancelBooking, isSeatTakenByElse } from "@/lib/controllers/flights";
 import { getOneDoc } from "@/lib/db/getOperationDB";
-
+import { strToObjectId } from "@/lib/db/utilsDB";
 export async function POST(req) {
   const body = await req.json();
   const session = await auth();
@@ -13,21 +13,28 @@ export async function POST(req) {
   }
 
   try {
-    const flightItinerary = await getOneDoc("FlightItinerary", {
-      flightCode: body.flightNumber,
-      date: new Date(body.flightDateTimestamp),
-    });
+    const flightItinerary = await getOneDoc(
+      "FlightItinerary",
+      {
+        flightCode: body.flightNumber,
+        date: new Date(+body.flightDateTimestamp),
+      },
+      ["flight"],
+      0,
+    );
+
     const reservedFlight = await getOneDoc(
       "FlightBooking",
       {
-        flightItineraryId: flightItinerary._id,
-        userId: session.user.id,
+        flightItineraryId: strToObjectId(flightItinerary._id),
+        userId: strToObjectId(session.user.id),
         paymentStatus: "pending",
         ticketStatus: "pending",
       },
       ["userFlightBooking"],
       0,
     );
+
     if (Object.keys(reservedFlight).length === 0) {
       return Response.json({
         success: false,
@@ -35,8 +42,10 @@ export async function POST(req) {
       });
     }
     const isSeatTakenPromise = reservedFlight.selectedSeats.map(async (el) => {
-      return await isSeatTakenByElse(el.seatId, el.passengerId);
+      const isTaken = await isSeatTakenByElse(el.seatId._id, el.passengerId);
+      return isTaken;
     });
+
     const isTaken = (await Promise.all(isSeatTakenPromise)).some(Boolean);
     if (isTaken) {
       await cancelBooking(reservedFlight.pnrCode, {

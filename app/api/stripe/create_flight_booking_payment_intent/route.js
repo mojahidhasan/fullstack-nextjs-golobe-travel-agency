@@ -3,10 +3,12 @@ import { cancelBooking, isSeatTakenByElse } from "@/lib/controllers/flights";
 import { getUserDetails } from "@/lib/controllers/user";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
+import { strToObjectId } from "@/lib/db/utilsDB";
 import initStripe, {
   createUniqueCustomer,
 } from "@/lib/paymentIntegration/stripe";
 import { usdToCents } from "@/lib/utils";
+import { revalidateTag } from "next/cache";
 import { z } from "zod";
 
 export async function POST(req) {
@@ -35,7 +37,6 @@ export async function POST(req) {
       message: "Invalid types in body props or required property is absent",
     });
   }
-
   try {
     const user = await getUserDetails(session.user.id, 0);
     let customerId = user?.customerId;
@@ -50,6 +51,7 @@ export async function POST(req) {
       );
       customerId = customer.id;
       await updateOneDoc("User", { _id: user._id }, { customerId });
+      revalidateTag("userDetails");
     }
 
     const flightItinerary = await getOneDoc(
@@ -64,8 +66,8 @@ export async function POST(req) {
     const bookingData = await getOneDoc(
       "FlightBooking",
       {
-        flightItineraryId: flightItinerary._id,
-        userId: user._id,
+        flightItineraryId: strToObjectId(flightItinerary._id),
+        userId: strToObjectId(user._id),
         paymentStatus: "pending",
         ticketStatus: "pending",
       },
@@ -80,7 +82,7 @@ export async function POST(req) {
     }
 
     const isSeatTakenPromise = bookingData.selectedSeats.map(async (el) => {
-      return await isSeatTakenByElse(el.seatId, el.passengerId);
+      return await isSeatTakenByElse(el.seatId._id, el.passengerId);
     });
 
     const isTaken = (await Promise.all(isSeatTakenPromise)).some(Boolean);

@@ -9,6 +9,7 @@ import { cookies } from "next/headers";
 import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalculation";
 import { parseFlightSearchParams, passengerStrToObject } from "@/lib/utils";
 import { getFlight } from "@/lib/controllers/flights";
+import { getUserDetails } from "@/lib/controllers/user";
 
 export default async function FavouritesPage() {
   const session = await auth();
@@ -22,9 +23,7 @@ export default async function FavouritesPage() {
     );
   }
 
-  const userDetails = await getOneDoc("User", { _id: session?.user?.id }, [
-    "userDetails",
-  ]);
+  const userDetails = await getUserDetails(session?.user?.id);
 
   const timeZone = cookies().get("timeZone")?.value || "UTC";
 

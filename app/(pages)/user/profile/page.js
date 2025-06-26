@@ -1,11 +1,11 @@
 import { ProfileImages } from "@/components/pages/profile/ProfileImages";
 import { ProfileData } from "@/components/pages/profile/ProfileData";
 import { auth } from "@/lib/auth";
-import { getOneDoc } from "@/lib/db/getOperationDB";
 import { format } from "date-fns";
 import { redirect } from "next/navigation";
 
 import routes from "@/data/routes.json";
+import { getUserDetails } from "@/lib/controllers/user";
 export default async function ProfilePage({ searchParams }) {
   const session = await auth();
   const isLoggedIn = !!session?.user?.id;
@@ -19,9 +19,7 @@ export default async function ProfilePage({ searchParams }) {
   }
 
   if (isLoggedIn) {
-    const userDetails = await getOneDoc("User", { _id: session?.user?.id }, [
-      "userDetails",
-    ]);
+    const userDetails = await getUserDetails(session?.user?.id);
 
     return (
       <main className={"mx-auto mb-[90px] w-[95%] sm:w-[90%]"}>

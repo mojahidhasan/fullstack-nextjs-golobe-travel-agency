@@ -4,6 +4,7 @@ import routes from "@/data/routes.json";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import FlightTicket from "@/components/pages/user.my_bookings.flights.[bookingRef].ticket/Ticket";
 import { generateHMACSignature } from "@/lib/utils.server";
+import { strToObjectId } from "@/lib/db/utilsDB";
 export default async function FlightTicketPage({ params }) {
   const session = await auth();
   const loggedIn = !!session?.user;
@@ -18,17 +19,25 @@ export default async function FlightTicketPage({ params }) {
   }
 
   const bookingId = params.bookingId;
-  const bookingData = await getOneDoc("FlightBooking", {
-    _id: bookingId,
-    userId: session.user.id,
-    ticketStatus: "confirmed",
-    paymentStatus: "paid",
-  });
+  const bookingData = await getOneDoc(
+    "FlightBooking",
+    {
+      _id: strToObjectId(bookingId),
+      userId: strToObjectId(session.user.id),
+      ticketStatus: "confirmed",
+      paymentStatus: "paid",
+    },
+    ["userFlightBooking"],
+  );
   if (!bookingData || Object.keys(bookingData).length === 0) return notFound();
 
-  const flightData = await getOneDoc("FlightItinerary", {
-    _id: bookingData.flightItineraryId,
-  });
+  const flightData = await getOneDoc(
+    "FlightItinerary",
+    {
+      _id: strToObjectId(bookingData.flightItineraryId),
+    },
+    ["flight"],
+  );
   const qrCodeStr = `${bookingId}|${generateHMACSignature(bookingId, process.env.AUTH_SECRET)}`;
 
   const ticketData = {

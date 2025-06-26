@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { getUserDetails } from "@/lib/controllers/user";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
 import initStripe, { createCustomer } from "@/lib/paymentIntegration/stripe";
+import { revalidateTag } from "next/cache";
 
 export async function GET() {
   const session = await auth();
@@ -18,6 +19,7 @@ export async function GET() {
     });
     customerId = customer.id;
     await updateOneDoc("User", { _id: user._id }, { customerId: customer.id });
+    revalidateTag("userDetails");
     return Response.json({
       success: true,
       data: [],

@@ -4,6 +4,7 @@ import { updateOneDoc } from "@/lib/db/updateOperationDB";
 import initStripe, {
   createUniqueCustomer,
 } from "@/lib/paymentIntegration/stripe";
+import { revalidateTag } from "next/cache";
 
 export async function POST(req) {
   const body = await req.json();
@@ -39,6 +40,7 @@ export async function POST(req) {
       );
       customerId = customer.id;
       await updateOneDoc("User", { _id: user._id }, { customerId });
+      revalidateTag("userDetails");
     }
     const setupIntents = await stripe.setupIntents.create(
       {

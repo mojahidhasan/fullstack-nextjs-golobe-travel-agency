@@ -2,6 +2,7 @@ import { FlightBookingDetailsCard } from "@/components/pages/profile/ui/FlightBo
 import { auth } from "@/lib/auth";
 import { getAllFlightBookings } from "@/lib/controllers/flights";
 import { getOneDoc } from "@/lib/db/getOperationDB";
+import { strToObjectId } from "@/lib/db/utilsDB";
 
 export default async function FlightBookingDetailsPage() {
   const session = await auth();
@@ -12,9 +13,13 @@ export default async function FlightBookingDetailsPage() {
     <div>
       {flightBookings.length === 0 && <Empty />}
       {flightBookings.map(async (booking) => {
-        const flightData = await getOneDoc("FlightItinerary", {
-          _id: booking.flightItineraryId,
-        });
+        const flightData = await getOneDoc(
+          "FlightItinerary",
+          {
+            _id: strToObjectId(booking.flightItineraryId),
+          },
+          ["flight"],
+        );
 
         const bookingCardData = {
           key: booking._id,

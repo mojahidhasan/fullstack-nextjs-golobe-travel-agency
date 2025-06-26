@@ -14,6 +14,7 @@ import { auth } from "@/lib/auth";
 import Link from "next/link";
 import NoSSR from "@/components/helpers/NoSSR";
 import ShowTimeInClientSide from "@/components/helpers/ShowTimeInClientSide";
+import { strToObjectId } from "@/lib/db/utilsDB";
 export default async function FlightBookingDetailsPage({ params }) {
   const session = await auth();
   const loggedIn = !!session?.user;
@@ -25,16 +26,24 @@ export default async function FlightBookingDetailsPage({ params }) {
     );
   }
   const bookingId = params.bookingId;
-  const bookingData = await getOneDoc("FlightBooking", {
-    _id: bookingId,
-    userId: session.user.id,
-  });
+  const bookingData = await getOneDoc(
+    "FlightBooking",
+    {
+      _id: strToObjectId(bookingId),
+      userId: strToObjectId(session.user.id),
+    },
+    ["userFlightBooking"],
+  );
 
   if (Object.keys(bookingData).length === 0) return notFound();
 
-  const flightData = await getOneDoc("FlightItinerary", {
-    _id: bookingData.flightItineraryId,
-  });
+  const flightData = await getOneDoc(
+    "FlightItinerary",
+    {
+      _id: strToObjectId(bookingData.flightItineraryId),
+    },
+    ["flight"],
+  );
 
   const bookingDetails = {
     key: bookingData._id,

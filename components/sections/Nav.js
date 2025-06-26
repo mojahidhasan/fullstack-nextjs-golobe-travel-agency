@@ -5,9 +5,8 @@ import { AvatarWithName } from "@/components/local-ui/nav/AvatarWithName";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SideBar } from "@/components/local-ui/nav/SideBar";
-import { cn, validateURL } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
-import { getOneDoc } from "@/lib/db/getOperationDB";
 import routes from "@/data/routes.json";
 
 import user from "@/public/icons/user.svg";
@@ -15,14 +14,13 @@ import card from "@/public/icons/card.svg";
 import settings from "@/public/icons/settings.svg";
 import Image from "next/image";
 import { BookCopyIcon } from "lucide-react";
+import { getUserDetails } from "@/lib/controllers/user";
 
 export async function Nav({ className, type = "default", session, ...props }) {
   const isLoggedIn = !!session?.user;
   let nameOfUser, avatar;
   if (isLoggedIn) {
-    const userData = await getOneDoc("User", { _id: session.user.id }, [
-      "userDetails",
-    ]);
+    const userData = await getUserDetails(session?.user?.id);
     avatar = userData.profileImage;
     nameOfUser = userData.firstName + " " + userData.lastName;
   }

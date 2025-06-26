@@ -1,7 +1,8 @@
 import { HotelResultCard } from "@/components/pages/hotels.search/ui/HotelResultCard";
-import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
+import { getManyDocs } from "@/lib/db/getOperationDB";
 import { auth } from "@/lib/auth";
 import { RATING_SCALE } from "@/lib/constants";
+import { getUserDetails } from "@/lib/controllers/user";
 export default async function HotelResultPage({ searchParams }) {
   let hotels = [];
   let filters = {};
@@ -27,7 +28,7 @@ export default async function HotelResultPage({ searchParams }) {
             filters?.features.length > 0 && {
               features: {
                 $in: filters.features.map(
-                  (feature) => feature.split("feature-")[1]
+                  (feature) => feature.split("feature-")[1],
                 ),
               },
             }),
@@ -35,12 +36,12 @@ export default async function HotelResultPage({ searchParams }) {
             filters?.amenities.length > 0 && {
               amenities: {
                 $in: filters.amenities.map(
-                  (amenity) => amenity.split("amenity-")[1]
+                  (amenity) => amenity.split("amenity-")[1],
                 ),
               },
             }),
         },
-        ["hotels"]
+        ["hotels"],
       );
     } else {
       hotels = await getManyDocs(
@@ -51,7 +52,7 @@ export default async function HotelResultPage({ searchParams }) {
             $options: "i",
           },
         },
-        ["hotels"]
+        ["hotels"],
       );
     }
     // filter by total available rooms sleeps count is greater than or equal to number of guests
@@ -70,16 +71,14 @@ export default async function HotelResultPage({ searchParams }) {
 
       const totalSleepsCount = availableHotelRoomsByDate.reduce(
         (acc, room) => acc + +room.sleepsCount,
-        0
+        0,
       );
 
       return totalSleepsCount >= Number(guests);
     });
     // show liked hotels if user is logged in
     if (session?.user?.id) {
-      const userDetails = await getOneDoc("User", { _id: session?.user?.id }, [
-        "userDetails",
-      ]);
+      const userDetails = await getUserDetails(session?.user?.id);
 
       hotels = hotels.map((hotel) => {
         const liked = userDetails?.likes?.hotels.includes(hotel._id);
@@ -95,11 +94,11 @@ export default async function HotelResultPage({ searchParams }) {
         const reviews = await getManyDocs(
           "HotelReview",
           { hotelId: hotel._id, slug: hotel.slug },
-          [hotel._id + "_review", hotel.slug + "_review", "hotelReviews"]
+          [hotel._id + "_review", hotel.slug + "_review", "hotelReviews"],
         );
         const totalRatingsSum = reviews.reduce(
           (acc, review) => acc + +review.rating,
-          0
+          0,
         );
         const totalReviewsCount = reviews.length;
 
@@ -156,11 +155,11 @@ export default async function HotelResultPage({ searchParams }) {
           }
         }
         return rateFilter && priceFilter;
-      })
+      }),
   );
 
   if (hotels?.length < 1) {
-    return <div className={"text-center grow font-bold"}>No data found</div>;
+    return <div className={"grow text-center font-bold"}>No data found</div>;
   }
 
   return (

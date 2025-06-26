@@ -12,6 +12,7 @@ import { RatingShow } from "@/components/local-ui/ratingShow";
 import { LikeButton } from "@/components/local-ui/likeButton";
 import { auth } from "@/lib/auth";
 import FlightOrHotelReview from "@/components/sections/FlightOrHotelReview";
+import { getUserDetails } from "@/lib/controllers/user";
 export default async function HotelDetailsPage({ params }) {
   const session = await auth();
   const slug = params.slug;
@@ -46,9 +47,7 @@ export default async function HotelDetailsPage({ params }) {
 
   let isLiked = false;
   if (session?.user) {
-    const userDetails = await getOneDoc("User", { _id: session?.user?.id }, [
-      "userDetails",
-    ]);
+    const userDetails = await getUserDetails(session?.user?.id);
     isLiked = userDetails?.likes?.hotels?.includes(hotelDetails._id);
   }
 
