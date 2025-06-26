@@ -8,7 +8,7 @@ import routes from "@/data/routes.json";
 import { cookies } from "next/headers";
 import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalculation";
 import { parseFlightSearchParams, passengerStrToObject } from "@/lib/utils";
-import { getFlight } from "@/lib/controllers/flights";
+import { getAvailableSeats, getFlight } from "@/lib/controllers/flights";
 import { getUserDetails } from "@/lib/controllers/user";
 
 export default async function FavouritesPage() {
@@ -31,12 +31,9 @@ export default async function FavouritesPage() {
   let favouriteHotels = [];
 
   if (userDetails?.flights?.bookmarked?.length > 0) {
-    const flightSearchState = parseFlightSearchParams(
-      cookies().get("flightSearchState").value,
-    );
     // eslint-disable-next-line no-undef
     favouriteFlights = await Promise.all(
-      userDetails.flights.bookmarked.map(async (flight) => {
+      userDetails.flights.bookmarked?.map(async (flight) => {
         const flightDetails = flight.flightId;
 
         if (Object.keys(flightDetails).length === 0) return;
@@ -70,13 +67,26 @@ export default async function FavouritesPage() {
           flightClass: flight.searchState.class,
           timeZone,
           isBookmarked: true,
+          isExpired: new Date(flightDetails.expireAt) < new Date(),
         };
 
+        const availableSeats = flightDetails.segmentIds.map(async (segment) => {
+          const seats = await getAvailableSeats(
+            segment._id,
+            flight.searchState.class,
+            0,
+          );
+          return {
+            segmentId: segment._id,
+            availableSeats: seats.length,
+          };
+        });
         return {
           ...flightDetails,
           ratingReviews,
           metaData,
           searchState: flight.searchState,
+          availableSeatsCount: await Promise.all(availableSeats),
         };
       }),
     );

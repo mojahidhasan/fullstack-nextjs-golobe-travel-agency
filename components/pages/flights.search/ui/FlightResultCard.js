@@ -31,9 +31,15 @@ export function FlightResultCard({ data, searchState, metaData }) {
   return (
     <div
       className={cn(
-        "shadow-small flex h-min rounded-l-[8px] rounded-r-[8px] bg-white text-[0.75rem] font-medium text-secondary shadow-md max-md:flex-col",
+        "shadow-small relative flex h-min rounded-l-[8px] rounded-r-[8px] bg-white text-[0.75rem] font-medium text-secondary shadow-md max-md:flex-col",
+        metaData.isExpired && "opacity-50",
       )}
     >
+      {metaData.isExpired && (
+        <span className="absolute left-2 top-2 rounded-lg bg-black p-2 text-sm font-bold text-white">
+          Expired
+        </span>
+      )}
       <div className="aspect-square h-auto w-full max-md:h-[200px] md:w-[300px]">
         <Image
           width={300}
