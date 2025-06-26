@@ -5,7 +5,7 @@ import Image from "next/image";
 import error_icon from "@/public/icons/error.svg";
 import { cn, isDateObjValid } from "@/lib/utils";
 
-import { forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import eye from "@/public/icons/eye.svg";
 import eyeOff from "@/public/icons/eye-closed.svg";
 import { SelectDialCode } from "../SelectDialCode";
@@ -64,6 +64,11 @@ export function Input({
   onChange = () => {},
   defaultPhoneValue,
   dialCodePlaceholder,
+  minDate,
+  maxDate,
+  value,
+  defaultValue,
+  containerPopover, // used for select popover in tel input
   ...props
 }) {
   const [inputType, setInputType] = useState(type);
@@ -121,17 +126,14 @@ export function Input({
                   error && "border-destructive",
                 )}
               >
-                <input
-                  type="hidden"
-                  value={JSON.stringify(phoneData)}
-                  {...props}
-                />
+                <input type="hidden" value={JSON.stringify(phoneData)} />
                 <SelectDialCode
                   name={"dialCode"}
                   getDialCode={handleDialCode}
                   value={phoneData?.dialCode}
                   className={"border-none bg-slate-300"}
                   placeholder={dialCodePlaceholder}
+                  containerPopover={containerPopover}
                 />
                 <_Input
                   style={{
@@ -152,18 +154,12 @@ export function Input({
                   error && "border-destructive",
                 )}
               >
-                <input
-                  type="hidden"
-                  value={props?.value || props?.defaultValue}
-                  {...props}
-                />
+                <input type="hidden" value={value || defaultValue} />
                 <DatePicker
                   customInput={<DatePickerCustomInput />}
-                  date={props?.value || props?.defaultValue}
-                  minDate={props?.minDate || subYears(new Date(), 20)}
-                  maxDate={
-                    props?.maxDate || addYears(endOfYear(new Date()), 20)
-                  }
+                  date={value || defaultValue}
+                  minDate={minDate || subYears(new Date(), 20)}
+                  maxDate={maxDate || addYears(endOfYear(new Date()), 20)}
                   setDate={(selected) => {
                     let d = "";
                     if (selected) {
@@ -193,6 +189,8 @@ export function Input({
                 )}
                 type={inputType}
                 onChange={onChange}
+                value={value}
+                defaultValue={defaultValue}
                 {...props}
               />
             )
