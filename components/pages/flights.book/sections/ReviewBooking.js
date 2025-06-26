@@ -1,5 +1,5 @@
 "use client";
-import React, { useLayoutEffect, useState } from "react";
+import React, { Fragment, useLayoutEffect, useState } from "react";
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
@@ -30,7 +30,7 @@ const FlightDetails = ({ flight }) => {
           <p className="text-gray-600">Departure</p>
           <div className="font-semibold">
             <NoSSR fallback={"eee, MMM d, yyyy"}>
-              {format(+flight.from.scheduledDeparture, "eee, MMM d, yyyy")}
+              {format(flight.from.scheduledDeparture, "eee, MMM d, yyyy")}
             </NoSSR>
           </div>
           <p className="text-sm text-gray-500">
@@ -41,7 +41,7 @@ const FlightDetails = ({ flight }) => {
           <p className="text-gray-600">Arrival</p>
           <div className="font-semibold">
             <NoSSR fallback={"eee, MMM d, yyyy"}>
-              {format(+flight.to.scheduledArrival, "eee, MMM d, yyyy")}
+              {format(flight.to.scheduledArrival, "eee, MMM d, yyyy")}
             </NoSSR>
           </div>
           <p className="text-sm text-gray-500">
@@ -297,7 +297,7 @@ const ReviewBooking = ({
         <SectionHeader title="Flight Details" />
         {flight.segmentIds.map((segment, index) => {
           return (
-            <>
+            <Fragment key={segment._id}>
               <FlightDetails flight={segment} />
               {index !== flight.segmentIds.length - 1 &&
                 flight.segmentIds.length > 1 && (
@@ -310,7 +310,7 @@ const ReviewBooking = ({
                     )}
                   </div>
                 )}
-            </>
+            </Fragment>
           );
         })}
       </div>
