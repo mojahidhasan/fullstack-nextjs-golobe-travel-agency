@@ -15,10 +15,10 @@ export default function FlightOrHotelReviewsSectionSkeleton() {
       </div>
       <div className="flex items-end gap-3">
         <Skeleton className={"h-10 w-12"} />
-        <p className={"inline-flex items-center gap-3"}>
+        <div className={"inline-flex items-center gap-3"}>
           <Skeleton className={"h-6 w-20"} />
           <Skeleton className={"h-5 w-24"} />
-        </p>
+        </div>
       </div>
       <Separator className="my-[24px]" />
       <div>
