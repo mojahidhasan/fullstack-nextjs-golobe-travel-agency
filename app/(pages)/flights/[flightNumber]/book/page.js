@@ -4,13 +4,15 @@ import { auth } from "@/lib/auth";
 import { parseFlightSearchParams } from "@/lib/utils";
 
 import { cookies } from "next/headers";
-import { notFound, redirect } from "next/navigation";
+import { notFound } from "next/navigation";
 import { getUserDetails } from "@/lib/controllers/user";
 import SessionTimeoutCountdown from "@/components/local-ui/SessionTimeoutCountdown";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import BookingSteps from "@/components/pages/flights.book/BookingSteps";
 import { getAvailableSeats } from "@/lib/controllers/flights";
 import InfoPage from "@/components/InfoPage";
+import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 
 export default async function FlightBookPage({ params }) {
   const session = await auth();
@@ -72,19 +74,6 @@ export default async function FlightBookPage({ params }) {
     hasPendingBooking = Object.keys(booking).length !== 0;
   }
 
-  if (hasPendingBooking) {
-    return (
-      <InfoPage
-        whatHappened={"You have a pending booking"}
-        explanation={"Go to your dashboard to complete your pending booking."}
-        navigateTo={{
-          path: "/user/my_bookings/flights" + bookingId + "/payment",
-          title: "Confirm Booking",
-        }}
-      />
-    );
-  }
-
   const isFlightExpired = flight.expireAt < new Date();
   let isSeatsAvailable = true;
 
@@ -126,8 +115,28 @@ export default async function FlightBookPage({ params }) {
         <BreadcrumbUI />
         <SessionTimeoutCountdown
           redirectionLink="/flights"
-          className={"mt-4 rounded-md"}
+          className={"my-4 rounded-md"}
         />
+
+        {hasPendingBooking && (
+          <div className="mb-6 rounded-lg border border-yellow-300 bg-yellow-50 p-4 text-sm font-medium text-gray-800 shadow-md">
+            You have a pending booking for this flight. Whether cancel that or
+            confirm that to book this flight again.
+            <br />
+            <Link
+              target="_blank"
+              className="font-bold text-yellow-800 underline"
+              href={`/user/my_bookings/flights/${bookingId}`}
+            >
+              See that booking{" "}
+              <ExternalLink
+                width={12}
+                height={12}
+                className="inline stroke-[3px] align-middle"
+              />
+            </Link>
+          </div>
+        )}
 
         <BookingSteps
           flight={flight}
