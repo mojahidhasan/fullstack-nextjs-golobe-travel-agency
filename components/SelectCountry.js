@@ -7,6 +7,7 @@ export function SelectCountry({
   className,
   getSelected = () => {},
   value,
+  containerPopover,
   ...props
 }) {
   return (
@@ -18,6 +19,7 @@ export function SelectCountry({
         value={value}
         placeholder="select country"
         className={cn(className, error && "border-destructive")}
+        popoverAttributes={{ containerDomObjRef: containerPopover }}
         {...props}
       >
         {countryInfo.map((country) => (

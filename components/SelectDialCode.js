@@ -9,6 +9,7 @@ export function SelectDialCode({
   value,
   className,
   placeholder,
+  containerPopover,
 }) {
   return (
     <Select
@@ -17,6 +18,7 @@ export function SelectDialCode({
       onValueChange={getDialCode}
       className={cn("h-auto max-w-[110px] lg:h-auto", className)}
       placeholder={placeholder}
+      popoverAttributes={{ containerDomObjRef: containerPopover }}
     >
       {countryInfo.map((item, i) => (
         <Option

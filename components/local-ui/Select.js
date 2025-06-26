@@ -211,7 +211,9 @@ const Select = forwardRef(
         {children && isMounted && (
           <SelectPopover
             {...popoverAttributes}
-            containerDomObjRef={triggerRef.current}
+            containerDomObjRef={
+              popoverAttributes?.containerDomObjRef || triggerRef.current
+            }
           >
             {children}
           </SelectPopover>
@@ -243,13 +245,14 @@ const Option = forwardRef(
         : value);
 
     return (
-      <Button
-        type="button"
+      <div
+        role="option"
+        aria-selected={cntx.value.value === value}
         value={value}
         title={titleText}
         ref={ref}
         className={cn(
-          "h-auto w-full cursor-pointer select-none justify-start rounded-sm bg-slate-100 px-3 py-2 text-left text-sm outline-none hover:bg-slate-200",
+          "h-auto w-full cursor-pointer select-none justify-start rounded-sm bg-slate-100 px-3 py-2 text-left text-sm font-semibold outline-none hover:bg-slate-200",
           cntx.value.value === value &&
             (selectedClassNames ||
               "bg-primary text-primary-foreground hover:bg-primary/90"),
@@ -276,7 +279,7 @@ const Option = forwardRef(
         {...props}
       >
         {children}
-      </Button>
+      </div>
     );
   },
 );

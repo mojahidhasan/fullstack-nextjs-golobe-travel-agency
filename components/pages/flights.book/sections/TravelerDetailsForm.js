@@ -184,6 +184,7 @@ export default function TravelerDetailsForm({
             setPassengerFormInStorage({ country: selected.value });
             setSessionTimeoutInStorage();
           }}
+          containerPopover={global?.document?.body}
           error={errors?.country}
         />
       </div>
@@ -247,7 +248,7 @@ export default function TravelerDetailsForm({
       <div className="mt-3 flex flex-col gap-6">
         <h3 className="mb-2 text-xl font-bold">Contacts</h3>
         <Input
-          defaultValue={primaryPassengerEmail || thisPassenger?.email}
+          value={primaryPassengerEmail || thisPassenger?.email}
           type="text"
           name={travelerKey + "-" + "email"}
           label="Email"
@@ -265,6 +266,8 @@ export default function TravelerDetailsForm({
           placeholder="Phone Number"
           required
           error={errors?.phoneNumber}
+          containerPopover={global?.document?.body}
+          dialCodePlaceholder={"+XXX"}
           onChange={debounce((e) => {
             const parsed = JSON.parse(e.target.value);
             setPassengerFormInStorage({
