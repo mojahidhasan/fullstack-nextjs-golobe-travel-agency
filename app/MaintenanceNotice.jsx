@@ -25,7 +25,7 @@ export function MaintenanceNotice({ maintenanceMode }) {
         const m = minutes < 1 ? "" : minutes + "m";
         const s = seconds < 1 ? "" : seconds + "s";
 
-        setCountdown(`${h} ${m} ${s}`);
+        setCountdown(`Maintenance is starting in ${h} ${m} ${s}`);
       };
 
       updateCountdown();
@@ -56,7 +56,7 @@ export function MaintenanceNotice({ maintenanceMode }) {
   if (!maintenanceMode?.enabled && countdown) {
     return (
       <div className="bg-secondary p-2 text-center text-xl font-semibold !text-tertiary text-white">
-        Maintenance is starting in {countdown}
+        {countdown}
         <p className="text-sm text-secondary-foreground">
           The website will be down soon
         </p>
