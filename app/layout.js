@@ -11,7 +11,12 @@ import mongoose from "mongoose";
 import dynamic from "next/dynamic";
 
 import openGraph from "./opengraph-image.jpg";
-import SetCookies from "./_setCookies";
+import MaintenancePage from "./MaintenancePage";
+import { MaintenanceNotice } from "./MaintenanceNotice";
+import SetNecessaryCookies from "./SetNecessaryCookies";
+import { getOneDoc } from "@/lib/db/getOperationDB";
+import { headers } from "next/headers";
+
 const monse = Montserrat({
   subsets: ["latin"],
   variable: "--font-monserrat",
@@ -66,7 +71,7 @@ export default async function RootLayout({ children }) {
     try {
       await mongoose.connect(process.env.MONGODB_URI);
     } catch (e) {
-      console.log(e.message);
+      console.log(e);
     }
   }
 
@@ -76,20 +81,47 @@ export default async function RootLayout({ children }) {
       ssr: false,
     }
   );
+
+  const websiteConfig = await getOneDoc(
+    "WebsiteConfig",
+    {},
+    ["websiteConfig"],
+    60
+  );
+
+  const maintenanceMode = websiteConfig?.maintenanceMode ?? { enabled: false };
+
+  const alloweRoutesWhileMaintenance = maintenanceMode?.allowlistedRoutes ?? [];
+  const currentPathname = headers().get("x-pathname");
+
   return (
     <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
       <body className={monse.className}>
-        <StoreProvider>
-          <SessionProvider>
-            <div className="max-w-[1440px] mx-auto">
-              <Notification />
-              {children}
-            </div>
-          </SessionProvider>
-        </StoreProvider>
+        {maintenanceMode.enabled === true &&
+        !alloweRoutesWhileMaintenance.some(
+          (path) =>
+            path === currentPathname ||
+            (path !== "/" && currentPathname.startsWith(path))
+        ) ? (
+          <MaintenancePage
+            message={maintenanceMode.message}
+            startsAt={maintenanceMode.startsAt || 0}
+            endsAt={maintenanceMode.endsAt || 0}
+          />
+        ) : (
+          <StoreProvider>
+            <SessionProvider>
+              <div className="mx-auto max-w-[1440px]">
+                <Notification />
+                <MaintenanceNotice maintenanceMode={maintenanceMode} />
+                {children}
+              </div>
+            </SessionProvider>
+          </StoreProvider>
+        )}
         <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
         <Toaster className="bg-secondary" />
-        <SetCookies />
+        <SetNecessaryCookies />
       </body>
     </html>
   );
