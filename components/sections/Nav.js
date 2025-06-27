@@ -5,19 +5,24 @@ import { AvatarWithName } from "@/components/local-ui/nav/AvatarWithName";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import { SideBar } from "@/components/local-ui/nav/SideBar";
-import { cn, validateURL } from "@/lib/utils";
+import { cn } from "@/lib/utils";
 
-import { getOneDoc } from "@/lib/db/getOperationDB";
 import routes from "@/data/routes.json";
+
+import user from "@/public/icons/user.svg";
+import card from "@/public/icons/card.svg";
+import settings from "@/public/icons/settings.svg";
+import Image from "next/image";
+import { BookCopyIcon } from "lucide-react";
+import { getUserDetails } from "@/lib/controllers/user";
+
 export async function Nav({ className, type = "default", session, ...props }) {
   const isLoggedIn = !!session?.user;
   let nameOfUser, avatar;
   if (isLoggedIn) {
-    const userData = await getOneDoc("User", { _id: session.user.id }, [
-      "userDetails",
-    ]);
+    const userData = await getUserDetails(session?.user?.id);
     avatar = userData.profileImage;
-    nameOfUser = userData.firstname + " " + userData.lastname;
+    nameOfUser = userData.firstName + " " + userData.lastName;
   }
   const types = {
     home: {
@@ -34,18 +39,41 @@ export async function Nav({ className, type = "default", session, ...props }) {
     },
   };
 
+  const sideBarLinksUser = [
+    {
+      title: "Profile",
+      href: "/user/profile",
+      icon: <Image src={user} alt="user_icon" height={18} width={18} />,
+    },
+    {
+      title: "My Bookings",
+      href: "/user/my_bookings",
+      icon: <BookCopyIcon height={18} width={18} />,
+    },
+    {
+      title: "Payments",
+      href: "/user/payments",
+      icon: <Image src={card} alt="card_icon" height={18} width={18} />,
+    },
+    {
+      title: "Settings",
+      href: "/user/settings",
+      icon: <Image src={settings} alt="settings_icon" height={18} width={18} />,
+    },
+  ];
+
   return (
     <nav
       className={cn(
         "flex h-[70px] w-full items-center justify-end px-[5%] shadow-lg lg:h-[90px] lg:justify-between",
         types[type].nav,
-        className
+        className,
       )}
       {...props}
     >
       {/* menu */}
       <div className="lg:hidden">
-        <SideBar isLoggedIn={isLoggedIn} />
+        <SideBar isLoggedIn={isLoggedIn} sideBarLinksUser={sideBarLinksUser} />
         {/*small screen end*/}
       </div>
       {/* menu end*/}
@@ -62,10 +90,10 @@ export async function Nav({ className, type = "default", session, ...props }) {
       {isLoggedIn === true ? (
         <div className="hidden lg:flex lg:items-center lg:gap-5">
           <Button
-            className={cn("text-inherit p-2", types[type].btnFavorite)}
+            className={cn("p-2 text-inherit", types[type].btnFavorite)}
             variant={"link"}
           >
-            <Link href={routes.favourites.path} className="gap-2 inline-flex">
+            <Link href={routes.favourites.path} className="inline-flex gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 className="h-6 max-h-6 w-6 max-w-6"
@@ -86,7 +114,11 @@ export async function Nav({ className, type = "default", session, ...props }) {
 
           <div className="flex gap-2">
             <Button asChild variant="link" className={"gap-2 text-inherit"}>
-              <AvatarWithName profileName={nameOfUser} profilePic={avatar} />
+              <AvatarWithName
+                sideBarLinksUser={sideBarLinksUser}
+                profileName={nameOfUser}
+                profilePic={avatar}
+              />
             </Button>
           </div>
         </div>
@@ -98,7 +130,7 @@ export async function Nav({ className, type = "default", session, ...props }) {
           <Button
             className={cn(
               "bg-black text-white hover:bg-gray-900",
-              types[type].btnSignup
+              types[type].btnSignup,
             )}
             asChild
           >

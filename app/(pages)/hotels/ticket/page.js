@@ -18,12 +18,12 @@ export default function HotelTicketDownloadPagee() {
   ];
 
   return (
-    <main className="mx-auto mt-7 mb-[80px] w-[90%] text-secondary">
+    <main className="mx-auto mb-[80px] mt-7 w-[90%] text-secondary">
       <div>
         <BreadcrumbUI />
       </div>
       <div className="mt-[20px]">
-        <div className="mb-[40px] gap-2 flex items-center justify-between">
+        <div className="mb-[40px] flex items-center justify-between gap-2">
           <div>
             <h2 className="mb-[16px] font-tradeGothic text-[1.5rem] font-bold">
               CVK Park Bosphorus Hotel Istanbul
@@ -55,10 +55,10 @@ export default function HotelTicketDownloadPagee() {
             </div>
           </div>
         </div>
-        <div className="mb-[64px] flex md:flex-row flex-col-reverse">
-          <div className="grow max-md:rounded-b-[12px] md:max-w-[300px] md:rounded-l-[12px] md:block flex max-md:items-center max-md:justify-between border border-t-0 md:border-r-0 bg-[#EBF6F2] p-[24px]">
+        <div className="mb-[64px] flex flex-col-reverse md:flex-row">
+          <div className="flex grow border border-t-0 bg-[#EBF6F2] p-[24px] max-md:items-center max-md:justify-between max-md:rounded-b-[12px] md:block md:max-w-[300px] md:rounded-l-[12px] md:border-r-0">
             <div>
-              <h3 className="text-[1.25rem] sm:text-[2rem] font-semibold">
+              <h3 className="text-[1.25rem] font-semibold sm:text-[2rem]">
                 Thur, Dec 8
               </h3>
               <p className="text-[0.75rem] font-medium opacity-60">Check-In</p>
@@ -66,19 +66,19 @@ export default function HotelTicketDownloadPagee() {
             <div className="p-3">
               <Image
                 src={checkInOut}
-                className="max-sm:h-full max-sm:w-full max-md:-rotate-90"
+                className="max-md:-rotate-90 max-sm:h-full max-sm:w-full"
                 alt="flightGoing_icon"
               />
             </div>
             <div className="rounded-l-[12px]">
-              <h3 className="text-[1.25rem] sm:text-[2rem] font-semibold">
+              <h3 className="text-[1.25rem] font-semibold sm:text-[2rem]">
                 Fri, Dec 9
               </h3>
               <p className="text-[0.75rem] font-medium opacity-60">Check-Out</p>
             </div>
           </div>
-          <div className="grow rounded-t-[12px] md:rounded-r-[12px] border md:border-l-0">
-            <div className="flex items-center justify-between max-md:rounded-tl-[12px] rounded-tr-[12px] bg-primary p-[24px]">
+          <div className="grow rounded-t-[12px] border md:rounded-r-[12px] md:border-l-0">
+            <div className="flex items-center justify-between rounded-tr-[12px] bg-primary p-[24px] max-md:rounded-tl-[12px]">
               <div className="flex items-center gap-[16px]">
                 <Image
                   width={200}
@@ -98,7 +98,7 @@ export default function HotelTicketDownloadPagee() {
                 Superior room - 1 double bed or 2 twin beds
               </h3>
             </div>
-            <div className="mb-[40px] flex gap-[32px] p-[24px] flex-wrap">
+            <div className="mb-[40px] flex flex-wrap gap-[32px] p-[24px]">
               <div className="flex items-center gap-[8px]">
                 <div className="min-h-[32px] min-w-[32px] rounded-[4px] bg-primary/20 p-[5px]">
                   <Image
@@ -224,8 +224,8 @@ export default function HotelTicketDownloadPagee() {
               booking if payment is declined for any reason or if you have
               supplied incorrect card information. If we become aware of, or is
               notified of, any fraud or illegal activity associated with the
-              payment for the booking, the booking will be cancelled and you
-              will be liable for all costs and expenses arising from such
+              payment for the booking, the booking will be canceled and you will
+              be liable for all costs and expenses arising from such
               cancellation, without prejudice to any action that may be taken
               against us.
             </li>
@@ -258,7 +258,7 @@ export default function HotelTicketDownloadPagee() {
               <Button
                 asChild
                 variant={"link"}
-                className={"p-0 h-auto text-tertiary"}
+                className={"h-auto p-0 text-tertiary"}
               >
                 <Link href={"/support"}>golobe.com/support</Link>
               </Button>

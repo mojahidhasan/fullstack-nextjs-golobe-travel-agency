@@ -1,7 +1,7 @@
 import { createOneDoc } from "../../../lib/db/createOperationDB";
 import mongoose from "mongoose";
 import dataModels from "../../../lib/db/models";
-import { expect, test, beforeAll, describe } from "vitest";
+import { expect, test, beforeAll, describe, afterAll } from "vitest";
 
 describe("Create operation DB tests", () => {
   beforeAll(async () => {
@@ -25,7 +25,7 @@ describe("Create operation DB tests", () => {
 
       for (const val of Object.values(modelName)) {
         await expect(createOneDoc(val, {})).rejects.toThrowError(
-          `${val} is not a string. modelName property must be a string`
+          `${val} is not a string. modelName property must be a string`,
         );
       }
     });
@@ -34,7 +34,7 @@ describe("Create operation DB tests", () => {
       const modelName = "InvalidModelName";
 
       await expect(createOneDoc(modelName, {})).rejects.toThrowError(
-        `"${modelName}" is not a valid model`
+        `"${modelName}" is not a valid model`,
       );
     });
 
@@ -53,7 +53,7 @@ describe("Create operation DB tests", () => {
 
       for (const val of Object.values(data)) {
         await expect(createOneDoc(modelName, val)).rejects.toThrowError(
-          `${val} is not an object. data property must be an object`
+          `${val} is not an object. data property must be an object`,
         );
       }
     });
@@ -70,7 +70,7 @@ describe("Create operation DB tests", () => {
       };
 
       await expect(createOneDoc(modelName, data)).rejects.toThrowError(
-        `The following keys are not allowed: age, gender,\n Only firstname, lastname, email, emails, profileImage, coverImage, emailVerifiedAt, phone, address, dateOfBirth, likes, searchHistory are allowed`
+        `The following keys are not allowed: age, gender,\n Only firstname, lastname, email, emails, profileImage, coverImage, emailVerifiedAt, phone, address, dateOfBirth, likes, searchHistory are allowed`,
       );
     });
 

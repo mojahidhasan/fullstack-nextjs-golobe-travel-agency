@@ -1,9 +1,9 @@
 import { revalidateTag } from "next/cache";
 import MongoDBAdapter from "@/lib/db/MongoDBAdapter";
-import { getOneDoc } from "@/lib/db/getOperationDB";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
 import { auth } from "@/lib/auth";
 import routes from "@/data/routes.json";
+import { getUserDetails } from "@/lib/controllers/user";
 export async function GET(req) {
   const session = await auth();
   const isLoggedIn = !!session?.user;
@@ -15,7 +15,7 @@ export async function GET(req) {
         redirectURL:
           req.nextUrl.origin +
           `${routes.login.path}?callbackPath=${encodeURIComponent(
-            routes.profile.path
+            routes.profile.path,
           )}`,
       }),
       {
@@ -23,7 +23,7 @@ export async function GET(req) {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
 
@@ -37,17 +37,15 @@ export async function GET(req) {
         headers: {
           "Content-Type": "application/json",
         },
-      }
+      },
     );
   }
 
   const token = searchParams?.token;
 
-  const user = await getOneDoc("User", { _id: session?.user?.id }, [
-    "userDetails",
-  ]);
+  const user = await getUserDetails(session?.user?.id, 0);
   const inVerificationEmail = user.emails.filter(
-    (e) => e.inVerification === true
+    (e) => e.inVerification === true,
   );
 
   for (const email of inVerificationEmail) {
@@ -67,7 +65,7 @@ export async function GET(req) {
             "emails.$.inVerification": false,
             ...(email.primary === true && { emailVerifiedAt: new Date() }),
           },
-        }
+        },
       );
       revalidateTag("userDetails");
 
@@ -82,7 +80,7 @@ export async function GET(req) {
           headers: {
             "Content-Type": "application/json",
           },
-        }
+        },
       );
     }
   }
@@ -97,6 +95,6 @@ export async function GET(req) {
       headers: {
         "Content-Type": "application/json",
       },
-    }
+    },
   );
 }

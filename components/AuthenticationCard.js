@@ -1,13 +1,17 @@
+import { cn } from "@/lib/utils";
 import { LoginForm } from "./pages/login/LoginForm";
 
-export function AuthenticationCard() {
+export function AuthenticationCard({ className }) {
   return (
-    <div className="flex flex-col gap-4 rounded-[12px] border bg-white p-[24px] shadow-lg">
-      <h3 className="font-tradeGothic text-[1.25rem] font-bold">
-        Login or Sign up to book
-      </h3>
+    <div
+      className={cn(
+        "flex flex-col gap-4 rounded-[12px] border bg-white p-[24px] shadow-lg",
+        className,
+      )}
+    >
+      <h3 className="text-[1.25rem] font-bold">Login or Sign up to book</h3>
       <div>
-        <LoginForm />
+        <LoginForm className={"p-0 shadow-none"} />
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 "use client";
 
 import { Slider } from "@/components/ui/slider";
-import { Dropdown } from "@/components/ui/Dropdown";
+import { Dropdown } from "@/components/local-ui/Dropdown";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -31,7 +31,7 @@ export function HotelsFilter({ className }) {
     async function getFilterValues() {
       const res = await fetch(
         process.env.NEXT_PUBLIC_BASE_URL + "/api/hotels/hotel_filter_values",
-        { next: { revalidate: process.env.NEXT_PUBLIC_REVALIDATE } }
+        { next: { revalidate: process.env.NEXT_PUBLIC_REVALIDATE } },
       );
 
       const data = await res.json();
@@ -46,20 +46,20 @@ export function HotelsFilter({ className }) {
             minPrice,
             maxPrice,
           },
-        })
+        }),
       );
       if (searchparams.get("filters")) {
         const priceRange = JSON.parse(searchparams.get("filters")).priceRange;
         dispatch(
           setStayFilter({
             priceRange,
-          })
+          }),
         );
       } else {
         dispatch(
           setStayFilter({
             priceRange: [minPrice, maxPrice],
-          })
+          }),
         );
       }
     }
@@ -75,15 +75,15 @@ export function HotelsFilter({ className }) {
       dispatch(
         setStayFilter({
           [groupName]: [...stayState?.filters[groupName], name],
-        })
+        }),
       );
     } else {
       dispatch(
         setStayFilter({
           [groupName]: stayState?.filters[groupName].filter(
-            (item) => item !== name
+            (item) => item !== name,
           ),
-        })
+        }),
       );
     }
   }
@@ -91,7 +91,7 @@ export function HotelsFilter({ className }) {
   function handleApplyFilters() {
     if (searchForEmptyValuesInStaySearchForm(stayState)) {
       alert(
-        "Please fill all the required fields. Asterisk (*) indicates 'required'"
+        "Please fill all the required fields. Asterisk (*) indicates 'required'",
       );
       return;
     }
@@ -123,13 +123,13 @@ export function HotelsFilter({ className }) {
   return (
     <section
       className={cn(
-        "relative lg:w-[400px] w-full border-none lg:border-r-[1px] pr-[12px]",
-        className
+        "relative w-full border-none pr-[12px] lg:w-[400px] lg:border-r-[1px]",
+        className,
       )}
     >
-      <div className="flex items-center justify-between mb-[16px] font-semibold text-secondary">
+      <div className="mb-[16px] flex items-center justify-between font-semibold text-secondary">
         <Button
-          className="text-[1.25rem] p-0"
+          className="p-0 text-[1.25rem]"
           variant={"link"}
           onClick={() => {
             if (document.body.clientWidth < 1024) {
@@ -146,8 +146,8 @@ export function HotelsFilter({ className }) {
       </div>
       <div
         className={cn(
-          "w-full max-lg:bg-white max-lg:p-5 rounded-lg  max-lg:shadow-md",
-          filter === false && "max-lg:hidden"
+          "w-full rounded-lg max-lg:bg-white max-lg:p-5 max-lg:shadow-md",
+          filter === false && "max-lg:hidden",
         )}
       >
         <div>
@@ -162,7 +162,7 @@ export function HotelsFilter({ className }) {
                   dispatch(setStayFilter({ priceRange: value }));
                 }}
               />
-              <div className="flex font-semibold mt-2 justify-between">
+              <div className="mt-2 flex justify-between font-semibold">
                 <span>${stayState.filters.priceRange?.[0]}</span>
                 <span>${stayState.filters.priceRange?.[1]}</span>
               </div>
@@ -199,7 +199,7 @@ export function HotelsFilter({ className }) {
               <Button
                 type={"button"}
                 variant={"ghost"}
-                className="w-min h-min p-0 text-tertiary"
+                className="h-min w-min p-0 text-tertiary"
                 onClick={() => {
                   if (featuresLimit < stayState.filtersData?.features.length) {
                     setFeaturesLimit(stayState.filtersData?.features.length);
@@ -210,7 +210,7 @@ export function HotelsFilter({ className }) {
               >
                 {featuresLimit < stayState.filtersData?.features.length
                   ? `+${Math.abs(
-                      stayState.filtersData?.features.length - featuresLimit
+                      stayState.filtersData?.features.length - featuresLimit,
                     )} more`
                   : "Show less"}
               </Button>
@@ -238,7 +238,7 @@ export function HotelsFilter({ className }) {
               <Button
                 type={"button"}
                 variant={"ghost"}
-                className="w-min h-min p-0 text-tertiary"
+                className="h-min w-min p-0 text-tertiary"
                 onClick={() => {
                   if (
                     amenitiesLimit < stayState.filtersData?.amenities.length
@@ -251,7 +251,7 @@ export function HotelsFilter({ className }) {
               >
                 {amenitiesLimit < stayState.filtersData?.amenities.length
                   ? `+${Math.abs(
-                      stayState.filtersData?.amenities.length - amenitiesLimit
+                      stayState.filtersData?.amenities.length - amenitiesLimit,
                     )} more`
                   : "Show less"}
               </Button>

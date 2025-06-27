@@ -10,11 +10,6 @@ A full-stack nextjs project to practice and showcase the work. The UI design was
 
 Here is the live preview of this website [golob-travel-agency.vercel.app](https://golob-travel-agency.vercel.app)
 
-## Note
-
-- This website is not a real travel agency website. This was only for practicing web development. Not all the data shown here is real. This website used [fakerjs](https://fakerjs.dev/) to generate fake data.
-- **Never provide your real card data here**. This website can collect information from some places (e.g.: subscription, signup, payment method adding, profile photo and cover photo uploading, etc.). So it is recommended that you don't provide your real information there. This website does not verify email during sign-up. So you can sign up using a fake email. However, if you sign in with Google, Facebook, or Apple, it can collect your real information. So do it with caution. Use fake data instead. This data will only be saved in the database, and nothing will be done with it. You can still test buying tickets for flights and book flight functionalities with fake data.
-
 ## Technologies used in this project
 
 <img src="https://nextjs.org/favicon.ico" width="16" height="16"> Next js v14
@@ -27,88 +22,189 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 <img src="https://authjs.dev/favicon-32x32.png" width="16" height="16"> Next Auth v5
 
-<img src="https://www.gstatic.com/mobilesdk/240501_mobilesdk/firebase_96dp.png" width="16" height="16"> Firebase Cloud Storage
-
 <img src="https://assets.mailjet.com/lib/images/mailjetLogo/mj_logo_only_icon_color.png" width="16" height="16"> Mailjet
 
 ## Features
 
-1. Fully Responsive
-2. Used redux for state management
-3. Used tailwind for styling
-4. Flight and Hotel search (dummy data)
-5. Filter Flight and Hotel
-6. Show flight and hotel details
-7. Buy a ticket or book a hotel
-8. Get a ticket after buying
-9. Sorting search results by best, shortest, and cheapest
-10. Add to favorite
-11. Login and Signup
+1. **User Authentication**
+
+   - Email and phone verification
+   - Anonymous user signup for guest browsing
+   - Profile management with customizable settings
+
+2. **Flight Services**
+
+   - Advanced flight search with multiple filters
+   - Multi-city and round trip options
+   - Favorite flights saving feature
+
+3. **Hotel Services**
+
+   - Comprehensive hotel search and filtering
+   <!-- - Room type selection, not yet implemented -->
+
+4. **User Experience**
+
+   - Timezone detection for accurate scheduling
+   - Responsive design for all devices
+     <!-- - Intuitive booking process, not yet implemented -->
+     <!-- - Search history tracking, not yet implemented  -->
+
+5. **Account Management**
+
+   - Multiple email addresses support
+   - Phone number management
+     <!-- - Booking history and receipts , not yet implemented -->
+     <!-- - Saved payment methods , not yet implemented -->
+
+6. **Technical Implementation**
+
+   - Server-side rendering with Next.js App Router
+   - Server components and server actions
+   - Dynamic OG image generation for avatars
+   - Parallel route loading with dedicated loading states
+   - Custom server-side utilities for data processing
+
+7. **Data Management**
+
+   - MongoDB integration with custom ORM-like functions
+   - Real-time flight pricing calculations
+   - Rating and review system for flights
+   - Session-based data persistence
+   - Timezone-aware date handling
+
+8. **Performance Optimization**
+   - Client-side state management with Redux
+   - Server-side caching strategies
+   - Optimized image delivery
+   - Responsive loading skeletons
 
 ## Limitations
 
-- The website is not a real travel agency website. This was only for practicing web development.
-- The data shown here is not real data.
-- This website is hosted on Vercel with the hobby plan and the hosting location is Europe. The timeout of tasks in the hobby plan is 10 seconds. So sometimes users with a slow connection or locations far from Europe may be unable to change their profile picture, cover photo, etc. because of exceeding the task time limit on Vercel.
+- Limited payment gateway integration (currently only supports test mode)
+- No real-time flight availability checking
+- Basic hotel booking functionality (room selection not implemented)
+- No advanced user analytics or search history tracking
+- Limited error handling for edge cases in flight search
+- No multi-language support implemented
+- No social media login options (only email/password authentication)
+- Limited mobile optimization for some complex components
+- No offline functionality or caching of search results
+- Basic flight review system without advanced filtering
+- No flight price alert or tracking system
+- Limited airline partnership integrations
+- No advanced filtering options for flight results
+- No support for flight booking modifications
+- Basic user profile management features
+- No integration with travel insurance providers
+- Limited accessibility features for differently-abled users
+- No group booking functionality
+- No loyalty program or rewards system
 
-## Work locally
+## Local Development Setup
 
-1. Download or clone the repository
+To set up and run the project locally, follow these steps:
+
+1. **Clone the repository**
 
    ```sh
    git clone https://github.com/mojahidhasan/fullstack-nextjs-golobe-travel-agency.git
    ```
 
-2. Navigate to the project directory
+2. **Navigate to the project directory**
 
    ```sh
    cd fullstack-nextjs-golobe-travel-agency
    ```
 
-3. Install dependencies
+3. **Install dependencies**
 
    ```sh
    npm install
    ```
 
-4. rename the `.env.example` file from the root directory to `.env` or `.env.local` and set the proper values of keys. The app may get runtime errors if the `.env` file is not set up.
-5. [Generate fake flight and related data](#generate-fake-flight-data-for-database)
-6. start the local server
+4. **Configure environment variables**
+
+   - Rename `.env.example` to `.env` or `.env.local`
+   - Set the required values for all environment variables
+   - Note: The application may fail to run if environment variables are not properly configured
+
+5. **Generate sample data** (Optional)
+
+   ```sh
+   # Generate and upload flights data to MongoDB
+   # This will creates 10 days of flight data but deletes all flight data from db before uploading
+   # If you want to add more flight data without deleting, use `/api/cronjob/flight_schedule` api endpoint
+   npm run generateAndUploadFlightsDB
+
+   # Generate flights data files
+   npm run generateFlightsFiles
+
+   # Generate and upload hotels data to MongoDB
+   npm run generateAnduploadHotelsDB
+
+   # Generate hotels data files
+   npm run generateHotelsFiles
+   ```
+
+   Files will be generated in `./generated` directory.
+
+6. **Start the development server**
 
    ```sh
    npm run dev
-   # http://localhost:3000
    ```
 
-### Generate Fake Flight and Related Data for Database
+   The application will be available at:
 
-1: To upload it to the database directly after generating it, run the following command:
-
-```bash
-npm run generateAndUploadDB
-```
-
-2: To generate fake flight and related data and save it in JSON file, run the following command:
-
-```bash
-npm run generateDBFiles
-```
-
-It should create files in the `generated` directory.
+   ```bash
+   http://localhost:3000
+   ```
 
 ## TODO
 
-This project is still in development. All front-end pages have been developed already but many functionalities especially the backend have not been implemented yet. Here are some functionalities that are yet to develop:
+### Core Features
 
-- Replacing fake flight data with real flight API
-- Buying tickets and Booking hotel functionality (demo).
-- Add payment method form and make it functional.
-- Adding functionality of changing password, phone number, address, and date of birth from profile
-- Showing histories (i.e. Hotel book, Ticket buy) and added payment methods.
-- Adding hotel card to the "/favorites" page
-- Download ticket functionality
-- Let users know via email that they have successfully bought a ticket or booked a hotel.
-- Adding Dark mode.
-- Migrating to Typescript.
-- Adding tests cases.
-- And some more small functionalities
+- Integrate real flight API to replace mock data (High Priority)
+- Implement flight ticket booking system
+- Add hotel reservation functionality
+- Develop fake payment system
+
+### User Account & Profile
+
+- Implement profile management:
+  - Password updates
+  - Contact information changes
+  - Personal detail modifications
+- Add payment methods management interface
+- Create booking history section:
+  - Flight tickets
+  - Hotel reservations
+
+### UI/UX Improvements
+
+- Implement dark mode toggle
+- Enhance favorites page with hotel cards and improved organization
+- Add ticket download functionality (PDF/QR Codes)
+
+### Technical Enhancements
+
+- Migrate codebase to TypeScript
+- Implement comprehensive test suite:
+  - Unit tests
+  - Integration tests
+  - E2E testing
+- Add email notification system for:
+  - Booking confirmations
+  - Payment receipts
+  - Travel reminders
+
+### Additional Features
+
+- Develop loyalty/rewards program
+- Implement price alert system
+- Add multi-language support
+- Create admin dashboard for content management
+- Adding websocket for real-time updates
+
+Note: Several smaller enhancements and bug fixes are also planned for optimal user experience.

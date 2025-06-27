@@ -1,67 +1,45 @@
-import { Cheapest } from "@/components/pages/flights.search/sections/Cheapest";
-import { Best } from "@/components/pages/flights.search/sections/Best";
-import { Quickest } from "@/components/pages/flights.search/sections/Quickest";
+import { FlightResultList } from "./FlightResultList";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { minutesToHMFormat, substractTimeInMins } from "@/lib/utils";
-
-export async function FLightResult({ flightResults }) {
+import { multiSegmentCombinedFareBreakDown } from "@/lib/db/schema/flightItineraries";
+import { minutesToHMFormat } from "@/lib/utils";
+export async function FlightResult({ flightResults, searchState, metaData }) {
   const sortByCheapest = flightResults.slice(0).sort((a, b) => {
-    return +a.price - +b.price;
-  });
-
-  const sortByBest = flightResults.slice(0).sort((a, b) => {
-    const aMinutes = substractTimeInMins(
-      a.destinationArrivalDateTime,
-      a.departureDateTime
-    );
-    const bMinutes = substractTimeInMins(
-      b.destinationArrivalDateTime,
-      b.departureDateTime
-    );
-    return (
-      parseFloat(a.price) +
-      aMinutes -
-      (parseFloat(b.price) + bMinutes)
-    );
+    const aTotalPrice = multiSegmentCombinedFareBreakDown(
+      a.segmentIds,
+      searchState.passengers,
+      metaData.flightClass,
+    ).total;
+    const bTotalPrice = multiSegmentCombinedFareBreakDown(
+      b.segmentIds,
+      searchState.passengers,
+      metaData.flightClass,
+    ).total;
+    return +aTotalPrice - +bTotalPrice;
   });
   const sortByQuickest = [...flightResults].sort((a, b) => {
-    const aMinutes = substractTimeInMins(
-      a.destinationArrivalDateTime,
-      a.departureDateTime
-    );
-    const bMinutes = substractTimeInMins(
-      b.destinationArrivalDateTime,
-      b.departureDateTime
-    );
-    return aMinutes - bMinutes;
+    return +a.totalDurationMinutes - b.totalDurationMinutes;
   });
+
+  const mostCheap =
+    multiSegmentCombinedFareBreakDown(
+      sortByCheapest[0]?.segmentIds,
+      searchState.passengers,
+      metaData.flightClass,
+    ).total || 0;
+
+  const mostQuick = sortByQuickest[0]?.totalDurationMinutes;
   return (
     <div className="flex grow flex-col gap-[32px]">
       <Tabs defaultValue="cheapest" className="w-full">
-        <TabsList className="bg-white p-0 gap-1 flex sm:flex-row flex-col h-auto">
+        <TabsList className="flex h-auto flex-col gap-1 bg-white p-0 sm:flex-row">
           <TabsTrigger
             value="cheapest"
             className="w-full grow justify-start gap-2"
           >
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Cheapest</p>
-              <p className={ "text-sm text-gray-500" }>${ sortByCheapest[0].price }</p>
-            </div>
-          </TabsTrigger>
-          <TabsTrigger
-            value="best"
-            className="w-full grow justify-start gap-2"
-          >
-            <div className="text-left">
-              <p className="mb-[8px] block font-semibold">Best</p>
-              <p className={ "text-sm text-gray-500" }>
-                ${ sortByBest[0].price } .{ " " }
-                { minutesToHMFormat(
-                  substractTimeInMins(
-                    sortByBest[0].destinationArrivalDateTime,
-                    sortByBest[0].departureDateTime
-                  )
-                ) }
+              <p className={"text-sm text-gray-500"}>
+                $ {(+mostCheap).toFixed(2)}
               </p>
             </div>
           </TabsTrigger>
@@ -72,24 +50,24 @@ export async function FLightResult({ flightResults }) {
             <div className="text-left">
               <p className="mb-[8px] block font-semibold">Quickest</p>
               <p className="text-sm text-gray-500">
-                { minutesToHMFormat(
-                  substractTimeInMins(
-                    sortByQuickest[0].destinationArrivalDateTime,
-                    sortByQuickest[0].departureDateTime
-                  )
-                ) }
+                {minutesToHMFormat(mostQuick || 0)}
               </p>
             </div>
           </TabsTrigger>
         </TabsList>
         <TabsContent value="cheapest">
-          <Cheapest data={ sortByCheapest } />
-        </TabsContent>
-        <TabsContent value="best">
-          <Best data={ sortByBest } />
+          <FlightResultList
+            searchState={searchState}
+            data={sortByCheapest}
+            metaData={metaData}
+          />
         </TabsContent>
         <TabsContent value="quickest">
-          <Quickest data={ sortByQuickest } />
+          <FlightResultList
+            searchState={searchState}
+            data={sortByQuickest}
+            metaData={metaData}
+          />
         </TabsContent>
       </Tabs>
     </div>

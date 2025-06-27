@@ -73,7 +73,7 @@ export function ChangePhonePopup() {
       <DialogTrigger asChild>
         <ChangeButton />
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[425px]">
+      <DialogContent className="z-[99] overflow-visible sm:max-w-[425px]">
         <DialogHeader>
           <DialogTitle>Change your phone number</DialogTitle>
           <DialogDescription>
@@ -95,6 +95,7 @@ export function ChangePhonePopup() {
               name="phone"
               label="Phone Number"
               placeholder="Enter phone number"
+              dialCodePlaceholder={"+XXX"}
               error={state?.error?.phone}
               type={"tel"}
               className={"w-full"}

@@ -1,30 +1,28 @@
-"use client"; // Error components must be Client Components
-import { Button } from "@/components/ui/button";
-import { useEffect } from "react";
+"use client";
 
-export default function Error({ error, reset }) {
-  useEffect(() => {
-    // Log the error to an error reporting service
-    console.error(error);
-  }, [error]);
+import { AlertTriangle } from "lucide-react";
 
+export default function Error({ error, reset = () => {} }) {
   return (
-    <div
-      className={
-        "h-screen p-1 w-full flex justify-center items-center flex-col"
-      }
-    >
-      <h2 className={"font-bold text-4xl text-center mb-5"}>
-        Something went wrong!
-      </h2>
-      <Button
-        onClick={
-          // Attempt to recover by trying to re-render the segment
-          () => reset()
-        }
-      >
-        Try again
-      </Button>
+    <div className="flex h-screen w-full flex-col items-center justify-center bg-gradient-to-br from-red-100 to-red-200 px-4 text-center dark:from-red-900 dark:to-red-800">
+      <div className="flex w-full max-w-md flex-col items-center justify-center gap-4 rounded-2xl bg-white p-8 shadow-lg dark:bg-gray-950">
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-red-100 shadow-inner dark:bg-red-900">
+          <AlertTriangle className="h-10 w-10 text-red-600 dark:text-red-400" />
+        </div>
+        <h1 className="text-3xl font-bold text-red-700 dark:text-red-300">
+          Something went wrong
+        </h1>
+        <p className="text-sm text-gray-700 dark:text-gray-300">
+          {error?.message ||
+            "An unexpected error occurred. Please try again later."}
+        </p>
+        <button
+          onClick={reset}
+          className="mt-4 inline-flex items-center justify-center rounded-full bg-red-600 px-6 py-2 text-white shadow-md transition duration-200 hover:bg-red-700"
+        >
+          Try Again
+        </button>
+      </div>
     </div>
   );
 }

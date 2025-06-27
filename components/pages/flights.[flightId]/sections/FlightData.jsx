@@ -3,74 +3,85 @@ import Link from "next/link";
 import Image from "next/image";
 import { LikeButton } from "@/components/local-ui/likeButton";
 import share from "@/public/icons/share.svg";
-import { RatingShow } from "@/components/local-ui/ratingShow";
-import { FLIGHT_CLASS_PLACEHOLDERS, RATING_SCALE } from "@/lib/constants";
-import { Carousel, CarouselContent, CarouselItem } from "@/components/local-ui/carousel";
-import dummyAirplane from "@/public/images/dummy-plane.webp";
+import { FLIGHT_CLASS_PLACEHOLDERS } from "@/lib/constants";
 
 import routes from "@/data/routes.json";
-export function FlightData({ data }) {
-  const { flightNumber, airplaneName, price, rating, totalReviews, liked, flightClass, airplaneImages, flightId } = data;
+import { cn } from "@/lib/utils";
+import { multiSegmentCombinedFareBreakDown } from "@/lib/db/schema/flightItineraries";
+export function FlightData({ data, searchState, metaData, className }) {
+  const { flightCode, _id } = data;
+  const { flightClass, isBookmarked } = metaData;
+  const { fareBreakdowns, total } = multiSegmentCombinedFareBreakDown(
+    data.segmentIds,
+    searchState.passengers,
+    metaData.flightClass,
+  );
+  const totalPrice = Object.values(fareBreakdowns).reduce(
+    (acc, item) => acc + +item.totalBeforeDiscount,
+    0,
+  );
+  const discountedPrice = total;
+  const hasDiscount = totalPrice !== discountedPrice;
+  const isFlightExpired = metaData.isFlightExpired;
+  const isSeatsAvailable = metaData.isSeatsAvailable;
+
+  const bookingDisabled = isFlightExpired || !isSeatsAvailable;
 
   return (
-    <section className="mb-10 text-secondary bg-white p-6 rounded-lg shadow-sm transition duration-300 ease-in-out hover:shadow-md">
-      <div className="flex justify-between items-center mb-8 gap-6 sm:flex-row flex-col">
+    <section
+      className={cn(
+        "rounded-lg bg-white p-6 text-secondary shadow-lg transition duration-300 ease-in-out",
+        className,
+      )}
+    >
+      <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
         <div>
-          <h2 className="text-2xl font-bold text-gray-800 mb-3">
-            { airplaneName }
-          </h2>
-          <div className="flex items-center gap-2 text-sm text-gray-600">
-            <RatingShow rating={ rating } />
-            <span className="font-semibold">{ RATING_SCALE[parseInt(rating)] }</span>
-            <span className="text-gray-500">{ totalReviews } reviews</span>
+          <div className="mb-2 flex flex-col items-center justify-between gap-2 max-2xsm:flex-col sm:items-start sm:justify-start">
+            <p className="text-md font-bold text-primary sm:text-xs">
+              {FLIGHT_CLASS_PLACEHOLDERS[flightClass]}
+            </p>
+
+            <p className="text-3xl font-bold text-primary">
+              {hasDiscount && (
+                <span className={"text-base text-black line-through"}>
+                  ${(+totalPrice).toFixed(2)}
+                </span>
+              )}{" "}
+              <span>${(+discountedPrice).toFixed(2)}</span>
+            </p>
           </div>
         </div>
-        <div className="text-right flex flex-col gap-2">
-          <div className="flex flex-row sm:flex-col justify-between sm:justify-end max-2xsm:flex-col max-xsm:items-start sm:items-end items-center gap-2">
-            <p className="text-xl sm:text-xs font-bold text-primary">{ FLIGHT_CLASS_PLACEHOLDERS[flightClass] }</p>
-
-            <p className="text-3xl font-bold text-primary">${ price }</p>
-          </div>
-          <div className="flex gap-4 flex-wrap">
-            <LikeButton liked={ liked } keys={ {
-              flightId,
-              flightNumber,
-              flightClass
-            } } flightsOrHotels="flights" className={ "p-3" } />
-            <Button variant="outline" className="rounded-lg grow flex items-center justify-center">
-              <Image
-                className="min-h-5 min-w-5"
-                src={ share }
-                alt="Share icon"
-              />
-            </Button>
-            <Button variant="solid" asChild className="px-6 grow py-2 text-white bg-primary rounded-lg transition duration-200 hover:bg-primary-dark">
-              <Link href={ `${routes.flights.path}/${flightNumber}/book` }>Book Now</Link>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <div className="flex flex-wrap justify-evenly gap-2">
+            <LikeButton
+              isBookmarked={isBookmarked}
+              keys={{
+                flightId: _id,
+                searchState: searchState,
+              }}
+              flightsOrHotels="flight"
+              className={"p-3"}
+            />
+            <Button
+              variant="outline"
+              className="flex items-center justify-center rounded-lg"
+            >
+              <Image className="min-h-5 min-w-5" src={share} alt="Share icon" />
             </Button>
           </div>
+          {!bookingDisabled && (
+            <Button
+              asChild
+              className="hover:bg-primary-dark grow rounded-lg bg-primary px-4 py-2 transition duration-200"
+            >
+              <Link
+                href={`${routes.flights.path}/${flightCode}_${new Date(data.date).getTime()}/book`}
+              >
+                Book Now
+              </Link>
+            </Button>
+          )}
         </div>
-      </div>
-      <div className={ "rounded-lg" }>
-        {
-          Array.isArray(airplaneImages) && airplaneImages.length > 1 ? <Carousel className={ "rounded-lg w-full h-auto max-h-[700px]" }>
-            <CarouselContent indicator={ false }>
-              {
-                airplaneImages.map((image, index) => (
-                  <CarouselItem key={ index }>
-                    <Image
-                      className="h-full w-full object-cover object-center"
-                      src={ image }
-                      width={ 700 }
-                      height={ 500 }
-                      alt="airplane image"
-                      sizes={ "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" }
-                    />
-                  </CarouselItem>
-                )) }
-            </CarouselContent>
-          </Carousel> : <Image className="h-full mx-auto max-w-full max-h-[700px]" width={ 700 } height={ 700 } src={ dummyAirplane } alt="dummy airplane" />
-        }
-
       </div>
     </section>
   );

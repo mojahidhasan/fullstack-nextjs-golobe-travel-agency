@@ -6,5 +6,6 @@ const { auth } = NextAuth(authConfig);
 export default auth(async (req) => {
   const response = NextResponse.next();
   response.headers.set("x-pathname", req.nextUrl.pathname);
+  response.headers.set("x-url", req.nextUrl.href);
   return response;
 });

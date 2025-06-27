@@ -5,7 +5,7 @@ export function FavouriteFlightListSection({ favouriteFlights }) {
     return (
       <h1
         className={
-          "text-[1.25rem] py-20 h-full font-semibold text-secondary text-center bg-white rounded-md shadow-md"
+          "h-full rounded-md bg-white py-20 text-center text-[1.25rem] font-semibold text-secondary shadow-md"
         }
       >
         No favourite flights
@@ -13,13 +13,14 @@ export function FavouriteFlightListSection({ favouriteFlights }) {
     );
   }
   return (
-    <div className={"grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2"}>
+    <div className={"mb-5 grid grid-cols-1 gap-[16px]"}>
       {favouriteFlights.map((flight, i) => {
         return (
           <FlightResultCard
             key={flight._id}
             data={flight}
-            liked={flight.liked}
+            searchState={flight.searchState}
+            metaData={flight.metaData}
           />
         );
       })}

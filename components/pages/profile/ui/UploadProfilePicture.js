@@ -15,13 +15,13 @@ import Image from "next/image";
 
 import AvatarEditor from "react-avatar-editor";
 
-import { useState, useRef, useEffect } from "react";
-import { useFormState } from "react-dom";
+import { useState, useRef } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 import { updateProfilePictureAction } from "@/lib/actions";
 
 import pen from "@/public/icons/pen.svg";
+import { LoaderIcon } from "lucide-react";
 
 export function UploadProfilePicture() {
   const [file, setFile] = useState(null);
@@ -31,17 +31,21 @@ export function UploadProfilePicture() {
 
   const editorRef = useRef(null);
 
-  const [state, dispatch] = useFormState(updateProfilePictureAction, undefined);
-
   const { toast } = useToast();
 
-  function handleSave() {
+  async function handleSave() {
     const image = editorRef.current.getImage().toDataURL();
     setPreview(image);
     setSaved(true);
   }
 
-  useEffect(() => {
+  const [uploading, setUploading] = useState(false);
+  async function handleUpload() {
+    setUploading(true);
+    const formData = new FormData();
+    formData.append("profilePic", preview);
+    const state = await updateProfilePictureAction(null, formData);
+    setUploading(false);
     if (state?.success) {
       setFile(null);
       setPreview(null);
@@ -58,8 +62,7 @@ export function UploadProfilePicture() {
         variant: "destructive",
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  }
 
   return (
     <Dialog open={isDialogOpened} onOpenChange={setIsDialogOpened}>
@@ -94,7 +97,7 @@ export function UploadProfilePicture() {
           <div className="grid flex-1 gap-2">
             <Label
               htmlFor="upload-profile-pic"
-              className="cursor-pointer flex items-center justify-center bg-gray-100 rounded-md border border-gray-200 p-2 text-center w-full"
+              className="flex w-full cursor-pointer items-center justify-center rounded-md border border-gray-200 bg-gray-100 p-2 text-center"
             >
               <span className="text-sm text-gray-500">Choose a file</span>
             </Label>
@@ -112,7 +115,7 @@ export function UploadProfilePicture() {
             />
           </div>
         </form>
-        <div className="h-auto w-auto mx-auto rounded-lg">
+        <div className="mx-auto h-auto w-auto rounded-lg">
           {file && !saved && (
             <AvatarEditor
               className="rounded-lg"
@@ -137,39 +140,42 @@ export function UploadProfilePicture() {
             />
           )}
         </div>
-        {file &&
-          (!saved ? (
-            <Button
-              type="button"
-              size="lg"
-              onClick={() => {
-                handleSave();
-              }}
-            >
-              Save
-            </Button>
-          ) : (
-            <Button type="button" size="lg" onClick={() => setSaved(false)}>
-              Edit
-            </Button>
-          ))}
+        <div className="flex flex-col items-center justify-center gap-2">
+          {file &&
+            (!saved ? (
+              <Button
+                type="button"
+                size="lg"
+                className="w-[200px]"
+                onClick={() => {
+                  handleSave();
+                }}
+              >
+                Save
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                className="w-[200px]"
+                size="lg"
+                onClick={() => setSaved(false)}
+              >
+                Edit
+              </Button>
+            ))}
 
-        {preview && (
-          <Button
-            formAction={dispatch}
-            onClick={() => {
-              toast({
-                title: "Uploading...",
-                description: "Please wait",
-              });
-            }}
-            form="upload_profile_pic_form"
-            type="submit"
-            size="lg"
-          >
-            Upload
-          </Button>
-        )}
+          {preview && (
+            <Button
+              className="w-[200px]"
+              size="lg"
+              onClick={handleUpload}
+              disabled={uploading}
+              type={"button"}
+            >
+              {uploading ? <LoaderIcon className="animate-spin" /> : "Upload"}
+            </Button>
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

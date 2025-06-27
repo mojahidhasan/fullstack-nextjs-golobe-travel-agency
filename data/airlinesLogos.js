@@ -3,9 +3,11 @@ import EY from "@/public/images/ey.svg";
 import FZ from "@/public/images/fz.svg";
 import QR from "@/public/images/qr.svg";
 
-export const airlines = {
+const airlinesLogos = {
   EK,
   EY,
   FZ,
   QR,
 };
+
+export default airlinesLogos;

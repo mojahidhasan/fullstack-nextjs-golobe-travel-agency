@@ -1,5 +1,5 @@
 "use client";
-import { generateStars } from "@/lib/functions_client";
+import { generateStars } from "@/lib/utils.client";
 import { useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";

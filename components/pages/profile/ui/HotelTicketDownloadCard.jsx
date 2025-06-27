@@ -9,9 +9,9 @@ import gate from "@/public/icons/door-closed-mint.svg";
 import { formatInTimeZone } from "date-fns-tz";
 import { cookies } from "next/headers";
 export function HotelTicketDownloadCard({ className, ticketData }) {
-  const timezone = cookies().get("timezone")?.value || "UTC";
+  const timeZone = cookies().get("timeZone")?.value || "UTC";
   function dateFormat(dateObject) {
-    return formatInTimeZone(dateObject, timezone, "EEE, LLL d");
+    return formatInTimeZone(dateObject, timeZone, "EEE, LLL d");
   }
   function zeroPrecition(number) {
     return number < 10 ? `0${number}` : number;
@@ -24,60 +24,67 @@ export function HotelTicketDownloadCard({ className, ticketData }) {
     return "am";
   }
 
+  const checkInTime = formatInTimeZone(
+    ticketData.check.in,
+    timeZone,
+    "hh:mm aaa",
+  );
 
-  const checkInTime = formatInTimeZone(ticketData.check.in, timezone, "hh:mm aaa");
-
-  const checkOutTime = formatInTimeZone(ticketData.check.out, timezone, "hh:mm aaa");
+  const checkOutTime = formatInTimeZone(
+    ticketData.check.out,
+    timeZone,
+    "hh:mm aaa",
+  );
 
   return (
     <div
-      className={ cn(
-        "flex items-center flex-wrap justify-between gap-4 lg:gap-[32px] rounded-[8px] shadow-md mb-4 bg-white p-2 xsm:px-[24px] xsm:py-[32px]",
-        className
-      ) }
+      className={cn(
+        "mb-4 flex flex-wrap items-center justify-between gap-4 rounded-[8px] bg-white p-2 shadow-md xsm:px-[24px] xsm:py-[32px] lg:gap-[32px]",
+        className,
+      )}
     >
-      <div className="flex max-sm:w-full lg:flex-row flex-col items-center gap-[24px]">
+      <div className="flex flex-col items-center gap-[24px] max-sm:w-full lg:flex-row">
         <Image
-          src={ ticketData.logo }
-          height={ 80 }
-          width={ 80 }
-          className="min-h-[80px] h-[80px] border lg:w-[80px] border-primary w-full min-w-[80px] rounded-[8px] object-contain object-center p-[10px]"
+          src={ticketData.logo}
+          height={80}
+          width={80}
+          className="h-[80px] min-h-[80px] w-full min-w-[80px] rounded-[8px] border border-primary object-contain object-center p-[10px] lg:w-[80px]"
           alt=""
         />
-        <div className="flex xsm:flex-row flex-col items-center gap-[16px]">
+        <div className="flex flex-col items-center gap-[16px] xsm:flex-row">
           <div>
             <p className="opacity-75">Check-In</p>
             <p className="text-[1.25rem] font-semibold">
-              { dateFormat(ticketData.check.in) }
+              {dateFormat(ticketData.check.in)}
             </p>
           </div>
-          <p className="h-[2px] w-[20px] select-none bg-secondary"></p>{ " " }
+          <p className="h-[2px] w-[20px] select-none bg-secondary"></p>{" "}
           <div>
             <p className="opacity-75">Check-Out</p>
             <p className="text-[1.25rem] font-semibold">
-              { dateFormat(ticketData.check.out) }
+              {dateFormat(ticketData.check.out)}
             </p>
           </div>
         </div>
       </div>
-      <div className="grid xl:grid-cols-2 gap-x-[24px] gap-y-[8px]">
+      <div className="grid gap-x-[24px] gap-y-[8px] xl:grid-cols-2">
         <SmallDataCard
-          imgSrc={ timer }
-          title={ "Check-In time" }
-          data={ checkInTime }
+          imgSrc={timer}
+          title={"Check-In time"}
+          data={checkInTime}
         />
         <SmallDataCard
-          imgSrc={ gate }
-          title={ "Roon no." }
-          data={ ticketData.roomNo }
+          imgSrc={gate}
+          title={"Roon no."}
+          data={ticketData.roomNo}
         />
         <SmallDataCard
-          imgSrc={ timer }
-          title={ "Check-Out time" }
-          data={ checkOutTime }
+          imgSrc={timer}
+          title={"Check-Out time"}
+          data={checkOutTime}
         />
       </div>
-      <div className="flex max-xsm:w-full flex-col lg:flex-row gap-[16px]">
+      <div className="flex flex-col gap-[16px] max-xsm:w-full lg:flex-row">
         <Button className="text-wrap">Download Ticket</Button>
         <Button variant="outline">
           <svg

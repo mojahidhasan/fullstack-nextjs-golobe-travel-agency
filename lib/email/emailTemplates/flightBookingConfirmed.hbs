@@ -1,0 +1,660 @@
+<html dir="ltr" lang="en">
+  <head>
+    <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+    <meta name="x-apple-disable-message-reformatting" />
+    <title>Your Flight Booking Confirmation - Golobe</title>
+    <style>
+      @media only screen and (max-width: 600px) {
+        .responsive-table {
+          width: 100% !important;
+        }
+        .mobile-padding {
+          padding-left: 15px !important;
+          padding-right: 15px !important;
+        }
+      }
+    </style>
+  </head>
+  <body
+    style="
+      background-color: #f9fafb;
+      font-family:
+        ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji',
+        'Segoe UI Emoji', 'Segoe UI Symbol',
+        'Noto Color Emoji';
+      margin: 0;
+      padding: 0;
+    "
+  >
+    <!-- Hidden preview text -->
+    <div
+      style="
+        display: none;
+        overflow: hidden;
+        line-height: 1px;
+        opacity: 0;
+        max-height: 0;
+        max-width: 0;
+      "
+    >
+      Your flight booking with Golobe has been confirmed.
+      <br />
+      PNR:
+      {{main.bookingDetails.pnrCode}}
+      <br />
+      Booked At:
+      {{formatDate
+        main.bookingDetails.bookedAt
+        main.bookingDetails.userTimeZone
+        "dd MMMM yyyy, hh:mm a"
+      }}
+    </div>
+
+    <!-- Main email container -->
+    <table
+      align="center"
+      width="100%"
+      border="0"
+      cellpadding="0"
+      cellspacing="0"
+      role="presentation"
+      style="margin: 40px auto; max-width: 600px"
+    >
+      <!-- Header with logo -->
+      <tr>
+        <td
+          style="
+            background-color: #8dd3ba;
+            padding: 30px 20px;
+            text-align: center;
+          "
+        >
+          <a href="{{branding.baseUrl}}" style="display: inline-block">
+            <img
+              src="{{branding.logoImageUrl}}"
+              alt="Golobe"
+              style="width: 120px; height: auto"
+            />
+          </a>
+        </td>
+      </tr>
+
+      <!-- Booking confirmed header -->
+      <tr>
+        <td
+          style="
+            background-color: #ffffff;
+            padding: 30px 30px 20px;
+            text-align: center;
+          "
+        >
+          <h1
+            style="
+              font-size: 28px;
+              font-weight: 700;
+              color: #2d3436;
+              margin: 0 0 10px;
+            "
+          >
+            Your Flight is Confirmed!
+          </h1>
+          <p style="font-size: 16px; color: #4a4a4a; margin: 0">
+            PNR:
+            <strong>{{main.bookingDetails.pnrCode}}</strong>
+          </p>
+        </td>
+      </tr>
+
+      <!-- Flight summary -->
+      {{#each main.flightDetails.segments as |segment|}}
+        <tr>
+          <td style="background-color: #ffffff; padding: 0 30px 20px">
+            <table
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+            >
+              <tr>
+                <td
+                  style="
+                  background-color: #f1f8f5;
+                  border-radius: 8px;
+                  padding: 20px;
+                "
+                >
+                  <table
+                    width="100%"
+                    border="0"
+                    cellpadding="0"
+                    cellspacing="0"
+                    role="presentation"
+                  >
+                    <!-- Flight details -->
+                    <tr>
+                      <td style="padding-bottom: 15px">
+                        <h2
+                          style="
+                          font-size: 18px;
+                          font-weight: 600;
+                          color: #2d3436;
+                          margin: 0 0 5px;
+                        "
+                        >
+                          {{segment.airlineName}}
+                          <br />
+                          Flight No:
+                          {{segment.flightNumber}}
+                        </h2>
+                      </td>
+                    </tr>
+
+                    <!-- Departure and arrival times -->
+                    <tr>
+                      <td style="padding-bottom: 15px">
+                        <table
+                          width="100%"
+                          border="0"
+                          cellpadding="0"
+                          cellspacing="0"
+                          role="presentation"
+                        >
+                          <tr>
+                            <td style="width: 45%">
+                              <p
+                                style="
+                                font-size: 24px;
+                                font-weight: 700;
+                                color: #2d3436;
+                                margin: 0 0 5px;
+                              "
+                              >
+                                {{formatDate
+                                  segment.departureDateTime
+                                  main.bookingDetails.userTimeZone
+                                  "hh:mm a"
+                                }}
+                              </p>
+                              <p
+                                style="font-size: 14px; color: #636e72; margin: 0"
+                              >
+                                {{formatDate
+                                  segment.departureDateTime
+                                  main.bookingDetails.userTimeZone
+                                  "dd MMMM yyyy"
+                                }}
+                              </p>
+                              <p
+                                style="
+                                font-size: 14px;
+                                color: #636e72;
+                                margin: 5px 0 0;
+                              "
+                              >
+                                {{segment.departureAirportName}}
+                                ({{segment.departureAirportIataCode}})
+                              </p>
+                            </td>
+
+                            <td style="width: 45%; text-align: right">
+                              <p
+                                style="
+                                font-size: 24px;
+                                font-weight: 700;
+                                color: #2d3436;
+                                margin: 0 0 5px;
+                              "
+                              >
+                                {{formatDate
+                                  segment.arrivalDateTime
+                                  main.bookingDetails.userTimeZone
+                                  "hh:mm a"
+                                }}
+                              </p>
+                              <p
+                                style="font-size: 14px; color: #636e72; margin: 0"
+                              >
+                                {{formatDate
+                                  segment.arrivalDateTime
+                                  main.bookingDetails.userTimeZone
+                                  "dd MMMM yyyy"
+                                }}
+                              </p>
+                              <p
+                                style="
+                                font-size: 14px;
+                                color: #636e72;
+                                margin: 5px 0 0;
+                              "
+                              >
+                                {{segment.arrivalAirportName}}
+                                ({{segment.arrivalAirportIataCode}})
+                              </p>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+
+                    <!-- Duration and aircraft -->
+                    <tr>
+                      <td style="padding-bottom: 15px">
+                        <table
+                          width="100%"
+                          border="0"
+                          cellpadding="0"
+                          cellspacing="0"
+                          role="presentation"
+                        >
+                          <tr>
+                            <td style="width: 50%">
+                              <p
+                                style="font-size: 14px; color: #636e72; margin: 0"
+                              >
+                                <strong>Duration:</strong>
+                                {{minToHM segment.totalDurationMinutes}}
+                              </p>
+                            </td>
+                            <td style="width: 50%; text-align: right">
+                              <p
+                                style="font-size: 14px; color: #636e72; margin: 0"
+                              >
+                                <strong>Aircraft:</strong>
+                                {{segment.airplaneModelName}}
+                              </p>
+                            </td>
+                          </tr>
+                        </table>
+                      </td>
+                    </tr>
+                  </table>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      {{/each}}
+
+      <!-- Passenger details -->
+      <tr>
+        <td style="background-color: #ffffff; padding: 0 30px 20px">
+          <h2
+            style="
+              font-size: 18px;
+              font-weight: 600;
+              color: #2d3436;
+              margin: 0 0 15px;
+            "
+          >
+            Passenger Details
+          </h2>
+          {{#each main.bookingDetails.passengers as |p|}}
+            <table
+              width="100%"
+              border="0"
+              cellpadding="0"
+              cellspacing="0"
+              role="presentation"
+              style="
+              margin-bottom: 15px;
+              background-color: #f8f9fa;
+              border-radius: 8px;
+              overflow: hidden;
+            "
+            >
+              <tr>
+                <td style="padding: 15px">
+                  <p
+                    style="
+                    font-size: 16px;
+                    font-weight: 600;
+                    color: #2d3436;
+                    margin: 0 0 5px;
+                  "
+                  >
+                    {{p.firstName}}
+                    {{p.lastName}}
+                  </p>
+                  <p
+                    style="
+                    font-size: 14px;
+                    color: #636e72;
+                    margin: 0 0 5px;
+                    text-transform: capitalize;
+                  "
+                  >
+                    {{p.seatClass}}
+                    Class
+                  </p>
+                  <p
+                    style="
+                    font-size: 14px;
+                    color: #636e72;
+                    margin: 0 0 5px;
+                    text-transform: capitalize;
+                  "
+                  >
+                    <strong>Type</strong>
+                    {{p.passengerType}}
+                  </p>
+                  <p style="font-size: 14px; color: #636e72; margin: 0">
+                    <strong>Seat:</strong>
+                    {{p.seatNumber}}
+                  </p>
+                </td>
+              </tr>
+            </table>
+          {{/each}}
+        </td>
+      </tr>
+
+      <!-- Booking summary -->
+      <tr>
+        <td style="background-color: #ffffff; padding: 0 30px 20px">
+          <h2
+            style="
+              font-size: 18px;
+              font-weight: 600;
+              color: #2d3436;
+              margin: 0 0 15px;
+            "
+          >
+            Booking Summary
+          </h2>
+          <table
+            width="100%"
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            role="presentation"
+            style="margin-bottom: 20px"
+          >
+            <tr>
+              <td style="padding: 8px 0; border-bottom: 1px solid #e9ecef">
+                <p style="font-size: 14px; color: #636e72; margin: 0">
+                  Ticket Type
+                </p>
+                <p
+                  style="
+                    font-size: 14px;
+                    color: #2d3436;
+                    margin: 0;
+                    font-weight: 700;
+                    text-transform: capitalize;
+                  "
+                >
+                  {{main.bookingDetails.ticketType}}
+                </p>
+              </td>
+            </tr>
+            {{!--
+            <tr>
+              <td style="padding: 8px 0; border-bottom: 1px solid #e9ecef">
+                <p style="font-size: 14px; color: #636e72; margin: 0">
+                  Fare Class
+                </p>
+                <p
+                  style="
+                    font-size: 14px;
+                    color: #2d3436;
+                    margin: 0;
+                    font-weight: 500;
+                  "
+                >
+                  {{main.bookingDetails.fareClass}}
+                </p>
+              </td>
+            </tr>
+            --}}
+            <tr>
+              <td style="padding: 8px 0; border-bottom: 1px solid #e9ecef">
+                <p style="font-size: 14px; color: #636e72; margin: 0">
+                  Payment Method
+                </p>
+                <p
+                  style="
+                    text-transform: capitalize;
+                    font-size: 14px;
+                    color: #2d3436;
+                    margin: 0;
+                    font-weight: 500;
+                  "
+                >
+                  <strong>{{main.bookingDetails.paymentMethod.brand}}
+                    ****
+                    {{main.bookingDetails.paymentMethod.last4}}</strong>
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0; border-bottom: 1px solid #e9ecef">
+                <p style="font-size: 14px; color: #636e72; margin: 0">
+                  Receipt
+                </p>
+                <a
+                  href="{{main.bookingDetails.paymentMethod.receiptUrl}}"
+                  target="_blank"
+                  style="
+                    font-size: 14px;
+                    color: #1466ff;
+                    margin: 0;
+                    font-weight: 500;
+                    text-decoration: underline;
+                  "
+                >View Receipt</a>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 8px 0">
+                <p style="font-size: 14px; color: #636e72; margin: 0">
+                  Total Amount
+                </p>
+                <p
+                  style="
+                    font-size: 18px;
+                    color: #2d3436;
+                    margin: 0;
+                    font-weight: 700;
+                  "
+                >
+                  {{formatCurrency
+                    main.bookingDetails.totalfare
+                    main.bookingDetails.currency
+                  }}
+                </p>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Important information -->
+      {{!--
+      <tr>
+        <td style="background-color: #ffffff; padding: 0 30px 30px">
+          <div
+            style="
+              background-color: #fff8e6;
+              border-left: 4px solid #ffc107;
+              padding: 15px;
+              border-radius: 0 4px 4px 0;
+            "
+          >
+            <h3
+              style="
+                font-size: 16px;
+                font-weight: 600;
+                color: #2d3436;
+                margin: 0 0 10px;
+              "
+            >
+              Important Information
+            </h3>
+            <ul
+              style="
+                font-size: 14px;
+                color: #636e72;
+                margin: 0;
+                padding-left: 20px;
+              "
+            >
+              <li style="margin-bottom: 5px">
+                Check-in opens {{main.flightDetails.checkInOpens}} before
+                departure
+              </li>
+              <li style="margin-bottom: 5px">
+                Baggage allowance: {{main.flightDetails.baggageAllowance}}
+              </li>
+              {{#if (eq ticketType "refundable")}}
+              <li style="margin-bottom: 5px">
+                Refundable until: {{formatDate refundInfo.refundableUntil}}
+              </li>
+              {{/if}} {{#if (eq ticketType "partially_refundable")}}
+              <li style="margin-bottom: 5px">
+                Partial refund available until: {{formatDate
+                refundInfo.refundableUntil}} with penalty fee of {{currency}}
+                {{formatCurrency refundInfo.penaltyFee}}
+              </li>
+              {{/if}}
+              <li>Download your boarding pass 24 hours before departure</li>
+            </ul>
+          </div>
+        </td>
+      </tr>
+      --}}
+
+      <!-- CTA buttons -->
+      <tr>
+        <td
+          style="
+            background-color: #ffffff;
+            padding: 0 30px 30px;
+            text-align: center;
+          "
+        >
+          <table
+            align="center"
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            role="presentation"
+          >
+            <tr>
+              <td style="padding: 0 10px 10px 0">
+                <a
+                  href="{{main.manageBookingUrl}}"
+                  style="
+                    background-color: #8dd3ba;
+                    color: #2d3436;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    font-size: 16px;
+                    text-decoration: none;
+                    display: inline-block;
+                  "
+                >Manage Booking</a>
+              </td>
+              <td style="padding: 0 0 10px 10px">
+                <a
+                  href="{{main.downloadTicketUrl}}"
+                  style="
+                    background-color: #2d3436;
+                    color: #ffffff;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    font-weight: 600;
+                    font-size: 16px;
+                    text-decoration: none;
+                    display: inline-block;
+                  "
+                >Download Ticket</a>
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+
+      <!-- Footer -->
+      <tr>
+        <td
+          style="
+            background-color: #f8f9fa;
+            padding: 30px 20px;
+            text-align: center;
+          "
+        >
+          <p style="font-size: 14px; color: #636e72; margin: 0 0 15px">
+            Need help with your booking?
+          </p>
+          <p style="font-size: 14px; color: #636e72; margin: 0 0 20px">
+            Our customer support team is available 24/7 at
+            <a
+              href="mailto:support@golobe.com"
+              style="color: #8dd3ba; text-decoration: none"
+            >support@golobe.com</a>
+          </p>
+
+          <!-- Social icons -->
+          <table
+            align="center"
+            border="0"
+            cellpadding="0"
+            cellspacing="0"
+            role="presentation"
+            style="margin: 0 auto 20px"
+          >
+            <tr>
+              <td style="padding: 0 10px">
+                <a
+                  href="https://facebook.com/golobe"
+                  style="display: inline-block"
+                >
+                  <img
+                    src="https://s68ty.mjt.lu/img2/s68ty/3e251711-c52b-4997-9e56-6dd9d3419304/content"
+                    alt="Facebook"
+                    style="width: 24px; height: 24px"
+                  />
+                </a>
+              </td>
+              <td style="padding: 0 10px">
+                <a
+                  href="https://twitter.com/golobe"
+                  style="display: inline-block"
+                >
+                  <img
+                    src="https://s68ty.mjt.lu/img2/s68ty/47b060fc-4b2b-41c5-97a8-b93987ab033c/content"
+                    alt="Twitter"
+                    style="width: 24px; height: 24px"
+                  />
+                </a>
+              </td>
+              <td style="padding: 0 10px">
+                <a
+                  href="https://instagram.com/golobe"
+                  style="display: inline-block"
+                >
+                  <img
+                    src="https://s68ty.mjt.lu/img2/s68ty/1dde75ec-9e90-4899-97c4-cb63d50b14c4/content"
+                    alt="Instagram"
+                    style="width: 24px; height: 24px"
+                  />
+                </a>
+              </td>
+            </tr>
+          </table>
+
+          <p style="font-size: 12px; color: #636e72; margin: 0 0 10px">
+            {{footer.companyAddress}}
+          </p>
+          <p style="font-size: 12px; color: #636e72; margin: 0">
+            ©
+            {{footer.currentYear}}
+            Golobe Travel Agency. All rights reserved.
+          </p>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

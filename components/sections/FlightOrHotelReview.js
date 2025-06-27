@@ -1,54 +1,104 @@
+import { getManyDocs } from "@/lib/db/getOperationDB";
 import { Separator } from "../ui/separator";
 import { FlightOrHotelReviewList } from "./FlightOrHotelReviewList";
 import { WriteReview } from "./writeReview";
 
 import { auth } from "@/lib/auth";
 import { RATING_SCALE } from "@/lib/constants";
-export async function FlightOrHotelReview({
-  rating,
-  reviews,
-  reviewKeys,
-  flightOrHotel,
+import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalculation";
+import { cn } from "@/lib/utils";
+export default async function FlightOrHotelReview({
+  reviewType = "flight",
+  data,
+  className,
+  ...props
 }) {
   const session = await auth();
   const isLoggedIn = !!session?.user;
-  const isAlreadyReviewed = reviews.some(
-    (review) => review.reviewer.toString() === session?.user.id
-  );
-  const userReviewObj = reviews.find(
-    (review) => review.reviewer === session?.user.id
-  );
+  let flightReviews = [];
+  let hotelReviews = [];
+
+  let userReviewObj = {};
+  let rating = 0;
+  let isAlreadyReviewed = false;
+  let reviewKeys = {};
+
+  if (reviewType === "flight") {
+    const segment = data.segments[0];
+    flightReviews = await getManyDocs(
+      "FlightReview",
+      {
+        airlineId: segment.airlineId._id,
+        departureAirportId: segment.from.airport._id,
+        arrivalAirportId: segment.to.airport._id,
+        airplaneModelName: segment.airplaneId.model,
+      },
+      [data.flightNumber + "_review", "flightReviews"],
+    );
+    userReviewObj = flightReviews.find(
+      (review) => review.reviewer === session?.user.id,
+    );
+    rating = flightRatingCalculation(flightReviews);
+    isAlreadyReviewed = flightReviews.some(
+      (review) => review.reviewer.toString() === session?.user.id,
+    );
+    reviewKeys = {
+      flightNumber: data.flightNumber,
+      airlineId: segment.airlineId._id,
+      departureAirportId: segment.from.airport._id,
+      arrivalAirportId: segment.to.airport._id,
+      airplaneModelName: segment.airplaneId.model,
+    };
+  }
+
+  if (reviewType === "hotel") {
+    // hotelReviews
+  }
+
   return (
-    <div>
+    <div
+      className={cn("rounded-[12px] bg-white px-6 py-8 shadow-lg", className)}
+      {...props}
+    >
       <div className="mb-[32px]">
-        <h2 className="font-tradeGothic text-[1.25rem] font-bold inline-block">
-          Reviews
-        </h2>
-        <WriteReview
-          userReviewObj={userReviewObj}
-          isLoggedIn={isLoggedIn}
-          isAlreadyReviewed={isAlreadyReviewed}
-          reviewKeys={reviewKeys}
-          flightOrHotel={flightOrHotel}
-        />
+        <h2 className="inline-block text-2xl font-bold">Reviews</h2>
+        {
+          <WriteReview
+            userReviewObj={userReviewObj}
+            isLoggedIn={isLoggedIn}
+            isAlreadyReviewed={isAlreadyReviewed}
+            reviewKeys={reviewKeys}
+            flightOrHotel={reviewType}
+          />
+        }
       </div>
-      <div className="flex items-center gap-[16px]">
-        <p className="font-tradeGothic text-[2.8125rem] font-bold">{rating}</p>
-        <p className={"inline-flex gap-3 items-center"}>
-          <span className="text-[1.25rem] font-semibold">
-            {RATING_SCALE[parseInt(rating)]}
+      <div className="flex items-end gap-[16px]">
+        <p className="text-4xl font-bold">
+          {rating ? rating.toFixed(1) : "N/A"}
+        </p>
+        <p className={"inline-flex items-center gap-3"}>
+          <span className="text-lg font-semibold">
+            {rating ? RATING_SCALE[parseInt(rating)] : "N/A"}
           </span>
-          <span className="text-[0.875rem]">
-            {reviews.length} verified reviews
+          <span className="text-sm">
+            {flightReviews.length}&nbsp; verified reviews
           </span>
         </p>
       </div>
       <Separator className="my-[24px]" />
       <div>
-        {reviews.length === 0 ? (
-          <p className={"text-center text-xl font-bold"}>No reviews yet</p>
+        {flightReviews.length > 0 ? (
+          <FlightOrHotelReviewList session={session} reviews={flightReviews} />
+        ) : hotelReviews.length > 0 ? (
+          <FlightOrHotelReviewList session={session} reviews={hotelReviews} />
         ) : (
-          <FlightOrHotelReviewList session={session} reviews={reviews} />
+          <p
+            className={
+              "flex h-52 items-center justify-center text-center text-xl font-bold"
+            }
+          >
+            No reviews yet
+          </p>
         )}
       </div>
     </div>

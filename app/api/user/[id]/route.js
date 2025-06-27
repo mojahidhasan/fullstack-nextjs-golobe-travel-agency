@@ -1,8 +1,10 @@
-import { getOneDoc } from "@/lib/db/getOperationDB";
+import { getUserDetails } from "@/lib/controllers/user";
 export async function GET(req, { params }) {
-  const getUser = await getOneDoc("User", { _id: params.id }, ["userDetails"]);
+  const getUser = await getUserDetails(params.id);
   const user = {
-    name: Object.keys(getUser).length ? getUser?.firstname + " " + getUser?.lastname : "A golobe user",
+    name: Object.keys(getUser).length
+      ? getUser?.firstName + " " + getUser?.lastName
+      : "A golobe user",
     profileImage: getUser?.profileImage ?? null,
   };
 
