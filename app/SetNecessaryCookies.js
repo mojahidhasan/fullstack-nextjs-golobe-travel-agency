@@ -9,7 +9,7 @@ const cookies = {
   },
 };
 
-export default function SetCookies() {
+export default function SetNecessaryCookies() {
   useEffect(() => {
     setNecessaryCookiesAction(cookies);
   }, []);
