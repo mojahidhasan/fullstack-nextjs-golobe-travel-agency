@@ -28,7 +28,9 @@ export async function GET(req) {
     .sort({ date: -1 })
     .lean();
 
-  const lastFlightDate = lastFlight?.from?.scheduledDeparture || new Date();
+  const lastFlightDate = new Date(lastFlight?.date || new Date());
+  console.log("generating flight for the day after:", lastFlightDate);
+
   const flights = generateOneDayFlight(
     airlines,
     airlineFlightPrices,
@@ -42,9 +44,6 @@ export async function GET(req) {
     FlightSegment: flights.flightSegments,
     FlightSeat: flights.flightSeats,
   };
-
-  const session = await mongoose.startSession();
-  session.startTransaction();
 
   try {
     await Promise.all(
