@@ -1,5 +1,5 @@
 "use client";
-import { format, isSameDay } from "date-fns";
+import { addYears, format, isSameDay } from "date-fns";
 
 import { cn, isDateObjValid } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -16,7 +16,7 @@ export function DatePicker({
   setDate = () => {},
   loading = false,
   minDate = new Date(),
-  maxDate = new Date(),
+  maxDate = addYears(new Date(), 1),
   ...props
 }) {
   const years = [];
