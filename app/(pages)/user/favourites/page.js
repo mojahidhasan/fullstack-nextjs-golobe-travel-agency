@@ -100,7 +100,7 @@ export default async function FavouritesPage() {
   if (userDetails?.hotels?.bookmarked.length > 0) {
     // eslint-disable-next-line no-undef
     favouriteHotels = await Promise.all(
-      userDetails.likes.hotels.map(async (hotel) => {
+      userDetails.hotels.bookmarked.map(async (hotel) => {
         const hotelDetails = await getOneDoc(
           "Hotel",
           {

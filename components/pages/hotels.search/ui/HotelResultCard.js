@@ -72,19 +72,19 @@ export function HotelResultCard({
                 {discount > 0 ? (
                   <p className="flex items-center justify-end gap-1">
                     <span className="text-right text-[1rem] font-bold line-through">
-                      ${+base + +tax + +serviceFee}
+                      ${(+base + +tax + +serviceFee).toFixed(2)}
                     </span>
                     <span
                       className={
                         "text-right text-[1.5rem] font-bold text-tertiary"
                       }
                     >
-                      ${+base + +tax + +serviceFee - +discount}
+                      ${(+base + +tax + +serviceFee - +discount).toFixed(2)}
                     </span>
                   </p>
                 ) : (
                   <p className="text-right text-[1.5rem] font-bold text-tertiary">
-                    ${+base + +tax + +serviceFee}
+                    ${(+base + +tax + +serviceFee).toFixed(2)}
                   </p>
                 )}
                 <p className="text-right text-[0.875rem] text-secondary/75">
@@ -102,7 +102,11 @@ export function HotelResultCard({
         </div>
         <Separator className="my-[16px]" />
         <div className="flex gap-[16px]">
-          <LikeButton liked={liked} keys={_id} flightsOrHotels={"hotels"} />
+          <LikeButton
+            isBookmarked={liked}
+            keys={{ hotelId: _id }}
+            flightOrHotel={"hotel"}
+          />
           <Button asChild className={"w-full"}>
             <Link href={`${routes.hotels.path}/${slug}`}>View Deals</Link>
           </Button>
