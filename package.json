@@ -3,9 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "browserslist": [
-    "> 0.2%",
-    "not dead",
-    "not op_mini all"
+    "defaults"
   ],
   "scripts": {
     "dev": "cross-env TZ=UTC next dev",
