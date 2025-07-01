@@ -7,8 +7,8 @@ import { RATING_SCALE } from "@/lib/constants";
 import routes from "@/data/routes.json";
 import { cookies } from "next/headers";
 import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalculation";
-import { parseFlightSearchParams, passengerStrToObject } from "@/lib/utils";
-import { getAvailableSeats, getFlight } from "@/lib/controllers/flights";
+import { isObject } from "@/lib/utils";
+import { getAvailableSeats } from "@/lib/controllers/flights";
 import { getUserDetails } from "@/lib/controllers/user";
 
 export default async function FavouritesPage() {
@@ -34,9 +34,12 @@ export default async function FavouritesPage() {
     // eslint-disable-next-line no-undef
     favouriteFlights = await Promise.all(
       userDetails.flights.bookmarked?.map(async (flight) => {
-        const flightDetails = flight.flightId;
-
-        if (Object.keys(flightDetails).length === 0) return;
+        const flightDetails = flight?.flightId;
+        if (
+          !flightDetails ||
+          (isObject(flightDetails) && Object.keys(flightDetails).length === 0)
+        )
+          return;
 
         let currentDepartureAirport = flightDetails.departureAirportId._id,
           currentArrivalAirport = flightDetails.arrivalAirportId._id,
