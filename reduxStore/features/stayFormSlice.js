@@ -2,7 +2,10 @@ import { createSlice } from "@reduxjs/toolkit";
 import { addDays } from "date-fns";
 
 const defaultValue = {
-  destination: "",
+  destination: {
+    city: "",
+    country: "",
+  },
   checkIn: new Date().toString(),
   checkOut: addDays(new Date(), 1).toString(),
   rooms: 1,
@@ -20,6 +23,7 @@ const defaultValue = {
     amenities: [],
     features: [],
   },
+  errors: {},
 };
 
 const stayFormSlice = createSlice({
