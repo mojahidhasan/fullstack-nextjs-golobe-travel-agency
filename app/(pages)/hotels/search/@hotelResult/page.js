@@ -3,88 +3,71 @@ import { getManyDocs } from "@/lib/db/getOperationDB";
 import { auth } from "@/lib/auth";
 import { RATING_SCALE } from "@/lib/constants";
 import { getUserDetails } from "@/lib/controllers/user";
+import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
+import SetHotelFormState from "@/components/helpers/SetHotelFormState";
 export default async function HotelResultPage({ searchParams }) {
   let hotels = [];
   let filters = {};
   const session = await auth();
 
-  if (Object.keys(searchParams).length > 0) {
-    const destination = searchParams.destination;
-    const checkIn = searchParams.checkIn;
-    const checkOut = searchParams.checkOut;
-    const guests = searchParams.guests;
-    const rooms = searchParams.rooms;
+  const validate = validateHotelSearchParams(searchParams);
 
-    if (searchParams?.filters) {
-      filters = JSON.parse(searchParams.filters);
-      hotels = await getManyDocs(
-        "Hotel",
-        {
-          query: {
-            $regex: `${destination.match(/.{1,2}/g).join("+?.*")}`,
-            $options: "i",
-          },
-          ...(filters?.features &&
-            filters?.features.length > 0 && {
-              features: {
-                $in: filters.features.map(
-                  (feature) => feature.split("feature-")[1],
-                ),
-              },
-            }),
-          ...(filters?.amenities &&
-            filters?.amenities.length > 0 && {
-              amenities: {
-                $in: filters.amenities.map(
-                  (amenity) => amenity.split("amenity-")[1],
-                ),
-              },
-            }),
-        },
-        ["hotels"],
-      );
-    } else {
-      hotels = await getManyDocs(
-        "Hotel",
-        {
-          query: {
-            $regex: `${destination.match(/.{1,2}/g).join("+?.*")}`,
-            $options: "i",
-          },
-        },
-        ["hotels"],
-      );
-    }
-    // filter by total available rooms sleeps count is greater than or equal to number of guests
-    hotels = hotels.filter((hotel) => {
-      const availableHotelRoomsByDate = hotel.rooms.filter((room) => {
-        // check if room is available in the particular date
-        const isRoomAvailable = room.availability.every((availability) => {
-          return (
-            new Date(availability.willCheckedOut) >= new Date(checkIn) &&
-            new Date(availability.checkedIn) <= new Date(checkOut)
-          );
-        });
+  if (validate.success === false) {
+    return <SetHotelFormState obj={{ errors: validate.errors }} />;
+  }
+  const city = validate.data.city;
+  const country = validate.data.country;
+  const checkIn = validate.data.checkIn;
+  const checkOut = validate.data.checkOut;
+  const rooms = validate.data.rooms;
+  const guests = validate.data.guests;
 
-        return isRoomAvailable;
+  hotels = await getManyDocs(
+    "Hotel",
+    {
+      "address.city": {
+        $regex: `${city.match(/.{1,2}/g).join("+?.*")}`,
+        $options: "i",
+      },
+      "address.country": {
+        $regex: `${country.match(/.{1,2}/g).join("+?.*")}`,
+        $options: "i",
+      },
+    },
+    ["hotels"],
+  );
+
+  hotels = hotels.filter((hotel) => {
+    const availableHotelRoomsByDate = hotel.rooms.filter((room) => {
+      // check if room is available in the particular date
+      const isRoomAvailable = room.availability.every((availability) => {
+        return (
+          new Date(availability.willCheckedOut) >= new Date(checkIn) &&
+          new Date(availability.checkedIn) <= new Date(checkOut)
+        );
       });
 
-      const totalSleepsCount = availableHotelRoomsByDate.reduce(
-        (acc, room) => acc + +room.sleepsCount,
-        0,
-      );
-
-      return totalSleepsCount >= Number(guests);
+      return isRoomAvailable;
     });
-    // show liked hotels if user is logged in
-    if (session?.user?.id) {
-      const userDetails = await getUserDetails(session?.user?.id);
 
-      hotels = hotels.map((hotel) => {
-        const liked = userDetails?.likes?.hotels.includes(hotel._id);
-        return { ...hotel, liked };
-      });
-    }
+    const totalSleepsCount = availableHotelRoomsByDate.reduce(
+      (acc, room) => acc + +room.sleepsCount,
+      0,
+    );
+
+    return (
+      totalSleepsCount >= Number(guests) &&
+      availableHotelRoomsByDate.length >= Number(rooms)
+    );
+  });
+  // show liked hotels if user is logged in
+  if (session?.user?.id) {
+    const userDetails = await getUserDetails(session?.user?.id);
+
+    hotels = hotels.map((hotel) => {
+      const liked = userDetails?.hotels?.bookmarked?.includes(hotel._id);
+      return { ...hotel, liked };
+    });
   }
 
   // rating and reviews
