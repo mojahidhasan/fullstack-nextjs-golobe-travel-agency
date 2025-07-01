@@ -13,14 +13,18 @@ export async function GET(req) {
 
       return Response.json(
         hotels.map((hotel) => {
-          return { address: hotel.address, type: "place" };
-        })
+          return {
+            city: hotel.address.city,
+            country: hotel.address.country,
+            type: "place",
+          };
+        }),
       );
     }
 
     const regex = new RegExp(
       `${searchQuery.match(/.{1,2}/g).join("+?.*")}`,
-      "i"
+      "i",
     );
     const hotels = await Hotel.find({
       query: { $regex: regex },
@@ -31,14 +35,15 @@ export async function GET(req) {
 
     const stringified = hotels.map((hotel) => {
       return JSON.stringify({
-        address: hotel.address,
+        city: hotel.address.city,
+        country: hotel.address.country,
         type: "place",
       }); // stringified to later remove duplicates and one in array is type place and another is type hotel
     });
 
     // eslint-disable-next-line no-undef
     const filterDuplicates = Array.from(new Set(stringified), (x) =>
-      JSON.parse(x)
+      JSON.parse(x),
     );
 
     return Response.json(filterDuplicates);
