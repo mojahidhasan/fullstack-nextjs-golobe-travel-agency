@@ -1,33 +1,74 @@
 "use client";
+
+import { useEffect, useState } from "react";
 import Image from "next/image";
+import locationIcon from "@/public/icons/location.svg";
+import { Button } from "@/components/ui/button";
 
-import location from "@/public/icons/location.svg";
+export function Map({ lat = 0, lon = 0, address = "" }) {
+  const [key, setKey] = useState(0);
+  const [overlayVisible, setOverlayVisible] = useState(true);
 
-export function Map() {
-  function handleClick(e) {
-    e.target.style.display = "none";
-  }
+  useEffect(() => {
+    document.body.addEventListener("click", () => {
+      setOverlayVisible(true);
+    });
+
+    window.addEventListener("scroll", () => {
+      setOverlayVisible(true);
+    });
+    return () => {
+      document.body.removeEventListener("click", () => {
+        setOverlayVisible(true);
+      });
+
+      window.removeEventListener("scroll", () => {
+        setOverlayVisible(true);
+      });
+    };
+  }, []);
+  const handleMapClick = () => {
+    setOverlayVisible(false);
+  };
+
+  const handleReset = () => {
+    setKey((prev) => prev + 1);
+  };
+
+  const mapSrc = `https://www.openstreetmap.org/export/embed.html?bbox=${lon - 0.002}%2C${lat - 0.001}%2C${lon + 0.002}%2C${lat + 0.001}&layer=mapnik&marker=${lat}%2C${lon}`;
+
   return (
-    <div>
-      <div className="relative">
+    <div className="space-y-3">
+      <div className="relative w-full overflow-hidden rounded-xl">
         <iframe
-          width="425"
-          height="350"
-          src="https://www.openstreetmap.org/export/embed.html?bbox=28.972363471984863%2C41.00569842459431%2C28.976161479949955%2C41.00706671132942&amp;layer=mapnik"
-          className="w-full rounded-16px border-none"
+          key={key}
+          src={mapSrc}
+          className="h-[350px] w-full rounded-xl border-none"
+          loading="lazy"
         ></iframe>
-        <div
-          onClick={handleClick}
-          className="absolute left-0 top-0 flex h-[350px] w-full items-center justify-center rounded-[16px] bg-black/30 font-extrabold text-white"
+
+        {overlayVisible && (
+          <div
+            onClick={handleMapClick}
+            className="absolute inset-0 z-10 flex cursor-pointer items-center justify-center bg-black/30 font-semibold text-white backdrop-blur-sm transition hover:bg-black/20"
+          >
+            Click to interact with map
+          </div>
+        )}
+
+        {/* Reset button */}
+        <Button
+          size="sm"
+          onClick={handleReset}
+          className="absolute right-2 top-2 z-20 rounded-md bg-white/90 px-3 py-1 text-sm shadow hover:bg-white"
         >
-          Click to control map
-        </div>
+          Reset View
+        </Button>
       </div>
-      <div className="flex items-center">
-        <Image src={location} alt="" className="mr-1" />
-        <span className="text-[0.875rem] opacity-75">
-          Gümüssuyu Mah. Inönü Cad. No:8, Istanbul 34437
-        </span>
+
+      <div className="flex items-center gap-2 text-sm text-gray-700">
+        <Image src={locationIcon} alt="location" width={16} height={16} />
+        <span className="opacity-75">{address}</span>
       </div>
     </div>
   );
