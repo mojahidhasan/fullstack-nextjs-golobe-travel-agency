@@ -7,6 +7,8 @@ import {
 import { connectToDB } from "@/lib/db/utilsDB";
 import { subDays } from "date-fns";
 
+// cleanup unneeded data to save space
+
 export async function GET(req) {
   const pre = performance.now();
   if (
@@ -37,6 +39,11 @@ async function cleanupFlights() {
     _id: { $nin: bookedFlightItinerarieIds },
     date: { $lt: subDays(new Date(), 2) },
   }).limit(1000);
+
+  if (!itinerariesToDelete.length) {
+    console.log("nothing to delete in flights");
+    return;
+  }
 
   const segmentsToDelete = itinerariesToDelete.flatMap(
     (itinerary) => itinerary.segmentIds || [],
