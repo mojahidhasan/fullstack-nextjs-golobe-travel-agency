@@ -3,6 +3,10 @@
     {
       "path": "/api/cronjob/flight_schedule",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/cronjob/cleanup_db",
+      "schedule": "0 0 * * *"
     }
   ]
 }
