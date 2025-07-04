@@ -19,15 +19,20 @@ import {
 import { forwardRef, useEffect, useState } from "react";
 
 import { useSelector, useDispatch } from "react-redux";
-import { setStayForm } from "@/reduxStore/features/stayFormSlice";
+import {
+  defaultHotelFormValue,
+  setStayForm,
+} from "@/reduxStore/features/stayFormSlice";
 import { useRouter } from "next/navigation";
 
-import { format } from "date-fns";
-import { cn, isDateObjValid } from "@/lib/utils";
+import { addDays, format } from "date-fns";
+import { cn, isDateObjValid, objDeepCompare } from "@/lib/utils";
 import { Skeleton } from "../ui/skeleton";
 import Counter from "../local-ui/Counter";
 import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
 import { Loader } from "lucide-react";
+import { jumpTo } from "../local-ui/Jumper";
+import { getCookiesAction, setCookiesAction } from "@/lib/actions";
 
 const DatePickerCustomInput = forwardRef(
   ({ loading, open, setOpen, value, onClick, className }, ref) => {
@@ -67,19 +72,6 @@ const DatePickerCustomInput = forwardRef(
 );
 DatePickerCustomInput.displayName = "DatePickerCustomInput";
 
-export function searchForEmptyValuesInStaySearchForm(obj) {
-  const optionals = ["promocode"];
-  for (const [key, value] of Object.entries(obj)) {
-    if (optionals.includes(key)) {
-      continue;
-    }
-    if (value === "") {
-      return true;
-    }
-  }
-  return false;
-}
-
 function SearchStaysForm({ searchParams = {} }) {
   const dispatch = useDispatch();
   const router = useRouter();
@@ -88,12 +80,75 @@ function SearchStaysForm({ searchParams = {} }) {
   const [isLoadingDateRange, setIsLoadingDateRange] = useState(false);
   const [isFormLoading, setIsFormLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
-
+  const [isRoomsGuestOpen, setIsRoomsGuestOpen] = useState(false);
   const stayFormData = useSelector((state) => state.stayForm.value);
   const errors = stayFormData.errors;
-  function handleSubmit(e) {
+
+  const spStr = JSON.stringify(searchParams);
+  useEffect(() => {
+    async function searchState() {
+      setIsFormLoading(true);
+      const p = getSearchStateParams();
+      if (Object.keys(searchParams).length > 0) {
+        const newFormData = { ...defaultHotelFormValue, ...p };
+        if (Object.keys(newFormData?.errors || {}).length > 0) {
+          dispatch(setStayForm(newFormData));
+        } else {
+          const obj = {
+            ...p,
+            destination: {
+              city: p.city,
+              country: p.country,
+            },
+          };
+          delete obj.city;
+          delete obj.country;
+
+          dispatch(
+            setStayForm({
+              ...defaultHotelFormValue,
+              ...obj,
+            }),
+          );
+        }
+        setIsFormLoading(false);
+        return;
+      }
+
+      let searchState = await getSearchStateCookies();
+      if (Object.keys(searchState?.errors || {}).length > 0) {
+        dispatch(setStayForm({ ...defaultHotelFormValue, ...searchState }));
+      } else {
+        const obj = {
+          ...searchState,
+          destination: {
+            city: searchState.city,
+            country: searchState.country,
+          },
+        };
+        delete obj.city;
+        delete obj.country;
+
+        dispatch(
+          setStayForm({
+            ...defaultHotelFormValue,
+            ...obj,
+          }),
+        );
+      }
+      setIsFormLoading(false);
+    }
+    searchState();
+    setTimeout(() => {
+      jumpTo("flightResult");
+    }, 500);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [spStr]);
+
+  async function handleSubmit(e) {
     e.preventDefault();
     setIsSending(true);
+
     const sp = {
       ...stayFormData.destination,
       checkIn: new Date(stayFormData.checkIn).getTime(),
@@ -102,16 +157,90 @@ function SearchStaysForm({ searchParams = {} }) {
       guests: stayFormData.guests,
     };
 
-    const validate = validateHotelSearchParams(sp);
-    if (validate.success === false) {
-      dispatch(setStayForm({ errors: validate.errors }));
+    let searchState = {};
+    if (Object.keys(searchParams).length > 0) {
+      searchState = getSearchStateParams();
+    } else searchState = await getSearchStateCookies();
+
+    if (Object.keys(searchState?.errors).length > 0) {
+      dispatch(setStayForm({ errors: { ...searchState.errors } }));
       setIsSending(false);
       return;
     }
+
+    const {
+      success: sSState,
+      errors: eSState,
+      data: dSState,
+    } = validateHotelSearchParams(searchState);
+
+    const {
+      success: sFForm,
+      errors: eFForm,
+      data: dFForm,
+    } = validateHotelSearchParams(sp);
+
+    if (sFForm === false) {
+      dispatch(setStayForm({ errors: { ...eFForm } }));
+      setIsSending(false);
+      return;
+    }
+
+    const areTheySame = objDeepCompare(dFForm, dSState);
+
+    const shouldPreventFromSubmit =
+      areTheySame && !Object.keys(searchParams).length < 1;
+    if (shouldPreventFromSubmit) {
+      jumpTo("hotelResults");
+      setIsSending(false);
+      return;
+    }
+
+    const res = await setCookiesAction([
+      {
+        name: "hotelSearchState",
+        value: JSON.stringify(dFForm),
+        expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
+      },
+    ]);
+
+    if (!res?.success) {
+      setIsSending(false);
+      return;
+    }
+
     dispatch(setStayForm({ errors: {} }));
-    const queryString = new URLSearchParams(validate.data).toString();
+    const queryString = new URLSearchParams(dFForm).toString();
     router.push(`/hotels/search?${queryString}`);
     setIsSending(false);
+    setTimeout(() => {
+      jumpTo("hotelResults");
+    }, 500);
+  }
+  function getSearchStateParams() {
+    const p = searchParams || {};
+    const validateFlightForm = validateHotelSearchParams(p);
+
+    const data = validateFlightForm?.data || {};
+    const errors = validateFlightForm?.errors || {};
+    let flightFormData = {
+      ...data,
+      errors,
+    };
+    return flightFormData;
+  }
+  async function getSearchStateCookies() {
+    const state =
+      (await getCookiesAction(["hotelSearchState"]))[0]?.value || "{}";
+    const validate = validateHotelSearchParams(JSON.parse(state));
+
+    const data = validate?.data || {};
+    const errors = validate?.errors || {};
+    let flightFormData = {
+      ...data,
+      errors,
+    };
+    return state === "{}" ? { errors: {} } : flightFormData;
   }
 
   return (
@@ -127,6 +256,7 @@ function SearchStaysForm({ searchParams = {} }) {
             Enter Destination <span className={"text-red-600"}>*</span>
           </span>
           <HotelDestinationPopover
+            isLoading={isFormLoading}
             className={"h-full w-full rounded-[8px] border-0 py-4 pl-4"}
             fetchInputs={{
               url: `${process.env.NEXT_PUBLIC_BASE_URL}/api/hotels/available_places`,
@@ -174,12 +304,13 @@ function SearchStaysForm({ searchParams = {} }) {
             )}
           >
             <DatePicker
-              date={new Date(stayFormData.checkIn)}
+              loading={isFormLoading}
+              date={stayFormData.checkIn}
               customInput={
                 <DatePickerCustomInput
                   open={popperOpened}
                   setOpen={setPopperOpened}
-                  loading={isLoadingDateRange}
+                  loading={isLoadingDateRange || isFormLoading}
                 />
               }
               setDate={(date) => {
@@ -207,15 +338,17 @@ function SearchStaysForm({ searchParams = {} }) {
             )}
           >
             <DatePicker
-              date={new Date(stayFormData.checkOut)}
+              loading={isFormLoading}
+              date={stayFormData.checkOut}
               required={false}
               customInput={
                 <DatePickerCustomInput
                   open={popperOpened}
                   setOpen={setPopperOpened}
-                  loading={isLoadingDateRange}
+                  loading={isLoadingDateRange || isFormLoading}
                 />
               }
+              minDate={addDays(new Date(stayFormData.checkIn || new Date()), 1)}
               setDate={(date) => {
                 let d = null;
                 if (date) {
@@ -251,7 +384,12 @@ function SearchStaysForm({ searchParams = {} }) {
             }
           />
           <div className="h-full grow">
-            <Popover>
+            <Popover
+              open={isRoomsGuestOpen}
+              onOpenChange={(open) =>
+                !isFormLoading && setIsRoomsGuestOpen(open)
+              }
+            >
               <PopoverTrigger
                 asChild
                 className="max-h-[100px] min-h-[100px] w-full justify-start rounded-lg p-4"
