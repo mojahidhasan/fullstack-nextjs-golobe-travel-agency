@@ -24,6 +24,16 @@ export function HotelResultCard({
     _id,
   },
 }) {
+  let discountAmount = +discount.amount;
+
+  if (discount.type === "percentage") {
+    discountAmount = +(base * +discount.amount) / 100;
+  }
+
+  const totalDiscount = +discountAmount;
+  const dicountedPrice = +base - +totalDiscount + +serviceFee + +tax;
+  const totalPrice = +base + +serviceFee + +tax;
+
   return (
     <div className="flex h-min rounded-l-[8px] rounded-r-[8px] bg-white text-[0.75rem] font-medium text-secondary shadow-sm max-md:flex-col">
       <div className="h-auto w-full max-md:h-[300px] md:w-[400px]">
@@ -69,22 +79,25 @@ export function HotelResultCard({
           <div className={"flex grow flex-col justify-between gap-2"}>
             <div>
               <div>
-                {discount > 0 ? (
-                  <p className="flex items-center justify-end gap-1">
-                    <span className="text-right text-[1rem] font-bold line-through">
-                      ${(+base + +tax + +serviceFee).toFixed(2)}
-                    </span>
-                    <span
-                      className={
-                        "text-right text-[1.5rem] font-bold text-tertiary"
-                      }
-                    >
-                      ${(+base + +tax + +serviceFee - +discount).toFixed(2)}
-                    </span>
-                  </p>
+                {totalDiscount > 0 ? (
+                  <div className="flex flex-col items-end space-y-1 text-right">
+                    {discount.type === "percentage" && (
+                      <span className="rounded-md bg-tertiary px-2 py-1 text-sm font-semibold text-white">
+                        {discount.amount}% OFF
+                      </span>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <span className="text-base font-semibold text-black line-through">
+                        ${totalPrice.toFixed(2)}
+                      </span>
+                      <span className="text-xl font-bold text-tertiary">
+                        ${dicountedPrice.toFixed(2)}
+                      </span>
+                    </div>
+                  </div>
                 ) : (
                   <p className="text-right text-[1.5rem] font-bold text-tertiary">
-                    ${(+base + +tax + +serviceFee).toFixed(2)}
+                    ${totalPrice.toFixed(2)}
                   </p>
                 )}
                 <p className="text-right text-[0.875rem] text-secondary/75">
