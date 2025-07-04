@@ -30,15 +30,19 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import { View, X } from "lucide-react";
+import { notFound } from "next/navigation";
+import { strToObjectId } from "@/lib/db/utilsDB";
 
 export default async function HotelDetailsPage({ params }) {
   const session = await auth();
   const slug = params.slug;
   const hotelDetails = await getOneDoc("Hotel", { slug }, ["hotels"]);
 
+  if (Object.keys(hotelDetails).length === 0) return notFound();
+
   const reviews = await getManyDocs(
     "HotelReview",
-    { hotelId: hotelDetails._id, slug },
+    { hotelId: strToObjectId(hotelDetails._id), slug },
     [hotelDetails._id + "_review", params.slug + "_review", "hotelReviews"],
   );
 
@@ -332,10 +336,6 @@ export default async function HotelDetailsPage({ params }) {
               hotelDetails.address.streetAddress +
               ", " +
               hotelDetails.address.city +
-              ", " +
-              hotelDetails.address.state +
-              ", " +
-              hotelDetails.address.postalCode +
               ", " +
               hotelDetails.address.country
             }
