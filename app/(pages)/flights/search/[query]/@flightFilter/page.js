@@ -43,7 +43,7 @@ async function FlightFilterPage({ params }) {
   const airlines = new Set();
   flightResults.forEach((flight) => {
     const { total } = multiSegmentCombinedFareBreakDown(
-      flight.segments,
+      flight.segmentIds,
       {
         adult: passengers.adults,
         child: passengers.children,
