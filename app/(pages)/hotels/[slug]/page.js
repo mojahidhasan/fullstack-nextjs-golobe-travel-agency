@@ -32,6 +32,7 @@ import {
 import { View, X } from "lucide-react";
 import { notFound } from "next/navigation";
 import { strToObjectId } from "@/lib/db/utilsDB";
+import hotelPriceCalculation from "@/lib/helpers/hotels/priceCalculation";
 
 export default async function HotelDetailsPage({ params }) {
   const session = await auth();
@@ -56,19 +57,33 @@ export default async function HotelDetailsPage({ params }) {
   const ratingScale = RATING_SCALE[Math.floor(rating)];
 
   const roomsSorted = [...hotelDetails.rooms].sort((a, b) => {
+    let aDiscountAmount = 0;
+    let bDiscountAmount = 0;
+
+    if (a.price.discount.type === "percentage") {
+      aDiscountAmount = a.price.base * (+a.price.discount.amount / 100);
+    } else {
+      aDiscountAmount = +a.price.discount.amount;
+    }
+    if (b.price.discount.type === "percentage") {
+      bDiscountAmount = b.price.base * (+b.price.discount.amount / 100);
+    } else {
+      bDiscountAmount = +b.price.discount.amount;
+    }
+
     const aPrice =
-      +a.price.base + +a.price.tax - +a.price.discount + +a.price.serviceFee;
+      +a.price.base + +a.price.tax - aDiscountAmount + +a.price.serviceFee;
     const bPrice =
-      +b.price.base + +b.price.tax - +b.price.discount + +b.price.serviceFee;
+      +b.price.base + +b.price.tax - bDiscountAmount + +b.price.serviceFee;
+
     return aPrice - bPrice;
   });
-
   const cheapestRoom = roomsSorted[0];
-  const cheapestRoomPrice =
-    +cheapestRoom.price.base +
-    +cheapestRoom.price.tax -
-    +cheapestRoom.price.discount +
-    +cheapestRoom.price.serviceFee;
+
+  const price = hotelPriceCalculation(cheapestRoom.price);
+
+  const cheapestRoomPrice = formatCurrency(price.total);
+  const totalBeforeDiscount = formatCurrency(price.totalBeforeDiscount);
 
   let isLiked = false;
   if (session?.user) {
@@ -81,7 +96,7 @@ export default async function HotelDetailsPage({ params }) {
   return (
     <main className={"mx-auto mb-[90px] mt-10 w-[90%]"}>
       <BreadcrumbUI />
-      <div className="my-[40px] flex justify-between gap-5">
+      <div className="my-[40px] flex flex-col items-center justify-between gap-5 sm:flex-row">
         <div>
           <div className="mb-[16px] flex items-center gap-[16px]">
             <h1 className="text-[1.5rem] font-bold text-secondary">
@@ -113,11 +128,26 @@ export default async function HotelDetailsPage({ params }) {
           </div>
         </div>
         <div>
-          <p className="mb-[16px] text-right text-[0.875rem] font-bold text-tertiary">
-            <span className="text-[2rem]">${cheapestRoomPrice.toFixed(2)}</span>
-            /night
-          </p>
-          <div className="flex gap-[16px]">
+          <div className="mb-[16px] flex flex-col text-right text-[0.875rem] font-bold text-tertiary sm:items-end">
+            {totalBeforeDiscount !== cheapestRoomPrice &&
+              cheapestRoom.price.discount.type === "percentage" && (
+                <p className="w-fit rounded-md bg-tertiary px-2 py-1 text-sm font-semibold text-white">
+                  {cheapestRoom.price.discount.amount}% OFF
+                </p>
+              )}
+            <div className="space-x-2 max-sm:text-left">
+              {totalBeforeDiscount !== cheapestRoomPrice && (
+                <>
+                  <span className="text-base font-semibold text-black line-through">
+                    {totalBeforeDiscount}
+                  </span>
+                </>
+              )}
+              <span className="text-[2rem]">{cheapestRoomPrice}</span>
+              /night
+            </div>
+          </div>
+          <div className="flex flex-col gap-[16px] sm:flex-row">
             <LikeButton
               keys={{ hotelId: hotelDetails._id }}
               isBookmarked={isLiked}
@@ -274,11 +304,9 @@ export default async function HotelDetailsPage({ params }) {
                 <div className="space-y-4 p-4">
                   {Object.entries(groupByBedOptions).map(([key, arr]) => {
                     const oneEquivalentRoom = arr[0];
-                    const price =
-                      +oneEquivalentRoom.price.base +
-                      +oneEquivalentRoom.price.tax -
-                      +oneEquivalentRoom.price.discount +
-                      +oneEquivalentRoom.price.serviceFee;
+                    const price = hotelPriceCalculation(
+                      oneEquivalentRoom.price,
+                    );
                     return (
                       <RoomDetailsModal
                         key={key}
@@ -301,7 +329,7 @@ export default async function HotelDetailsPage({ params }) {
                                   {oneEquivalentRoom.bedOptions}
                                 </p>
                                 <p className="text-xs font-bold opacity-60">
-                                  {formatCurrency(price)} / night
+                                  {formatCurrency(price.total)} / night
                                 </p>
                                 <p className="text-xs opacity-60">
                                   Person capacity:{" "}
@@ -311,6 +339,16 @@ export default async function HotelDetailsPage({ params }) {
                                   Available rooms: {arr.length}
                                 </p>
                               </div>
+                            </div>
+                            <div>
+                              {oneEquivalentRoom.price.discount.type ===
+                                "percentage" &&
+                                price.discount !== 0 && (
+                                  <p className="rounded-md bg-tertiary p-1 font-bold text-white">
+                                    {oneEquivalentRoom.price.discount.amount}%
+                                    OFF
+                                  </p>
+                                )}
                             </div>
                           </div>
                         }
