@@ -10,6 +10,8 @@ import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalcu
 import { isObject } from "@/lib/utils";
 import { getAvailableSeats } from "@/lib/controllers/flights";
 import { getUserDetails } from "@/lib/controllers/user";
+import { hotelPriceCalculation } from "@/lib/helpers/hotels/priceCalculation";
+import { strToObjectId } from "@/lib/db/utilsDB";
 
 export default async function FavouritesPage() {
   const session = await auth();
@@ -93,6 +95,7 @@ export default async function FavouritesPage() {
         };
       }),
     );
+    favouriteFlights = favouriteFlights.filter(Boolean);
   }
 
   favouriteFlights = favouriteFlights.filter(Boolean);
@@ -104,7 +107,7 @@ export default async function FavouritesPage() {
         const hotelDetails = await getOneDoc(
           "Hotel",
           {
-            _id: hotel,
+            _id: strToObjectId(hotel),
           },
           [hotel, "hotels"],
         );
@@ -124,17 +127,9 @@ export default async function FavouritesPage() {
         const ratingScale =
           RATING_SCALE[Math.floor(rating / totalReviewsCount)];
         const cheapestRoom = [...hotelDetails.rooms].sort((a, b) => {
-          const aPrice =
-            +a.price.base +
-            +a.price.taxe -
-            +a.price.discount +
-            +a.price.serviceFee;
-          const bPrice =
-            +b.price.base +
-            +b.price.taxe -
-            +b.price.discount +
-            +b.price.serviceFee;
-          return aPrice - bPrice;
+          const aPrice = hotelPriceCalculation(a.price, 1);
+          const bPrice = hotelPriceCalculation(b.price, 1);
+          return aPrice.total - bPrice.total;
         })[0];
         return {
           _id: hotelDetails._id,
@@ -152,6 +147,8 @@ export default async function FavouritesPage() {
         };
       }),
     );
+
+    favouriteHotels = favouriteHotels.filter(Boolean);
   }
 
   return (
