@@ -5,7 +5,7 @@ export function FavouriteHotelsSection({ favouriteHotels }) {
     return (
       <h1
         className={
-          "text-[1.25rem] py-20 h-full font-semibold text-secondary text-center bg-white rounded-md shadow-md"
+          "h-full rounded-md bg-white py-20 text-center text-[1.25rem] font-semibold text-secondary shadow-md"
         }
       >
         No favourite hotels
@@ -13,7 +13,7 @@ export function FavouriteHotelsSection({ favouriteHotels }) {
     );
   }
   return (
-    <div className={"grid grid-cols-1 mb-5 gap-[16px] sm:max-md:grid-cols-2"}>
+    <div className={"mb-5 grid grid-cols-1 gap-[16px] sm:max-md:grid-cols-2"}>
       {favouriteHotels.map((hotel, i) => {
         return <HotelResultCard key={hotel._id} hotel={hotel} />;
       })}
