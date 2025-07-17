@@ -57,7 +57,7 @@ export default async function FlightDetailsPage({ params }) {
   if (loggedIn) {
     const userDetails = await getUserDetails(session.user.id, 0);
     metaData.isBookmarked = userDetails.flights.bookmarked.some((el) => {
-      return el.flightId._id === flight._id;
+      return el.flightId?._id === flight._id;
     });
 
     const flightBookings = await FlightBooking.findOne({
