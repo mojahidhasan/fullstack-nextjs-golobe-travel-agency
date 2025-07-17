@@ -1,5 +1,3 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
@@ -8,6 +6,8 @@ import { Separator } from "@/components/ui/separator";
 import routes from "@/data/routes.json";
 import { RatingShow } from "@/components/local-ui/ratingShow";
 import { LikeButton } from "@/components/local-ui/likeButton";
+import { hotelPriceCalculation } from "@/lib/helpers/hotels/priceCalculation";
+import { formatCurrency } from "@/lib/utils";
 export function HotelResultCard({
   hotel: {
     image = "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
@@ -23,7 +23,18 @@ export function HotelResultCard({
     slug,
     _id,
   },
+  searchState,
 }) {
+  const breakdown = hotelPriceCalculation(
+    { base, discount, tax, serviceFee },
+    1,
+  );
+  let discountAmount = breakdown.discountUnit;
+  const discountPercentage = breakdown.discountPercentage;
+  const totalDiscount = +discountAmount;
+  const dicountedPrice = +base - +totalDiscount + +serviceFee + +tax;
+  const totalPrice = +base + +serviceFee + +tax;
+
   return (
     <div className="flex h-min rounded-l-[8px] rounded-r-[8px] bg-white text-[0.75rem] font-medium text-secondary shadow-sm max-md:flex-col">
       <div className="h-auto w-full max-md:h-[300px] md:w-[400px]">
@@ -32,7 +43,7 @@ export function HotelResultCard({
           height={400}
           className="h-full w-full rounded-l-[12px] object-cover max-md:rounded-r-[8px]"
           src={image}
-          alt={""}
+          alt={name}
         />
       </div>
       <div className="flex max-h-full w-full flex-col p-3">
@@ -69,22 +80,25 @@ export function HotelResultCard({
           <div className={"flex grow flex-col justify-between gap-2"}>
             <div>
               <div>
-                {discount > 0 ? (
-                  <p className="flex items-center justify-end gap-1">
-                    <span className="text-right text-[1rem] font-bold line-through">
-                      ${+base + +tax + +serviceFee}
-                    </span>
-                    <span
-                      className={
-                        "text-right text-[1.5rem] font-bold text-tertiary"
-                      }
-                    >
-                      ${+base + +tax + +serviceFee - +discount}
-                    </span>
-                  </p>
+                {totalDiscount > 0 ? (
+                  <div className="flex flex-col items-end space-y-1 text-right">
+                    {discountPercentage && (
+                      <span className="rounded-md bg-tertiary px-2 py-1 text-sm font-semibold text-white">
+                        {discountPercentage}% OFF
+                      </span>
+                    )}
+                    <div className="flex items-center gap-2">
+                      <span className="text-base font-semibold text-black line-through">
+                        {formatCurrency(totalPrice)}
+                      </span>
+                      <span className="text-xl font-bold text-tertiary">
+                        {formatCurrency(dicountedPrice)}
+                      </span>
+                    </div>
+                  </div>
                 ) : (
                   <p className="text-right text-[1.5rem] font-bold text-tertiary">
-                    ${+base + +tax + +serviceFee}
+                    {formatCurrency(totalPrice)}
                   </p>
                 )}
                 <p className="text-right text-[0.875rem] text-secondary/75">
