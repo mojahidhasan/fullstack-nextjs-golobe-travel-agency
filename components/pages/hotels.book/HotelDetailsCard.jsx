@@ -1,38 +1,32 @@
 import Image from "next/image";
 
-import CVKHotel from "@/public/images/CVK-hotel.jpg";
 import location from "@/public/icons/location.svg";
 import building from "@/public/icons/building.svg";
 import lineLeft from "@/public/icons/line-left.svg";
 import lineRight from "@/public/icons/line-right.svg";
-export function HotelDetailsCard() {
+import NoSSR from "@/components/helpers/NoSSR";
+import ShowTimeInClientSide from "@/components/helpers/ShowTimeInClientSide";
+export function HotelDetailsCard({
+  hotelLogo,
+  hotelName,
+  hotelLocation,
+  checkIn,
+  checkOut,
+}) {
   return (
-    <div className="mb-[20px] shadow-lg rounded-[12px] bg-white px-[24px] py-[32px] shadow-small lg:mb-[30px] xl:mb-[40px]">
-      <div className="mb-[24px] gap-6 flex items-baseline justify-between font-bold">
-        <h3 className="font-tradeGothic text-[1.5rem]">
-          Superior room - 1 double bed or 2 twin beds
-        </h3>
-        <p className="text-[2rem] leading-3 text-tertiary">
-          $240
-          <span className="text-[1rem]">/night</span>
-        </p>
-      </div>
-      <div className="mb-[24px] flex justify-between font-bold">
-        <h4 className="font-tradeGothic text-[1.25rem]">Return Wed, Dec 8</h4>
-        <p className="font-medium opacity-75">2h 28m</p>
-      </div>
+    <div className="shadow-small mb-[20px] rounded-[12px] bg-white px-[24px] py-[32px] shadow-lg lg:mb-[30px] xl:mb-[40px]">
       <div className="mb-[40px] grid justify-between gap-[20px] md:flex">
         <div className="flex w-full items-center gap-[24px] rounded-[8px] border border-primary px-[32px] py-[16px]">
           <Image
             height={40}
             width={60}
-            src={CVKHotel}
+            src={hotelLogo}
             alt="emirates_logo"
             className="h-[40px] w-auto"
           />
           <div>
             <h3 className="mb-[8px] text-[1.5rem] font-semibold">
-              CVK Park Bosphorus Hotel Istanbul
+              {hotelName}
             </h3>
             <p className="flex gap-1 text-[0.875rem] font-medium">
               <Image
@@ -41,7 +35,7 @@ export function HotelDetailsCard() {
                 width={16}
                 alt="location_icon"
               />
-              <span>Gümüssuyu Mah. Inönü Cad. No:8, Istanbul 34437</span>
+              <span>{hotelLocation}</span>
             </p>
           </div>
         </div>
@@ -49,7 +43,9 @@ export function HotelDetailsCard() {
       <div className="grid grid-rows-5 items-center gap-[40px] md:flex md:justify-center lg:gap-[80px]">
         <div>
           <p className="text-[1rem] font-semibold lg:text-[1.5rem]">
-            Thursday, Dec 8
+            <NoSSR fallback={"PPpp"}>
+              <ShowTimeInClientSide date={checkIn} formatStr="PPpp" />
+            </NoSSR>
           </p>
           <p className="max-lg:text-[0.75rem]">Check-In</p>
         </div>
@@ -64,7 +60,7 @@ export function HotelDetailsCard() {
           <Image
             src={building}
             alt="plane_icon"
-            className="h-[48px] w-1/3"
+            className="h-[48px] w-1/3 max-md:-rotate-90"
             height={48}
             width={48}
           />
@@ -77,7 +73,11 @@ export function HotelDetailsCard() {
           />
         </div>
         <div>
-          <p className="font-semibold lg:text-[1.5rem]">Friday, Dec 9</p>{" "}
+          <p className="font-semibold lg:text-[1.5rem]">
+            <NoSSR fallback={"PPpp"}>
+              <ShowTimeInClientSide date={checkOut} formatStr="PPpp" />
+            </NoSSR>
+          </p>
           <p className="max-lg:text-[0.75rem]">Check-Out</p>
         </div>
       </div>
