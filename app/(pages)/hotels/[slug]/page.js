@@ -13,6 +13,27 @@ import { LikeButton } from "@/components/local-ui/likeButton";
 import { auth } from "@/lib/auth";
 import FlightOrHotelReview from "@/components/sections/FlightOrHotelReview";
 import { getUserDetails } from "@/lib/controllers/user";
+import { formatCurrency, groupBy } from "@/lib/utils";
+import { Dropdown } from "@/components/local-ui/Dropdown";
+import RoomDetailsModal from "@/components/pages/hotels.[slug]/sections/RoomDetailsModal";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel";
+import { View, X } from "lucide-react";
+import { notFound } from "next/navigation";
+import { strToObjectId } from "@/lib/db/utilsDB";
+import { hotelPriceCalculation } from "@/lib/helpers/hotels/priceCalculation";
+
 export default async function HotelDetailsPage({ params }) {
   const session = await auth();
   const slug = params.slug;
@@ -38,12 +59,13 @@ export default async function HotelDetailsPage({ params }) {
     const bPrice =
       +b.price.base + +b.price.tax - +b.price.discount + +b.price.serviceFee;
     return aPrice - bPrice;
-  })[0];
-  const cheapestRoomPrice =
-    +cheapestRoom.price.base +
-    +cheapestRoom.price.tax -
-    +cheapestRoom.price.discount +
-    +cheapestRoom.price.serviceFee;
+  });
+  const cheapestRoom = roomsSorted[0];
+
+  const price = hotelPriceCalculation(cheapestRoom.price, 1);
+
+  const cheapestRoomPrice = formatCurrency(price.total);
+  const totalBeforeDiscount = formatCurrency(price.totalBeforeDiscount);
 
   let isLiked = false;
   if (session?.user) {
@@ -86,11 +108,25 @@ export default async function HotelDetailsPage({ params }) {
           </div>
         </div>
         <div>
-          <p className="mb-[16px] text-right text-[0.875rem] font-bold text-tertiary">
-            <span className="text-[2rem]">${cheapestRoomPrice}</span>
-            /night
-          </p>
-          <div className="flex gap-[16px]">
+          <div className="mb-[16px] flex flex-col text-right text-[0.875rem] font-bold text-tertiary sm:items-end">
+            {price.discountPercentage && (
+              <p className="w-fit rounded-md bg-tertiary px-2 py-1 text-sm font-semibold text-white">
+                {price.discountPercentage}% OFF
+              </p>
+            )}
+            <div className="space-x-2 max-sm:text-left">
+              {totalBeforeDiscount !== cheapestRoomPrice && (
+                <>
+                  <span className="text-base font-semibold text-black line-through">
+                    {totalBeforeDiscount}
+                  </span>
+                </>
+              )}
+              <span className="text-[2rem]">{cheapestRoomPrice}</span>
+              /night
+            </div>
+          </div>
+          <div className="flex flex-col gap-[16px] sm:flex-row">
             <LikeButton
               keys={hotelDetails._id}
               liked={isLiked}
@@ -200,95 +236,73 @@ export default async function HotelDetailsPage({ params }) {
       </div>
       <Separator className="my-[40px]" />
       <div>
-        <h2 className="mb-[32px] text-[1.25rem] font-bold">Available Rooms</h2>
-        <div>
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-[16px]">
-              <Image
-                src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt=""
-                width={48}
-                height={48}
-                className="h-[48px] w-[48px] rounded-[4px] object-cover object-center"
-              />
-              <p className="font-medium">
-                Superior room - 1 double bed or 2 twin beds
-              </p>
-            </div>
-            <div className="flex gap-[64px]">
-              <p className="text-right">
-                <span className="text-[1.5rem] font-semibold">$240</span>{" "}
-                <span className="text-[0.875rem]">/per night</span>
-              </p>
-              <Button className={"text-right"}>Book now</Button>
-            </div>
-          </div>
-          <Separator className="my-[16px]" />
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-[16px]">
-              <Image
-                src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt=""
-                width={48}
-                height={48}
-                className="h-[48px] w-[48px] rounded-[4px] object-cover object-center"
-              />
-              <p className="font-medium">
-                Superior room - 1 double bed or 2 twin beds
-              </p>
-            </div>
-            <div className="flex gap-[64px]">
-              <p className="text-right">
-                <span className="text-[1.5rem] font-semibold">$240</span>{" "}
-                <span className="text-[0.875rem]">/per night</span>
-              </p>
-              <Button className={"text-right"}>Book now</Button>
-            </div>
-          </div>
-          <Separator className="my-[16px]" />
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-[16px]">
-              <Image
-                src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt=""
-                width={48}
-                height={48}
-                className="h-[48px] w-[48px] rounded-[4px] object-cover object-center"
-              />
-              <p className="font-medium">
-                Superior room - 1 double bed or 2 twin beds
-              </p>
-            </div>
-            <div className="flex gap-[64px]">
-              <p className="text-right">
-                <span className="text-[1.5rem] font-semibold">$240</span>{" "}
-                <span className="text-[0.875rem]">/per night</span>
-              </p>
-              <Button className={"text-right"}>Book now</Button>
-            </div>
-          </div>
-          <Separator className="my-[16px]" />
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-[16px]">
-              <Image
-                src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                alt=""
-                width={48}
-                height={48}
-                className="h-[48px] w-[48px] rounded-[4px] object-cover object-center"
-              />
-              <p className="font-medium">
-                Superior room - 1 double bed or 2 twin beds
-              </p>
-            </div>
-            <div className="flex gap-[64px]">
-              <p className="text-right">
-                <span className="text-[1.5rem] font-semibold">$240</span>{" "}
-                <span className="text-[0.875rem]">/per night</span>
-              </p>
-              <Button className={"text-right"}>Book now</Button>
-            </div>
-          </div>
+        <h2 className="mb-[32px] text-2xl font-bold">Available Rooms</h2>
+        <div className="space-y-6">
+          {Object.entries(groupByRoomType).map(([roomType, rooms]) => {
+            const groupByBedOptions = groupBy(rooms, (room) => room.bedOptions);
+
+            return (
+              <Dropdown
+                key={roomType}
+                open={roomType === "Budget Room"}
+                title={roomType}
+              >
+                <div className="space-y-4 p-4">
+                  {Object.entries(groupByBedOptions).map(([key, arr]) => {
+                    const oneEquivalentRoom = arr[0];
+                    const price = hotelPriceCalculation(
+                      oneEquivalentRoom.price,
+                      1,
+                    );
+                    return (
+                      <RoomDetailsModal
+                        key={key}
+                        roomDetails={oneEquivalentRoom}
+                        customTriggerElement={
+                          <div
+                            key={key}
+                            className="group flex items-center justify-between rounded-md border-b p-1 pb-4 hover:bg-gray-100"
+                          >
+                            <div className="flex items-center gap-4">
+                              <Image
+                                src={oneEquivalentRoom.images[0]}
+                                alt="Room image"
+                                width={64}
+                                height={64}
+                                className="aspect-square rounded-md object-cover"
+                              />
+                              <div>
+                                <p className="text-sm font-medium group-hover:underline">
+                                  {oneEquivalentRoom.bedOptions}
+                                </p>
+                                <p className="text-xs font-bold opacity-60">
+                                  {formatCurrency(price.total)} / night
+                                </p>
+                                <p className="text-xs opacity-60">
+                                  Person capacity:{" "}
+                                  {oneEquivalentRoom.sleepsCount}
+                                </p>
+                                <p className="text-xs opacity-60">
+                                  Available rooms: {arr.length}
+                                </p>
+                              </div>
+                            </div>
+                            <div>
+                              {Boolean(price.discountPercentage) && (
+                                <p className="rounded-md bg-tertiary p-1 font-bold text-white">
+                                  {price.discountPercentage}% OFF
+                                </p>
+                              )}
+                            </div>
+                          </div>
+                        }
+                      />
+                    );
+                  })}
+                </div>
+              </Dropdown>
+            );
+          })}
         </div>
       </div>
       <Separator className="my-[64px]" />
