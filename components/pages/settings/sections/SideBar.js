@@ -10,26 +10,28 @@ export function SettingsSideBar() {
     currentTab === tab ? "font-bold text-primary bg-primary/10" : "";
 
   const settingTabs = [
-    "profile",
-    "account",
-    "payments",
-    "security",
-    "appearance",
+    "Profile",
+    "Account",
+    "Payments",
+    "Security",
+    "Appearance",
   ];
   return (
     <div
       className={
-        "p-4 w-full md:w-60 xl:w-80 border-r-0 border-b md:border-r md:border-b-0 border-slate-200"
+        "w-full border-b border-r-0 border-slate-200 p-4 md:w-60 md:border-b-0 md:border-r xl:w-80"
       }
     >
       <ul className={"flex flex-col gap-2"}>
         {settingTabs.map((tab, i) => (
-          <li key={tab} className={"w-full hover:bg-slate-100 rounded-md"}>
+          <li key={tab} className={"w-full rounded-md hover:bg-slate-100"}>
             <Link
               className={cn(
-                "p-2 h-full w-full block",
+                "block h-full w-full p-2",
                 isActive(tab),
-                i === 0 && !currentTab && "font-bold text-primary bg-primary/10"
+                i === 0 &&
+                  !currentTab &&
+                  "bg-primary/10 font-bold text-primary",
               )}
               href={`${routes.settings.path}?tab=${tab}`}
             >
