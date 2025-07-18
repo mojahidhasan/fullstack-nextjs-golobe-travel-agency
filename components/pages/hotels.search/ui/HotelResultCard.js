@@ -116,7 +116,11 @@ export function HotelResultCard({
         </div>
         <Separator className="my-[16px]" />
         <div className="flex gap-[16px]">
-          <LikeButton liked={liked} keys={_id} flightsOrHotels={"hotels"} />
+          <LikeButton
+            isBookmarked={liked}
+            keys={{ hotelId: _id }}
+            flightOrHotel={"hotel"}
+          />
           <Button asChild className={"w-full"}>
             <Link href={`${routes.hotels.path}/${slug}`}>View Deals</Link>
           </Button>
