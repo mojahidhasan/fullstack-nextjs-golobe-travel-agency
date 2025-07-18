@@ -52,7 +52,30 @@ export default async function FlightOrHotelReview({
   }
 
   if (reviewType === "hotel") {
-    // hotelReviews
+    hotelReviews = await getManyDocs(
+      "HotelReview",
+      {
+        slug: data.slug,
+      },
+      [data.slug + "_review", "hotelReviews"],
+    );
+    userReviewObj = hotelReviews.find(
+      (review) => review.reviewer.toString() === session?.user.id,
+    );
+    const totalRate = hotelReviews.reduce(
+      (acc, review) => acc + +review?.rating,
+      0,
+    );
+    rating = totalRate / hotelReviews.length;
+
+    isAlreadyReviewed = hotelReviews.some(
+      (review) => review.reviewer.toString() === session?.user.id,
+    );
+
+    reviewKeys = {
+      slug: data.slug,
+      hotelId: data._id,
+    };
   }
 
   return (

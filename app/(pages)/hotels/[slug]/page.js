@@ -39,9 +39,11 @@ export default async function HotelDetailsPage({ params }) {
   const slug = params.slug;
   const hotelDetails = await getOneDoc("Hotel", { slug }, ["hotels"]);
 
+  if (Object.keys(hotelDetails).length === 0) return notFound();
+
   const reviews = await getManyDocs(
     "HotelReview",
-    { hotelId: hotelDetails._id, slug },
+    { hotelId: strToObjectId(hotelDetails._id), slug },
     [hotelDetails._id + "_review", params.slug + "_review", "hotelReviews"],
   );
 
@@ -53,11 +55,27 @@ export default async function HotelDetailsPage({ params }) {
 
   const rating = totalRatingsSum / totalReviewsCount;
   const ratingScale = RATING_SCALE[Math.floor(rating)];
-  const cheapestRoom = [...hotelDetails.rooms].sort((a, b) => {
+
+  const roomsSorted = [...hotelDetails.rooms].sort((a, b) => {
+    let aDiscountAmount = 0;
+    let bDiscountAmount = 0;
+
+    if (a.price.discount.type === "percentage") {
+      aDiscountAmount = a.price.base * (+a.price.discount.amount / 100);
+    } else {
+      aDiscountAmount = +a.price.discount.amount;
+    }
+    if (b.price.discount.type === "percentage") {
+      bDiscountAmount = b.price.base * (+b.price.discount.amount / 100);
+    } else {
+      bDiscountAmount = +b.price.discount.amount;
+    }
+
     const aPrice =
-      +a.price.base + +a.price.tax - +a.price.discount + +a.price.serviceFee;
+      +a.price.base + +a.price.tax - aDiscountAmount + +a.price.serviceFee;
     const bPrice =
-      +b.price.base + +b.price.tax - +b.price.discount + +b.price.serviceFee;
+      +b.price.base + +b.price.tax - bDiscountAmount + +b.price.serviceFee;
+
     return aPrice - bPrice;
   });
   const cheapestRoom = roomsSorted[0];
@@ -70,13 +88,15 @@ export default async function HotelDetailsPage({ params }) {
   let isLiked = false;
   if (session?.user) {
     const userDetails = await getUserDetails(session?.user?.id);
-    isLiked = userDetails?.likes?.hotels?.includes(hotelDetails._id);
+    isLiked = userDetails?.hotels?.bookmarked?.includes(hotelDetails._id);
   }
+
+  const groupByRoomType = groupBy(roomsSorted, (room) => room.roomType);
 
   return (
     <main className={"mx-auto mb-[90px] mt-10 w-[90%]"}>
       <BreadcrumbUI />
-      <div className="my-[40px] flex justify-between gap-5">
+      <div className="my-[40px] flex flex-col items-center justify-between gap-5 sm:flex-row">
         <div>
           <div className="mb-[16px] flex items-center gap-[16px]">
             <h1 className="text-[1.5rem] font-bold text-secondary">
@@ -128,9 +148,9 @@ export default async function HotelDetailsPage({ params }) {
           </div>
           <div className="flex flex-col gap-[16px] sm:flex-row">
             <LikeButton
-              keys={hotelDetails._id}
-              liked={isLiked}
-              flightsOrHotels="hotels"
+              keys={{ hotelId: hotelDetails._id }}
+              isBookmarked={isLiked}
+              flightOrHotel="hotel"
             />
             <Button variant="outline">
               <svg
@@ -154,54 +174,87 @@ export default async function HotelDetailsPage({ params }) {
           </div>
         </div>
       </div>
-      <div className="relative mb-[40px] grid grid-cols-4 grid-rows-2 gap-[8px] overflow-hidden rounded-[12px]">
-        <Image
-          height={300}
-          className="col-span-2 row-span-2 h-full w-full object-cover object-center"
-          src="https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt=""
-          width={302}
-        />
-        <Image
-          className="h-full w-full"
-          height={300}
-          src="https://images.unsplash.com/photo-1618773928121-c32242e63f39?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          width={302}
-          alt=""
-        />
-        <Image
-          className="h-full w-full"
-          height={300}
-          width={302}
-          src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt=""
-        />
-        <Image
-          className="h-full w-full"
-          height={300}
-          width={302}
-          src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt=""
-        />
-        <Image
-          className="h-full w-full"
-          height={300}
-          width={302}
-          src="https://images.unsplash.com/photo-1582719478250-c89cae4dc85b?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-          alt=""
-        />
-        <Button className={"absolute bottom-[8px] right-[8px]"}>
-          View all photos
-        </Button>
+      <div className="relative mb-[40px] grid w-auto grid-cols-4 grid-rows-2 gap-[8px] overflow-hidden rounded-[12px] max-lg:aspect-video lg:h-[500px]">
+        {hotelDetails.images.length > 0 && (
+          <Image
+            height={1000}
+            className="col-span-2 row-span-2 h-full w-full object-cover object-center"
+            src={hotelDetails.images[0]}
+            alt=""
+            width={1000}
+          />
+        )}
+        {hotelDetails.images.length > 1 &&
+          hotelDetails.images
+            .slice(1, 5)
+            .map((image) => (
+              <Image
+                key={image}
+                height={1000}
+                className="h-full w-full object-cover object-center"
+                src={image}
+                alt=""
+                width={1000}
+              />
+            ))}
+
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button
+              size={"icon"}
+              className={"absolute bottom-[8px] right-[8px]"}
+            >
+              <View />
+            </Button>
+          </DialogTrigger>
+          <DialogContent
+            close={false}
+            className="h-[90vh] max-w-[90%] items-center border-0 bg-transparent"
+          >
+            <DialogClose
+              asChild
+              className="absolute right-[16px] top-[16px] rounded-md border-2 border-white text-white"
+            >
+              <X />
+            </DialogClose>
+            <Carousel
+              options={{
+                autoPlay: false,
+              }}
+              className="mx-auto max-w-[80%] sm:max-w-[90%]"
+            >
+              <CarouselContent>
+                {hotelDetails.images.length > 0 &&
+                  hotelDetails.images.map((img, i) => (
+                    <CarouselItem
+                      key={img}
+                      className="flex h-full w-full items-center justify-center"
+                    >
+                      <Image
+                        key={img}
+                        src={img}
+                        alt={`Hotel image ${i + 1}`}
+                        width={1000}
+                        height={1000}
+                        className="aspect-video h-full rounded-lg object-cover"
+                      />
+                    </CarouselItem>
+                  ))}
+              </CarouselContent>
+              <CarouselPrevious />
+              <CarouselNext />
+            </Carousel>
+          </DialogContent>
+        </Dialog>
       </div>
       <Separator className="my-[40px]" />
       <div>
-        <h2 className="mb-[16px] text-[1.25rem] font-bold">Overview</h2>
+        <h2 className="mb-[16px] text-2xl font-bold">Overview</h2>
         <p className="mb-[32px] font-medium opacity-75">
           {hotelDetails.description}
         </p>
-        <div className="flex gap-[16px]">
-          <div className="h-[145px] w-[160px] rounded-[12px] bg-primary p-[16px]">
+        <div className="golobe-scrollbar flex gap-[16px] overflow-x-auto pb-3">
+          <div className="h-[145px] min-w-[160px] whitespace-nowrap rounded-[12px] bg-primary p-[16px]">
             <p className="mb-[32px] text-[2rem] font-bold">
               {totalReviewsCount ? rating.toFixed(1) : "N/A"}
             </p>
@@ -212,10 +265,10 @@ export default async function HotelDetailsPage({ params }) {
               {totalReviewsCount} reviews
             </p>
           </div>
-          {hotelDetails.features.slice(0, 4).map((feature) => (
+          {hotelDetails.features.slice(0).map((feature) => (
             <div
               key={feature}
-              className="flex h-[145px] w-[160px] flex-col justify-between rounded-[12px] border border-primary p-[16px]"
+              className="flex h-[145px] min-w-[160px] flex-col justify-between rounded-[12px] border border-primary p-[16px]"
             >
               <svg
                 width="32"
@@ -308,16 +361,25 @@ export default async function HotelDetailsPage({ params }) {
       <Separator className="my-[64px]" />
       <div>
         <div className="mb-[32px] flex items-center justify-between">
-          <h2 className="text-1.25rem font-bold">Location/Map</h2>
-          <Button className="text-right">View on map</Button>
+          <h2 className="text-2xl font-bold">Location/Map</h2>
         </div>
         <div>
-          <Map />
+          <Map
+            lat={+hotelDetails.coordinates.lat}
+            lon={+hotelDetails.coordinates.lon}
+            address={
+              hotelDetails.address.streetAddress +
+              ", " +
+              hotelDetails.address.city +
+              ", " +
+              hotelDetails.address.country
+            }
+          />
         </div>
       </div>
       <Separator className="my-[40px]" />
       <div>
-        <h2 className="mb-[32px] text-[1.25rem] font-bold">Amenities</h2>
+        <h2 className="mb-[32px] text-2xl font-bold">Amenities</h2>
         <div>
           <ul className="grid grid-cols-2 gap-[24px]">
             {hotelDetails.amenities.map((amenity) => (
@@ -333,12 +395,7 @@ export default async function HotelDetailsPage({ params }) {
       </div>
 
       <Separator className="my-[40px]" />
-      <FlightOrHotelReview
-        flightOrHotel="hotel"
-        reviewKeys={{ hotelId: hotelDetails._id, slug: hotelDetails.slug }}
-        reviews={reviews}
-        rating={totalReviewsCount ? rating.toFixed(1) : "N/A"}
-      />
+      <FlightOrHotelReview reviewType="hotel" data={hotelDetails} />
     </main>
   );
 }

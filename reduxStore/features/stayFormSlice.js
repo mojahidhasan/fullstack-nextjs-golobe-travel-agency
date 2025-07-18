@@ -1,10 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { addDays } from "date-fns";
 
-const defaultValue = {
-  destination: "",
-  checkIn: new Date().toString(),
-  checkOut: addDays(new Date(), 1).toString(),
+export const defaultHotelFormValue = {
+  destination: {
+    city: "",
+    country: "",
+  },
+  checkIn: "",
+  checkOut: "",
   rooms: 1,
   guests: 1,
   promocode: "",
@@ -20,12 +22,13 @@ const defaultValue = {
     amenities: [],
     features: [],
   },
+  errors: {},
 };
 
 const stayFormSlice = createSlice({
   name: "stayForm",
   initialState: {
-    value: defaultValue,
+    value: defaultHotelFormValue,
   },
   reducers: {
     setStayForm(state, action) {
@@ -42,7 +45,7 @@ const stayFormSlice = createSlice({
     },
     resetStayFilters(state) {
       state.value.filters = {
-        ...defaultValue.filters,
+        ...defaultHotelFormValue.filters,
         priceRange: [
           state.value.filtersData.minPrice,
           state.value.filtersData.maxPrice,

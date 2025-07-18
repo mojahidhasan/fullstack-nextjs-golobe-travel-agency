@@ -7,89 +7,25 @@ import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
 import SetHotelFormState from "@/components/helpers/SetHotelFormState";
 import { getHotels } from "@/lib/controllers/hotels";
 import Jumper from "@/components/local-ui/Jumper";
-import { hotelPriceCalculation } from "@/lib/helpers/hotels/priceCalculation";
 export default async function HotelResultPage({ searchParams }) {
-  let hotels = [];
   let filters = {};
   const session = await auth();
 
-  if (Object.keys(searchParams).length > 0) {
-    const destination = searchParams.destination;
-    const checkIn = searchParams.checkIn;
-    const checkOut = searchParams.checkOut;
-    const guests = searchParams.guests;
-    const rooms = searchParams.rooms;
+  const validate = validateHotelSearchParams(searchParams);
 
-    if (searchParams?.filters) {
-      filters = JSON.parse(searchParams.filters);
-      hotels = await getManyDocs(
-        "Hotel",
-        {
-          query: {
-            $regex: `${destination.match(/.{1,2}/g).join("+?.*")}`,
-            $options: "i",
-          },
-          ...(filters?.features &&
-            filters?.features.length > 0 && {
-              features: {
-                $in: filters.features.map(
-                  (feature) => feature.split("feature-")[1],
-                ),
-              },
-            }),
-          ...(filters?.amenities &&
-            filters?.amenities.length > 0 && {
-              amenities: {
-                $in: filters.amenities.map(
-                  (amenity) => amenity.split("amenity-")[1],
-                ),
-              },
-            }),
-        },
-        ["hotels"],
-      );
-    } else {
-      hotels = await getManyDocs(
-        "Hotel",
-        {
-          query: {
-            $regex: `${destination.match(/.{1,2}/g).join("+?.*")}`,
-            $options: "i",
-          },
-        },
-        ["hotels"],
-      );
-    }
-    // filter by total available rooms sleeps count is greater than or equal to number of guests
-    hotels = hotels.filter((hotel) => {
-      const availableHotelRoomsByDate = hotel.rooms.filter((room) => {
-        // check if room is available in the particular date
-        const isRoomAvailable = room.availability.every((availability) => {
-          return (
-            new Date(availability.willCheckedOut) >= new Date(checkIn) &&
-            new Date(availability.checkedIn) <= new Date(checkOut)
-          );
-        });
+  if (validate.success === false) {
+    return <SetHotelFormState obj={{ errors: validate.errors }} />;
+  }
 
-        return isRoomAvailable;
-      });
+  let hotels = await getHotels(validate.data);
+  // show liked hotels if user is logged in
+  if (session?.user?.id) {
+    const userDetails = await getUserDetails(session?.user?.id);
 
-      const totalSleepsCount = availableHotelRoomsByDate.reduce(
-        (acc, room) => acc + +room.sleepsCount,
-        0,
-      );
-
-      return totalSleepsCount >= Number(guests);
+    hotels = hotels.map((hotel) => {
+      const liked = userDetails?.hotels?.bookmarked?.includes(hotel._id);
+      return { ...hotel, liked };
     });
-    // show liked hotels if user is logged in
-    if (session?.user?.id) {
-      const userDetails = await getUserDetails(session?.user?.id);
-
-      hotels = hotels.map((hotel) => {
-        const liked = userDetails?.likes?.hotels.includes(hotel._id);
-        return { ...hotel, liked };
-      });
-    }
   }
 
   // rating and reviews
@@ -110,10 +46,26 @@ export default async function HotelResultPage({ searchParams }) {
       const ratingScale = RATING_SCALE[Math.floor(rating)];
 
       const cheapestRoom = [...hotel.rooms].sort((a, b) => {
-        const aPrice = hotelPriceCalculation(a.price, 1);
-        const bPrice = hotelPriceCalculation(b.price, 1);
+        let aDiscountAmount = 0;
+        let bDiscountAmount = 0;
 
-        return aPrice.total - bPrice.total;
+        if (a.price.discount.type === "percentage") {
+          aDiscountAmount = a.price.base * (+a.price.discount.amount / 100);
+        } else {
+          aDiscountAmount = +a.price.discount.amount;
+        }
+        if (b.price.discount.type === "percentage") {
+          bDiscountAmount = b.price.base * (+b.price.discount.amount / 100);
+        } else {
+          bDiscountAmount = +b.price.discount.amount;
+        }
+
+        const aPrice =
+          +a.price.base + +a.price.tax - aDiscountAmount + +a.price.serviceFee;
+        const bPrice =
+          +b.price.base + +b.price.tax - bDiscountAmount + +b.price.serviceFee;
+
+        return aPrice - bPrice;
       })[0];
 
       return {
@@ -136,9 +88,9 @@ export default async function HotelResultPage({ searchParams }) {
   if (hotels?.length < 1) {
     return <div className={"grow text-center font-bold"}>No data found</div>;
   }
-
   return (
     <div className="flex flex-grow flex-col gap-[32px]">
+      <Jumper id={"hotelResults"} />
       {hotels.map((hotel) => (
         <HotelResultCard
           key={hotel._id}

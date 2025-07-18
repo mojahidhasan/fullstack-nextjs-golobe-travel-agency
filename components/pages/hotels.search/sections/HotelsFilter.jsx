@@ -17,7 +17,7 @@ import {
   resetStayFilters,
 } from "@/reduxStore/features/stayFormSlice";
 import { useSearchParams, useRouter } from "next/navigation";
-import { searchForEmptyValuesInStaySearchForm } from "@/components/sections/SearchStaysForm";
+import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
 
 export function HotelsFilter({ className }) {
   const searchparams = useSearchParams();
@@ -50,6 +50,7 @@ export function HotelsFilter({ className }) {
       );
       if (searchparams.get("filters")) {
         const priceRange = JSON.parse(searchparams.get("filters")).priceRange;
+
         dispatch(
           setStayFilter({
             priceRange,
@@ -89,33 +90,27 @@ export function HotelsFilter({ className }) {
   }
 
   function handleApplyFilters() {
-    if (searchForEmptyValuesInStaySearchForm(stayState)) {
-      alert(
-        "Please fill all the required fields. Asterisk (*) indicates 'required'",
-      );
+    const validateStayForm = validateHotelSearchParams({
+      city: stayState.destination.city,
+      country: stayState.destination.country,
+      checkIn: stayState.checkIn,
+      checkOut: stayState.checkOut,
+      rooms: stayState.rooms,
+      guests: stayState.guests,
+    });
+
+    if (validateStayForm.success === false) {
+      dispatch(setStayForm({ errors: validateStayForm.errors }));
       return;
     }
-    if (stayState.rooms > 5) {
-      alert("Maximum 5 rooms are allowed");
-      return;
-    }
-    if (stayState.guests > 10) {
-      alert("Maximum 10 guests are allowed");
-      return;
-    }
-    if (stayState.rooms <= 0) {
-      alert("Please select at least one room");
-    }
-    if (stayState.guests <= 0) {
-      alert("Please select at least one guest");
-    }
+
     const filters = JSON.stringify(stayState.filters);
     const stayFormData = {
       ...stayState,
     };
     delete stayFormData.filtersData;
     const queryParams = new URLSearchParams({
-      ...stayFormData,
+      ...validateStayForm.data,
       filters,
     }).toString();
     router.push(`/hotels/search?${queryParams}`);
