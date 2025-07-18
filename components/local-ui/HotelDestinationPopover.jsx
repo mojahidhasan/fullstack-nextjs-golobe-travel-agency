@@ -4,7 +4,9 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 
 import locationIcon from "@/public/icons/location.svg";
+import { Skeleton } from "../ui/skeleton";
 export function HotelDestinationPopover({
+  isLoading,
   className,
   fetchInputs,
   defaultSelected,
@@ -12,18 +14,19 @@ export function HotelDestinationPopover({
   getSelected = () => {},
 }) {
   function renderSelectedResult(obj) {
-    if (Object.keys(obj).length > 0) {
+    if (isLoading) {
       return (
-        <div className={cn("rounded border p-2", className)}>
-          <div className={"text-2xl font-bold"}>{obj.address.city}</div>
-          <div className={"text-sm"}>{obj.address.country}</div>
+        <div disabled={true} className={cn("rounded border p-2", className)}>
+          <Skeleton className={"mb-2 h-8 w-[130px]"} />
+          <Skeleton className={"h-4 w-[100px]"} />
         </div>
       );
     }
+
     return (
       <div className={cn("rounded border p-2", className)}>
-        <div className={"text-2xl font-bold"}>{"City"}</div>
-        <div className={"text-sm"}>{"Country"}</div>
+        <div className={"text-2xl font-bold"}>{obj?.city || "City"}</div>
+        <div className={"text-sm"}>{obj?.country || "Country"}</div>
       </div>
     );
   }
@@ -44,8 +47,8 @@ export function HotelDestinationPopover({
       >
         <Image width={24} height={24} src={locationIcon} alt="location_icon" />
         <div>
-          <div className={"text-md font-bold"}>{obj.address.city}</div>
-          <div className={"text-xs"}>{obj.address.country}</div>
+          <div className={"text-md font-bold"}>{obj.city}</div>
+          <div className={"text-xs"}>{obj.country}</div>
         </div>
       </div>
     ));
@@ -54,6 +57,7 @@ export function HotelDestinationPopover({
   return (
     <>
       <ApiSearchInputPopover
+        isLoading={isLoading}
         fetchInputs={fetchInputs}
         defaultSelected={defaultSelected}
         renderSelectedResult={renderSelectedResult}
