@@ -59,7 +59,7 @@ export function FlightData({ data, searchState, metaData, className }) {
                 flightId: _id,
                 searchState: searchState,
               }}
-              flightsOrHotels="flight"
+              flightOrHotel="flight"
               className={"p-3"}
             />
             <Button

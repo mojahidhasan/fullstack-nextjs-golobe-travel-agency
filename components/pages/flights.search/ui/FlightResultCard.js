@@ -155,7 +155,7 @@ export function FlightResultCard({ data, searchState, metaData }) {
               flightId: data?._id,
               searchState: searchState,
             }}
-            flightsOrHotels={"flight"}
+            flightOrHotel={"flight"}
           />
           <Button className={"w-full"} asChild>
             <Link
