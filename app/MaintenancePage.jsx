@@ -21,11 +21,16 @@ export default function MaintenancePage({ message, startsAt, endsAt }) {
           return;
         }
 
-        const minutes = Math.floor(diff / 60000);
-        const seconds = Math.floor((diff % 60000) / 1000);
-        setCountdown(`${minutes}m ${seconds}s`);
-      };
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
+        const h = hours < 1 ? "" : hours + "h";
+        const m = minutes < 1 ? "" : minutes + "m";
+        const s = seconds < 1 ? "" : seconds + "s";
+
+        setCountdown(`${h} ${m} ${s}`);
+      };
       updateCountdown();
       const timer = setInterval(updateCountdown, 1000);
       return () => clearInterval(timer);

@@ -13,13 +13,19 @@ export function MaintenanceNotice({ maintenanceMode }) {
         const diff = startsAt - now;
 
         if (diff <= 0) {
-          setCountdown("Maintenance is starting soon");
+          setCountdown("Maintenance is ending soon.");
           return;
         }
 
-        const minutes = Math.floor(diff / 60000);
-        const seconds = Math.floor((diff % 60000) / 1000);
-        setCountdown(`${minutes}m ${seconds}s`);
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+        const h = hours < 1 ? "" : hours + "h";
+        const m = minutes < 1 ? "" : minutes + "m";
+        const s = seconds < 1 ? "" : seconds + "s";
+
+        setCountdown(`Maintenance is starting in ${h} ${m} ${s}`);
       };
 
       updateCountdown();
@@ -50,7 +56,7 @@ export function MaintenanceNotice({ maintenanceMode }) {
   if (!maintenanceMode?.enabled && countdown) {
     return (
       <div className="bg-secondary p-2 text-center text-xl font-semibold !text-tertiary text-white">
-        Maintenance is starting in {countdown}
+        {countdown}
         <p className="text-sm text-secondary-foreground">
           The website will be down soon
         </p>
