@@ -14,10 +14,20 @@ export async function GET(req) {
     const allPrices = hotels
       .flatMap((hotel) => hotel.rooms)
       .map((room) => {
+        let discount = 0;
+
+        if (room.price.discount.type === "percentage") {
+          discount = +(room.price.base * +room.price.discount.amount) / 100;
+        }
+
+        if (room.price.discount.type === "fixed") {
+          discount = +room.price.discount.amount;
+        }
+
         return (
           +room.price.base +
           +room.price.tax -
-          +room.price.discount +
+          +discount +
           +room.price.serviceFee
         );
       });
