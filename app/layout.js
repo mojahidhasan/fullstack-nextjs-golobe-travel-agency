@@ -79,10 +79,15 @@ export default async function RootLayout({ children }) {
     () => import("@/app/_notification").then((mod) => mod.Notification),
     {
       ssr: false,
-    },
+    }
   );
 
-  const websiteConfig = await getOneDoc("WebsiteConfig", {}, ["websiteConfig"]);
+  const websiteConfig = await getOneDoc(
+    "WebsiteConfig",
+    {},
+    ["websiteConfig"],
+    60
+  );
 
   const maintenanceMode = websiteConfig?.maintenanceMode ?? { enabled: false };
 
@@ -93,13 +98,15 @@ export default async function RootLayout({ children }) {
     <html lang="en" className={`${tradegothic.variable} ${monse.variable}`}>
       <body className={monse.className}>
         {maintenanceMode.enabled === true &&
-        !alloweRoutesWhileMaintenance.some((path) =>
-          path.startsWith(currentPathname),
+        !alloweRoutesWhileMaintenance.some(
+          (path) =>
+            path === currentPathname ||
+            (path !== "/" && currentPathname.startsWith(path))
         ) ? (
           <MaintenancePage
             message={maintenanceMode.message}
-            startsAt={maintenanceMode.startsAt}
-            endsAt={maintenanceMode.endsAt}
+            startsAt={maintenanceMode.startsAt || 0}
+            endsAt={maintenanceMode.endsAt || 0}
           />
         ) : (
           <StoreProvider>
