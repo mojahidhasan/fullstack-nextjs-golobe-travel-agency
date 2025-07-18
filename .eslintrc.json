@@ -1,6 +1,10 @@
 {
-  "extends": "next/core-web-vitals",
+  "plugins": ["compat"],
+  "extends": ["next/core-web-vitals", "plugin:compat/recommended"],
   "rules": {
     "no-undef": "warn"
+  },
+  "settings": {
+    "polyfills": ["Promise", "fetch", "URLSearchParams", "performance", "URL"]
   }
 }
