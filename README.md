@@ -129,25 +129,34 @@ To set up and run the project locally, follow these steps:
    - Set the required values for all environment variables
    - Note: The application may fail to run if environment variables are not properly configured
 
-5. **Generate sample data** (Optional)
+5. **Generate sample data**
+
+   Flights:
 
    ```sh
-   # Generate and upload flights data to MongoDB
-   # This will creates 10 days of flight data but deletes all flight data from db before uploading
-   # If you want to add more flight data without deleting, use `/api/cronjob/flight_schedule` api endpoint
-   npm run generateAndUploadFlightsDB
+      # Generate and upload flights data to MongoDB
+      # This creates 10 days of flight data but deletes all flight data from db before uploading
+      # If you want to add more flight data without deleting, use `/api/cronjob/flight_schedule` api endpoint
 
-   # Generate flights data files
-   npm run generateFlightsFiles
+      curl -X POST http://localhost:3000/api/generate/flights/upload_db -H "Authorization: Bearer API_SECRET_TOKEN"
+      # curl.exe for windows
 
-   # Generate and upload hotels data to MongoDB
-   npm run generateAnduploadHotelsDB
-
-   # Generate hotels data files
-   npm run generateHotelsFiles
+      # Generate flights data files
+      curl -X POST http://localhost:3000/api/generate/flights/store_in_file -H "Authorization: Bearer API_SECRET_TOKEN"
+      # curl.exe for windows
    ```
 
-   Files will be generated in `./generated` directory.
+   Hotels:
+
+   ```sh
+   # Generate and upload hotels data to MongoDB
+   curl -X POST http://localhost:3000/api/generate/hotels/upload_db -H "Authorization: Bearer API_SECRET_TOKEN"
+   # curl.exe for windows
+
+   # Generate hotels data files
+   curl -X POST http://localhost:3000/api/generate/hotels/store_in_file -H "Authorization: Bearer API_SECRET_TOKEN"
+   # curl.exe for windows
+   ```
 
 6. **Start the development server**
 
@@ -155,20 +164,12 @@ To set up and run the project locally, follow these steps:
    npm run dev
    ```
 
-   The application will be available at:
-
-   ```bash
-   http://localhost:3000
-   ```
-
 ## TODO
 
 ### Core Features
 
 - Integrate real flight API to replace mock data (High Priority)
-- Implement flight ticket booking system
 - Add hotel reservation functionality
-- Develop fake payment system
 
 ### User Account & Profile
 
@@ -178,14 +179,11 @@ To set up and run the project locally, follow these steps:
   - Personal detail modifications
 - Add payment methods management interface
 - Create booking history section:
-  - Flight tickets
   - Hotel reservations
 
 ### UI/UX Improvements
 
 - Implement dark mode toggle
-- Enhance favorites page with hotel cards and improved organization
-- Add ticket download functionality (PDF/QR Codes)
 
 ### Technical Enhancements
 
