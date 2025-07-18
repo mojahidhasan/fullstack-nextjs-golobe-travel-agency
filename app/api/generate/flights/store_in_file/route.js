@@ -11,7 +11,7 @@ import {
 } from "@/lib/db/generateForDB/flights/generateFlights";
 import fs from "fs/promises";
 
-export async function GET(req) {
+export async function POST(req) {
   if (
     req.headers.get("Authorization") !==
     `Bearer ${process.env.API_SECRET_TOKEN}`

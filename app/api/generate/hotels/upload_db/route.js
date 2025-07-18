@@ -2,7 +2,7 @@ import { createManyDocs } from "@/lib/db/createOperationDB";
 import { deleteManyDocs } from "@/lib/db/deleteOperationDB";
 import { generateHotelsDB } from "@/lib/db/generateForDB/hotels/generateHotels";
 
-export async function GET(req) {
+export async function POST(req) {
   if (
     req.headers.get("Authorization") !==
     `Bearer ${process.env.API_SECRET_TOKEN}`
