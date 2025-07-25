@@ -33,6 +33,7 @@ import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
 import { Loader } from "lucide-react";
 import { jumpTo } from "../local-ui/Jumper";
 import { getCookiesAction, setCookiesAction } from "@/lib/actions";
+import { ErrorMessage } from "../local-ui/errorMessage";
 
 const DatePickerCustomInput = forwardRef(
   ({ loading, open, setOpen, value, onClick, className }, ref) => {
@@ -245,6 +246,25 @@ function SearchStaysForm({ searchParams = {} }) {
 
   return (
     <form id="stayForm" method="get" onSubmit={handleSubmit}>
+      <div className={"col-span-full"}>
+        {Object.keys(errors).length > 0 && (
+          <ErrorMessage
+            message={
+              <ol>
+                {Object.entries(errors).map((err) => {
+                  return (
+                    <li key={err[0]}>
+                      <span className="font-bold capitalize">{err[0]}</span>:{" "}
+                      {err[1]}
+                    </li>
+                  );
+                })}
+              </ol>
+            }
+            className={"text-xs"}
+          />
+        )}
+      </div>
       <div className="my-[20px] grid grid-cols-4 gap-4">
         <div
           className={cn(
