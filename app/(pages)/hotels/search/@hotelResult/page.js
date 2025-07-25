@@ -13,8 +13,26 @@ export default async function HotelResultPage({ searchParams }) {
 
   const validate = validateHotelSearchParams(searchParams);
 
+  const formStateError = {
+    ...searchParams,
+    checkIn: new Date(searchParams.checkIn)?.toLocaleString("en-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }),
+    checkOut: new Date(searchParams.checkOut)?.toLocaleString("en-CA", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    }),
+    destination: { city: searchParams.city, country: searchParams.country },
+    errors: validate.errors,
+  };
+  delete formStateError.city;
+  delete formStateError.country;
+
   if (validate.success === false) {
-    return <SetHotelFormState obj={{ errors: validate.errors }} />;
+    return <SetHotelFormState obj={formStateError} />;
   }
 
   let hotels = await getHotels(validate.data);
