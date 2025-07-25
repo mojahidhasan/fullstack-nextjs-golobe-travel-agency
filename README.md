@@ -129,7 +129,13 @@ To set up and run the project locally, follow these steps:
    - Set the required values for all environment variables
    - Note: The application may fail to run if environment variables are not properly configured
 
-5. **Generate sample data**
+5. **Start the development server**
+
+   ```sh
+   npm run dev
+   ```
+
+6. **Generate sample data**
 
    Flights:
 
@@ -156,12 +162,6 @@ To set up and run the project locally, follow these steps:
    # Generate hotels data files
    curl -X POST http://localhost:3000/api/generate/hotels/store_in_file -H "Authorization: Bearer API_SECRET_TOKEN"
    # curl.exe for windows
-   ```
-
-6. **Start the development server**
-
-   ```sh
-   npm run dev
    ```
 
 ## TODO
