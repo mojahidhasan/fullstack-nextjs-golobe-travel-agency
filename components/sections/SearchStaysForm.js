@@ -89,9 +89,21 @@ function SearchStaysForm({ searchParams = {} }) {
   useEffect(() => {
     async function searchState() {
       setIsFormLoading(true);
-      const p = getSearchStateParams();
       if (Object.keys(searchParams).length > 0) {
-        const newFormData = { ...defaultHotelFormValue, ...p };
+        const p = getSearchStateParams();
+
+        const newFormData = {
+          ...defaultHotelFormValue,
+          ...{
+            ...searchParams,
+            destination: {
+              city: searchParams.city,
+              country: searchParams.country,
+            },
+          },
+          ...p,
+        };
+
         if (Object.keys(newFormData?.errors || {}).length > 0) {
           dispatch(setStayForm(newFormData));
         } else {
@@ -117,8 +129,24 @@ function SearchStaysForm({ searchParams = {} }) {
       }
 
       let searchState = await getSearchStateCookies();
+      const searchStateCookie = JSON.parse(
+        (await getCookiesAction(["hotelSearchState"]))[0]?.value || "{}",
+      );
+
       if (Object.keys(searchState?.errors || {}).length > 0) {
-        dispatch(setStayForm({ ...defaultHotelFormValue, ...searchState }));
+        dispatch(
+          setStayForm({
+            ...defaultHotelFormValue,
+            ...{
+              ...searchStateCookie,
+              destination: {
+                city: searchStateCookie.city,
+                country: searchStateCookie.country,
+              },
+            },
+            ...searchState,
+          }),
+        );
       } else {
         const obj = {
           ...searchState,
