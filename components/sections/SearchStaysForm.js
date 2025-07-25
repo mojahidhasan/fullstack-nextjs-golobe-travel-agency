@@ -193,8 +193,6 @@ function SearchStaysForm({ searchParams = {} }) {
 
     if (Object.keys(searchState?.errors).length > 0) {
       dispatch(setStayForm({ errors: { ...searchState.errors } }));
-      setIsSending(false);
-      return;
     }
 
     const {
@@ -239,6 +237,7 @@ function SearchStaysForm({ searchParams = {} }) {
     }
 
     dispatch(setStayForm({ errors: {} }));
+
     const queryString = new URLSearchParams(dFForm).toString();
     router.push(`/hotels/search?${queryString}`);
     setIsSending(false);
