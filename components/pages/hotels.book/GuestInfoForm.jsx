@@ -1,7 +1,6 @@
-// in development
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Input } from "@/components/local-ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -26,6 +25,17 @@ export default function GuestInfoForm({ guestsCount = 1, nextStep }) {
       isPrimary: index === 0,
     }));
   });
+
+  useEffect(() => {
+    const guests = JSON.parse(sessionStorage.getItem("guests") || "[]");
+    const guestsErrors = JSON.parse(
+      sessionStorage.getItem("guestsFormErrors") || "{}",
+    );
+    setErrors(guestsErrors);
+    if (guests.length > 0) {
+      setGuestData(guests);
+    }
+  }, []);
 
   function handleChange(index, field, value) {
     const updated = [...guestData];
@@ -63,6 +73,7 @@ export default function GuestInfoForm({ guestsCount = 1, nextStep }) {
     }
 
     sessionStorage.setItem("guests", JSON.stringify(data));
+    sessionStorage.removeItem("guestsFormErrors");
     router.push(`${pathname}?tab=${nextStep}`);
   }
   return (
