@@ -84,9 +84,12 @@ const SelectPopover = forwardRef(
 
           const textToSearch =
             el.props.searchableValue || String(el.props.children);
-
+          const escapedQuery = escapeRegExp(searchQuery);
+          function escapeRegExp(string) {
+            return string.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+          }
           const regexPattern =
-            searchQuery.match(/.{1,2}/g)?.join("+?.*") || searchQuery;
+            escapedQuery.match(/.{1,2}/g)?.join("+?.*") || escapedQuery;
           if (!regexPattern) return true;
 
           try {
