@@ -7,6 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Select, Option } from "@/components/local-ui/Select";
 import validateGuestForm from "@/lib/zodSchemas/hotelGuestsFormValidation";
 import { usePathname, useRouter } from "next/navigation";
+import { deepSanitize } from "@/lib/utils";
 export default function GuestInfoForm({ guestsCount = 1, nextStep }) {
   const pathname = usePathname();
   const router = useRouter();
@@ -25,21 +26,31 @@ export default function GuestInfoForm({ guestsCount = 1, nextStep }) {
       isPrimary: index === 0,
     }));
   });
-
+  const allowedFields = [
+    "firstName",
+    "lastName",
+    "email",
+    "phone",
+    "guestType",
+    "age",
+    "isPrimary",
+  ];
   useEffect(() => {
     const guests = JSON.parse(sessionStorage.getItem("guests") || "[]");
     const guestsErrors = JSON.parse(
       sessionStorage.getItem("guestsFormErrors") || "{}",
     );
-    setErrors(guestsErrors);
+    setErrors(deepSanitize(guestsErrors));
     if (guests.length > 0) {
-      setGuestData(guests);
+      setGuestData(deepSanitize(guests));
     }
   }, []);
 
   function handleChange(index, field, value) {
     const updated = [...guestData];
-    updated[index][field] = value;
+    if (allowedFields.includes(field)) {
+      updated[index][field] = value;
+    }
     setGuestData(updated);
   }
 
