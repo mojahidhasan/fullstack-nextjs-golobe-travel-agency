@@ -58,7 +58,16 @@ export async function TicketsOrBookings() {
             </TabsTrigger>
           </TabsList>
           <TabsContent className="flex flex-col gap-3" value="flights">
-            {!flightBookings.length && <NoSavedCardsMessage />}
+            {!flightBookings.length && (
+              <NoBookingFound
+                message={
+                  <>
+                    You don&apos;t have any flight booking yet. Go to{" "}
+                    <Link href="/flights">flights</Link> to book a flight
+                  </>
+                }
+              />
+            )}
 
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {flightBookings.map(async (booking) => {
