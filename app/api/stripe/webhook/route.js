@@ -121,6 +121,41 @@ export async function POST(req) {
             htmlEmail,
           );
         }
+        if (charge.metadata?.type === "hotelBooking") {
+          const paymentInfo = await createOneDoc(
+            "HotelPayment",
+            {
+              bookingId: charge.metadata.hotelBookingId,
+              transactionId: charge.balance_transaction,
+              paymentDate: charge.created,
+              paymentMethod: {
+                id: charge.payment_method,
+                methodType: methodtype,
+                brand: charge.payment_method_details[methodtype].brand,
+                last4: charge.payment_method_details[methodtype].last4,
+              },
+              amount: Number(charge.amount) / 100, // Stripe returns amount in cents
+              receiptUrl: charge.receipt_url,
+            },
+            { session },
+          );
+          await updateOneDoc(
+            "HotelBooking",
+            {
+              _id: strToObjectId(charge.metadata.hotelBookingId),
+            },
+            {
+              bookingStatus: "confirmed",
+              paymentStatus: "paid",
+              paymentMethod: "card",
+              paymentId: paymentInfo._id,
+              bookedAt: new Date(charge.created * 1000),
+            },
+            { session },
+          );
+          await session.commitTransaction();
+          revalidateTag("hotelBookings");
+        }
         console.log("Received webhook:", event.type);
         return Response.json({ success: true, message: "Success" });
       } catch (err) {
