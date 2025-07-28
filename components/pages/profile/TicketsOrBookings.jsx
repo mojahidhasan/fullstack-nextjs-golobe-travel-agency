@@ -1,15 +1,15 @@
 import { TabsContent, TabsList, TabsTrigger, Tabs } from "@/components/ui/tabs";
-import { HotelTicketDownloadCard } from "@/components/pages/profile/ui/HotelTicketDownloadCard";
 
 import Image from "next/image";
 
-import CVKHotel from "@/public/images/CVK-hotel.jpg";
 import { auth } from "@/lib/auth";
 import { getAllFlightBookings } from "@/lib/controllers/flights";
 import Link from "next/link";
 import FlightBookingDetailsCardSmall from "./ui/FlightBookingDetailsCardSmall";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { strToObjectId } from "@/lib/db/utilsDB";
+import { getAllHotelBookings } from "@/lib/controllers/hotels";
+import HotelBookingDetailsCardSmall from "./ui/HotelBookingDetailsCardSmall";
 export async function TicketsOrBookings() {
   const session = await auth();
 
@@ -17,15 +17,7 @@ export async function TicketsOrBookings() {
 
   const flightBookings = await getAllFlightBookings(userId);
 
-  const ticketHotel = {
-    id: 1,
-    check: {
-      in: new Date(2023, 1, 1, 18, 0),
-      out: new Date(2023, 1, 1, 22, 0),
-    },
-    roomNo: "On Arrival",
-    logo: CVKHotel,
-  };
+  const hotelBookings = await getAllHotelBookings(userId);
 
   return (
     <>
@@ -126,21 +118,47 @@ export async function TicketsOrBookings() {
             </div>
           </TabsContent>
           <TabsContent value="stays">
-            <HotelTicketDownloadCard ticketData={ticketHotel} />
+            {hotelBookings.length === 0 && (
+              <NoBookingFound
+                message={
+                  <>
+                    You don&apos;t have any hotel booking yet. Go to{" "}
+                    <Link href="/hotels">hotels</Link> to book a room
+                  </>
+                }
+              />
+            )}
+
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {hotelBookings.map(async (booking) => {
+                const hotelData = await getOneDoc(
+                  "Hotel",
+                  {
+                    _id: strToObjectId(booking.hotelId),
+                  },
+                  ["hotel"],
+                );
+                return (
+                  <HotelBookingDetailsCardSmall
+                    key={booking._id}
+                    hotelDetails={hotelData}
+                    bookingDetails={booking}
+                    className={"mx-auto"}
+                  />
+                );
+              })}
+            </div>
           </TabsContent>
         </Tabs>
       </div>
     </>
   );
 }
-function NoSavedCardsMessage() {
+function NoBookingFound({ message }) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 rounded-xl bg-gray-50 p-6 text-gray-700 shadow-inner">
       <div className="text-2xl font-semibold">No Bookings yet</div>
-      <p className="max-w-md text-center text-base">
-        You don&apos;t have any flight booking yet. Go to{" "}
-        <Link href="/flights">flights</Link> to book a flight
-      </p>
+      <div className="max-w-md text-center text-base">{message}</div>
     </div>
   );
 }
