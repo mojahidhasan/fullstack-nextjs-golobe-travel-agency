@@ -1,13 +1,11 @@
-// in development
-
 "use client";
 
 import { usePathname, useRouter } from "next/navigation";
-import { useState, useMemo, useRef, useEffect } from "react";
+import { useMemo, useEffect, useState } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Dropdown } from "@/components/local-ui/Dropdown";
-import { BedDouble, Minus, Plus, User } from "lucide-react";
+import { AlertTriangle, BedDouble, Minus, Plus, User } from "lucide-react";
 import { formatCurrency, groupBy } from "@/lib/utils";
 import {
   hotelPriceCalculation,
@@ -17,7 +15,9 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   addRoom,
   removeRoomById,
+  setRooms,
 } from "@/reduxStore/features/hotelRoomSelectorSlice";
+import validateGuestForm from "@/lib/zodSchemas/hotelGuestsFormValidation";
 
 function RoomSelectorSummary({
   guests,
@@ -81,6 +81,41 @@ export function RoomSelector({ nextStep, rooms, guests = 1 }) {
   const router = useRouter();
   const dispatch = useDispatch();
 
+  const [hasGuestFormErrors, setHasGuestFormErrors] = useState(false);
+
+  useEffect(() => {
+    const guestsDetails = JSON.parse(sessionStorage.getItem("guests") || "{}");
+    const selectedRooms = JSON.parse(
+      sessionStorage.getItem("selectedRooms") || "[]",
+    );
+
+    const guestsArr = Object.values(guestsDetails);
+    const guestData = guestsArr.length ? guestsArr : Array(guests).fill({});
+
+    let key = 0;
+    let err = {};
+    let data = {};
+    for (const guestForm of guestData) {
+      const validate = validateGuestForm(guestForm);
+      if (validate.success === false) {
+        err = JSON.parse(JSON.stringify(err));
+        err[key] = validate.errors;
+      }
+      if (validate.success) {
+        data = JSON.parse(JSON.stringify(data));
+        data[key] = validate.data;
+      }
+      key++;
+    }
+
+    if (Object.keys(err).length) {
+      sessionStorage.setItem("guestsFormErrors", JSON.stringify(err));
+      setHasGuestFormErrors(true);
+    }
+
+    setRooms(selectedRooms);
+  }, []);
+
   const selectedRoomGroups = useSelector(
     (state) => state.hotelRoomsSelector.value,
   );
@@ -106,7 +141,28 @@ export function RoomSelector({ nextStep, rooms, guests = 1 }) {
     sessionStorage.setItem("selectedRooms", JSON.stringify(selectedRoomGroups));
     router.push(`${pathname}?tab=${nextStep}`);
   };
-  return (
+
+  function setProgress(step) {
+    router.push(`${pathname}?tab=${step}`);
+  }
+  return hasGuestFormErrors ? (
+    <div className="flex h-full min-h-[300px] flex-col items-center justify-center gap-4 rounded-md border border-red-300 bg-red-50 p-6 shadow-sm">
+      <div className="flex items-center gap-2 text-red-600">
+        <AlertTriangle className="h-6 w-6" />
+        <h2 className="text-xl font-semibold">Incomplete Guest Details</h2>
+      </div>
+      <p className="max-w-md text-center text-sm text-red-700">
+        Please fix the guest details and try again.
+      </p>
+      <Button
+        size="lg"
+        onClick={() => setProgress("guest_info")}
+        className="bg-red-600 font-semibold text-white hover:bg-red-700"
+      >
+        Go Back & Fix Details
+      </Button>
+    </div>
+  ) : (
     <div className="space-y-6">
       <RoomSelectorSummary
         guests={guests}
