@@ -53,11 +53,13 @@ export default async function FlightDetailsPage({ params }) {
   metaData.isFlightExpired = isFlightExpired;
   metaData.isSeatsAvailable = isSeatsAvailable;
   const bookingDisabled = isFlightExpired || !isSeatsAvailable;
+
   let bookingId = null;
+
   if (loggedIn) {
-    const userDetails = await getUserDetails(session.user.id, 0);
+    const userDetails = await getUserDetails(session.user.id);
     metaData.isBookmarked = userDetails.flights.bookmarked.some((el) => {
-      return el.flightId._id === flight._id;
+      return el.flightId?._id === flight._id;
     });
 
     const flightBookings = await FlightBooking.findOne({
