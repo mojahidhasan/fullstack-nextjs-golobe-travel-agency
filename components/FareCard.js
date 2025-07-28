@@ -112,7 +112,7 @@ export function FareCard({
   );
 }
 
-export function HotelFareCard({ className = "" }) {
+export function HotelFareCard({ searchState, className = "" }) {
   const dispatch = useDispatch();
   const [loading, setLoading] = useState(true);
 
@@ -127,9 +127,8 @@ export function HotelFareCard({ className = "" }) {
 
   const selected = useSelector((state) => state.hotelRoomsSelector.value);
 
-  // Per-Room Pricing Model
   const { fareBreakdowns, total: computedTotal } =
-    multiRoomCombinedFareBreakDown(selected, 2);
+    multiRoomCombinedFareBreakDown(selected, searchState.guests);
 
   const fareTypeLabels = {
     base: "Base Fare",
