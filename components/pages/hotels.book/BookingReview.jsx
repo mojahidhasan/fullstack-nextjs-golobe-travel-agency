@@ -29,6 +29,7 @@ export default function BookingReview({ nextStep, hotelDetails, searchState }) {
   };
 
   const [guestInfo, setGuestInfo] = useState([]);
+  const [hasGuestFormErrors, setHasGuestFormErrors] = useState(false);
   const [selectedRooms, setRooms] = useState([]);
 
   const strHotelDetails = JSON.stringify(hotelDetails);
@@ -41,10 +42,34 @@ export default function BookingReview({ nextStep, hotelDetails, searchState }) {
     );
 
     const guestsArr = Object.values(guestsDetails);
+    const guestData = guestsArr.length
+      ? guestsArr
+      : Array(searchState.guests).fill({});
+
+    let key = 0;
+    let err = {};
+    let data = {};
+    for (const guestForm of guestData) {
+      const validate = validateGuestForm(guestForm);
+      if (validate.success === false) {
+        err = JSON.parse(JSON.stringify(err));
+        err[key] = validate.errors;
+      }
+      if (validate.success) {
+        data = JSON.parse(JSON.stringify(data));
+        data[key] = validate.data;
+      }
+      key++;
+    }
+
+    if (Object.keys(err).length) {
+      sessionStorage.setItem("guestsFormErrors", JSON.stringify(err));
+      setHasGuestFormErrors(true);
+    }
 
     setGuestInfo(guestsArr);
     setRooms(selectedRooms);
-  }, [strHotelDetails, strSearchState]);
+  }, [strHotelDetails, strSearchState, searchState.guests]);
 
   function formatDate(date) {
     try {
