@@ -36,26 +36,25 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
    - Advanced flight search with multiple filters
    - Multi-city and round trip options
-   - Favorite flights saving feature
 
 3. **Hotel Services**
 
    - Comprehensive hotel search and filtering
-   <!-- - Room type selection, not yet implemented -->
+   - Room type selection
 
 4. **User Experience**
 
    - Timezone detection for accurate scheduling
    - Responsive design for all devices
-     <!-- - Intuitive booking process, not yet implemented -->
-     <!-- - Search history tracking, not yet implemented  -->
+   - Intuitive booking process
+   - Search history tracking
 
 5. **Account Management**
 
    - Multiple email addresses support
    - Phone number management
-     <!-- - Booking history and receipts , not yet implemented -->
-     <!-- - Saved payment methods , not yet implemented -->
+   - Booking history and receipts
+   - Saved payment methods
 
 6. **Technical Implementation**
 
@@ -169,7 +168,7 @@ To set up and run the project locally, follow these steps:
 ### Core Features
 
 - Integrate real flight API to replace mock data (High Priority)
-- Add hotel reservation functionality
+- Implement real hotel API to replace mock data
 
 ### User Account & Profile
 
@@ -177,9 +176,6 @@ To set up and run the project locally, follow these steps:
   - Password updates
   - Contact information changes
   - Personal detail modifications
-- Add payment methods management interface
-- Create booking history section:
-  - Hotel reservations
 
 ### UI/UX Improvements
 
