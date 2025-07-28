@@ -47,7 +47,7 @@ export default async function HotelResultPage({ searchParams }) {
   }
 
   // rating and reviews
-  hotels = await Promise.all(
+  const hotelResultsForCard = await Promise.all(
     hotels.map(async (hotel) => {
       const reviews = await getManyDocs(
         "HotelReview",
@@ -93,7 +93,7 @@ export default async function HotelResultPage({ searchParams }) {
         address: Object.values(hotel.address).join(", "),
         amenities: hotel.amenities.slice(0, 5),
         price: cheapestRoom.price,
-        availableRooms: hotel.rooms.length,
+        availableRoomsCount: hotel.rooms.length,
         rating: totalReviewsCount ? rating.toFixed(1) : "N/A",
         totalReviews: totalReviewsCount,
         ratingScale: ratingScale || "N/A",
@@ -109,7 +109,7 @@ export default async function HotelResultPage({ searchParams }) {
   return (
     <div className="flex flex-grow flex-col gap-[32px]">
       <Jumper id={"hotelResults"} />
-      {hotels.map((hotel) => (
+      {hotelResultsForCard.map((hotel) => (
         <HotelResultCard
           key={hotel._id}
           hotel={hotel}
