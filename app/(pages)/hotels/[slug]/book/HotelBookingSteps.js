@@ -1,4 +1,3 @@
-// In development
 "use client";
 import { HotelFareCard } from "@/components/FareCard";
 import ProgressStepper from "@/components/local-ui/ProgressStepper";
@@ -41,7 +40,13 @@ export function HotelBookingSteps({ hotelDetails, searchState }) {
           />
         );
       case "payment":
-        return <HotelBookingPayment />;
+        return (
+          <HotelBookingPayment
+            slug={hotelDetails.slug}
+            checkInDate={searchState.checkIn}
+            checkOutDate={searchState.checkOut}
+          />
+        );
       default:
         return (
           <GuestInfoForm
@@ -78,7 +83,10 @@ export function HotelBookingSteps({ hotelDetails, searchState }) {
         <div className="flex-grow">
           <div className="h-auto rounded-lg bg-white p-6 shadow-lg">
             <h3 className="mb-3 text-2xl font-bold">Fare Summary</h3>
-            <HotelFareCard className="p-0 shadow-none" />
+            <HotelFareCard
+              searchState={searchState}
+              className="p-0 shadow-none"
+            />
           </div>
         </div>
       </div>
