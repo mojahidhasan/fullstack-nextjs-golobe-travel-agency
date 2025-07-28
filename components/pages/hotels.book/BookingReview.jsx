@@ -79,15 +79,42 @@ export default function BookingReview({ nextStep, hotelDetails, searchState }) {
     }
   }
 
-  async function handleConfirm() {
+  async function handleConfirm(e) {
+    e.target.disabled = true;
     const bookingData = {
       guests: guestInfo,
       selectedRooms: selectedRooms,
     };
-    await hotelRoomReserveAction(bookingData);
-    // sessionStorage.removeItem("guests");
-    // sessionStorage.removeItem("selectedRooms");
-    // router.push(`${pathname}?tab=${nextStep}`);
+    const res = await hotelRoomReserveAction(bookingData);
+    e.target.disabled = false;
+    if (res.success) {
+      sessionStorage.removeItem("guests");
+      sessionStorage.removeItem("selectedRooms");
+      router.push(`${pathname}?tab=${nextStep}`);
+    }
+    if (!res.success) {
+      if (res.name === "RoomAlreadyReserved") {
+        toast({
+          title: res.name,
+          description: res.message,
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          router.push(`${pathname}?tab=${nextStep}`);
+        }, 1000);
+        return;
+      }
+
+      toast({
+        title: "Failed",
+        description: res.message,
+        variant: "destructive",
+      });
+    }
+  }
+
+  function setProgress(step) {
+    router.push(`${pathname}?tab=${step}`);
   }
   return (
     <div className="space-y-6">
