@@ -33,11 +33,30 @@ import { View, X } from "lucide-react";
 import { notFound } from "next/navigation";
 import { strToObjectId } from "@/lib/db/utilsDB";
 import { hotelPriceCalculation } from "@/lib/helpers/hotels/priceCalculation";
-
+import { getHotel } from "@/lib/controllers/hotels";
+import { cookies } from "next/headers";
+import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
+import NotFound from "@/app/not-found";
+import routes from "@/data/routes.json";
 export default async function HotelDetailsPage({ params }) {
   const session = await auth();
   const slug = params.slug;
-  const hotelDetails = await getOneDoc("Hotel", { slug }, ["hotels"]);
+
+  const searchState = JSON.parse(
+    cookies().get("hotelSearchState")?.value || "{}",
+  );
+  const validate = validateHotelSearchParams(searchState);
+
+  if (!validate.success)
+    return (
+      <NotFound
+        whatHappened="Error in search state"
+        explanation="Sorry, we couldn't retrieve your hotel search context or there was an error in search state. Thus we couldn't retrieve the hotel details. Please search again."
+        navigateTo={{ path: routes.hotels.path, title: routes.hotels.title }}
+      />
+    );
+
+  const hotelDetails = await getHotel(slug, searchState);
 
   if (Object.keys(hotelDetails).length === 0) return notFound();
 
@@ -129,7 +148,7 @@ export default async function HotelDetailsPage({ params }) {
         </div>
         <div>
           <div className="mb-[16px] flex flex-col text-right text-[0.875rem] font-bold text-tertiary sm:items-end">
-            {price.discountPercentage && (
+            {Boolean(+price.discountPercentage) && (
               <p className="w-fit rounded-md bg-tertiary px-2 py-1 text-sm font-semibold text-white">
                 {price.discountPercentage}% OFF
               </p>
