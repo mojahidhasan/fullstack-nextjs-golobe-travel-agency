@@ -46,7 +46,7 @@ export async function POST(req) {
               brand: charge.payment_method_details[methodtype].brand,
               last4: charge.payment_method_details[methodtype].last4,
             },
-            amount: charge.amount,
+            amount: Number(charge.amount) / 100,
             receiptUrl: charge.receipt_url,
           };
 
