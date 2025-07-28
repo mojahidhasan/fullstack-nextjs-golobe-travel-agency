@@ -12,7 +12,7 @@ export function HotelResultCard({
   hotel: {
     image = "https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
     price: { base = 0, discount = 0, tax = 0, serviceFee = 0 },
-    availableRooms,
+    availableRoomsCount,
     rating = 4.2,
     totalReviews = 371,
     ratingScale = "N/A",
@@ -110,7 +110,7 @@ export function HotelResultCard({
               </div>
             </div>
             <div className="rounded-xl text-right text-xs font-semibold text-destructive">
-              {availableRooms} rooms available
+              {availableRoomsCount} rooms available
             </div>
           </div>
         </div>
