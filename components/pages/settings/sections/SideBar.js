@@ -10,11 +10,11 @@ export function SettingsSideBar() {
     currentTab === tab ? "font-bold text-primary bg-primary/10" : "";
 
   const settingTabs = [
-    "Profile",
-    "Account",
-    "Payments",
-    "Security",
-    "Appearance",
+    "profile",
+    "account",
+    "payments",
+    "security",
+    "appearance",
   ];
   return (
     <div
@@ -27,7 +27,7 @@ export function SettingsSideBar() {
           <li key={tab} className={"w-full rounded-md hover:bg-slate-100"}>
             <Link
               className={cn(
-                "block h-full w-full p-2",
+                "block h-full w-full p-2 capitalize",
                 isActive(tab),
                 i === 0 &&
                   !currentTab &&
