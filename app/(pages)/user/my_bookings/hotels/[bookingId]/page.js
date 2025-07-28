@@ -8,7 +8,7 @@ import { strToObjectId } from "@/lib/db/utilsDB";
 import { auth } from "@/lib/auth";
 import routes from "@/data/routes.json";
 import { redirect } from "next/navigation";
-import { TruncatedBadgeList } from "./TruncateBadgeList";
+import { TruncatedBadgeList } from "@/components/pages/hotels.[bookingId]/TruncateBadgeList";
 import Link from "next/link";
 export default async function HotelBookingDetailsPage({ params }) {
   const session = await auth();
