@@ -59,8 +59,13 @@ export default function GuestInfoForm({
       sessionStorage.getItem("guestsFormErrors") || "{}",
     );
     setErrors(deepSanitize(guestsErrors));
-    if (guests.length > 0) {
-      setGuestData(deepSanitize(guests));
+
+    const guestsArr = Object.values(guests);
+    if (guestsArr.length > 0) {
+      const sanitizedGuests = deepSanitize(guestsArr);
+      setGuestData((prev) =>
+        prev.map((g, i) => ({ ...g, ...sanitizedGuests[i] })),
+      );
     }
   }, [userDetailsDeps]);
 
