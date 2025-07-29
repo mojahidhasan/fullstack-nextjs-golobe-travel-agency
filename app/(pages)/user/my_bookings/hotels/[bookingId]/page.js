@@ -113,7 +113,12 @@ export default async function HotelBookingDetailsPage({ params }) {
       {/* Room Details */}
       <Card>
         <CardContent className="space-y-4 p-4">
-          <h3 className="text-lg font-medium">Rooms</h3>
+          <div>
+            <h3 className="text-lg font-semibold">Rooms</h3>
+            <p className="text-sm font-semibold text-muted-foreground">
+              {rooms.length} {rooms.length === 1 ? "room" : "rooms"}
+            </p>
+          </div>
           {rooms.map((room, index) => (
             <div
               key={room._id || index}
@@ -158,7 +163,7 @@ export default async function HotelBookingDetailsPage({ params }) {
       {/* Guest Details */}
       <Card>
         <CardContent className="space-y-2 p-4">
-          <h3 className="text-lg font-medium">Guests</h3>
+          <h3 className="text-lg font-semibold">Guests</h3>
           {guests.map((guest, index) => (
             <div
               key={guest._id || index}
