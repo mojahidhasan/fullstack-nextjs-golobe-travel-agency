@@ -123,7 +123,7 @@ export default function GuestInfoForm({ guestsCount = 1, nextStep }) {
             <div className="space-y-1.5">
               <Input
                 id={`lastName-${index}`}
-                label={guest.isPrimary ? "Last Name *" : "Last Name"}
+                label={"Last Name *"}
                 value={guest.lastName}
                 onChange={(e) =>
                   handleChange(index, "lastName", e.target.value)
