@@ -15,14 +15,16 @@ export function HotelBookingSteps({ hotelDetails, searchState }) {
   const tab = searchParams.get("tab");
 
   function renderComponent(tab) {
+    const guestForm = (
+      <GuestInfoForm
+        nextStep="select_room"
+        guestsCount={searchState.guests}
+        userDetails={userDetails}
+      />
+    );
     switch (tab) {
       case "guest_info":
-        return (
-          <GuestInfoForm
-            nextStep="select_room"
-            guestsCount={searchState.guests}
-          />
-        );
+        return guestForm;
       case "select_room":
         return (
           <RoomSelector
@@ -48,12 +50,7 @@ export function HotelBookingSteps({ hotelDetails, searchState }) {
           />
         );
       default:
-        return (
-          <GuestInfoForm
-            nextStep={"select_room"}
-            guestsCount={searchState.guests}
-          />
-        );
+        return guestForm;
     }
   }
 
