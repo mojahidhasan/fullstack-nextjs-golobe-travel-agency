@@ -1,7 +1,7 @@
 import { BreadcrumbUI } from "@/components/local-ui/breadcrumb";
 import { AuthenticationCard } from "@/components/AuthenticationCard";
 
-import { isLoggedIn } from "@/lib/auth";
+import { auth } from "@/lib/auth";
 import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import NotFound from "@/app/not-found";
@@ -9,9 +9,11 @@ import routes from "@/data/routes.json";
 import { HotelBookingSteps } from "@/components/pages/hotels.book/HotelBookingSteps";
 import { getHotel } from "@/lib/controllers/hotels";
 import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
+import { getUserDetails } from "@/lib/controllers/user";
 
 export default async function HotelBookPage({ params }) {
-  const loggedIn = await isLoggedIn();
+  const session = await auth();
+  const loggedIn = !!session?.user;
   const slug = params.slug;
 
   if (!loggedIn) {
@@ -41,6 +43,8 @@ export default async function HotelBookPage({ params }) {
   if (!hotelDetails || Object.keys(hotelDetails).length === 0)
     return notFound();
 
+  const userDetails = await getUserDetails(session.user.id);
+
   return (
     <>
       <main className="mx-auto my-12 w-[95%] text-secondary">
@@ -49,6 +53,15 @@ export default async function HotelBookPage({ params }) {
         <HotelBookingSteps
           hotelDetails={hotelDetails}
           searchState={searchState}
+          userDetails={{
+            firstName: userDetails.firstName,
+            lastName: userDetails.lastName,
+            email: userDetails.email,
+            phone: userDetails.phoneNumbers?.[0] || {
+              dialCode: "",
+              number: "",
+            },
+          }}
         />
       </main>
     </>

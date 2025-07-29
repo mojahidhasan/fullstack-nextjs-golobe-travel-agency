@@ -7,7 +7,7 @@ import HotelBookingPayment from "@/components/pages/hotels.book/HotelBookingPaym
 import { RoomSelector } from "@/components/pages/hotels.book/RoomSelector";
 import { Separator } from "@/components/ui/separator";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-export function HotelBookingSteps({ hotelDetails, searchState }) {
+export function HotelBookingSteps({ hotelDetails, userDetails, searchState }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
