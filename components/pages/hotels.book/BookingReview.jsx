@@ -225,7 +225,12 @@ function SelectedRoomsCard({ selectedRooms = [] }) {
   return (
     <Card>
       <CardContent className="space-y-3 p-4">
-        <h3 className="text-lg font-semibold">Selected Rooms</h3>
+        <div>
+          <h3 className="text-lg font-semibold">Selected Rooms</h3>
+          <p className="text-sm text-muted-foreground">
+            {selectedRooms.length} selected
+          </p>
+        </div>
 
         {selectedRooms.map((room, index) => (
           <div
