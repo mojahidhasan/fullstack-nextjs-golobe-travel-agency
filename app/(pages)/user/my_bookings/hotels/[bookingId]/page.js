@@ -51,6 +51,31 @@ export default async function HotelBookingDetailsPage({ params }) {
     <main className="mx-auto my-4 w-[90%] max-w-[1440px] space-y-6">
       {/* Page Title */}
       <h2 className="text-2xl font-semibold text-gray-800">Booking Details</h2>
+      {/* Action Buttons (optional) */}
+      <Card>
+        <CardContent className="p-4">
+          <div className="flex flex-wrap gap-3">
+            {bookingStatus === "pending" && paymentStatus === "pending" && (
+              <Button>Confirm Now, Pay at Hotel</Button>
+            )}
+            {bookingStatus === "confirmed" && paymentStatus === "paid" && (
+              <Button asChild>
+                <Link href={`/user/my_bookings/hotels/${bookingId}/invoice`}>
+                  Download Invoice
+                </Link>
+              </Button>
+            )}
+            {paymentStatus === "pending" && (
+              <Button asChild>
+                <Link href={`/user/my_bookings/hotels/${bookingId}/payment`}>
+                  Pay and Confirm Now
+                </Link>
+              </Button>
+            )}
+            <Button variant="destructive">Cancel Booking</Button>
+          </div>
+        </CardContent>
+      </Card>
       {/* Booking Info */}
       <Card>
         <CardContent className="space-y-4 p-4">
@@ -186,28 +211,6 @@ export default async function HotelBookingDetailsPage({ params }) {
           ))}
         </CardContent>
       </Card>
-
-      {/* Action Buttons (optional) */}
-      <div className="flex gap-3">
-        {bookingStatus === "pending" && paymentStatus === "pending" && (
-          <Button>Confirm Now, Pay at Hotel</Button>
-        )}
-        {bookingStatus === "confirmed" && paymentStatus === "paid" && (
-          <Button asChild>
-            <Link href={`/user/my_bookings/hotels/${bookingId}/invoice`}>
-              Download Invoice
-            </Link>
-          </Button>
-        )}
-        {paymentStatus === "pending" && (
-          <Button asChild>
-            <Link href={`/user/my_bookings/hotels/${bookingId}/payment`}>
-              Pay and Confirm Now
-            </Link>
-          </Button>
-        )}
-        <Button variant="destructive">Cancel Booking</Button>
-      </div>
     </main>
   );
 }
