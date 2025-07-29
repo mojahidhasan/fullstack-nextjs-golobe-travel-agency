@@ -149,12 +149,12 @@ export default function GuestInfoForm({ guestsCount = 1, nextStep }) {
               <div className="space-y-1.5">
                 <Input
                   type="tel"
-                  value={guest.phone}
+                  defaultPhoneValue={JSON.stringify(guest.phone)}
+                  name={`phone-${index}`}
                   label="Phone *"
                   dialCodePlaceholder={"+XXX"}
                   onChange={(e) => {
                     handleChange(index, "phone", JSON.parse(e.target.value));
-                    console.log(e);
                   }}
                   error={errors[index]?.[`phone`]}
                 />
