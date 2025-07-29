@@ -8,7 +8,11 @@ import { Select, Option } from "@/components/local-ui/Select";
 import validateGuestForm from "@/lib/zodSchemas/hotelGuestsFormValidation";
 import { usePathname, useRouter } from "next/navigation";
 import { deepSanitize } from "@/lib/utils";
-export default function GuestInfoForm({ guestsCount = 1, nextStep }) {
+export default function GuestInfoForm({
+  guestsCount = 1,
+  userDetails,
+  nextStep,
+}) {
   const pathname = usePathname();
   const router = useRouter();
   const [errors, setErrors] = useState({});
@@ -26,6 +30,7 @@ export default function GuestInfoForm({ guestsCount = 1, nextStep }) {
       isPrimary: index === 0,
     }));
   });
+
   const allowedFields = [
     "firstName",
     "lastName",
@@ -35,8 +40,21 @@ export default function GuestInfoForm({ guestsCount = 1, nextStep }) {
     "age",
     "isPrimary",
   ];
+
+  const userDetailsDeps = JSON.stringify(userDetails || {});
+
   useEffect(() => {
-    const guests = JSON.parse(sessionStorage.getItem("guests") || "[]");
+    const userDetailsObj = JSON.parse(userDetailsDeps);
+    if (userDetailsObj) {
+      setGuestData((prev) => {
+        return prev.map((g, i) => ({
+          ...g,
+          ...(g.isPrimary === true && userDetailsObj),
+        }));
+      });
+    }
+
+    const guests = JSON.parse(sessionStorage.getItem("guests") || "{}");
     const guestsErrors = JSON.parse(
       sessionStorage.getItem("guestsFormErrors") || "{}",
     );
@@ -44,7 +62,7 @@ export default function GuestInfoForm({ guestsCount = 1, nextStep }) {
     if (guests.length > 0) {
       setGuestData(deepSanitize(guests));
     }
-  }, []);
+  }, [userDetailsDeps]);
 
   function handleChange(index, field, value) {
     const updated = [...guestData];
