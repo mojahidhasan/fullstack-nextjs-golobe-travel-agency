@@ -166,6 +166,57 @@ export async function POST(req) {
         console.log(err);
         return Response.json({ success: false, message: err.message });
       }
+    case "charge.refund.updated":
+      const refunded = event.data.object;
+
+      try {
+        if (refunded.metadata?.type === "flightBooking") {
+          await updateOneDoc(
+            "FlightBooking",
+            {
+              _id: strToObjectId(refunded.metadata.flightBookingId),
+            },
+            {
+              ticketStatus: "cancelled",
+              paymentStatus: "refunded",
+              refundInfo: {
+                stripeRefundId: refunded.id,
+                status: "refunded",
+                reason: refunded.reason,
+                currency: refunded.currency,
+                amount: Number(refunded.amount) / 100,
+                refundedAt: new Date(refunded.created * 1000),
+              },
+            },
+          );
+          revalidateTag("userFlightBooking");
+        }
+
+        if (refunded.metadata?.type === "hotelBooking") {
+          await updateOneDoc(
+            "HotelBooking",
+            {
+              _id: strToObjectId(refunded.metadata.hotelBookingId),
+            },
+            {
+              refundInfo: {
+                stripeRefundId: refunded.id,
+                status: "refunded",
+                reason: refunded.reason,
+                currency: refunded.currency,
+                amount: Number(refunded.amount) / 100,
+                refundedAt: new Date(refunded.created * 1000),
+              },
+            },
+          );
+          revalidateTag("hotelBookings");
+        }
+        console.log("Received webhook:", event.type);
+        return Response.json({ success: true, message: "Success" });
+      } catch (err) {
+        console.log(err);
+        return Response.json({ success: false, message: err.message });
+      }
       break;
     default:
       console.log(`Unhandled event type: ${event.type}`);
