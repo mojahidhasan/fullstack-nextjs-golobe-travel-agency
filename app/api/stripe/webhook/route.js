@@ -39,6 +39,8 @@ export async function POST(req) {
           const flightPayment = {
             bookingId: charge.metadata.flightBookingId,
             transactionId: charge.balance_transaction,
+            stripe_paymentIntentId: charge.payment_intent,
+            stripe_chargeId: charge.id,
             paymentDate: charge.created,
             paymentMethod: {
               id: charge.payment_method,
@@ -67,7 +69,7 @@ export async function POST(req) {
             const bookingInfo = await updateOneDoc(
               "FlightBooking",
               {
-                _id: charge.metadata.flightBookingId,
+                _id: strToObjectId(charge.metadata.flightBookingId),
               },
               {
                 ticketStatus: "confirmed",
@@ -127,6 +129,8 @@ export async function POST(req) {
             {
               bookingId: charge.metadata.hotelBookingId,
               transactionId: charge.balance_transaction,
+              stripe_paymentIntentId: charge.payment_intent,
+              stripe_chargeId: charge.id,
               paymentDate: charge.created,
               paymentMethod: {
                 id: charge.payment_method,
