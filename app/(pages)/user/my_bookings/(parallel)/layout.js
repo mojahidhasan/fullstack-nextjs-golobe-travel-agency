@@ -56,7 +56,9 @@ export default async function MyBookingsLayout({ flights, stays }) {
           <TabsContent className="flex flex-col gap-3" value="flights">
             {flights}
           </TabsContent>
-          <TabsContent value="stays">{stays}</TabsContent>
+          <TabsContent className="flex flex-col gap-3" value="stays">
+            {stays}
+          </TabsContent>
         </Tabs>
       </div>
     </main>

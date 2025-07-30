@@ -10,7 +10,7 @@ export default async function Stays() {
 
   const bookingData = await getAllHotelBookings(userId);
   return (
-    <div className="space-y-4">
+    <div>
       {bookingData.length === 0 && <Empty />}
       {bookingData.map(async (booking) => {
         const hotelDetails = await getOneDoc("Hotel", { _id: booking.hotelId });
@@ -50,18 +50,28 @@ export default async function Stays() {
 
         data.nights = differenceInDays(data.checkOutDate, data.checkInDate);
 
-        return <HotelBookingDetailsCard key={booking._id} bookingData={data} />;
+        return (
+          <HotelBookingDetailsCard
+            className="mb-3"
+            key={booking._id}
+            bookingData={data}
+          />
+        );
       })}
     </div>
   );
 }
 function Empty() {
   return (
-    <div className="flex h-[300px] flex-col items-center justify-center gap-4 rounded-xl border bg-gray-50 p-6 text-gray-700 shadow-inner">
-      <div className="text-2xl font-semibold">No Hotel Bookings yet</div>
-      <p className="max-w-md text-center text-base">
-        You haven&apos;t booked any hotel yet.
-      </p>
+    <div className="flex h-[300px] items-center justify-center rounded-xl border bg-gray-50 p-6 text-gray-700 shadow-inner">
+      <div>
+        <div className="mb-3 text-center text-2xl font-semibold">
+          No Hotel Bookings
+        </div>
+        <p className="text-center text-base">
+          You haven&apos;t booked any hotel yet.
+        </p>
+      </div>
     </div>
   );
 }
