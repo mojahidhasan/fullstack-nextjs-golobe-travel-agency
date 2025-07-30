@@ -199,6 +199,8 @@ export async function POST(req) {
               _id: strToObjectId(refunded.metadata.hotelBookingId),
             },
             {
+              bookingStatus: "cancelled",
+              paymentStatus: "refunded",
               refundInfo: {
                 stripeRefundId: refunded.id,
                 status: "refunded",
