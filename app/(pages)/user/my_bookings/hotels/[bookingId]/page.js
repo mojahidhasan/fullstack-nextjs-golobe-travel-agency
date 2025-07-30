@@ -10,6 +10,13 @@ import routes from "@/data/routes.json";
 import { redirect } from "next/navigation";
 import { TruncatedBadgeList } from "@/components/pages/hotels.[bookingId]/TruncateBadgeList";
 import Link from "next/link";
+import {
+  CancelHotelBookingButton,
+  RequestRefundHotelBookingButton,
+} from "@/components/pages/hotels.[bookingId]/ActionsButtons";
+import { availableFlightOrHotelBookingActionBtn } from "@/lib/helpers";
+import NotFound from "@/app/not-found";
+
 export default async function HotelBookingDetailsPage({ params }) {
   const session = await auth();
   const loggedIn = !!session?.user;
@@ -26,6 +33,7 @@ export default async function HotelBookingDetailsPage({ params }) {
     "HotelBooking",
     {
       _id: strToObjectId(bookingId),
+      userId: strToObjectId(session.user.id),
     },
     ["hotelBooking", "hotelBookings"],
   );
@@ -59,35 +67,33 @@ export default async function HotelBookingDetailsPage({ params }) {
     paymentMethod,
   } = booking;
 
+  const { canConfirm, canCancel, canRefund, canDownload, canPay } =
+    availableFlightOrHotelBookingActionBtn(bookingStatus, paymentStatus);
+
   return (
     <main className="mx-auto my-4 w-[90%] max-w-[1440px] space-y-6">
       {/* Page Title */}
       <h2 className="text-2xl font-semibold text-gray-800">Booking Details</h2>
       {/* Action Buttons (optional) */}
-      <Card>
-        <CardContent className="p-4">
-          <div className="flex flex-wrap gap-3">
-            {bookingStatus === "pending" && paymentStatus === "pending" && (
-              <Button>Confirm Now, Pay at Hotel</Button>
-            )}
-            {bookingStatus === "confirmed" && paymentStatus === "paid" && (
-              <Button asChild>
-                <Link href={`/user/my_bookings/hotels/${bookingId}/invoice`}>
-                  Download Invoice
-                </Link>
-              </Button>
-            )}
-            {paymentStatus === "pending" && (
-              <Button asChild>
-                <Link href={`/user/my_bookings/hotels/${bookingId}/payment`}>
-                  Pay and Confirm Now
-                </Link>
-              </Button>
-            )}
-            <Button variant="destructive">Cancel Booking</Button>
-          </div>
-        </CardContent>
-      </Card>
+      <div className="flex flex-wrap gap-3">
+        {canConfirm && <Button>Confirm Now, Pay at Hotel</Button>}
+        {canDownload && (
+          <Button asChild>
+            <Link href={`/user/my_bookings/hotels/${bookingId}/invoice`}>
+              Download Invoice
+            </Link>
+          </Button>
+        )}
+        {canPay && (
+          <Button asChild>
+            <Link href={`/user/my_bookings/hotels/${bookingId}/payment`}>
+              Pay and Confirm Now
+            </Link>
+          </Button>
+        )}
+        {canCancel && <CancelHotelBookingButton bookingId={bookingId} />}
+        {canRefund && <RequestRefundHotelBookingButton bookingId={bookingId} />}
+      </div>
       {/* Booking Info */}
       <Card>
         <CardContent className="space-y-4 p-4">
