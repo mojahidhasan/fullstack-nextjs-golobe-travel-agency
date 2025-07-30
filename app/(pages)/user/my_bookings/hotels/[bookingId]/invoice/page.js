@@ -12,7 +12,12 @@ import { auth } from "@/lib/auth";
 import routes from "@/data/routes.json";
 export default async function HotelBookingInvoicePage({ params }) {
   const session = await auth();
-  if (!session?.user) return redirect(routes.login.path);
+  if (!session?.user)
+    return redirect(
+      routes.login.path +
+        "?callbackPath=" +
+        encodeURIComponent(routes.profile.path),
+    );
   const userId = session.user.id;
   const bookingId = params.bookingId;
   const hotelBooking = await getOneDoc(
