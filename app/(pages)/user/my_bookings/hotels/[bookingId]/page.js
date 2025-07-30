@@ -30,8 +30,20 @@ export default async function HotelBookingDetailsPage({ params }) {
     ["hotelBooking", "hotelBookings"],
   );
 
-  if (!booking)
-    return <div className="py-10 text-center">No booking found.</div>;
+  if (!Object.keys(booking).length) {
+    return (
+      <NotFound
+        whatHappened={"Booking Not Found"}
+        explanation={
+          "Sorry, the booking you're looking for doesn't exist or has been moved. Let's take you back to your bookings."
+        }
+        navigateTo={{
+          path: "/user/my_bookings?tab=hotels",
+          title: "My Bookings",
+        }}
+      />
+    );
+  }
 
   const hotel = await getOneDoc("Hotel", { _id: booking.hotelId }, ["hotel"]);
   const rooms = hotel.rooms.filter((room) => booking.rooms.includes(room._id));
