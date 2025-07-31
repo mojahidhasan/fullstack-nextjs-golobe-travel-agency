@@ -19,6 +19,7 @@ export default async function Stays() {
           bookingId: booking._id,
           bookingStatus: booking.bookingStatus,
           paymentStatus: booking.paymentStatus,
+          paymentMethod: booking.paymentMethod,
           bookedAt: new Date(booking.createdAt),
           hotelName: booking.hotelName,
           hotelAddress: booking.hotelAddress,
