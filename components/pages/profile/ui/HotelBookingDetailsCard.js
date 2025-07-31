@@ -10,6 +10,19 @@ import timer from "@/public/icons/timer-mint.svg";
 import NoSSR from "@/components/helpers/NoSSR";
 import ShowTimeInClientSide from "@/components/helpers/ShowTimeInClientSide";
 import { format } from "date-fns";
+import {
+  BOOKING_STATUS_BG_COL_TW_CLASS,
+  BOOKING_STATUS_TEXT_COL_TW_CLASS,
+  PAYMENT_STATUS_BG_TW_CLASS,
+  PAYMENT_STATUS_TEXT_COL_TW_CLASS,
+} from "@/lib/constants";
+import { availableFlightOrHotelBookingActionBtn } from "@/lib/helpers";
+
+import {
+  CancelHotelBookingButton,
+  ConfirmNowPayAtHotelButton,
+  RequestRefundHotelBookingButton,
+} from "../../hotels.[bookingId]/ActionsButtons";
 
 export default function HotelBookingDetailsCard({ className, bookingData }) {
   const {
@@ -30,9 +43,6 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
     hotelImage,
   } = bookingData;
 
-  const canCancel = bookingStatus !== "cancelled";
-  const canRefund = bookingStatus === "cancelled" && paymentStatus === "paid";
-
   const cin = checkInTime.split(":"); // checkin time, not cin of c++
   const cout = checkOutTime.split(":"); // checkout time, not cout of c++
 
@@ -41,6 +51,9 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
 
   checkIn.setHours(cin[0], cin[1], 0, 0);
   checkOut.setHours(cout[0], cout[1], 0, 0);
+
+  const { canConfirm, canCancel, canRefund, canDownload, canPay } =
+    availableFlightOrHotelBookingActionBtn(bookingStatus, paymentStatus);
 
   return (
     <div
@@ -64,10 +77,9 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
         <div className="mb-3 flex justify-end">
           <span
             className={cn(
-              "rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
-              bookingStatus === "confirmed" && "bg-green-100 text-green-700",
-              bookingStatus === "pending" && "bg-yellow-100 text-yellow-700",
-              bookingStatus === "cancelled" && "bg-red-100 text-red-700",
+              "w-fit rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
+              BOOKING_STATUS_BG_COL_TW_CLASS[bookingStatus],
+              BOOKING_STATUS_TEXT_COL_TW_CLASS[bookingStatus],
             )}
           >
             {bookingStatus}
@@ -75,7 +87,12 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
           {paymentStatus === "pending" && bookingStatus === "confirmed" && (
             <span
               className={cn(
-                "rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
+              "w-fit rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
+              PAYMENT_STATUS_BG_TW_CLASS[paymentStatus],
+              PAYMENT_STATUS_TEXT_COL_TW_CLASS[paymentStatus],
+            )}
+          >
+            {paymentMethod === "cash" &&
                 bookingStatus === "confirmed" &&
                   paymentStatus === "pending" &&
                   "bg-yellow-100 text-yellow-700",
@@ -208,26 +225,23 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
         <Button className="min-w-[100px]" asChild>
           <Link href={`/user/my_bookings/hotels/${key}`}>View</Link>
         </Button>
-        {paymentStatus === "pending" && (
+        {canConfirm && <ConfirmNowPayAtHotelButton bookingId={bookingId} />}
+        {canPay && (
           <Button className="min-w-[100px]" asChild>
             <Link href={`/user/my_bookings/hotels/${key}/payment`}>
               Pay now
             </Link>
           </Button>
         )}
-        {paymentStatus === "confirmed" && (
+        {canDownload && (
           <Button className="min-w-[100px]" asChild>
-            <Link href={`/user/my_bookings/hotels/${key}/voucher`}>
-              Download Voucher
+            <Link href={`/user/my_bookings/hotels/${key}/invoice`}>
+              Download Invoice
             </Link>
           </Button>
         )}
-        {canCancel && <Button variant="destructive">Cancel Booking</Button>}
-        {canRefund && (
-          <Button variant="outline" className="border-green-500 text-green-700">
-            Request Refund
-          </Button>
-        )}
+        {canCancel && <CancelHotelBookingButton bookingId={bookingId} />}
+        {canRefund && <RequestRefundHotelBookingButton bookingId={bookingId} />}
       </div>
     </div>
   );
