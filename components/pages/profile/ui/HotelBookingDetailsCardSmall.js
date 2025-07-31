@@ -10,6 +10,12 @@ import ShowTimeInClientSide from "@/components/helpers/ShowTimeInClientSide";
 import locationIcon from "@/public/icons/location.svg";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
+import {
+  BOOKING_STATUS_BG_COL_TW_CLASS,
+  BOOKING_STATUS_TEXT_COL_TW_CLASS,
+  PAYMENT_STATUS_BG_TW_CLASS,
+  PAYMENT_STATUS_TEXT_COL_TW_CLASS,
+} from "@/lib/constants";
 export default function HotelBookingDetailsCardSmall({
   className,
   hotelDetails,
@@ -112,12 +118,8 @@ export default function HotelBookingDetailsCardSmall({
               <span
                 className={cn(
                   "rounded-full px-3 py-1 text-xs font-semibold capitalize",
-                  data.bookingStatus === "confirmed" &&
-                    "bg-green-100 text-green-700",
-                  data.bookingStatus === "pending" &&
-                    "bg-yellow-100 text-yellow-700",
-                  data.bookingStatus === "canceled" &&
-                    "bg-red-100 text-red-700",
+                  BOOKING_STATUS_BG_COL_TW_CLASS[data.bookingStatus],
+                  BOOKING_STATUS_TEXT_COL_TW_CLASS[data.bookingStatus],
                 )}
               >
                 {data.bookingStatus}
@@ -128,12 +130,8 @@ export default function HotelBookingDetailsCardSmall({
               <span
                 className={cn(
                   "rounded-full px-3 py-1 text-xs font-semibold capitalize",
-                  data.paymentStatus === "paid" &&
-                    "bg-green-100 text-green-700",
-                  data.paymentStatus === "pending" &&
-                    "bg-yellow-100 text-yellow-700",
-                  data.paymentStatus === "refunded" &&
-                    "bg-red-100 text-red-700",
+                  PAYMENT_STATUS_BG_TW_CLASS[data.paymentStatus],
+                  PAYMENT_STATUS_TEXT_COL_TW_CLASS[data.paymentStatus],
                 )}
               >
                 {data.paymentStatus === "pending"
