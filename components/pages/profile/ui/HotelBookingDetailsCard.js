@@ -30,6 +30,7 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
     bookingId,
     bookingStatus,
     paymentStatus,
+    paymentMethod,
     bookedAt,
     hotelAddress,
     checkInDate,
@@ -65,6 +66,9 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <p className="font-bold">
+            <span className="font-normal">Booking Id:</span> {bookingId}
+          </p>
+          <p className="font-bold">
             <span className="font-normal">Booked At:</span>{" "}
             <NoSSR fallback={"dd MMMM yyyy, hh:mm:ss a"}>
               <ShowTimeInClientSide
@@ -74,8 +78,8 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
             </NoSSR>
           </p>
         </div>
-        <div className="mb-3 flex justify-end">
-          <span
+        <div className="mb-3 flex flex-col items-end gap-2">
+          <p
             className={cn(
               "w-fit rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
               BOOKING_STATUS_BG_COL_TW_CLASS[bookingStatus],
@@ -83,24 +87,21 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
             )}
           >
             {bookingStatus}
-          </span>
-          {paymentStatus === "pending" && bookingStatus === "confirmed" && (
-            <span
-              className={cn(
+          </p>
+
+          <p
+            className={cn(
               "w-fit rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
               PAYMENT_STATUS_BG_TW_CLASS[paymentStatus],
               PAYMENT_STATUS_TEXT_COL_TW_CLASS[paymentStatus],
             )}
           >
             {paymentMethod === "cash" &&
-                bookingStatus === "confirmed" &&
-                  paymentStatus === "pending" &&
-                  "bg-yellow-100 text-yellow-700",
-              )}
-            >
-              pay at property
-            </span>
-          )}
+            bookingStatus === "confirmed" &&
+            paymentStatus === "pending"
+              ? "Pay On Property"
+              : paymentStatus}
+          </p>
         </div>
       </div>
       <div>
@@ -207,7 +208,7 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
                 Type: {guest.guestType}
               </p>
               {guest.email && (
-                <p className="text-sm capitalize text-muted-foreground">
+                <p className="text-sm text-muted-foreground">
                   Email: {guest.email}
                 </p>
               )}
