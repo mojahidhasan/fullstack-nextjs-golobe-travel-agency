@@ -16,6 +16,7 @@ import {
   PAYMENT_STATUS_BG_TW_CLASS,
   PAYMENT_STATUS_TEXT_COL_TW_CLASS,
 } from "@/lib/constants";
+import { availableFlightOrHotelBookingActionBtn } from "@/lib/helpers";
 export default function HotelBookingDetailsCardSmall({
   className,
   hotelDetails,
@@ -54,6 +55,10 @@ export default function HotelBookingDetailsCardSmall({
     paymentStatus: bookingDetails.paymentStatus,
   };
 
+  const { canDownload, canPay } = availableFlightOrHotelBookingActionBtn(
+    data.bookingStatus,
+    data.paymentStatus,
+  );
   const checkInDate = (
     <NoSSR fallback={"EEE, MMM d, yyy"}>
       {
@@ -201,32 +206,6 @@ export default function HotelBookingDetailsCardSmall({
 
       {/* Footer Action Buttons */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-start">
-        {data.bookingStatus === "confirmed" &&
-          data.paymentStatus === "paid" && (
-            <Button
-              title="Download Invoice"
-              asChild
-              size="sm"
-              className="text-wrap"
-            >
-              <Link
-                title="Download Invoice"
-                href={`/user/my_bookings/hotels/${data.key}/invoice`}
-              >
-                <Download className="mr h-4 w-4" />
-              </Link>
-            </Button>
-          )}
-        {(data.bookingStatus === "pending" ||
-          (data.bookingStatus === "confirmed" &&
-            data.paymentStatus === "pending")) && (
-          <Button title="Pay Now" size="sm" asChild>
-            <Link href={`/user/my_bookings/hotels/${data.key}/payment`}>
-              <HandCoins className="h-4 w-4" />
-            </Link>
-          </Button>
-        )}
-
         <Button title="View Booking" asChild size="sm" className="text-wrap">
           <Link
             title="View Booking"
@@ -235,6 +214,28 @@ export default function HotelBookingDetailsCardSmall({
             <View className="mr h-4 w-4" />
           </Link>
         </Button>
+        {canDownload && (
+          <Button
+            title="Download Invoice"
+            asChild
+            size="sm"
+            className="text-wrap"
+          >
+            <Link
+              title="Download Invoice"
+              href={`/user/my_bookings/hotels/${data.key}/invoice`}
+            >
+              <Download className="mr h-4 w-4" />
+            </Link>
+          </Button>
+        )}
+        {canPay && (
+          <Button title="Pay Now" size="sm" asChild>
+            <Link href={`/user/my_bookings/hotels/${data.key}/payment`}>
+              <HandCoins className="h-4 w-4" />
+            </Link>
+          </Button>
+        )}
       </div>
     </div>
   );
