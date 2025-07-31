@@ -24,6 +24,8 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 <img src="https://assets.mailjet.com/lib/images/mailjetLogo/mj_logo_only_icon_color.png" width="16" height="16"> Mailjet
 
+<img src="https://assets.stripeassets.com/fzn2n1nzq965/01hMKr6nEEGVfOuhsaMIXQ/c424849423b5f036a8892afa09ac38c7/favicon.ico" width="16" height="16"> Stripe
+
 ## Features
 
 1. **User Authentication**
