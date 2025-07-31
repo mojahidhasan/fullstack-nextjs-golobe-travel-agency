@@ -12,10 +12,15 @@ import { TruncatedBadgeList } from "@/components/pages/hotels.[bookingId]/Trunca
 import Link from "next/link";
 import {
   CancelHotelBookingButton,
+  ConfirmNowPayAtHotelButton,
   RequestRefundHotelBookingButton,
 } from "@/components/pages/hotels.[bookingId]/ActionsButtons";
 import { availableFlightOrHotelBookingActionBtn } from "@/lib/helpers";
 import NotFound from "@/app/not-found";
+import {
+  BOOKING_STATUS_TEXT_COL_TW_CLASS,
+  PAYMENT_STATUS_TEXT_COL_TW_CLASS,
+} from "@/lib/constants";
 
 export default async function HotelBookingDetailsPage({ params }) {
   const session = await auth();
@@ -76,7 +81,7 @@ export default async function HotelBookingDetailsPage({ params }) {
       <h2 className="text-2xl font-semibold text-gray-800">Booking Details</h2>
       {/* Action Buttons (optional) */}
       <div className="flex flex-wrap gap-3">
-        {canConfirm && <Button>Confirm Now, Pay at Hotel</Button>}
+        {canConfirm && <ConfirmNowPayAtHotelButton bookingId={bookingId} />}
         {canDownload && (
           <Button asChild>
             <Link href={`/user/my_bookings/hotels/${bookingId}/invoice`}>
@@ -240,12 +245,8 @@ function Detail({ label, value, highlight = false }) {
       <p
         className={cn(
           "text-sm font-medium capitalize",
-          highlight &&
-            (value === "paid" || value === "confirmed"
-              ? "text-green-600"
-              : value === "cancelled"
-                ? "text-red-600"
-                : "text-yellow-600"),
+          highlight && BOOKING_STATUS_TEXT_COL_TW_CLASS[value],
+          highlight && PAYMENT_STATUS_TEXT_COL_TW_CLASS[value],
         )}
       >
         {value}
