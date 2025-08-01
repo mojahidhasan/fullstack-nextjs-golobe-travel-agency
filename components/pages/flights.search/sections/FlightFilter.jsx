@@ -99,6 +99,18 @@ export function FlightsFilter({ filters, defaultFilterObj, query, className }) {
     return "am";
   }
 
+  function handleApplyFilter(e) {
+    const searchParams = new URLSearchParams(decodeURIComponent(query));
+    for (const [key, value] of Object.entries(flightFilterState)) {
+      searchParams.set("filter_" + key, value.join(","));
+    }
+
+    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/${routes["flights-search"].path}/${searchParams.toString()}`;
+
+    router.replace(url, { scroll: false });
+    jumpTo("flightResult");
+  }
+
   return (
     <section
       className={cn(
@@ -219,7 +231,12 @@ export function FlightsFilter({ filters, defaultFilterObj, query, className }) {
             </div>
           </Dropdown>
           <div className={"flex w-full justify-end py-4"}>
-            <Button type="submit" form="flightform" className={"bg-primary"}>
+            <Button
+              onClick={handleApplyFilter}
+              type="button"
+              form="flightform"
+              className={"bg-primary"}
+            >
               Apply
             </Button>
           </div>
