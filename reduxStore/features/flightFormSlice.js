@@ -75,14 +75,24 @@ const flightFormSlice = createSlice({
     setFlightFormFilters(state, action) {
       state.value.filters = { ...state.value.filters, ...action.payload };
     },
+    setDefaultFlightFilters(state, action) {
+      state.value.defaultFilterValues = {
+        ...defaultFlightFormValue.defaultFilterValues,
+        ...action.payload,
+      };
+    },
     resetFilters(state, action) {
       state.value.filters = state.value.defaultFilterValues;
     },
   },
 });
 
-export const { setFlightForm, setFlightFormFilters, resetFilters } =
-  flightFormSlice.actions;
+export const {
+  setFlightForm,
+  setDefaultFlightFilters,
+  setFlightFormFilters,
+  resetFilters,
+} = flightFormSlice.actions;
 export default flightFormSlice.reducer;
 
 // reduxStore\features\flightFormSlice.js
