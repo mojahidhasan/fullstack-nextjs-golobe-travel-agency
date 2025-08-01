@@ -76,7 +76,7 @@ const flightFormSlice = createSlice({
       state.value.filters = { ...state.value.filters, ...action.payload };
     },
     resetFilters(state, action) {
-      state.value.filters = defaultFlightFormValue.filters;
+      state.value.filters = state.value.defaultFilterValues;
     },
   },
 });
