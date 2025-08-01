@@ -14,17 +14,19 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   setFlightFormFilters,
+  setDefaultFlightFilters,
   resetFilters,
-  defaultFlightFormValue,
-  setFlightForm,
 } from "@/reduxStore/features/flightFormSlice";
-
+import { useRouter } from "next/navigation";
+import routes from "@/data/routes.json";
+import { jumpTo } from "@/components/local-ui/Jumper";
 // does not work after new flight search, fix later
-export function FlightsFilter({ filterObj, className }) {
+export function FlightsFilter({ filters, defaultFilterObj, query, className }) {
   const dispatch = useDispatch();
+  const router = useRouter();
   const flightState = useSelector((selector) => selector.flightForm.value);
   const flightFilterState = flightState.filters;
-  const defaultFilterState = flightState.filterOptions;
+  const defaultFilterState = flightState.defaultFilterValues;
 
   const [filterPopup, setFilterPopup] = useState(false);
 
@@ -36,19 +38,21 @@ export function FlightsFilter({ filterObj, className }) {
 
   useEffect(() => {
     dispatch(
-      setFlightForm({
-        filterOptions: {
-          ...defaultFlightFormValue.filterOptions,
-          ...filterObj,
-        },
+      setDefaultFlightFilters({
+        ...defaultFilterState,
+        ...defaultFilterObj,
       }),
     );
+  }, [JSON.stringify(defaultFilterObj)]);
+
+  useEffect(() => {
     dispatch(
       setFlightFormFilters({
-        priceRange: filterObj.defaultPriceRange,
+        priceRange: defaultFilterObj.priceRange,
+        ...filters,
       }),
     );
-  }, [JSON.stringify(filterObj)]);
+  }, [JSON.stringify(filters)]);
 
   function handleCheckboxChange(checked, groupName, name) {
     if (checked) {
@@ -147,8 +151,8 @@ export function FlightsFilter({ filterObj, className }) {
             <div className="my-5">
               <Slider
                 name="price-slider"
-                min={defaultFilterState.defaultPriceRange[0]}
-                max={defaultFilterState.defaultPriceRange[1]}
+                min={defaultFilterState.priceRange[0]}
+                max={defaultFilterState.priceRange[1]}
                 value={flightFilterState.priceRange}
                 onValueChange={(value) => {
                   dispatch(setFlightFormFilters({ priceRange: value }));
