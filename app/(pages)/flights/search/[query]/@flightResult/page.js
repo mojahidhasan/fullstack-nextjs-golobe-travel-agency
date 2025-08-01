@@ -15,6 +15,8 @@ import Jumper from "@/components/local-ui/Jumper";
 import { SetLocalStorage } from "@/components/helpers/SetLocalStorage";
 import { defaultFlightFormValue } from "@/reduxStore/features/flightFormSlice";
 import { auth } from "@/lib/auth";
+import extractFilterObjFromSearchParams from "@/lib/helpers/flights/extractFilterObjFromSearchParams";
+import validateFlightSearchFilter from "@/lib/zodSchemas/flightSearchFilterValidation";
 async function FlightResultPage({ params }) {
   const decoded = decodeURIComponent(params.query);
   const pObj = Object.fromEntries(new URLSearchParams(decoded));
@@ -51,6 +53,10 @@ async function FlightResultPage({ params }) {
     );
   }
 
+  const filterParamsObj = extractFilterObjFromSearchParams(params.query);
+  const validateFilterParams = validateFlightSearchFilter(filterParamsObj);
+
+  const finalFilterParams = validateFilterParams?.data || {};
   const sParams = JSON.stringify(data);
   const searchStateCookie = cookies().get("flightSearchState")?.value;
   let isNewSearch = searchStateCookie !== sParams;
@@ -89,6 +95,7 @@ async function FlightResultPage({ params }) {
       tripType,
       flightClass,
       passengersObj: passengers,
+      filters: finalFilterParams,
     },
     userDetails?.flights?.bookmarked,
     {
