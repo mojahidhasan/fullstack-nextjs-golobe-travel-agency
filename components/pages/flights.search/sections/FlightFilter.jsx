@@ -26,7 +26,7 @@ export function FlightsFilter({ filterObj, className }) {
   const flightFilterState = flightState.filters;
   const defaultFilterState = flightState.filterOptions;
 
-  const [filter, setFilter] = useState(false);
+  const [filterPopup, setFilterPopup] = useState(false);
 
   const airlineFullName = {
     EK: "Emirates",
@@ -108,7 +108,7 @@ export function FlightsFilter({ filterObj, className }) {
           variant={"link"}
           onClick={() => {
             if (document.body.clientWidth < 1024) {
-              setFilter(!filter);
+              setFilterPopup(!filterPopup);
             }
           }}
           asChild
@@ -128,7 +128,7 @@ export function FlightsFilter({ filterObj, className }) {
       <div
         className={cn(
           "w-full max-lg:rounded-xl max-lg:bg-white max-lg:p-5 max-lg:shadow-md",
-          filter === false && "max-lg:hidden",
+          filterPopup === false && "max-lg:hidden",
         )}
       >
         <div className={"flex justify-end"}>
