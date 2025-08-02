@@ -11,13 +11,14 @@ export const defaultHotelFormValue = {
   guests: 1,
   promocode: "",
   filters: {
-    priceRange: [0, Infinity],
+    priceRange: [0, 2000],
     rates: [],
     features: [],
     amenities: [],
   },
-  filtersData: {
+  defaultFilterValues: {
     rates: [],
+    priceRange: [0, 2000],
     minPrice: 0,
     maxPrice: 0,
     amenities: [],
@@ -45,17 +46,17 @@ const stayFormSlice = createSlice({
       };
     },
     setDefaultStayFilters(state, action) {
-      state.value.filtersData = {
-        ...state.value.filtersData,
+      state.value.defaultFilterValues = {
+        ...state.value.defaultFilterValues,
         ...action.payload,
       };
     },
     resetStayFilters(state) {
       state.value.filters = {
-        ...state.value.filtersData,
+        ...state.value.defaultFilterValues,
         priceRange: [
-          state.value.filtersData.minPrice,
-          state.value.filtersData.maxPrice,
+          state.value.defaultFilterValues.minPrice,
+          state.value.defaultFilterValues.maxPrice,
         ],
       };
     },
