@@ -272,7 +272,7 @@ function SearchStaysForm({ searchParams = {} }) {
   }
 
   return (
-    <form id="stayForm" method="get" onSubmit={handleSubmit}>
+    <form id="stayForm" onSubmit={handleSubmit}>
       <div className={"col-span-full"}>
         {Object.keys(errors).length > 0 && (
           <ErrorMessage
