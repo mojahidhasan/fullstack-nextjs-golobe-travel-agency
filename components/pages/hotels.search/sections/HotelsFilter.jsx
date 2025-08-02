@@ -14,6 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import {
   setStayFilter,
   setStayForm,
+  setDefaultStayFilters,
   resetStayFilters,
 } from "@/reduxStore/features/stayFormSlice";
 import { useSearchParams, useRouter } from "next/navigation";
@@ -27,50 +28,23 @@ export function HotelsFilter({ className }) {
   const [amenitiesLimit, setAmenitiesLimit] = useState(10);
   const [featuresLimit, setFeaturesLimit] = useState(10);
 
-  useEffect(() => {
-    async function getFilterValues() {
-      const res = await fetch(
-        process.env.NEXT_PUBLIC_BASE_URL + "/api/hotels/hotel_filter_values",
-        { next: { revalidate: process.env.NEXT_PUBLIC_REVALIDATE } },
-      );
-
-      const data = await res.json();
-      let minPrice = data.minPrice;
-      let maxPrice = data.maxPrice;
-
-      dispatch(
-        setStayForm({
-          filtersData: {
-            amenities: data.amenities,
-            features: data.features,
-            minPrice,
-            maxPrice,
-          },
-        }),
-      );
-      if (searchparams.get("filters")) {
-        const priceRange = JSON.parse(searchparams.get("filters")).priceRange;
-
-        dispatch(
-          setStayFilter({
-            priceRange,
-          }),
-        );
-      } else {
-        dispatch(
-          setStayFilter({
-            priceRange: [minPrice, maxPrice],
-          }),
-        );
-      }
-    }
-    getFilterValues();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filter]);
-
   const dispatch = useDispatch();
+  const stayState = useSelector((state) => state.stayForm.value);
+  const hotelFilterState = stayState.filters;
 
-  const stayState = useSelector((selector) => selector.stayForm.value);
+  useEffect(() => {
+    dispatch(
+      setStayFilter({
+        priceRange: [defaultFiltersVals.minPrice, defaultFiltersVals.maxPrice],
+        ...filters,
+      }),
+    );
+  }, [JSON.stringify(filters)]);
+
+  useEffect(() => {
+    dispatch(setDefaultStayFilters(defaultFiltersVals));
+  }, [JSON.stringify(defaultFiltersVals)]);
+
   function handleCheckboxChange(checked, groupName, name) {
     if (checked) {
       dispatch(
