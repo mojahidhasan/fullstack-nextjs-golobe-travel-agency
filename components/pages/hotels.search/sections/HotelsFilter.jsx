@@ -99,9 +99,9 @@ export function HotelsFilter({
         className,
       )}
     >
-      <div className="mb-[16px] flex items-center justify-between font-semibold text-secondary">
+      <div className="mb-[24px] flex items-center justify-between font-semibold text-secondary">
         <Button
-          className="p-0 text-[1.25rem]"
+          className="p-0 text-[1.25rem] max-lg:w-full max-lg:bg-primary/30"
           variant={"link"}
           onClick={() => {
             if (document.body.clientWidth < 1024) {
@@ -112,9 +112,6 @@ export function HotelsFilter({
         >
           <h2>Fliters</h2>
         </Button>
-        <Button variant={"link"} onClick={() => dispatch(resetStayFilters())}>
-          reset
-        </Button>
       </div>
       <div
         className={cn(
@@ -122,6 +119,17 @@ export function HotelsFilter({
           filter === false && "max-lg:hidden",
         )}
       >
+        <div className={"flex justify-end"}>
+          <Button
+            type="submit"
+            form="flightForm"
+            variant={"link"}
+            className="block h-auto px-0 lg:hidden"
+            onClick={() => dispatch(resetStayFilters())}
+          >
+            reset filter
+          </Button>
+        </div>
         <div>
           <Dropdown title={"Price"} open>
             <div className="my-5">
@@ -149,7 +157,7 @@ export function HotelsFilter({
               className="justify-start"
             />
           </Dropdown>
-          <Dropdown title={"Features"} open>
+          <Dropdown title={"Features"} open={false}>
             <div className="flex flex-col gap-3">
               {stayState.filtersData?.features
                 .slice(0, featuresLimit)
@@ -188,7 +196,7 @@ export function HotelsFilter({
               </Button>
             </div>
           </Dropdown>
-          <Dropdown title={"Amenities"} open>
+          <Dropdown title={"Amenities"} open={false}>
             <div className="flex flex-col gap-3">
               {stayState.filtersData?.amenities
                 .slice(0, amenitiesLimit)
