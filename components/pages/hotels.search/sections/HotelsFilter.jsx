@@ -36,11 +36,12 @@ export function HotelsFilter({
   const dispatch = useDispatch();
   const stayState = useSelector((state) => state.stayForm.value);
   const hotelFilterState = stayState.filters;
+  const hotelDefaultFilterState = stayState.defaultFilterValues;
 
   useEffect(() => {
     dispatch(
       setStayFilter({
-        priceRange: [defaultFiltersVals.minPrice, defaultFiltersVals.maxPrice],
+        priceRange: defaultFiltersVals?.priceRange || [0, 2000],
         ...filters,
       }),
     );
@@ -135,8 +136,8 @@ export function HotelsFilter({
             <div className="my-5">
               <Slider
                 name="hotel-price-slider"
-                min={+stayState.filtersData?.minPrice}
-                max={+stayState.filtersData?.maxPrice}
+                min={+hotelDefaultFilterState?.priceRange?.[0]}
+                max={+hotelDefaultFilterState?.priceRange?.[1]}
                 value={stayState.filters.priceRange}
                 onValueChange={(value) => {
                   dispatch(setStayFilter({ priceRange: value }));
@@ -150,16 +151,16 @@ export function HotelsFilter({
           </Dropdown>
           <Dropdown title={"Rating"} open>
             <FilterRating
-              value={stayState.filters.rate}
+              value={stayState.filters.rates}
               setValue={(rate) => {
-                dispatch(setStayFilter({ rate }));
+                dispatch(setStayFilter({ rates: rate }));
               }}
               className="justify-start"
             />
           </Dropdown>
           <Dropdown title={"Features"} open={false}>
             <div className="flex flex-col gap-3">
-              {stayState.filtersData?.features
+              {hotelDefaultFilterState?.features
                 .slice(0, featuresLimit)
                 .map((name) => {
                   const IDfyName = "feature-" + name.trim();
@@ -181,16 +182,18 @@ export function HotelsFilter({
                 variant={"ghost"}
                 className="h-min w-min p-0 text-tertiary"
                 onClick={() => {
-                  if (featuresLimit < stayState.filtersData?.features.length) {
-                    setFeaturesLimit(stayState.filtersData?.features.length);
+                  if (
+                    featuresLimit < hotelDefaultFilterState?.features.length
+                  ) {
+                    setFeaturesLimit(hotelDefaultFilterState?.features.length);
                   } else {
                     setFeaturesLimit(10);
                   }
                 }}
               >
-                {featuresLimit < stayState.filtersData?.features.length
+                {featuresLimit < hotelDefaultFilterState?.features.length
                   ? `+${Math.abs(
-                      stayState.filtersData?.features.length - featuresLimit,
+                      hotelDefaultFilterState?.features.length - featuresLimit,
                     )} more`
                   : "Show less"}
               </Button>
@@ -198,7 +201,7 @@ export function HotelsFilter({
           </Dropdown>
           <Dropdown title={"Amenities"} open={false}>
             <div className="flex flex-col gap-3">
-              {stayState.filtersData?.amenities
+              {hotelDefaultFilterState?.amenities
                 .slice(0, amenitiesLimit)
                 .map((name) => {
                   const IDfyName = "amenity-" + name.trim();
@@ -221,17 +224,20 @@ export function HotelsFilter({
                 className="h-min w-min p-0 text-tertiary"
                 onClick={() => {
                   if (
-                    amenitiesLimit < stayState.filtersData?.amenities.length
+                    amenitiesLimit < hotelDefaultFilterState?.amenities.length
                   ) {
-                    setAmenitiesLimit(stayState.filtersData?.amenities.length);
+                    setAmenitiesLimit(
+                      hotelDefaultFilterState?.amenities.length,
+                    );
                   } else {
                     setAmenitiesLimit(10);
                   }
                 }}
               >
-                {amenitiesLimit < stayState.filtersData?.amenities.length
+                {amenitiesLimit < hotelDefaultFilterState?.amenities.length
                   ? `+${Math.abs(
-                      stayState.filtersData?.amenities.length - amenitiesLimit,
+                      hotelDefaultFilterState?.amenities.length -
+                        amenitiesLimit,
                     )} more`
                   : "Show less"}
               </Button>
