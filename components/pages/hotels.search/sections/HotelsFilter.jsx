@@ -19,8 +19,13 @@ import {
 } from "@/reduxStore/features/stayFormSlice";
 import { useSearchParams, useRouter } from "next/navigation";
 import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
+import { jumpTo } from "@/components/local-ui/Jumper";
 
-export function HotelsFilter({ className }) {
+export function HotelsFilter({
+  className,
+  filters = {},
+  defaultFiltersVals = {},
+}) {
   const searchparams = useSearchParams();
   const router = useRouter();
   const [filter, setFilter] = useState(false);
@@ -78,16 +83,14 @@ export function HotelsFilter({ className }) {
       return;
     }
 
-    const filters = JSON.stringify(stayState.filters);
-    const stayFormData = {
-      ...stayState,
-    };
-    delete stayFormData.filtersData;
-    const queryParams = new URLSearchParams({
-      ...validateStayForm.data,
-      filters,
-    }).toString();
-    router.push(`/hotels/search?${queryParams}`);
+    const sp = new URLSearchParams(decodeURIComponent(searchparams.toString()));
+
+    for (const [key, value] of Object.entries(hotelFilterState)) {
+      sp.set("filter_" + key, value.join(","));
+    }
+
+    router.replace(`/hotels/search?${sp.toString()}`, { scroll: false });
+    jumpTo("hotelResults");
   }
   return (
     <section
