@@ -245,7 +245,7 @@ export function HotelsFilter({
           </Dropdown>
           <div className="flex justify-end">
             <Button
-              type={"submit"}
+              type={"button"}
               className={"mt-4 bg-primary"}
               onClick={handleApplyFilters}
             >
