@@ -169,7 +169,7 @@ function SearchStaysForm({ searchParams = {} }) {
     }
     searchState();
     setTimeout(() => {
-      jumpTo("flightResult");
+      jumpTo("hotelResults");
     }, 500);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [spStr]);
