@@ -7,8 +7,12 @@ import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
 import SetHotelFormState from "@/components/helpers/SetHotelFormState";
 import { getHotels } from "@/lib/controllers/hotels";
 import Jumper from "@/components/local-ui/Jumper";
+import extractFiltersObjFromSearchParams from "@/lib/helpers/hotels/extractFiltersObjFromSearchParams";
+import validateHotelSearchFilter from "@/lib/zodSchemas/hotelSearchFilterValidation";
 export default async function HotelResultPage({ searchParams }) {
-  let filters = {};
+  let filters = extractFiltersObjFromSearchParams(searchParams);
+  const validatedFilters = validateHotelSearchFilter(filters);
+
   const session = await auth();
 
   const validate = validateHotelSearchParams(searchParams);
@@ -35,7 +39,10 @@ export default async function HotelResultPage({ searchParams }) {
     return <SetHotelFormState obj={formStateError} />;
   }
 
-  let hotels = await getHotels(validate.data);
+  let hotels = await getHotels(validate.data, {
+    filters: validatedFilters?.data,
+  });
+
   // show liked hotels if user is logged in
   if (session?.user?.id) {
     const userDetails = await getUserDetails(session?.user?.id);
