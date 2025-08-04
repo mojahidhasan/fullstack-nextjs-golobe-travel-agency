@@ -105,7 +105,7 @@ export function FlightsFilter({ filters, defaultFilterObj, query, className }) {
       searchParams.set("filter_" + key, value.join(","));
     }
 
-    const url = `${process.env.NEXT_PUBLIC_BASE_URL}/${routes["flights-search"].path}/${searchParams.toString()}`;
+    const url = `/${routes["flights-search"].path}/${encodeURIComponent(searchParams.toString())}`;
 
     router.replace(url, { scroll: false });
     jumpTo("flightResult");
