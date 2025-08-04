@@ -122,7 +122,9 @@ export function HotelResultCard({
             flightOrHotel={"hotel"}
           />
           <Button asChild className={"w-full"}>
-            <Link href={`${routes.hotels.path}/${slug}`}>View Deals</Link>
+            <Link target="_blank" href={`${routes.hotels.path}/${slug}`}>
+              View Deals
+            </Link>
           </Button>
         </div>
       </div>
