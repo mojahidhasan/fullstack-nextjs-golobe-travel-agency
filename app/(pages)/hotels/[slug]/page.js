@@ -137,9 +137,7 @@ export default async function HotelDetailsPage({ params }) {
             </span>
           </p>
           <div className="flex items-center gap-1 text-[0.75rem]">
-            <RatingShow
-              rating={totalReviewsCount ? rating.toFixed(1) : "N/A"}
-            />
+            <RatingShow rating={rating} />
             <p className="font-bold">
               {totalReviewsCount ? ratingScale : "N/A"}
             </p>
