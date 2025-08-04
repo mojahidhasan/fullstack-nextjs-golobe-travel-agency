@@ -8,7 +8,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { FilterRating } from "@/components/local-ui/FilterRating";
 
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useState, useEffect, use } from "react";
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -20,15 +20,20 @@ import {
 import { useSearchParams, useRouter } from "next/navigation";
 import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
 import { jumpTo } from "@/components/local-ui/Jumper";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export function HotelsFilter({
   className,
   filters = {},
-  defaultFiltersVals = {},
+  hotelSearchParams = {},
+  defaultFilterValuesPromise = new Promise(() => {}),
 }) {
   const searchparams = useSearchParams();
   const router = useRouter();
   const [filter, setFilter] = useState(false);
+
+  const defaultFilterDB = use(defaultFilterValuesPromise);
+  const [isFilterLoading, setIsFilterLoading] = useState(true);
 
   const [amenitiesLimit, setAmenitiesLimit] = useState(10);
   const [featuresLimit, setFeaturesLimit] = useState(10);
@@ -93,7 +98,10 @@ export function HotelsFilter({
     router.replace(`/hotels/search?${sp.toString()}`, { scroll: false });
     jumpTo("hotelResults");
   }
-  return (
+
+  return isFilterLoading ? (
+    <Loading className={className} />
+  ) : (
     <section
       className={cn(
         "relative w-full border-none pr-[12px] lg:w-[400px] lg:border-r-[1px]",
@@ -251,6 +259,40 @@ export function HotelsFilter({
             >
               Apply
             </Button>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Loading({ className }) {
+  return (
+    <section
+      className={cn(
+        "relative w-full border-none pr-[12px] lg:w-[400px] lg:border-r-[1px]",
+        className,
+      )}
+    >
+      <div className="mb-[24px] flex items-center justify-between font-semibold text-secondary">
+        <Button
+          className="p-0 text-[1.25rem] max-lg:w-full max-lg:bg-primary/30"
+          variant={"link"}
+          disabled
+          asChild
+        >
+          <h2>Filters</h2>
+        </Button>
+      </div>
+      <div className="w-full rounded-lg max-lg:bg-white max-lg:p-5 max-lg:shadow-md">
+        <div className="space-y-4">
+          <Skeleton className={"h-4 w-24"} />
+          <Skeleton className={"h-8 w-full"} />
+          <Skeleton className={"h-4 w-20"} />
+          <div className="space-y-2">
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className={"h-4 w-full"} />
+            ))}
           </div>
         </div>
       </div>
