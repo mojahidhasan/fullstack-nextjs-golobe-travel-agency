@@ -9,10 +9,7 @@ import { getHotels } from "@/lib/controllers/hotels";
 import Jumper from "@/components/local-ui/Jumper";
 import extractFiltersObjFromSearchParams from "@/lib/helpers/hotels/extractFiltersObjFromSearchParams";
 import validateHotelSearchFilter from "@/lib/zodSchemas/hotelSearchFilterValidation";
-import {
-  multiRoomCombinedFareBreakDown,
-  singleRoomFareBreakdown,
-} from "@/lib/helpers/hotels/priceCalculation";
+import { singleRoomFareBreakdown } from "@/lib/helpers/hotels/priceCalculation";
 import { EmptyResult } from "@/components/EmptyResult";
 export default async function HotelResultPage({ params }) {
   const decodedSp = decodeURIComponent(params.hotelSearchParams);
@@ -75,7 +72,6 @@ export default async function HotelResultPage({ params }) {
           0,
         );
         const totalReviewsCount = reviews.length;
-
         const rating = totalRatingsSum / totalReviewsCount;
         const ratingScale = RATING_SCALE[Math.floor(rating)];
 
@@ -100,7 +96,7 @@ export default async function HotelResultPage({ params }) {
           amenities: hotel.amenities.slice(0, 5),
           price: cheapestRoom.price,
           availableRoomsCount: hotel.rooms.length,
-          rating: totalReviewsCount ? rating.toFixed(1) : "N/A",
+          rating: rating,
           totalReviews: totalReviewsCount,
           ratingScale: ratingScale || "N/A",
           image: hotel.images[0],
@@ -112,7 +108,9 @@ export default async function HotelResultPage({ params }) {
 
   return (
     <div className="w-full">
-      <Jumper id={"hotelResults"} />
+      <div className="mb-10">
+        <Jumper id={"hotelResults"} />
+      </div>
       {!hotelResultsForCard?.length ? (
         <EmptyResult className={"h-full w-full"} message="No Hotels Found" />
       ) : (
