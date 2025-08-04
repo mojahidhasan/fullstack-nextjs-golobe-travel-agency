@@ -73,7 +73,7 @@ const DatePickerCustomInput = forwardRef(
 );
 DatePickerCustomInput.displayName = "DatePickerCustomInput";
 
-function SearchStaysForm({ searchParams = {} }) {
+function SearchStaysForm({ params = {} }) {
   const dispatch = useDispatch();
   const router = useRouter();
 
@@ -85,20 +85,20 @@ function SearchStaysForm({ searchParams = {} }) {
   const stayFormData = useSelector((state) => state.stayForm.value);
   const errors = stayFormData.errors;
 
-  const spStr = JSON.stringify(searchParams);
+  const spStr = params;
   useEffect(() => {
     async function searchState() {
       setIsFormLoading(true);
-      if (Object.keys(searchParams).length > 0) {
-        const p = getSearchStateParams();
+      const p = getSearchStateParams();
 
+      if ("hotelSearchParams" in params) {
         const newFormData = {
           ...defaultHotelFormValue,
           ...{
-            ...searchParams,
+            ...p,
             destination: {
-              city: searchParams.city,
-              country: searchParams.country,
+              city: p.city,
+              country: p.country,
             },
           },
           ...p,
@@ -187,12 +187,14 @@ function SearchStaysForm({ searchParams = {} }) {
     };
 
     let searchState = {};
-    if (Object.keys(searchParams).length > 0) {
+    if ("hotelSearchParams" in params) {
       searchState = getSearchStateParams();
     } else searchState = await getSearchStateCookies();
 
     if (Object.keys(searchState?.errors).length > 0) {
       dispatch(setStayForm({ errors: { ...searchState.errors } }));
+      setIsSending(false);
+      return;
     }
 
     const {
@@ -216,7 +218,8 @@ function SearchStaysForm({ searchParams = {} }) {
     const areTheySame = objDeepCompare(dFForm, dSState);
 
     const shouldPreventFromSubmit =
-      areTheySame && !Object.keys(searchParams).length < 1;
+      areTheySame && "hotelSearchParams" in params;
+
     if (shouldPreventFromSubmit) {
       jumpTo("hotelResults");
       setIsSending(false);
@@ -239,23 +242,29 @@ function SearchStaysForm({ searchParams = {} }) {
     dispatch(setStayForm({ errors: {} }));
 
     const queryString = new URLSearchParams(dFForm).toString();
-    router.push(`/hotels/search?${queryString}`);
-    setIsSending(false);
+    router.push(`/hotels/search/${encodeURIComponent(queryString)}`, {
+      scroll: false,
+    });
+
     setTimeout(() => {
       jumpTo("hotelResults");
     }, 500);
   }
   function getSearchStateParams() {
-    const p = searchParams || {};
-    const validateFlightForm = validateHotelSearchParams(p);
+    const p = params?.hotelSearchParams || {};
+    const searchParams = new URLSearchParams(decodeURIComponent(p));
+    const validateHotelFormData = validateHotelSearchParams(
+      Object.fromEntries(searchParams),
+    );
 
-    const data = validateFlightForm?.data || {};
-    const errors = validateFlightForm?.errors || {};
-    let flightFormData = {
+    const data = validateHotelFormData?.data || {};
+    const errors = validateHotelFormData?.errors || {};
+
+    let hotelFormData = {
       ...data,
       errors,
     };
-    return flightFormData;
+    return hotelFormData;
   }
   async function getSearchStateCookies() {
     const state =
@@ -272,7 +281,7 @@ function SearchStaysForm({ searchParams = {} }) {
   }
 
   return (
-    <form id="stayForm" onSubmit={handleSubmit}>
+    <form id="stayForm" method={"get"} onSubmit={handleSubmit}>
       <div className={"col-span-full"}>
         {Object.keys(errors).length > 0 && (
           <ErrorMessage
