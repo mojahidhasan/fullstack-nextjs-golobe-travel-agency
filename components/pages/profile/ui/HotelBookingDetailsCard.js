@@ -56,6 +56,13 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
   const { canConfirm, canCancel, canRefund, canDownload, canPay } =
     availableFlightOrHotelBookingActionBtn(bookingStatus, paymentStatus);
 
+  const bookingStatusBgClass = BOOKING_STATUS_BG_COL_TW_CLASS[bookingStatus];
+  const bookingStatusTextClass =
+    BOOKING_STATUS_TEXT_COL_TW_CLASS[bookingStatus];
+  const paymentStatusBgClass = PAYMENT_STATUS_BG_TW_CLASS[paymentStatus];
+  const paymentStatusTextClass =
+    PAYMENT_STATUS_TEXT_COL_TW_CLASS[paymentStatus];
+
   return (
     <div
       className={cn(
@@ -82,8 +89,8 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
           <p
             className={cn(
               "w-fit rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
-              BOOKING_STATUS_BG_COL_TW_CLASS[bookingStatus],
-              BOOKING_STATUS_TEXT_COL_TW_CLASS[bookingStatus],
+              bookingStatusBgClass,
+              bookingStatusTextClass,
             )}
           >
             {bookingStatus}
@@ -92,8 +99,8 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
           <p
             className={cn(
               "w-fit rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
-              PAYMENT_STATUS_BG_TW_CLASS[paymentStatus],
-              PAYMENT_STATUS_TEXT_COL_TW_CLASS[paymentStatus],
+              paymentStatusBgClass,
+              paymentStatusTextClass,
             )}
           >
             {paymentMethod === "cash" &&
