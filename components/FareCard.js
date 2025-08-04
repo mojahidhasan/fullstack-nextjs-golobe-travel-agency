@@ -7,6 +7,7 @@ import { multiSegmentCombinedFareBreakDown } from "@/lib/db/schema/flightItinera
 import { multiRoomCombinedFareBreakDown } from "@/lib/helpers/hotels/priceCalculation";
 import { useDispatch, useSelector } from "react-redux";
 import { setRooms } from "@/reduxStore/features/hotelRoomSelectorSlice";
+import { EmptyResult } from "./EmptyResult";
 
 export function FareCard({
   segments = [],
@@ -151,16 +152,11 @@ export function HotelFareCard({ searchState, className = "" }) {
       ) : (
         <div className="flex flex-col gap-3">
           {selected.length === 0 && (
-            <div className="h-auto w-full">
-              <div className="flex h-[300px] flex-col items-center justify-center gap-4 rounded-xl border bg-gray-50 p-6 text-gray-700 shadow-inner">
-                <div className="text-2xl font-semibold">
-                  No Hotel Rooms selected
-                </div>
-                <p className="max-w-md text-center text-base">
-                  You haven&apos;t selected any hotel rooms yet.
-                </p>
-              </div>
-            </div>
+            <EmptyResult
+              className="h-auto w-full"
+              message="No Room Selected"
+              description="Please select at least one room to proceed."
+            />
           )}
           {Object.entries(fareBreakdowns).map(([roomType, bedOptions]) => (
             <div
