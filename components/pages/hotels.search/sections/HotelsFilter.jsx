@@ -17,7 +17,7 @@ import {
   setDefaultStayFilters,
   resetStayFilters,
 } from "@/reduxStore/features/stayFormSlice";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
 import { jumpTo } from "@/components/local-ui/Jumper";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -28,7 +28,6 @@ export function HotelsFilter({
   hotelSearchParams = {},
   defaultFilterValuesPromise = new Promise(() => {}),
 }) {
-  const searchparams = useSearchParams();
   const router = useRouter();
   const [filter, setFilter] = useState(false);
 
@@ -44,17 +43,26 @@ export function HotelsFilter({
   const hotelDefaultFilterState = stayState.defaultFilterValues;
 
   useEffect(() => {
-    dispatch(
-      setStayFilter({
-        priceRange: defaultFiltersVals?.priceRange || [0, 2000],
-        ...filters,
-      }),
-    );
-  }, [JSON.stringify(filters)]);
+    dispatch(setDefaultStayFilters(defaultFilterDB));
+    setIsFilterLoading(false);
+    return () => {
+      setIsFilterLoading(true);
+    };
+  }, [defaultFilterDB, dispatch]);
 
   useEffect(() => {
-    dispatch(setDefaultStayFilters(defaultFiltersVals));
-  }, [JSON.stringify(defaultFiltersVals)]);
+    dispatch(
+      setStayFilter({
+        ...filters,
+        amenities: filters?.amenities
+          ? filters?.amenities.map((el) => "amenity-" + el)
+          : [],
+        features: filters?.features
+          ? filters?.features.map((el) => "feature-" + el)
+          : [],
+      }),
+    );
+  }, [filters, dispatch]);
 
   function handleCheckboxChange(checked, groupName, name) {
     if (checked) {
@@ -89,13 +97,15 @@ export function HotelsFilter({
       return;
     }
 
-    const sp = new URLSearchParams(decodeURIComponent(searchparams.toString()));
+    const sp = new URLSearchParams(hotelSearchParams);
 
     for (const [key, value] of Object.entries(hotelFilterState)) {
       sp.set("filter_" + key, value.join(","));
     }
 
-    router.replace(`/hotels/search?${sp.toString()}`, { scroll: false });
+    router.replace(`/hotels/search/${encodeURIComponent(sp.toString())}`, {
+      scroll: false,
+    });
     jumpTo("hotelResults");
   }
 
@@ -119,7 +129,7 @@ export function HotelsFilter({
           }}
           asChild
         >
-          <h2>Fliters</h2>
+          <h2>Filters</h2>
         </Button>
       </div>
       <div
@@ -140,7 +150,7 @@ export function HotelsFilter({
           </Button>
         </div>
         <div>
-          <Dropdown title={"Price"} open>
+          <Dropdown title={"Price per night"} open>
             <div className="my-5">
               <Slider
                 name="hotel-price-slider"
