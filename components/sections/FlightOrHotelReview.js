@@ -20,6 +20,7 @@ export default async function FlightOrHotelReview({
 
   let userReviewObj = {};
   let rating = 0;
+  let reviewsCount = 0;
   let isAlreadyReviewed = false;
   let reviewKeys = {};
 
@@ -35,6 +36,7 @@ export default async function FlightOrHotelReview({
       },
       [data.flightNumber + "_review", "flightReviews"],
     );
+    reviewsCount = flightReviews.length;
     userReviewObj = flightReviews.find(
       (review) => review.reviewer === session?.user.id,
     );
@@ -59,6 +61,7 @@ export default async function FlightOrHotelReview({
       },
       [data.slug + "_review", "hotelReviews"],
     );
+    reviewsCount = hotelReviews.length;
     userReviewObj = hotelReviews.find(
       (review) => review.reviewer.toString() === session?.user.id,
     );
@@ -103,9 +106,7 @@ export default async function FlightOrHotelReview({
           <span className="text-lg font-semibold">
             {rating ? RATING_SCALE[parseInt(rating)] : "N/A"}
           </span>
-          <span className="text-sm">
-            {flightReviews.length}&nbsp; verified reviews
-          </span>
+          <span className="text-sm">{reviewsCount}&nbsp; verified reviews</span>
         </p>
       </div>
       <Separator className="my-[24px]" />
