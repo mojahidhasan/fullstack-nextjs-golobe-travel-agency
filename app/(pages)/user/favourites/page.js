@@ -139,7 +139,7 @@ export default async function FavouritesPage() {
           amenities: hotelDetails.amenities.slice(0, 5),
           price: cheapestRoom.price,
           availableRooms: hotelDetails.rooms.length,
-          rating: totalReviewsCount ? rating.toFixed(1) : "N/A",
+          rating: rating,
           totalReviews: totalReviewsCount,
           ratingScale: ratingScale || "N/A",
           image: hotelDetails.images[0],
