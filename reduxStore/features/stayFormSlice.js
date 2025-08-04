@@ -19,8 +19,6 @@ export const defaultHotelFormValue = {
   defaultFilterValues: {
     rates: [],
     priceRange: [0, 2000],
-    minPrice: 0,
-    maxPrice: 0,
     amenities: [],
     features: [],
   },
@@ -41,24 +39,21 @@ const stayFormSlice = createSlice({
     },
     setStayFilter(state, action) {
       state.value.filters = {
+        ...defaultHotelFormValue.defaultFilterValues,
+        ...state.value.defaultFilterValues,
         ...state.value.filters,
         ...action.payload,
       };
     },
     setDefaultStayFilters(state, action) {
       state.value.defaultFilterValues = {
+        ...defaultHotelFormValue.defaultFilterValues,
         ...state.value.defaultFilterValues,
         ...action.payload,
       };
     },
     resetStayFilters(state) {
-      state.value.filters = {
-        ...state.value.defaultFilterValues,
-        priceRange: [
-          state.value.defaultFilterValues.minPrice,
-          state.value.defaultFilterValues.maxPrice,
-        ],
-      };
+      state.value.filters = state.value.defaultFilterValues;
     },
   },
 });
