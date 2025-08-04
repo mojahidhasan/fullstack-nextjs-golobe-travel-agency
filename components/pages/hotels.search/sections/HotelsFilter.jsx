@@ -109,6 +109,10 @@ export function HotelsFilter({
     jumpTo("hotelResults");
   }
 
+  function handleResetFilters() {
+    dispatch(resetStayFilters());
+  }
+
   return isFilterLoading ? (
     <Loading className={className} />
   ) : (
@@ -131,6 +135,14 @@ export function HotelsFilter({
         >
           <h2>Filters</h2>
         </Button>
+        <Button
+          className="p-0 max-lg:hidden"
+          variant={"link"}
+          onClick={handleResetFilters}
+          asChild
+        >
+          <h2>Reset</h2>
+        </Button>
       </div>
       <div
         className={cn(
@@ -144,7 +156,7 @@ export function HotelsFilter({
             form="flightForm"
             variant={"link"}
             className="block h-auto px-0 lg:hidden"
-            onClick={() => dispatch(resetStayFilters())}
+            onClick={handleApplyFilters}
           >
             reset filter
           </Button>
