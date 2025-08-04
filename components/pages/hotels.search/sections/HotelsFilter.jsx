@@ -53,6 +53,7 @@ export function HotelsFilter({
   useEffect(() => {
     dispatch(
       setStayFilter({
+        priceRange: defaultFilterDB?.priceRange || [0, 2000],
         ...filters,
         amenities: filters?.amenities
           ? filters?.amenities.map((el) => "amenity-" + el)
@@ -62,7 +63,7 @@ export function HotelsFilter({
           : [],
       }),
     );
-  }, [filters, dispatch]);
+  }, [filters, dispatch, defaultFilterDB?.priceRange]);
 
   function handleCheckboxChange(checked, groupName, name) {
     if (checked) {
