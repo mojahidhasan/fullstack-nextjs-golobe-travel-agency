@@ -237,9 +237,19 @@ export default async function HotelBookingDetailsPage({ params }) {
                 </div>
                 <div className="flex-1 space-y-1">
                   <p className="font-semibold">{room.roomType || "Room"}</p>
-                  <p className="text-sm text-gray-600">{room.description}</p>
+                  <p className="text-sm font-semibold text-gray-600">
+                    {room.description}
+                  </p>
                   <p className="text-sm text-gray-600">
-                    Sleeps: {room.sleepsCount}
+                    <span className="font-semibold">Sleeps:</span>{" "}
+                    {room.sleepsCount}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <span className="font-semibold">Floor: </span> {room.floor}
+                  </p>
+                  <p className="text-sm text-gray-600">
+                    <span className="font-semibold">Room Number:</span>{" "}
+                    {room.roomNumber}
                   </p>
 
                   {/* Truncated amenities */}
