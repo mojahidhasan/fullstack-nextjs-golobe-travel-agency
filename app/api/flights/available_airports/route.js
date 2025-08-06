@@ -1,4 +1,5 @@
 import { Airport } from "@/lib/db/models";
+
 export async function GET(req) {
   const searchParams = Object.fromEntries(new URL(req.url).searchParams);
   const limit = searchParams?.limit || 10;
@@ -8,21 +9,19 @@ export async function GET(req) {
     .limit(limit)
     .select("iataCode name city -_id")
     .exec();
+
   try {
-    if (!!!searchQuery) {
+    if (!searchQuery || searchQuery.trim() === "") {
       return Response.json({ success: true, data: airports });
     }
 
-    const regex = new RegExp(
-      `${searchQuery.match(/.{1,2}/g).join("+?.*")}`,
-      "i"
-    );
+    const searchLower = searchQuery.toLowerCase().trim();
 
     const filteredAirports = airports.filter((airport) => {
       return (
-        regex.test(airport.iataCode) ||
-        regex.test(airport.name) ||
-        regex.test(airport.city)
+        airport.iataCode?.toLowerCase().includes(searchLower) ||
+        airport.name?.toLowerCase().includes(searchLower) ||
+        airport.city?.toLowerCase().includes(searchLower)
       );
     });
 
