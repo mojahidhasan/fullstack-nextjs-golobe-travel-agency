@@ -15,12 +15,14 @@ import {
   ConfirmNowPayAtHotelButton,
   RequestRefundHotelBookingButton,
 } from "@/components/pages/hotels.[bookingId]/ActionsButtons";
-import { availableFlightOrHotelBookingActionBtn } from "@/lib/helpers";
 import NotFound from "@/app/not-found";
 import {
   BOOKING_STATUS_TEXT_COL_TW_CLASS,
   PAYMENT_STATUS_TEXT_COL_TW_CLASS,
 } from "@/lib/constants";
+import { allowedHotelBookingActionBtns } from "@/lib/helpers/hotels/allowedHotelBookingActionBtns";
+import { ChevronLeft } from "lucide-react";
+import { parseHotelCheckInOutPolicy } from "@/lib/helpers/hotels";
 
 export default async function HotelBookingDetailsPage({ params }) {
   const session = await auth();
@@ -74,13 +76,31 @@ export default async function HotelBookingDetailsPage({ params }) {
     paymentMethod,
   } = booking;
 
+  const cancellationPolicy = hotel.policies.cancellationPolicy;
+  const refundPolicy = hotel.policies.refundPolicy;
+
+  const checkInTime = parseHotelCheckInOutPolicy(hotel.policies.checkIn);
+
+  const checkIn = new Date(checkInDate);
+  checkIn.setHours(checkInTime.hour, checkInTime.minute, 0, 0);
+
   const { canConfirm, canCancel, canRefund, canDownload, canPay } =
-    availableFlightOrHotelBookingActionBtn(bookingStatus, paymentStatus);
+    allowedHotelBookingActionBtns(
+      bookingStatus,
+      paymentStatus,
+      cancellationPolicy,
+      refundPolicy,
+      checkIn,
+    );
 
   return (
     <main className="mx-auto my-4 w-[90%] max-w-[1440px] space-y-6">
-      {/* Page Title */}
-      <h2 className="text-2xl font-semibold text-gray-800">Booking Details</h2>
+      <Button className="p-0" variant={"link"} asChild>
+        <Link href="/user/my_bookings?tab=hotels">
+          <ChevronLeft />
+          <span className="ml-2">Back to My Bookings</span>
+        </Link>
+      </Button>
       {/* Action Buttons (optional) */}
       <div className="flex flex-wrap gap-3">
         {canConfirm && <ConfirmNowPayAtHotelButton bookingId={bookingId} />}
