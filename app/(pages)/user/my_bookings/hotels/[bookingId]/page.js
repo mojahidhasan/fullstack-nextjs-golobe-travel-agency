@@ -59,7 +59,9 @@ export default async function HotelBookingDetailsPage({ params }) {
   }
 
   const hotel = await getOneDoc("Hotel", { _id: booking.hotelId }, ["hotel"]);
-  const rooms = hotel.rooms.filter((room) => booking.rooms.includes(room._id));
+  const rooms = (hotel?.rooms || []).filter((room) =>
+    booking.rooms.includes(room._id),
+  );
   const {
     checkInDate,
     checkOutDate,
