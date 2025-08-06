@@ -215,7 +215,7 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
       </div>
 
       {/* Actions */}
-      <div className="flex flex-wrap justify-end gap-3 border-t pt-4 pt-6">
+      <div className="flex flex-wrap justify-end gap-3 border-t pt-4">
         <Button variant="secondary" className="min-w-[100px]" asChild>
           <Link href={`/user/my_bookings/flights/${key}`}>View</Link>
         </Button>
