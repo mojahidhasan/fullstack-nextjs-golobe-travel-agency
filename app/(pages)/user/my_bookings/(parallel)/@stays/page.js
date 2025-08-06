@@ -27,6 +27,8 @@ export default async function Stays() {
           checkOutDate: new Date(booking.checkOutDate),
           checkInTime: hotelDetails.policies.checkIn,
           checkOutTime: hotelDetails.policies.checkOut,
+          cancellationPolicy: hotelDetails.policies.cancellationPolicy,
+          refundPolicy: hotelDetails.policies.refundPolicy,
           nights: null,
           rooms: hotelDetails.rooms
             .filter((room) => booking.rooms.includes(room._id))
