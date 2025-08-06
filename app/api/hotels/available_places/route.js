@@ -1,11 +1,12 @@
 import { Hotel } from "@/lib/db/models";
+
 export async function GET(req) {
   const searchParams = Object.fromEntries(new URL(req.url).searchParams);
   const limit = searchParams?.limit || 10;
   const searchQuery = searchParams?.searchQuery;
 
   try {
-    if (!!!searchQuery) {
+    if (!searchQuery || searchQuery.trim() === "") {
       const hotels = await Hotel.find({})
         .limit(limit)
         .select("address -_id")
@@ -22,12 +23,23 @@ export async function GET(req) {
       );
     }
 
-    const regex = new RegExp(
-      `${searchQuery.match(/.{1,2}/g).join("+?.*")}`,
-      "i",
-    );
+    const searchLower = searchQuery.toLowerCase().trim();
+
     const hotels = await Hotel.find({
-      query: { $regex: regex },
+      $or: [
+        {
+          "address.city": {
+            $regex: searchLower.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+            $options: "i",
+          },
+        },
+        {
+          "address.country": {
+            $regex: searchLower.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"),
+            $options: "i",
+          },
+        },
+      ],
     })
       .limit(limit)
       .select("address -_id")
