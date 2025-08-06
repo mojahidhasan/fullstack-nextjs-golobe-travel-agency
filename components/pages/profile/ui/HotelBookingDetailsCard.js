@@ -1,15 +1,22 @@
+"use client";
+
+import Image from "next/image";
+import Link from "next/link";
+import { format } from "date-fns";
+
 import { cn, formatCurrency } from "@/lib/utils";
 import { SmallDataCard } from "@/components/pages/profile/ui/SmallDataCard";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import Link from "next/link";
-
-import calender from "@/public/icons/calender-mint.svg";
-import timer from "@/public/icons/timer-mint.svg";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import NoSSR from "@/components/helpers/NoSSR";
 import ShowTimeInClientSide from "@/components/helpers/ShowTimeInClientSide";
-import { format } from "date-fns";
+
 import {
   BOOKING_STATUS_BG_COL_TW_CLASS,
   BOOKING_STATUS_TEXT_COL_TW_CLASS,
@@ -24,6 +31,18 @@ import {
 } from "../../hotels.[bookingId]/ActionsButtons";
 import { allowedHotelBookingActionBtns } from "@/lib/helpers/hotels/allowedHotelBookingActionBtns";
 import { parseHotelCheckInOutPolicy } from "@/lib/helpers/hotels";
+
+import calender from "@/public/icons/calender-mint.svg";
+import timer from "@/public/icons/timer-mint.svg";
+
+// Reusable chip component
+const StatusChip = ({ text, bg, color }) => (
+  <div
+    className={cn("rounded-full px-3 py-1 text-xs font-semibold", bg, color)}
+  >
+    {text}
+  </div>
+);
 
 export default function HotelBookingDetailsCard({ className, bookingData }) {
   const {
@@ -47,8 +66,8 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
     hotelImage,
   } = bookingData;
 
-  const cin = parseHotelCheckInOutPolicy(checkInTime); // checkin time, not cin of c++
-  const cout = parseHotelCheckInOutPolicy(checkOutTime); // checkout time, not cout of c++
+  const cin = parseHotelCheckInOutPolicy(checkInTime);
+  const cout = parseHotelCheckInOutPolicy(checkOutTime);
 
   const checkIn = new Date(checkInDate);
   const checkOut = new Date(checkOutDate);
@@ -75,74 +94,70 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-4 rounded-lg border bg-white p-4 shadow-md sm:p-6",
+        "space-y-6 rounded-2xl border bg-white p-5 shadow-sm",
         className,
       )}
     >
-      <div className="flex flex-wrap items-center justify-between gap-4">
-        <div>
-          <p className="font-bold">
-            <span className="font-normal">Booking Id:</span> {bookingId}
-          </p>
-          <p className="font-bold">
-            <span className="font-normal">Booked At:</span>{" "}
-            <NoSSR fallback={"dd MMMM yyyy, hh:mm:ss a"}>
-              <ShowTimeInClientSide
-                date={bookedAt}
-                formatStr="dd MMMM yyyy, hh:mm:ss a"
-              />
-            </NoSSR>
-          </p>
+      {/* Header: Hotel Image + Statuses */}
+      <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-[1fr_auto]">
+        <div className="flex gap-4">
+          {hotelImage && (
+            <Image
+              src={hotelImage}
+              alt="Hotel Image"
+              width={140}
+              height={105}
+              className="rounded-lg border object-cover"
+            />
+          )}
+          <div>
+            <p className="text-base font-semibold">{hotelAddress}</p>
+            <p className="text-sm text-muted-foreground">
+              Booking ID: <span className="font-medium">{bookingId}</span>
+            </p>
+            <p className="text-sm text-muted-foreground">
+              Booked At:{" "}
+              <NoSSR fallback="dd MMM yyyy, hh:mm:ss a">
+                <ShowTimeInClientSide
+                  date={bookedAt}
+                  formatStr="dd MMM yyyy, hh:mm:ss a"
+                />
+              </NoSSR>
+            </p>
+          </div>
         </div>
-        <div className="mb-3 flex flex-col items-end gap-2">
-          <p
-            className={cn(
-              "w-fit rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
-              bookingStatusBgClass,
-              bookingStatusTextClass,
-            )}
-          >
-            {bookingStatus}
-          </p>
 
-          <p
-            className={cn(
-              "w-fit rounded-full px-3 py-1 text-right text-xs font-semibold uppercase",
-              paymentStatusBgClass,
-              paymentStatusTextClass,
-            )}
-          >
-            {paymentMethod === "cash" &&
-            bookingStatus === "confirmed" &&
-            paymentStatus === "pending"
-              ? "Pay On Property"
-              : paymentStatus}
-          </p>
-        </div>
-      </div>
-      <div>
-        <p className="font-bold">
-          <span className="font-medium">Total Price:</span>{" "}
-          {formatCurrency(totalPrice)}
-        </p>
-      </div>
-
-      <div className="flex gap-4">
-        {hotelImage && (
-          <Image
-            src={hotelImage}
-            alt="Hotel Image"
-            width={128}
-            height={96}
-            className="rounded-lg border object-cover"
+        {/* Status Chips */}
+        <div className="flex flex-col items-end gap-2">
+          <StatusChip
+            text={bookingStatus}
+            bg={bookingStatusBgClass}
+            color={bookingStatusTextClass}
           />
-        )}
-        <div>
-          <p className="font-medium text-muted-foreground">{hotelAddress}</p>
+          <StatusChip
+            text={
+              paymentMethod === "cash" &&
+              bookingStatus === "confirmed" &&
+              paymentStatus === "pending"
+                ? "Pay On Property"
+                : paymentStatus
+            }
+            bg={paymentStatusBgClass}
+            color={paymentStatusTextClass}
+          />
         </div>
       </div>
 
-      <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      {/* Price Summary */}
+      <div className="text-sm font-semibold">
+        Total Price:{" "}
+        <span className="font-bold text-primary">
+          {formatCurrency(totalPrice)}
+        </span>
+      </div>
+
+      {/* Dates */}
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <SmallDataCard
           imgSrc={calender}
           title="Check-In"
@@ -154,9 +169,11 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
                   formatStr="d MMM yyyy"
                 />
               </NoSSR>
-              <span className="block text-xs">
-                {checkInTime && `at ${format(checkIn, "hh:mm aaa")}`}
-              </span>
+              {checkInTime && (
+                <span className="block text-xs text-muted-foreground">
+                  at {format(checkIn, "hh:mm aaa")}
+                </span>
+              )}
             </>
           }
         />
@@ -171,89 +188,99 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
                   formatStr="d MMM yyyy"
                 />
               </NoSSR>
-              <span className="block text-xs">
-                {checkOutTime && `at ${format(checkOut, "hh:mm aaa")}`}
-              </span>
+              {checkOutTime && (
+                <span className="block text-xs text-muted-foreground">
+                  at {format(checkOut, "hh:mm aaa")}
+                </span>
+              )}
             </>
           }
         />
         <SmallDataCard imgSrc={timer} title="Nights" data={nights || "—"} />
       </div>
 
-      <div className="rounded-md bg-muted/50 p-4">
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
-          Rooms
-        </h3>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {rooms.map((room) => (
-            <div
-              key={room.key}
-              className="min-w-fit grow rounded-md bg-white p-3 shadow-sm"
-            >
-              <p className="font-medium">{room.bedOptions}</p>
-              <p className="text-sm capitalize text-muted-foreground">
-                Type: {room.roomType}
-              </p>
-              <p className="text-sm capitalize text-muted-foreground">
-                Floor: {room.floor}
-              </p>
-              <p className="text-sm capitalize text-muted-foreground">
-                Room Number: {room.roomNumber}
-              </p>
-              <p className="text-sm capitalize text-muted-foreground">
-                Sleeps Count: {room.sleepsCount}
-              </p>
+      {/* Room Accordion */}
+      <Accordion type="single" collapsible>
+        <AccordionItem value="rooms">
+          <AccordionTrigger>Rooms ({rooms.length})</AccordionTrigger>
+          <AccordionContent>
+            <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {rooms.map((room) => (
+                <div
+                  key={room.key}
+                  className="space-y-1 rounded-xl border bg-white p-4 shadow-sm"
+                >
+                  <p className="font-medium">{room.bedOptions}</p>
+                  <p className="text-sm text-muted-foreground">
+                    Type: {room.roomType}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Floor: {room.floor}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Room #: {room.roomNumber}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Sleeps: {room.sleepsCount}
+                  </p>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
-      <div className="rounded-md bg-muted/50 p-4">
-        <h3 className="mb-2 text-sm font-semibold text-muted-foreground">
-          Guests
-        </h3>
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {guests.map((guest) => (
-            <div
-              key={guest.key}
-              className="min-w-fit grow rounded-md bg-white p-3 shadow-sm"
-            >
-              <p className="font-medium">
-                {guest.firstName} {guest.lastName}
-              </p>
-              <p className="text-sm capitalize text-muted-foreground">
-                Type: {guest.guestType}
-              </p>
-              {guest.email && (
-                <p className="text-sm text-muted-foreground">
-                  Email: {guest.email}
-                </p>
-              )}
-              {guest.phone && (
-                <p className="text-sm capitalize text-muted-foreground">
-                  Phone: {guest.phone}
-                </p>
-              )}
-            </div>
-          ))}
-        </div>
-      </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
 
-      <div className="mt-4 flex flex-wrap gap-3">
-        <Button className="min-w-[100px]" asChild>
+      {/* Guest Accordion */}
+      <Accordion type="single" collapsible>
+        <AccordionItem value="guests">
+          <AccordionTrigger>Guests ({guests.length})</AccordionTrigger>
+          <AccordionContent>
+            <div className="mt-3 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {guests.map((guest) => (
+                <div
+                  key={guest.key}
+                  className="space-y-1 rounded-xl border bg-white p-4 shadow-sm"
+                >
+                  <p className="font-medium">
+                    {guest.firstName} {guest.lastName}
+                  </p>
+                  <p className="text-sm text-muted-foreground">
+                    Type: {guest.guestType}
+                  </p>
+                  {guest.email && (
+                    <p className="text-sm text-muted-foreground">
+                      Email: {guest.email}
+                    </p>
+                  )}
+                  {guest.phone && (
+                    <p className="text-sm text-muted-foreground">
+                      Phone: {guest.phone}
+                    </p>
+                  )}
+                </div>
+              ))}
+            </div>
+          </AccordionContent>
+        </AccordionItem>
+      </Accordion>
+
+      {/* Action Buttons */}
+      <div className="flex flex-wrap justify-end gap-3 border-t pt-4">
+        <Button variant="secondary" className="min-w-[100px]" asChild>
           <Link href={`/user/my_bookings/hotels/${key}`}>View</Link>
         </Button>
         {canConfirm && <ConfirmNowPayAtHotelButton bookingId={bookingId} />}
         {canPay && (
-          <Button className="min-w-[100px]" asChild>
+          <Button variant="default" className="min-w-[100px]" asChild>
             <Link href={`/user/my_bookings/hotels/${key}/payment`}>
-              Pay now
+              Pay Now
             </Link>
           </Button>
         )}
         {canDownload && (
-          <Button className="min-w-[100px]" asChild>
+          <Button variant="outline" className="min-w-[100px]" asChild>
             <Link href={`/user/my_bookings/hotels/${key}/invoice`}>
-              Download Invoice
+              Invoice
             </Link>
           </Button>
         )}
