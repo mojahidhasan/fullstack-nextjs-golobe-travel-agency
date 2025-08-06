@@ -85,7 +85,7 @@ function SearchStaysForm({ params = {} }) {
   const stayFormData = useSelector((state) => state.stayForm.value);
   const errors = stayFormData.errors;
 
-  const spStr = params;
+  const spStr = params?.hotelSearchParams;
   useEffect(() => {
     async function searchState() {
       setIsFormLoading(true);
