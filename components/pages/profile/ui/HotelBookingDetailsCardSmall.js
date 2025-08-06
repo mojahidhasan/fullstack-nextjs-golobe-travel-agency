@@ -16,20 +16,25 @@ import {
   PAYMENT_STATUS_BG_TW_CLASS,
   PAYMENT_STATUS_TEXT_COL_TW_CLASS,
 } from "@/lib/constants";
-import { availableFlightOrHotelBookingActionBtn } from "@/lib/helpers";
+import { parseHotelCheckInOutPolicy } from "@/lib/helpers/hotels";
+import { allowedHotelBookingActionBtns } from "@/lib/helpers/hotels/allowedHotelBookingActionBtns";
 export default function HotelBookingDetailsCardSmall({
   className,
   hotelDetails,
   bookingDetails,
 }) {
-  const checkIn = new Date(0);
-  const checkOut = new Date(0);
+  const checkIn = new Date(bookingDetails.checkInDate);
+  const checkOut = new Date(bookingDetails.checkOutDate);
 
-  const hotelCheckInTime = hotelDetails.policies.checkIn.split(":");
-  const hotelCheckOutTime = hotelDetails.policies.checkOut.split(":");
+  const hotelCheckInTime = parseHotelCheckInOutPolicy(
+    hotelDetails.policies.checkIn,
+  );
+  const hotelCheckOutTime = parseHotelCheckInOutPolicy(
+    hotelDetails.policies.checkOut,
+  );
 
-  checkIn.setHours(hotelCheckInTime[0], hotelCheckInTime[1], 0, 0);
-  checkOut.setHours(hotelCheckOutTime[0], hotelCheckOutTime[1], 0, 0);
+  checkIn.setHours(hotelCheckInTime.hour, hotelCheckInTime.minute, 0, 0);
+  checkOut.setHours(hotelCheckOutTime.hour, hotelCheckOutTime.minute, 0, 0);
 
   const data = {
     key: bookingDetails._id,
@@ -37,10 +42,10 @@ export default function HotelBookingDetailsCardSmall({
     address: hotelDetails.address,
     guestsCount: bookingDetails.guests.length,
     totalPrice: bookingDetails.totalPrice,
-    checkInDate: new Date(bookingDetails.checkInDate),
-    checkOutDate: new Date(bookingDetails.checkOutDate),
-    checkInTime: checkIn,
-    checkOutTime: checkOut,
+    checkInDate: checkIn,
+    checkOutDate: checkOut,
+    cancellationPolicy: hotelDetails.policies.cancellationPolicy,
+    refundPolicy: hotelDetails.policies.refundPolicy,
     rooms: hotelDetails.rooms
       .filter((room) => bookingDetails.rooms.includes(room._id))
       .map((room) => ({
@@ -55,9 +60,12 @@ export default function HotelBookingDetailsCardSmall({
     paymentStatus: bookingDetails.paymentStatus,
   };
 
-  const { canDownload, canPay } = availableFlightOrHotelBookingActionBtn(
+  const { canDownload, canPay } = allowedHotelBookingActionBtns(
     data.bookingStatus,
     data.paymentStatus,
+    data.cancellationPolicy,
+    data.refundPolicy,
+    data.checkInDate,
   );
   const checkInDate = (
     <NoSSR fallback={"EEE, MMM d, yyy"}>
@@ -83,12 +91,12 @@ export default function HotelBookingDetailsCardSmall({
 
   const checkInTime = (
     <NoSSR fallback={"hh:mm aaa"}>
-      <ShowTimeInClientSide date={data.checkInTime} formatStr="hh:mm aaa" />
+      <ShowTimeInClientSide date={data.checkInDate} formatStr="hh:mm aaa" />
     </NoSSR>
   );
   const checkOutTime = (
     <NoSSR fallback={"hh:mm aaa"}>
-      <ShowTimeInClientSide date={data.checkOutTime} formatStr="hh:mm aaa" />
+      <ShowTimeInClientSide date={data.checkOutDate} formatStr="hh:mm aaa" />
     </NoSSR>
   );
 
