@@ -158,6 +158,33 @@ export default async function HotelBookingDetailsPage({ params }) {
         </CardContent>
       </Card>
 
+      {/* Guest Details */}
+      <Card>
+        <CardContent className="space-y-2 p-4">
+          <h3 className="text-lg font-semibold">Guests</h3>
+          {guests.map((guest, index) => (
+            <div
+              key={guest._id || index}
+              className="flex flex-col rounded-md border bg-white p-3 sm:flex-row sm:justify-between"
+            >
+              <div>
+                <p className="font-medium">
+                  {guest.firstName} {guest.lastName}
+                </p>
+                <p className="text-sm text-gray-600">Type: {guest.guestType}</p>
+                {guest.age && (
+                  <p className="text-sm text-gray-600">Age: {guest.age}</p>
+                )}
+              </div>
+              <div className="mt-2 text-sm text-gray-500 sm:mt-0">
+                {guest.email && <p>Email: {guest.email}</p>}
+                {guest.phone && <p>Phone: {guest.phone}</p>}
+              </div>
+            </div>
+          ))}
+        </CardContent>
+      </Card>
+
       {/* Room Details */}
       <Card>
         <CardContent className="space-y-4 p-4">
@@ -202,33 +229,6 @@ export default async function HotelBookingDetailsPage({ params }) {
                   {/* Truncated features */}
                   <TruncatedBadgeList label="Features" items={room.features} />
                 </div>
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      {/* Guest Details */}
-      <Card>
-        <CardContent className="space-y-2 p-4">
-          <h3 className="text-lg font-semibold">Guests</h3>
-          {guests.map((guest, index) => (
-            <div
-              key={guest._id || index}
-              className="flex flex-col rounded-md border bg-white p-3 sm:flex-row sm:justify-between"
-            >
-              <div>
-                <p className="font-medium">
-                  {guest.firstName} {guest.lastName}
-                </p>
-                <p className="text-sm text-gray-600">Type: {guest.guestType}</p>
-                {guest.age && (
-                  <p className="text-sm text-gray-600">Age: {guest.age}</p>
-                )}
-              </div>
-              <div className="mt-2 text-sm text-gray-500 sm:mt-0">
-                {guest.email && <p>Email: {guest.email}</p>}
-                {guest.phone && <p>Phone: {guest.phone}</p>}
               </div>
             </div>
           ))}
