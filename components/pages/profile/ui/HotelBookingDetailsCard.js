@@ -34,15 +34,7 @@ import { parseHotelCheckInOutPolicy } from "@/lib/helpers/hotels";
 
 import calender from "@/public/icons/calender-mint.svg";
 import timer from "@/public/icons/timer-mint.svg";
-
-// Reusable chip component
-const StatusChip = ({ text, bg, color }) => (
-  <div
-    className={cn("rounded-full px-3 py-1 text-xs font-semibold", bg, color)}
-  >
-    {text}
-  </div>
-);
+import StatusChip from "@/components/local-ui/StatusChip";
 
 export default function HotelBookingDetailsCard({ className, bookingData }) {
   const {
