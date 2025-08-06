@@ -112,8 +112,8 @@ export default async function HotelBookingDetailsPage({ params }) {
               value={format(new Date(checkOutDate), "PP")}
             />
             <Detail
-              label="Booking Date"
-              value={format(new Date(bookedAt), "PPp")}
+              label="Booked At"
+              value={bookedAt ? format(new Date(bookedAt), "PPp") : "-"}
             />
             <Detail label="Total Price" value={formatCurrency(+totalPrice)} />
           </div>
