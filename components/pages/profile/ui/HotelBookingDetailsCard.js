@@ -16,13 +16,14 @@ import {
   PAYMENT_STATUS_BG_TW_CLASS,
   PAYMENT_STATUS_TEXT_COL_TW_CLASS,
 } from "@/lib/constants";
-import { availableFlightOrHotelBookingActionBtn } from "@/lib/helpers";
 
 import {
   CancelHotelBookingButton,
   ConfirmNowPayAtHotelButton,
   RequestRefundHotelBookingButton,
 } from "../../hotels.[bookingId]/ActionsButtons";
+import { allowedHotelBookingActionBtns } from "@/lib/helpers/hotels/allowedHotelBookingActionBtns";
+import { parseHotelCheckInOutPolicy } from "@/lib/helpers/hotels";
 
 export default function HotelBookingDetailsCard({ className, bookingData }) {
   const {
@@ -46,17 +47,23 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
     hotelImage,
   } = bookingData;
 
-  const cin = checkInTime.split(":"); // checkin time, not cin of c++
-  const cout = checkOutTime.split(":"); // checkout time, not cout of c++
+  const cin = parseHotelCheckInOutPolicy(checkInTime); // checkin time, not cin of c++
+  const cout = parseHotelCheckInOutPolicy(checkOutTime); // checkout time, not cout of c++
 
-  const checkIn = new Date(0);
-  const checkOut = new Date(0);
+  const checkIn = new Date(checkInDate);
+  const checkOut = new Date(checkOutDate);
 
-  checkIn.setHours(cin[0], cin[1], 0, 0);
-  checkOut.setHours(cout[0], cout[1], 0, 0);
+  checkIn.setHours(cin.hour, cin.minute, 0, 0);
+  checkOut.setHours(cout.hour, cout.minute, 0, 0);
 
   const { canConfirm, canCancel, canRefund, canDownload, canPay } =
-    availableFlightOrHotelBookingActionBtn(bookingStatus, paymentStatus);
+    allowedHotelBookingActionBtns(
+      bookingStatus,
+      paymentStatus,
+      cancellationPolicy,
+      refundPolicy,
+      checkInDate,
+    );
 
   const bookingStatusBgClass = BOOKING_STATUS_BG_COL_TW_CLASS[bookingStatus];
   const bookingStatusTextClass =
