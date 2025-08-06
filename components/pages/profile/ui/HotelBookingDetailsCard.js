@@ -35,6 +35,8 @@ export default function HotelBookingDetailsCard({ className, bookingData }) {
     hotelAddress,
     checkInDate,
     checkOutDate,
+    cancellationPolicy,
+    refundPolicy,
     nights,
     checkInTime,
     checkOutTime,
