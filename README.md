@@ -28,57 +28,76 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 
 ## Features
 
-1. **User Authentication**
+### 1. User Authentication & Account
 
-   - Email and phone verification
-   - Anonymous user signup for guest browsing
-   - Profile management with customizable settings
+- Profile management: update personal details, change password, manage multiple emails and phone numbers
+- User settings: account, security, appearance, and payment preferences
 
-2. **Flight Services**
+### 2. Flight Booking
 
-   - Advanced flight search with multiple filters
-   - Multi-city and round trip options
+- Multi-city and round-trip booking support
+- Real-time flight pricing calculations
+- Flight details page with schedule, baggage, and seat info
+- Flight booking with step-by-step process
+- Save favorite flights
+- View and manage flight bookings (upcoming, past, all)
+- Download flight tickets/invoices
 
-3. **Hotel Services**
+### 3. Hotel Booking
 
-   - Comprehensive hotel search and filtering
-   - Room type selection
+- Hotel search with filters (destination, date, guests, rooms)
+- Hotel details page with amenities, map, reviews, and room types
+- Book hotels with guest info and room selection
+- View and manage hotel bookings (upcoming, past, all)
+- Download hotel invoices
+- Save favorite hotels
+- Recent hotel search history for logged-in users
 
-4. **User Experience**
+### 4. Payments & Checkout
 
-   - Timezone detection for accurate scheduling
-   - Responsive design for all devices
-   - Intuitive booking process
-   - Search history tracking
+- Stripe integration for secure payments (flights & hotels)
+- Support for saving payment methods (cards)
+- Payment status tracking (pending, confirmed, failed)
+- Downloadable receipts/invoices for bookings
 
-5. **Account Management**
+### 5. Reviews & Ratings
 
-   - Multiple email addresses support
-   - Phone number management
-   - Booking history and receipts
-   - Saved payment methods
+- Leave and view reviews for both flights and hotels
+- Verified user review system
+- Average rating calculation and display
+- Review management (one review per booking per user)
 
-6. **Technical Implementation**
+### 6. User Experience & UI
 
-   - Server-side rendering with Next.js App Router
-   - Server components and server actions
-   - Dynamic OG image generation for avatars
-   - Parallel route loading with dedicated loading states
-   - Custom server-side utilities for data processing
+- Responsive design for desktop and mobile
+- Modern, intuitive booking process with stepper UI
+- Loading skeletons and parallel route loading for fast UX
+- Timezone detection for accurate scheduling
+- Search history tracking (for hotels)
+- Accessible navigation and sidebar
 
-7. **Data Management**
+### 7. Account Management
 
-   - MongoDB integration with custom ORM-like functions
-   - Real-time flight pricing calculations
-   - Rating and review system for flights
-   - Session-based data persistence
-   - Timezone-aware date handling
+- Booking history for flights and hotels
+- Saved payment methods and card management
+- Downloadable receipts and invoices
+- Profile and settings management
 
-8. **Performance Optimization**
-   - Client-side state management with Redux
-   - Server-side caching strategies
-   - Optimized image delivery
-   - Responsive loading skeletons
+### 8. Admin & Configuration
+
+- Maintenance mode (full/partial) with customizable message and allowlisted routes
+- Feature toggles for enabling/disabling flight and hotel booking
+- Website configuration management (admin only)
+
+### 9. Technical Features
+
+- Next.js App Router with server components and server actions
+- MongoDB integration with custom ORM-like functions
+- Server-side rendering and caching
+- Dynamic OG image generation for avatars
+- Email notifications (booking confirmations, receipts, reminders)
+- Data validation with Zod schemas
+- Redux for client-side state management
 
 ## Limitations
 
