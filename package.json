@@ -9,11 +9,7 @@
     "dev": "cross-env TZ=UTC next dev",
     "build": "next build",
     "start": "next start",
-    "generateAndUploadFlightsDB": "vitest --testNamePattern generateAndUploadFlightsDB --run",
-    "generateFlightsFiles": "vitest --testNamePattern generateFlightsFiles --run",
-    "generateAnduploadHotelsDB": "vitest --testNamePattern generateAndUploadHotelsDB --run",
-    "generateHotelsFiles": "vitest --testNamePattern generateHotelsFiles --run",
-    "generateWebsiteConfig": "vitest --testNamePattern generateWebsiteConfig --run",
+    "setup": "node setup.js",
     "lint": "next lint",
     "test": "vitest --testNamePattern Testing"
   },
