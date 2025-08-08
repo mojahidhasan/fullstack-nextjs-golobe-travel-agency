@@ -58,9 +58,19 @@ export async function GET(req) {
       JSON.parse(x),
     );
 
-    return Response.json(filterDuplicates);
+    return Response.json({
+      success: true,
+      message: "Available places fetched successfully",
+      data: filterDuplicates,
+    });
   } catch (e) {
     console.log(e);
-    return Response.json({});
+    return Response.json(
+      {
+        success: false,
+        message: "Error getting available places",
+      },
+      { status: 500 },
+    );
   }
 }

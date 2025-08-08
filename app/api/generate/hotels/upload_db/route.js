@@ -14,10 +14,19 @@ export async function POST(req) {
     console.log("Uploading hotels DB...");
     await uploadHotelsDB();
     console.log("Hotels DB uploaded successfully.");
-    return new Response("Hotels DB uploaded successfully", { status: 200 });
+    return Response.json({
+      success: true,
+      message: "Hotels DB uploaded successfully.",
+    });
   } catch (error) {
     console.error("Error uploading hotels DB:", error);
-    return new Response("Error uploading hotels DB", { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: "Error uploading hotels DB",
+      },
+      { status: 500 },
+    );
   }
 }
 

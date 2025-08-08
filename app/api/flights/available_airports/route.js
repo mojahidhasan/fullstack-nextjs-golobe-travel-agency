@@ -25,8 +25,15 @@ export async function GET(req) {
       );
     });
 
-    return Response.json({ success: true, data: filteredAirports });
+    return Response.json({
+      success: true,
+      message: "Available airports fetched successfully",
+      data: filteredAirports,
+    });
   } catch (error) {
-    return Response.json({ success: false, message: error.message });
+    return Response.json(
+      { success: false, message: "Something went wrong" },
+      { status: 500 },
+    );
   }
 }

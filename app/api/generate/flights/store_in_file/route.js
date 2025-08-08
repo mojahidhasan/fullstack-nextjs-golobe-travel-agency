@@ -42,6 +42,7 @@ export async function POST(req) {
       airline,
       airlineFlightPrices,
     };
+
     await fs.mkdir("./generated/flights", { recursive: true });
     for (const [key, value] of Object.entries(data)) {
       await fs.writeFile(
@@ -51,11 +52,15 @@ export async function POST(req) {
     }
 
     console.log("Flights files generated successfully");
-    return new Response("Flights files generated successfully", {
-      status: 200,
+    return Response.json({
+      success: true,
+      message: "Flights files generated successfully",
     });
   } catch (e) {
     console.log(e);
-    return new Response("Error generating flight files", { status: 500 });
+    return Response.json(
+      { success: false, message: "Error generating flight files" },
+      { status: 500 },
+    );
   }
 }

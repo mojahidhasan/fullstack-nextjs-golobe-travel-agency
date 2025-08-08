@@ -17,9 +17,15 @@ export async function POST(req) {
       );
     }
     console.log("Hotels files generated successfully");
-    return new Response("Hotels files generated successfully", { status: 200 });
+    return Response.json({
+      success: true,
+      message: "Hotels files generated successfully",
+    });
   } catch (e) {
     console.log(e);
-    return new Response("Error generating hotel files", { status: 500 });
+    return Response.json(
+      { success: false, message: "Error generating files" },
+      { status: 500 },
+    );
   }
 }

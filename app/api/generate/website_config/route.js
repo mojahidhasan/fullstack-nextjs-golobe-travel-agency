@@ -38,11 +38,18 @@ export async function POST(req) {
     console.log("Uploading website config DB");
     await uploadWebsiteConfigDB();
     console.log("Website config DB uploaded successfully");
-    return new Response("success", {
-      status: 200,
+    return Response.json({
+      success: true,
+      message: "Website config DB uploaded successfully",
     });
   } catch (error) {
     console.error("Error uploading website config DB:", error);
-    return new Response("Error uploading website config DB", { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: "Error uploading website config DB",
+      },
+      { status: 500 },
+    );
   }
 }

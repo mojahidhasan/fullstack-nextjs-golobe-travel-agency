@@ -23,10 +23,19 @@ export async function POST(req) {
     console.log("Uploading flights DB...");
     await uploadFlightsDB();
     console.log("Flights DB uploaded successfully.");
-    return new Response("Flights DB uploaded successfully", { status: 200 });
+    return Response.json({
+      success: true,
+      message: "Flights DB uploaded successfully.",
+    });
   } catch (error) {
     console.error("Error uploading flights DB:", error);
-    return new Response("Error uploading flights DB", { status: 500 });
+    return Response.json(
+      {
+        success: false,
+        message: "Error uploading flights DB",
+      },
+      { status: 500 },
+    );
   }
 }
 
@@ -76,5 +85,5 @@ async function uploadFlightsDB() {
     console.log("created", key);
   }
 
-  return true;
+  return data;
 }
