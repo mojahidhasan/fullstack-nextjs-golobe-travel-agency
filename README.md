@@ -121,21 +121,24 @@ Here is the live preview of this website [golob-travel-agency.vercel.app](https:
 - No group booking functionality
 - No loyalty program or rewards system
 
-## Local Development Setup
+## 🚀 Quick Start
 
-To set up and run the project locally, follow these steps:
+### Option 1: Automated Setup (Recommended)
 
 1. **Clone the repository**
 
    ```sh
    git clone https://github.com/mojahidhasan/fullstack-nextjs-golobe-travel-agency.git
-   ```
-
-2. **Navigate to the project directory**
-
-   ```sh
    cd fullstack-nextjs-golobe-travel-agency
    ```
+
+2. **Run the setup script**
+
+   ```sh
+   npm run setup
+   ```
+
+   This interactive script will help you configure all environment variables.
 
 3. **Install dependencies**
 
@@ -143,46 +146,36 @@ To set up and run the project locally, follow these steps:
    npm install
    ```
 
-4. **Configure environment variables**
-
-   - Rename `.env.example` to `.env` or `.env.local`
-   - Set the required values for all environment variables
-   - Note: The application may fail to run if environment variables are not properly configured
-
-5. **Start the development server**
+4. **Start the development server**
 
    ```sh
    npm run dev
    ```
 
-6. **Generate sample data**
-
-   Flights:
+5. **Generate sample data**
 
    ```sh
-      # Generate and upload flights data to MongoDB
-      # This creates 10 days of flight data but deletes all flight data from db before uploading
-      # If you want to add more flight data without deleting, use `/api/cronjob/flight_schedule` api endpoint
+   # Generate flights data
+   curl -X POST http://localhost:3000/api/generate/flights/upload_db -H "Authorization: Bearer YOUR_API_SECRET_TOKEN"
 
-      curl -X POST http://localhost:3000/api/generate/flights/upload_db -H "Authorization: Bearer API_SECRET_TOKEN"
-      # curl.exe for windows
+   # Generate hotels data
+   curl -X POST http://localhost:3000/api/generate/hotels/upload_db -H "Authorization: Bearer YOUR_API_SECRET_TOKEN"
 
-      # Generate flights data files
-      curl -X POST http://localhost:3000/api/generate/flights/store_in_file -H "Authorization: Bearer API_SECRET_TOKEN"
-      # curl.exe for windows
+   # Generate website config
+   curl -X POST http://localhost:3000/api/generate/website_config -H "Authorization: Bearer YOUR_API_SECRET_TOKEN"
    ```
 
-   Hotels:
+### Option 2: Manual Setup
 
-   ```sh
-   # Generate and upload hotels data to MongoDB
-   curl -X POST http://localhost:3000/api/generate/hotels/upload_db -H "Authorization: Bearer API_SECRET_TOKEN"
-   # curl.exe for windows
+For detailed step-by-step instructions, please refer to our comprehensive **[Getting Started Guide](GETTING_STARTED.md)**.
 
-   # Generate hotels data files
-   curl -X POST http://localhost:3000/api/generate/hotels/store_in_file -H "Authorization: Bearer API_SECRET_TOKEN"
-   # curl.exe for windows
-   ```
+## 📚 Documentation
+
+- **[Getting Started Guide](GETTING_STARTED.md)** - Complete setup and configuration guide
+- **[Features](#features)** - Overview of project features
+- **[Technologies](#technologies-used-in-this-project)** - Tech stack information
+- **[Limitations](#limitations)** - Current project limitations
+- **[TODO](#todo)** - Planned features and improvements
 
 ## TODO
 
