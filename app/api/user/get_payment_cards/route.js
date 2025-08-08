@@ -9,7 +9,7 @@ export async function GET() {
   if (!session?.user)
     return Response.json({ success: false, message: "Unauthenticated" });
 
-  const user = await getUserDetails(session.user.id, 0);
+  const user = await getUserDetails(session.user.id);
   let customerId = user?.customerId;
 
   if (!customerId) {
