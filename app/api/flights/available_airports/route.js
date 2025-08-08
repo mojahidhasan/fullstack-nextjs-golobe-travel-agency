@@ -12,7 +12,11 @@ export async function GET(req) {
 
   try {
     if (!searchQuery || searchQuery.trim() === "") {
-      return Response.json({ success: true, data: airports });
+      return Response.json({
+        success: true,
+        message: "Available airports fetched successfully",
+        data: airports,
+      });
     }
 
     const searchLower = searchQuery.toLowerCase().trim();

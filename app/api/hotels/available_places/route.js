@@ -12,15 +12,17 @@ export async function GET(req) {
         .select("address -_id")
         .exec();
 
-      return Response.json(
-        hotels.map((hotel) => {
+      return Response.json({
+        success: true,
+        message: "Available places fetched successfully",
+        data: hotels.map((hotel) => {
           return {
             city: hotel.address.city,
             country: hotel.address.country,
             type: "place",
           };
         }),
-      );
+      });
     }
 
     const searchLower = searchQuery.toLowerCase().trim();
