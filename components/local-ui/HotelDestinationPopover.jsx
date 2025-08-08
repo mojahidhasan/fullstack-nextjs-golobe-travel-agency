@@ -1,7 +1,7 @@
 "use client";
 import { ApiSearchInputPopover } from "./ApiSearchInputPopover";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn, objDeepCompare } from "@/lib/utils";
 
 import locationIcon from "@/public/icons/location.svg";
 import { Skeleton } from "../ui/skeleton";
@@ -32,11 +32,30 @@ export function HotelDestinationPopover({
   }
 
   function renderSearchResults(
-    resultArr,
+    result,
     setOpen = () => {},
     setSelected = () => {},
   ) {
-    return resultArr.map((obj, i) => (
+    if (result.success === false) {
+      return (
+        <div className="flex h-full items-center justify-center p-2 text-center text-sm font-bold">
+          {result.message}
+        </div>
+      );
+    }
+    const filteredResultArr = result.data.filter((obj) => {
+      return !excludeVals.some((exObj) => objDeepCompare(obj, exObj));
+    });
+
+    if (filteredResultArr.length === 0) {
+      return (
+        <div className="flex h-full items-center justify-center p-2 text-center text-sm font-bold">
+          No results found
+        </div>
+      );
+    }
+
+    return result.data.map((obj, i) => (
       <div
         onClick={() => {
           setSelected(obj);
