@@ -101,18 +101,29 @@ export async function POST(req) {
             ["flight"],
             0,
           );
+
+          const updatedBooking = await getOneDoc(
+            "FlightBooking",
+            {
+              _id: strToObjectId(charge.metadata.flightBookingId),
+            },
+            ["userFlightBooking"],
+            0,
+          );
+
           const baseUrl = process.env.NEXT_PUBLIC_BASE_URL;
 
           const { emailFlightDetails, emailBookingDetails } =
-            processFlightBookingDataForEmail(flight, booking);
+            processFlightBookingDataForEmail(flight, updatedBooking);
 
           const htmlEmail = flightBookingConfirmedEmailTemplate({
             ...emailDefaultData,
             main: {
               manageBookingUrl:
-                baseUrl + `/user/my_bookings/flights/${booking._id}`,
+                baseUrl + `/user/my_bookings/flights/${updatedBooking._id}`,
               downloadTicketUrl:
-                baseUrl + `/user/my_bookings/flights/${booking._id}/ticket`,
+                baseUrl +
+                `/user/my_bookings/flights/${updatedBooking._id}/ticket`,
               flightDetails: emailFlightDetails,
               bookingDetails: emailBookingDetails,
             },
