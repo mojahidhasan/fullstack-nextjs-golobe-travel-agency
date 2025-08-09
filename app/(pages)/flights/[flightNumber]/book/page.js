@@ -7,7 +7,7 @@ import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
 import { getUserDetails } from "@/lib/controllers/user";
 import SessionTimeoutCountdown from "@/components/local-ui/SessionTimeoutCountdown";
-import { getOneDoc } from "@/lib/db/getOperationDB";
+import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import BookingSteps from "@/components/pages/flights.book/BookingSteps";
 import { getAvailableSeats } from "@/lib/controllers/flights";
 import InfoPage from "@/components/InfoPage";
@@ -15,7 +15,7 @@ import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import { strToObjectId } from "@/lib/db/utilsDB";
 
-export default async function FlightBookPage({ params }) {
+export default async function FlightBookPage({ params, searchParams }) {
   const session = await auth();
   const loggedIn = !!session?.user;
   const searchStateCookie = cookies().get("flightSearchState")?.value || "{}";
@@ -59,6 +59,22 @@ export default async function FlightBookPage({ params }) {
       return el.flightId._id === flight._id;
     });
 
+    if (searchParams.tab === "payment") {
+      const booking = await getManyDocs(
+        "FlightBooking",
+        {
+          flightItineraryId: strToObjectId(flight._id),
+          userId: strToObjectId(session.user.id),
+          paymentStatus: "pending",
+        },
+        ["userFlightBooking"],
+        0,
+      );
+
+      bookingId = booking[0]?._id;
+      hasPendingBooking = booking.length > 1;
+    }
+  } else {
     const booking = await getOneDoc(
       "FlightBooking",
       {
@@ -70,7 +86,7 @@ export default async function FlightBookPage({ params }) {
       ["userFlightBooking"],
       0,
     );
-    bookingId = booking._id;
+    bookingId = booking?._id;
     hasPendingBooking = Object.keys(booking).length !== 0;
   }
 
@@ -118,7 +134,7 @@ export default async function FlightBookPage({ params }) {
           className={"my-4 rounded-md"}
         />
 
-        {hasPendingBooking && (
+        {hasPendingBooking && bookingId && (
           <div className="mb-6 rounded-lg border border-yellow-300 bg-yellow-50 p-4 text-sm font-medium text-gray-800 shadow-md">
             You have a pending booking for this flight. Whether cancel that or
             confirm that to book this flight again.
