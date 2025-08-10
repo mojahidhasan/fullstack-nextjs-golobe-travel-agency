@@ -2,6 +2,7 @@ import HotelBookingDetailsCard from "@/components/pages/profile/ui/HotelBookingD
 import { auth } from "@/lib/auth";
 import { getAllHotelBookings } from "@/lib/controllers/hotels";
 import { getOneDoc } from "@/lib/db/getOperationDB";
+import { strToObjectId } from "@/lib/db/utilsDB";
 import { differenceInDays } from "date-fns";
 
 export default async function Stays() {
@@ -13,7 +14,9 @@ export default async function Stays() {
     <div>
       {bookingData.length === 0 && <Empty />}
       {bookingData.map(async (booking) => {
-        const hotelDetails = await getOneDoc("Hotel", { _id: booking.hotelId });
+        const hotelDetails = await getOneDoc("Hotel", {
+          _id: strToObjectId(booking.hotelId),
+        });
         const data = {
           key: booking._id,
           bookingId: booking._id,
