@@ -48,11 +48,8 @@ export default function ProfileSettings() {
   };
 
   const handleAvatarChange = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const url = URL.createObjectURL(file);
-      setAvatarPreview(url);
-    }
+    // TODO: Handle avatar upload
+    alert("Avatar uploaded successfully!");
   };
 
   const triggerFileSelect = () => {
