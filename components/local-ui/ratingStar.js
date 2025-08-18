@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 export function RatingStar({
   width = 24,
@@ -8,18 +8,25 @@ export function RatingStar({
   stroke = "none",
   error = "",
   defaultRating = 0,
+  onValueChange = () => {},
   ...props
 }) {
   const [ratingVal, setRatingVal] = useState(defaultRating || 0);
 
+  useEffect(() => {
+    setRatingVal(defaultRating);
+  }, [defaultRating]);
+
   function handleClick(currentRating) {
+    onValueChange(currentRating);
     setRatingVal(currentRating);
   }
+
   return (
     <div
       className={cn(
-        "flex gap-1 w-min",
-        error && "border-2 border-destructive rounded-sm"
+        "flex w-min gap-1",
+        error && "rounded-sm border-2 border-destructive",
       )}
     >
       <input type={"hidden"} name={"rating"} value={ratingVal} />
