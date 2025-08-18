@@ -9,12 +9,7 @@ import {
   PopoverTrigger,
   PopoverContent,
 } from "@/components/ui/popover";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@//components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 import { forwardRef, useEffect, useState } from "react";
 
@@ -34,6 +29,7 @@ import { Loader } from "lucide-react";
 import { jumpTo } from "../local-ui/Jumper";
 import { getCookiesAction, setCookiesAction } from "@/lib/actions";
 import { ErrorMessage } from "../local-ui/errorMessage";
+import addToSearchHistoryAction from "@/lib/actions/addToSearchHistoryAction";
 
 const DatePickerCustomInput = forwardRef(
   ({ loading, open, setOpen, value, onClick, className }, ref) => {
@@ -189,13 +185,15 @@ function SearchStaysForm({ params = {} }) {
     let searchState = {};
     if ("hotelSearchParams" in params) {
       searchState = getSearchStateParams();
-    } else searchState = await getSearchStateCookies();
+    }
 
-    if (Object.keys(searchState?.errors).length > 0) {
+    if (searchState.errors && Object.keys(searchState?.errors).length > 0) {
       dispatch(setStayForm({ errors: { ...searchState.errors } }));
       setIsSending(false);
       return;
     }
+
+    searchState = await getSearchStateCookies();
 
     const {
       success: sSState,
@@ -233,6 +231,8 @@ function SearchStaysForm({ params = {} }) {
         expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
       },
     ]);
+
+    await addToSearchHistoryAction("hotel", dFForm);
 
     if (!res?.success) {
       setIsSending(false);
