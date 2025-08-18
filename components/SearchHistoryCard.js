@@ -23,6 +23,20 @@ import { Skeleton } from "./ui/skeleton";
  * @param {string} props.search.searchState - The unique identifier for the search.
  * @param {string} props.search.details - The details of the search (e.g., destination, travel dates).
  * @param {string} props.search.searchedAt - The date and time when the search was performed.
+ *
+ * flight specific
+ * @param {string} [props.search.class] - The class of travel for flights (e.g., economy, business).
+ * @param {string} [props.search.passengers] - The number of passengers for flights.
+ * @param {string} [props.search.tripType] - The type of trip (one_way, round_trip).
+ * @param {string} [props.search.departureDate] - The departure date for flights.
+ * @param {string} [props.search.returnDate] - The return date for flights, if applicable.
+ *
+ * hotel specific
+ * @param {string} [props.search.rooms] - The number of rooms for hotels.
+ * @param {string} [props.search.guests] - The number of guests for hotels.
+ * @param {string} [props.search.checkInDate] - The check-in date for hotels.
+ * @param {string} [props.search.checkOutDate] - The check-out date for hotels.
+ *
  * @return {JSX.Element} The SearchHistoryCard component.
  */
 
@@ -37,7 +51,7 @@ export default function SearchHistoryCard({ search }) {
   href += `/search/${encodeURIComponent(searchParams.toString())}`;
 
   return (
-    <Card className="w-full max-w-md rounded-2xl border-primary shadow-lg transition-shadow hover:shadow-xl">
+    <Card className="w-full max-w-md rounded-2xl border-primary shadow-md transition-shadow hover:shadow-xl">
       <CardContent className="flex items-center gap-2 p-3">
         {/* Icon Section */}
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-muted">
