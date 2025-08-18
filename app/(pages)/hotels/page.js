@@ -19,7 +19,7 @@ export default async function HotelsPage() {
 
   return (
     <>
-      <header className={"mb-[20px] md:mb-[40px] lg:mb-[80px]"}>
+      <header>
         <section className="flex h-[600px] bg-stay-header bg-cover bg-no-repeat px-[20%]">
           <div className="mt-20 max-w-[440px] self-start text-white">
             <h1 className="mb-2 text-3xl font-bold sm:text-5xl">
@@ -32,7 +32,7 @@ export default async function HotelsPage() {
         </section>
         <div className="relative top-full mx-auto w-[90%] -translate-y-[20%] rounded-[16px] bg-white px-[24px] pb-[48px] pt-[32px] shadow-md sm:-translate-y-[30%]">
           <div className="text-[1.25rem] font-semibold text-secondary">
-            Where are you flying?
+            Where are you going?
           </div>
           <SearchStaysForm />
         </div>
