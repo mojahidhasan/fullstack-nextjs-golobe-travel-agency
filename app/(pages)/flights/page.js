@@ -1,15 +1,25 @@
 import { SearchFlightsForm } from "@/components/sections/SearchFlightsForm";
-import { WorldMapVector } from "@/components/pages/flights/sections/WorldMapVector";
-import { BookFlights } from "@/components/pages/flights/sections/BookFlights";
+import { FlightDestinations } from "@/components/pages/flights/sections/FlightDestinations";
+import { getPopularFlightDestinations } from "@/lib/services/flights";
+import { auth } from "@/lib/auth";
+import { getRecentSearches } from "@/lib/services";
+import { RecentSearches } from "@/components/sections/RecentSearches";
 
-export default function Flights() {
+export default async function Flights() {
+  const session = await auth();
+  const isLoggedIn = !!session?.user;
+  const popularDestinationsPromise = getPopularFlightDestinations(10);
+  const recentSearches = isLoggedIn
+    ? await getRecentSearches(session?.user?.id, "flight", 10)
+    : [];
+
   return (
     <>
-      <header className={"mb-[20px] md:mb-[40px] lg:mb-[80px]"}>
+      <header>
         <section className="flex h-[600px] items-center bg-flight-header bg-cover bg-no-repeat px-[20%]">
           <div className="mt-20 max-w-[440px] self-start text-white">
             <h1 className="mb-2 text-3xl font-bold sm:text-5xl">
-              Make your travel whishlist, we’ll do the rest
+              Make your travel wishlist, we&apos;ll do the rest
             </h1>
             <p className="text-base font-medium sm:text-xl">
               Special offers to suit your plan
@@ -25,9 +35,11 @@ export default function Flights() {
         </div>
       </header>
 
-      <main>
-        <WorldMapVector />
-        <BookFlights />
+      <main className="mx-auto mb-10 w-[90%] space-y-10 md:mb-20 md:space-y-20">
+        {isLoggedIn && <RecentSearches searchesArr={recentSearches} />}
+        <FlightDestinations
+          popularDestinationsPromise={popularDestinationsPromise}
+        />
       </main>
     </>
   );
