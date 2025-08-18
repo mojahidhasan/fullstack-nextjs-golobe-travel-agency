@@ -11,14 +11,12 @@ import Image from "next/image";
 import routes from "@/data/routes.json";
 export function FindFlightAndHotelcards() {
   return (
-    <section className="mb-5 grid gap-[12px] md:mb-20 md:grid-cols-2 lg:gap-[24px]">
+    <section className="grid gap-[12px] md:grid-cols-2 lg:gap-[24px]">
       <Card>
-        <div className="flex text-white h-[600px] items-end rounded-[20px] bg-flight-header bg-cover bg-center">
-          <div className="w-full text-center rounded-b-[20px] bg-gradient-to-t from-[#121212]/[.75] pb-[24px]">
+        <div className="flex h-[600px] items-end rounded-[20px] bg-flight-header bg-cover bg-center text-white">
+          <div className="w-full rounded-b-[20px] bg-gradient-to-t from-[#121212]/[.75] pb-[24px] text-center">
             <CardHeader className="p-4">
-              <CardTitle className="font-tradeGothic font-bold text-[40px]">
-                Flights
-              </CardTitle>
+              <CardTitle className="text-[40px] font-bold">Flights</CardTitle>
               <CardDescription className="text-inherit">
                 Search Flights & Places Hire to our most popular destinations
               </CardDescription>
@@ -40,12 +38,10 @@ export function FindFlightAndHotelcards() {
         </div>
       </Card>
       <Card>
-        <div className="flex text-white h-[600px] items-end rounded-[20px] bg-stay-header bg-cover bg-center">
-          <div className="w-full text-center rounded-b-[20px] bg-gradient-to-t from-[#121212]/[.75] pb-[24px]">
+        <div className="flex h-[600px] items-end rounded-[20px] bg-stay-header bg-cover bg-center text-white">
+          <div className="w-full rounded-b-[20px] bg-gradient-to-t from-[#121212]/[.75] pb-[24px] text-center">
             <CardHeader className="p-4">
-              <CardTitle className="font-tradeGothic font-bold text-[40px]">
-                Hotels
-              </CardTitle>
+              <CardTitle className="text-[40px] font-bold">Hotels</CardTitle>
               <CardDescription className="text-inherit">
                 Search Flights & Places Hire to our most popular destinations
               </CardDescription>
