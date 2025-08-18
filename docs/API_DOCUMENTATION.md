@@ -301,7 +301,7 @@ curl "http://localhost:3000/api/hotels/available_places?searchQuery=paris"
 
 **Endpoint:** `POST /api/stripe/create_flight_booking_payment_intent`
 
-**Description:** Creates a Stripe payment intent for flight bookings.
+**Description:** Creates a Stripe payment intent for flight bookings. Locked for unauthenticated users.
 
 **Headers:**
 
@@ -340,7 +340,7 @@ Content-Type: application/json
 
 **Endpoint:** `POST /api/stripe/create_hotel_booking_payment_intent`
 
-**Description:** Creates a Stripe payment intent for hotel bookings.
+**Description:** Creates a Stripe payment intent for hotel bookings. Locked for unauthenticated users.
 
 **Headers:**
 
