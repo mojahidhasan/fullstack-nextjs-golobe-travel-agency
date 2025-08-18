@@ -17,7 +17,7 @@ export default function NotFound({
       </p>
       <p className="mt-2 max-w-md text-gray-500 dark:text-gray-400">
         {explanation ||
-          "Sorry, the page you&apos;re looking for doesn&apos;t exist or has been moved. Let&apos;s take you back home."}
+          "Sorry, the page you're looking for doesn't exist or has been moved. Let's take you back home."}
       </p>
       <div className="mt-6">
         <Button asChild>
