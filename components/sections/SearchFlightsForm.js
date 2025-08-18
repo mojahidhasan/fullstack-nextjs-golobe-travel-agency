@@ -32,6 +32,7 @@ import { getCookiesAction, validateSearchStateAction } from "@/lib/actions";
 import Jumper, { jumpTo } from "../local-ui/Jumper";
 import { Skeleton } from "../ui/skeleton";
 import { Loader } from "lucide-react";
+import addToSearchHistoryAction from "@/lib/actions/addToSearchHistoryAction";
 
 const DatePickerCustomInput = forwardRef(
   ({ loading, open, setOpen, value, onClick, className }, ref) => {
@@ -246,6 +247,8 @@ function SearchFlightsForm({ params = {} }) {
           oldValue: sessionTimeout,
         },
       });
+
+      await addToSearchHistoryAction("flight", dFForm);
 
       // clear passengersDetails if it exists for previous search
       sessionStorage.removeItem("passengersDetails");
