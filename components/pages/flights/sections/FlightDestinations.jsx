@@ -1,15 +1,29 @@
+import "server-only";
 import { SectionTitle } from "@/components/SectionTitle";
 import { Card, CardContent } from "@/components/ui/card";
+
 import Link from "next/link";
 import Image from "next/image";
 import { MapPin } from "lucide-react";
 import { cookies } from "next/headers";
 import { addDays } from "date-fns";
 import { formatDateToYYYYMMDD } from "@/lib/utils";
+import { getPopularFlightDestinations } from "@/lib/services/flights";
+import { Skeleton } from "@/components/ui/skeleton";
+import dynamic from "next/dynamic";
 
-export async function FlightDestinations({ popularDestinationsPromise }) {
+export const FlightDestinations = dynamic(
+  () => Promise.resolve(DestinationsSection),
+  {
+    ssr: true,
+    loading: () => <FlightDestinationLoading />,
+  },
+);
+
+async function DestinationsSection() {
+  const popularDestinations = await getPopularFlightDestinations(10);
   const timeZone = cookies().get("timeZone")?.value || "UTC";
-  const popularDestinations = await popularDestinationsPromise;
+
   return (
     <section className="mx-auto">
       <div className="mx-auto mb-[20px] flex items-center justify-between max-md:flex-col max-md:gap-[16px] md:mb-[40px]">
@@ -88,6 +102,35 @@ export async function FlightDestinations({ popularDestinationsPromise }) {
                 </CardContent>
               </Card>
             </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function FlightDestinationLoading() {
+  return (
+    <section className="mx-auto">
+      <div className="mx-auto mb-[20px] flex items-center justify-between max-md:flex-col max-md:gap-[16px] md:mb-[40px]">
+        <SectionTitle
+          title="Popular Flight Destinations"
+          subTitle="Explore the world's most sought-after destinations with competitive prices"
+          className="flex-[0_0_50%]"
+        />
+      </div>
+
+      <div className="grid gap-[16px] sm:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 10 }).map((el) => {
+          return (
+            <Card
+              key={el}
+              className="group overflow-hidden transition-all duration-300 hover:shadow-lg"
+            >
+              <CardContent className="p-0">
+                <Skeleton className="h-48" />
+              </CardContent>
+            </Card>
           );
         })}
       </div>

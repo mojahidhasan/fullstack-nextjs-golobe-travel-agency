@@ -6,11 +6,20 @@ import Link from "next/link";
 import { cookies } from "next/headers";
 import { formatDateToYYYYMMDD } from "@/lib/utils";
 import { addDays } from "date-fns";
+import { getPopularHotelDestinaiton } from "@/lib/services/hotels";
+import dynamic from "next/dynamic";
+import { Skeleton } from "@/components/ui/skeleton";
 
-export async function PopularHotelDestinations({ destinationsPromise }) {
-  const destinations = await destinationsPromise;
+export const PopularHotelDestinations = dynamic(
+  () => Promise.resolve(DestinationsSection),
+  {
+    ssr: true,
+    loading: () => <HotelDestinationLoading />,
+  },
+);
+async function DestinationsSection() {
+  const hotelDestinations = await getPopularHotelDestinaiton(10);
   const timeZone = cookies().get("timeZone")?.value || "UTC";
-
   return (
     <section>
       <div className="mx-auto mb-[20px] flex items-center justify-between max-md:flex-col max-md:gap-[16px] md:mb-[40px]">
@@ -22,7 +31,7 @@ export async function PopularHotelDestinations({ destinationsPromise }) {
       </div>
 
       <div className="grid gap-[16px] sm:grid-cols-2 lg:grid-cols-4">
-        {destinations.map((destination) => {
+        {hotelDestinations.map((destination) => {
           const data = {
             id: destination._id,
             city: destination.address.city,
@@ -78,6 +87,35 @@ export async function PopularHotelDestinations({ destinationsPromise }) {
                 </CardContent>
               </Card>
             </Link>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function HotelDestinationLoading() {
+  return (
+    <section className="mx-auto">
+      <div className="mx-auto mb-[20px] flex items-center justify-between max-md:flex-col max-md:gap-[16px] md:mb-[40px]">
+        <SectionTitle
+          title="Popular Flight Destinations"
+          subTitle="Explore the world's most sought-after destinations with competitive prices"
+          className="flex-[0_0_50%]"
+        />
+      </div>
+
+      <div className="grid gap-[16px] sm:grid-cols-2 lg:grid-cols-4">
+        {Array.from({ length: 10 }).map((el) => {
+          return (
+            <Card
+              key={el}
+              className="group overflow-hidden transition-all duration-300 hover:shadow-lg"
+            >
+              <CardContent className="p-0">
+                <Skeleton className="h-48" />
+              </CardContent>
+            </Card>
           );
         })}
       </div>
