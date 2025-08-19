@@ -1,6 +1,5 @@
 import { SearchFlightsForm } from "@/components/sections/SearchFlightsForm";
 import { FlightDestinations } from "@/components/pages/flights/sections/FlightDestinations";
-import { getPopularFlightDestinations } from "@/lib/services/flights";
 import { auth } from "@/lib/auth";
 import { getRecentSearches } from "@/lib/services";
 import { RecentSearches } from "@/components/sections/RecentSearches";
@@ -8,7 +7,6 @@ import { RecentSearches } from "@/components/sections/RecentSearches";
 export default async function Flights() {
   const session = await auth();
   const isLoggedIn = !!session?.user;
-  const popularDestinationsPromise = getPopularFlightDestinations(10);
   const recentSearches = isLoggedIn
     ? await getRecentSearches(session?.user?.id, "flight", 10)
     : [];
@@ -37,9 +35,8 @@ export default async function Flights() {
 
       <main className="mx-auto mb-10 w-[90%] space-y-10 md:mb-20 md:space-y-20">
         {isLoggedIn && <RecentSearches searchesArr={recentSearches} />}
-        <FlightDestinations
-          popularDestinationsPromise={popularDestinationsPromise}
-        />
+
+        <FlightDestinations />
       </main>
     </>
   );
