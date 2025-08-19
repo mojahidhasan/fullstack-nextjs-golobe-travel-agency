@@ -1,22 +1,35 @@
 "use client";
 import { generateStars } from "@/lib/utils.client";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import { cn } from "@/lib/utils";
 
 export function ReviewsCard({ comment, rate, reviewer, profileImage }) {
-  const ref = useRef(null);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [showToggle, setShowToggle] = useState(false);
+  const textRef = useRef(null);
+
+  useEffect(() => {
+    if (textRef.current) {
+      const lineHeight = parseFloat(
+        getComputedStyle(textRef.current).lineHeight,
+      );
+      const maxHeight = lineHeight * 2;
+      if (textRef.current.scrollHeight > maxHeight) {
+        setShowToggle(true);
+      }
+    }
+  }, [comment]);
 
   function expandComment() {
-    ref.current.classList.toggle("line-clamp-2");
+    setIsExpanded(!isExpanded);
   }
 
   return (
     <div className="group relative h-[420px] w-[320px] transition-all duration-500 md:w-[380px]">
-      {/* Enhanced shadow with gradient */}
       <div className="absolute left-[16px] top-[16px] z-[1] h-[388px] w-[calc(100%-16px)] rounded-[24px] bg-gradient-to-br from-primary/20 via-primary/10 to-primary/5 blur-sm"></div>
 
-      {/* Main card */}
       <div
         className="relative z-[2] flex h-[388px] w-full flex-col justify-between overflow-y-auto rounded-[24px] border border-primary/20 bg-gradient-to-br from-white via-white to-primary/5 p-[28px] shadow-md backdrop-blur-sm transition-all duration-300 group-hover:border-primary/30 group-hover:shadow-lg"
         style={{
@@ -26,7 +39,6 @@ export function ReviewsCard({ comment, rate, reviewer, profileImage }) {
         }}
       >
         <div className="space-y-6">
-          {/* Quote icon */}
           <div className="flex justify-start">
             <div className="rounded-full bg-primary/10 p-2">
               <svg
@@ -43,22 +55,27 @@ export function ReviewsCard({ comment, rate, reviewer, profileImage }) {
           <div className="space-y-4">
             <div className="space-y-3">
               <p
-                ref={ref}
-                className="line-clamp-2 text-[0.9rem] font-medium leading-relaxed text-gray-600 transition-all duration-300"
+                ref={textRef}
+                className={cn(
+                  "text-[0.9rem] font-medium leading-relaxed text-gray-600 transition-all duration-300",
+                  isExpanded ? "line-clamp-none" : "line-clamp-2",
+                )}
               >
                 {comment}
               </p>
 
-              <div className="flex justify-end">
-                <Button
-                  role="button"
-                  variant="link"
-                  className="text-sm font-semibold text-primary transition-colors duration-200 hover:text-primary/80 hover:underline"
-                  onClick={expandComment}
-                >
-                  View more
-                </Button>
-              </div>
+              {showToggle && (
+                <div className="flex justify-end">
+                  <Button
+                    role="button"
+                    variant="link"
+                    className="text-sm font-semibold text-primary transition-colors duration-200 hover:text-primary/80 hover:underline"
+                    onClick={expandComment}
+                  >
+                    {isExpanded ? "View less" : "View more"}
+                  </Button>
+                </div>
+              )}
             </div>
           </div>
 
