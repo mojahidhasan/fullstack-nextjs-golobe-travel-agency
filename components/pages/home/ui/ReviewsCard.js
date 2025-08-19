@@ -15,7 +15,7 @@ export function ReviewsCard({ comment, rate, reviewer, profileImage }) {
       const lineHeight = parseFloat(
         getComputedStyle(textRef.current).lineHeight,
       );
-      const maxHeight = lineHeight * 2;
+      const maxHeight = lineHeight * 3;
       if (textRef.current.scrollHeight > maxHeight) {
         setShowToggle(true);
       }
@@ -58,7 +58,7 @@ export function ReviewsCard({ comment, rate, reviewer, profileImage }) {
                 ref={textRef}
                 className={cn(
                   "text-[0.9rem] font-medium leading-relaxed text-gray-600 transition-all duration-300",
-                  isExpanded ? "line-clamp-none" : "line-clamp-2",
+                  isExpanded ? "line-clamp-none" : "line-clamp-3",
                 )}
               >
                 {comment}
