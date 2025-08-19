@@ -1,18 +1,15 @@
 import { SearchStaysForm } from "@/components/sections/SearchStaysForm";
 
 import { RecentSearches } from "@/components/sections/RecentSearches";
-import { PopularHotelDestinations } from "@/components/pages/hotels/sections/PopularHotelDestinations";
 import { HotelSearchTips } from "@/app/dev/component/HotelSearchTips";
 
 import { auth } from "@/lib/auth";
-import { getPopularHotelDestinaiton } from "@/lib/services/hotels";
 import { getRecentSearches } from "@/lib/services";
-
+import { PopularHotelDestinations } from "@/components/pages/hotels/sections/PopularHotelDestinations";
 export default async function HotelsPage() {
   const session = await auth();
   const isLoggedIn = !!session?.user;
 
-  const hotelDestinations = getPopularHotelDestinaiton(10);
   const recentSearches = isLoggedIn
     ? await getRecentSearches(session?.user?.id, "hotel", 10)
     : [];
@@ -40,7 +37,7 @@ export default async function HotelsPage() {
 
       <main className="mx-auto mb-10 w-[90%] space-y-10 md:mb-20 md:space-y-20">
         {isLoggedIn && <RecentSearches searchesArr={recentSearches} />}
-        <PopularHotelDestinations destinationsPromise={hotelDestinations} />
+        <PopularHotelDestinations />
         <HotelSearchTips />
       </main>
     </>
