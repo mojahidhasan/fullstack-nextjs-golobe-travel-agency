@@ -7,15 +7,10 @@ import Image from "next/image";
 
 import { auth } from "@/lib/auth";
 import { FlightDestinations } from "@/components/pages/flights/sections/FlightDestinations";
-import { getPopularFlightDestinations } from "@/lib/services/flights";
 import { PopularHotelDestinations } from "@/components/pages/hotels/sections/PopularHotelDestinations";
-import { getPopularHotelDestinaiton } from "@/lib/services/hotels";
 
 export default async function HomePage() {
   const session = await auth();
-
-  const popularFlightsDestinationsPromise = getPopularFlightDestinations(10);
-  const popularHotelsDestinationsPromise = getPopularHotelDestinaiton(10);
 
   return (
     <>
@@ -58,11 +53,8 @@ export default async function HomePage() {
       </header>
 
       <main className="mx-auto mb-10 w-[90%] space-y-10 md:mb-20 md:space-y-20">
-        <FlightDestinations
-          popularDestinationsPromise={popularFlightsDestinationsPromise}
-        />
+        <FlightDestinations />
         <PopularHotelDestinations
-          destinationsPromise={popularHotelsDestinationsPromise}
         />
         <FindFlightAndHotelcards />
         <Reviews />
