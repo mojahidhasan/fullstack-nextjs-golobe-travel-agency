@@ -16,8 +16,12 @@ export function ReviewsCard({ comment, rate, reviewer, profileImage }) {
         getComputedStyle(textRef.current).lineHeight,
       );
       const maxHeight = lineHeight * 3;
-      if (textRef.current.scrollHeight > maxHeight) {
+
+      // check if text is taller than 3 lines
+      if (textRef.current.scrollHeight > maxHeight + 2) {
         setShowToggle(true);
+      } else {
+        setShowToggle(false);
       }
     }
   }, [comment]);
@@ -52,66 +56,71 @@ export function ReviewsCard({ comment, rate, reviewer, profileImage }) {
           </div>
 
           {/* Review content */}
-          <div className="space-y-4">
-            <div className="space-y-3">
+          <div className="flex min-h-0 flex-1 flex-col">
+            <div className="flex-1 overflow-hidden">
               <p
                 ref={textRef}
                 className={cn(
                   "text-[0.9rem] font-medium leading-relaxed text-gray-600 transition-all duration-300",
-                  isExpanded ? "line-clamp-none" : "line-clamp-3",
+                  isExpanded ? "line-clamp-none overflow-auto" : "line-clamp-3",
                 )}
+                style={{
+                  minHeight: "calc(1.5rem * 3)",
+                }}
               >
                 {comment}
               </p>
+            </div>
 
+            <div className="mt-2 flex h-[50px] justify-end">
               {showToggle && (
-                <div className="flex justify-end">
-                  <Button
-                    role="button"
-                    variant="link"
-                    className="text-sm font-semibold text-primary transition-colors duration-200 hover:text-primary/80 hover:underline"
-                    onClick={expandComment}
-                  >
-                    {isExpanded ? "View less" : "View more"}
-                  </Button>
-                </div>
+                <Button
+                  role="button"
+                  variant="link"
+                  className="text-sm font-semibold text-primary transition-colors duration-200 hover:text-primary/80 hover:underline"
+                  onClick={expandComment}
+                >
+                  {isExpanded ? "View less" : "View more"}
+                </Button>
               )}
             </div>
           </div>
 
-          {/* Rating */}
-          <div className="flex items-center gap-2">
-            <div className="flex gap-1">{generateStars(+rate)}</div>
-            <span className="text-sm font-medium text-gray-500">
-              ({rate?.toFixed(1)})
-            </span>
-          </div>
+          <div className="mt-auto">
+            {/* Rating */}
+            <div className="mb-3 flex items-center gap-2">
+              <div className="flex gap-1">{generateStars(+rate)}</div>
+              <span className="text-sm font-medium text-gray-500">
+                ({rate?.toFixed(1)})
+              </span>
+            </div>
 
-          {/* Reviewer info */}
-          <div className="border-t border-gray-100 pt-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/10">
-                {profileImage ? (
-                  <Image
-                    src={profileImage}
-                    alt="profile_image"
-                    className="h-full w-full rounded-full"
-                    width={40}
-                    height={40}
-                  />
-                ) : (
-                  <span className="text-lg font-bold text-primary">
-                    {reviewer.charAt(0).toUpperCase()}
-                  </span>
-                )}
-              </div>
-              <div>
-                <p className="text-sm font-semibold text-gray-900">
-                  {reviewer}
-                </p>
-                <p className="text-xs font-medium text-gray-500">
-                  Verified Customer
-                </p>
+            {/* Reviewer info */}
+            <div className="border-t border-gray-100 pt-4">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/10">
+                  {profileImage ? (
+                    <Image
+                      src={profileImage}
+                      alt="profile_image"
+                      className="h-full w-full rounded-full"
+                      width={40}
+                      height={40}
+                    />
+                  ) : (
+                    <span className="text-lg font-bold text-primary">
+                      {reviewer.charAt(0).toUpperCase()}
+                    </span>
+                  )}
+                </div>
+                <div>
+                  <p className="text-sm font-semibold text-gray-900">
+                    {reviewer}
+                  </p>
+                  <p className="text-xs font-medium text-gray-500">
+                    Verified Customer
+                  </p>
+                </div>
               </div>
             </div>
           </div>
