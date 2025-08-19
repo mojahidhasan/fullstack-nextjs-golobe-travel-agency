@@ -75,18 +75,18 @@ export default async function RootLayout({ children }) {
     }
   }
 
-  const Notification = dynamic(
-    () => import("@/app/_notification").then((mod) => mod.Notification),
+  const Notice = dynamic(
+    () => import("@/app/_notice").then((mod) => mod.Notice),
     {
       ssr: false,
-    }
+    },
   );
 
   const websiteConfig = await getOneDoc(
     "WebsiteConfig",
     {},
     ["websiteConfig"],
-    60
+    60,
   );
 
   const maintenanceMode = websiteConfig?.maintenanceMode ?? { enabled: false };
@@ -101,7 +101,7 @@ export default async function RootLayout({ children }) {
         !alloweRoutesWhileMaintenance.some(
           (path) =>
             path === currentPathname ||
-            (path !== "/" && currentPathname.startsWith(path))
+            (path !== "/" && currentPathname.startsWith(path)),
         ) ? (
           <MaintenancePage
             message={maintenanceMode.message}
@@ -112,7 +112,7 @@ export default async function RootLayout({ children }) {
           <StoreProvider>
             <SessionProvider>
               <div className="mx-auto max-w-[1440px]">
-                <Notification />
+                <Notice />
                 <MaintenanceNotice maintenanceMode={maintenanceMode} />
                 {children}
               </div>
