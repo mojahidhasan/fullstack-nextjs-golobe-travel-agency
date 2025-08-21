@@ -22,7 +22,7 @@ export async function Reviews() {
   const hasAlreadyReviewed = Object.keys(userReview).length > 0;
 
   const reviews = await getWebsiteReviews();
-  const { totalReviews, averageRating, fiveStarReviews, satisfactionRate } =
+  const { satisfiedReviews, averageRating, fiveStarReviews, satisfactionRate } =
     await getWebsiteReviewsStats();
 
   return (
@@ -66,10 +66,10 @@ export async function Reviews() {
                   </div>
                 </div>
                 <div className="mb-1 text-3xl font-bold text-gray-900">
-                  {totalReviews}
+                  {satisfiedReviews}
                 </div>
                 <div className="text-sm font-medium text-gray-600">
-                  Happy Customers
+                  Satisfied Customers
                 </div>
               </div>
             </div>
@@ -122,7 +122,7 @@ export async function Reviews() {
                   Customer Reviews
                 </Badge>
                 <span className="text-sm font-medium text-gray-600">
-                  Showing {totalReviews} verified customer reviews
+                  Showing {reviews.length} verified customer reviews
                 </span>
               </div>
             </div>
