@@ -1,7 +1,6 @@
 import { SearchStaysForm } from "@/components/sections/SearchStaysForm";
 
 import { RecentSearches } from "@/components/sections/RecentSearches";
-import { HotelSearchTips } from "@/app/dev/component/HotelSearchTips";
 
 import { auth } from "@/lib/auth";
 import { getRecentSearches } from "@/lib/services";
@@ -38,7 +37,6 @@ export default async function HotelsPage() {
       <main className="mx-auto mb-10 w-[90%] space-y-10 md:mb-20 md:space-y-20">
         {isLoggedIn && <RecentSearches searchesArr={recentSearches} />}
         <PopularHotelDestinations />
-        <HotelSearchTips />
       </main>
     </>
   );
