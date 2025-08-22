@@ -1,4 +1,4 @@
-import { getUserDetails } from "@/lib/controllers/user";
+import { getUserDetails } from "@/lib/services/user";
 export async function GET(req, { params }) {
   try {
     const getUser = await getUserDetails(params.id);

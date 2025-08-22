@@ -2,10 +2,10 @@ import { HotelResultCard } from "@/components/pages/hotels.search/ui/HotelResult
 import { getManyDocs } from "@/lib/db/getOperationDB";
 import { auth } from "@/lib/auth";
 import { RATING_SCALE } from "@/lib/constants";
-import { getUserDetails } from "@/lib/controllers/user";
+import { getUserDetails } from "@/lib/services/user";
 import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
 import SetHotelFormState from "@/components/helpers/SetHotelFormState";
-import { getHotels } from "@/lib/controllers/hotels";
+import { getHotels } from "@/lib/services/hotels";
 import Jumper from "@/components/local-ui/Jumper";
 import extractFiltersObjFromSearchParams from "@/lib/helpers/hotels/extractFiltersObjFromSearchParams";
 import validateHotelSearchFilter from "@/lib/zodSchemas/hotelSearchFilterValidation";

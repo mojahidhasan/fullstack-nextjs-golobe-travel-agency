@@ -1,5 +1,5 @@
 import { HotelsFilter } from "@/components/pages/hotels.search/sections/HotelsFilter";
-import { getHotelDefaultFilterValues } from "@/lib/controllers/hotels";
+import { getHotelDefaultFilterValues } from "@/lib/services/hotels";
 import extractFiltersObjFromSearchParams from "@/lib/helpers/hotels/extractFiltersObjFromSearchParams";
 import validateHotelSearchFilter from "@/lib/zodSchemas/hotelSearchFilterValidation";
 

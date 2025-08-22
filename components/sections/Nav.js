@@ -14,7 +14,7 @@ import card from "@/public/icons/card.svg";
 import settings from "@/public/icons/settings.svg";
 import Image from "next/image";
 import { BookCopyIcon } from "lucide-react";
-import { getUserDetails } from "@/lib/controllers/user";
+import { getUserDetails } from "@/lib/services/user";
 
 export async function Nav({ className, type = "default", session, ...props }) {
   const isLoggedIn = !!session?.user;

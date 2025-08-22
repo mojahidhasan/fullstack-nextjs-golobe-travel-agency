@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { cancelBooking, isRoomTakenByElse } from "@/lib/controllers/hotels";
+import { cancelBooking, isRoomTakenByElse } from "@/lib/services/hotels";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { HotelBooking } from "@/lib/db/models";
 import { strToObjectId } from "@/lib/db/utilsDB";

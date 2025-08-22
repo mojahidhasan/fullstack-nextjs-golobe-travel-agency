@@ -8,8 +8,8 @@ import routes from "@/data/routes.json";
 import { cookies } from "next/headers";
 import { flightRatingCalculation } from "@/lib/helpers/flights/flightRatingCalculation";
 import { isObject } from "@/lib/utils";
-import { getAvailableSeats } from "@/lib/controllers/flights";
-import { getUserDetails } from "@/lib/controllers/user";
+import { getAvailableSeats } from "@/lib/services/flights";
+import { getUserDetails } from "@/lib/services/user";
 import { hotelPriceCalculation } from "@/lib/helpers/hotels/priceCalculation";
 import { strToObjectId } from "@/lib/db/utilsDB";
 

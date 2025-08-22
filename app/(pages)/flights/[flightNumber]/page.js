@@ -4,7 +4,7 @@ import { FlightDetails } from "@/components/pages/flights.[flightId]/sections/Fl
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { getUserDetails } from "@/lib/controllers/user";
+import { getUserDetails } from "@/lib/services/user";
 import { parseFlightSearchParams } from "@/lib/utils";
 import SessionTimeoutCountdown from "@/components/local-ui/SessionTimeoutCountdown";
 import dynamic from "next/dynamic";
@@ -14,7 +14,7 @@ import { auth } from "@/lib/auth";
 import { FlightBooking } from "@/lib/db/models";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { getAvailableSeats } from "@/lib/controllers/flights";
+import { getAvailableSeats } from "@/lib/services/flights";
 
 export default async function FlightDetailsPage({ params }) {
   const session = await auth();

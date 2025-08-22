@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { cancelBooking, isSeatTakenByElse } from "@/lib/controllers/flights";
+import { cancelBooking, isSeatTakenByElse } from "@/lib/services/flights";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { strToObjectId } from "@/lib/db/utilsDB";
 export async function POST(req) {

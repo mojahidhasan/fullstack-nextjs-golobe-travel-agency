@@ -5,11 +5,11 @@ import { parseFlightSearchParams } from "@/lib/utils";
 
 import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { getUserDetails } from "@/lib/controllers/user";
+import { getUserDetails } from "@/lib/services/user";
 import SessionTimeoutCountdown from "@/components/local-ui/SessionTimeoutCountdown";
 import { getManyDocs, getOneDoc } from "@/lib/db/getOperationDB";
 import BookingSteps from "@/components/pages/flights.book/BookingSteps";
-import { getAvailableSeats } from "@/lib/controllers/flights";
+import { getAvailableSeats } from "@/lib/services/flights";
 import InfoPage from "@/components/InfoPage";
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";

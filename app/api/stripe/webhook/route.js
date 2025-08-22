@@ -1,5 +1,5 @@
 import emailDefaultData from "@/data/emailDefaultData";
-import { assignSeatsToFlightBooking } from "@/lib/controllers/flights";
+import { assignSeatsToFlightBooking } from "@/lib/services/flights";
 import { createOneDoc } from "@/lib/db/createOperationDB";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";

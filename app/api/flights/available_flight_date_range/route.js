@@ -1,4 +1,4 @@
-import { getAvailableFlightDateRange } from "@/lib/controllers/flights";
+import { getAvailableFlightDateRange } from "@/lib/services/flights";
 export async function GET(req) {
   try {
     const flightDateRange = await getAvailableFlightDateRange();

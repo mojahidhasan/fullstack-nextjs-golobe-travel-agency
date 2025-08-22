@@ -7,9 +7,9 @@ import { cookies } from "next/headers";
 import NotFound from "@/app/not-found";
 import routes from "@/data/routes.json";
 import { HotelBookingSteps } from "@/components/pages/hotels.book/HotelBookingSteps";
-import { getHotel } from "@/lib/controllers/hotels";
+import { getHotel } from "@/lib/services/hotels";
 import validateHotelSearchParams from "@/lib/zodSchemas/hotelSearchParams";
-import { getUserDetails } from "@/lib/controllers/user";
+import { getUserDetails } from "@/lib/services/user";
 
 export default async function HotelBookPage({ params }) {
   const session = await auth();

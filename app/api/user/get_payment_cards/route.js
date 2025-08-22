@@ -1,5 +1,5 @@
 import { auth } from "@/lib/auth";
-import { getUserDetails } from "@/lib/controllers/user";
+import { getUserDetails } from "@/lib/services/user";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
 import initStripe, { createCustomer } from "@/lib/paymentIntegration/stripe";
 import { revalidateTag } from "next/cache";

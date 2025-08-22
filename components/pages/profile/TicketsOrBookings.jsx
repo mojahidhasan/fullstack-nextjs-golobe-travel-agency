@@ -3,12 +3,12 @@ import { TabsContent, TabsList, TabsTrigger, Tabs } from "@/components/ui/tabs";
 import Image from "next/image";
 
 import { auth } from "@/lib/auth";
-import { getAllFlightBookings } from "@/lib/controllers/flights";
+import { getAllFlightBookings } from "@/lib/services/flights";
 import Link from "next/link";
 import FlightBookingDetailsCardSmall from "./ui/FlightBookingDetailsCardSmall";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { strToObjectId } from "@/lib/db/utilsDB";
-import { getAllHotelBookings } from "@/lib/controllers/hotels";
+import { getAllHotelBookings } from "@/lib/services/hotels";
 import HotelBookingDetailsCardSmall from "./ui/HotelBookingDetailsCardSmall";
 export async function TicketsOrBookings() {
   const session = await auth();

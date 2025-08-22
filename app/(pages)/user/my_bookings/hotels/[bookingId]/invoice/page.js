@@ -6,7 +6,7 @@ import { notFound, redirect } from "next/navigation";
 import { AlertCircle } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
-import { getUserDetails } from "@/lib/controllers/user";
+import { getUserDetails } from "@/lib/services/user";
 import HotelBookingInvoice from "@/components/pages/user.my_bookings.hotels.[bookingId].invoice/HotelBookingInvoice";
 import { auth } from "@/lib/auth";
 import routes from "@/data/routes.json";

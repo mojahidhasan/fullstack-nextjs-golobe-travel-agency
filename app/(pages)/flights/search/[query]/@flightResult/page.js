@@ -1,8 +1,8 @@
 import { FlightResult } from "@/components/pages/flights.search/sections/FlightResult";
 import { cookies } from "next/headers";
 import validateFlightSearchParams from "@/lib/zodSchemas/flightSearchParams";
-import { getUserDetails } from "@/lib/controllers/user";
-import { getFlights } from "@/lib/controllers/flights";
+import { getUserDetails } from "@/lib/services/user";
+import { getFlights } from "@/lib/services/flights";
 import {
   airportStrToObject,
   parseFlightSearchParams,

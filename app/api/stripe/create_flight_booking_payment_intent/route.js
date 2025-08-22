@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
-import { cancelBooking, isSeatTakenByElse } from "@/lib/controllers/flights";
-import { getUserDetails } from "@/lib/controllers/user";
+import { cancelBooking, isSeatTakenByElse } from "@/lib/services/flights";
+import { getUserDetails } from "@/lib/services/user";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
 import { strToObjectId } from "@/lib/db/utilsDB";

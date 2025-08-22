@@ -1,6 +1,6 @@
 import { auth } from "@/lib/auth";
-import { cancelBooking, isRoomTakenByElse } from "@/lib/controllers/hotels";
-import { getUserDetails } from "@/lib/controllers/user";
+import { cancelBooking, isRoomTakenByElse } from "@/lib/services/hotels";
+import { getUserDetails } from "@/lib/services/user";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { HotelBooking } from "@/lib/db/models";
 import { updateOneDoc } from "@/lib/db/updateOperationDB";
