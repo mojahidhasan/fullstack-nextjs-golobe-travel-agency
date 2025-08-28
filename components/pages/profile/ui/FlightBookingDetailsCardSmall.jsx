@@ -4,11 +4,19 @@ import {
   Download,
   HandCoins,
   SquareArrowOutUpRight,
+  View,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import NoSSR from "@/components/helpers/NoSSR";
 import ShowTimeInClientSide from "@/components/helpers/ShowTimeInClientSide";
+import { allowedFlightBookingActionBtns } from "@/lib/helpers/flights/allowedHotelBookingActionBtns";
+import {
+  BOOKING_STATUS_BG_COL_TW_CLASS,
+  BOOKING_STATUS_TEXT_COL_TW_CLASS,
+  PAYMENT_STATUS_BG_TW_CLASS,
+  PAYMENT_STATUS_TEXT_COL_TW_CLASS,
+} from "@/lib/constants";
 export default function FlightBookingDetailsCardSmall({
   className,
   bookingDetails,
@@ -17,12 +25,21 @@ export default function FlightBookingDetailsCardSmall({
     key,
     bookingStatus,
     paymentStatus,
+    cancellationPolicy,
     bookedAt,
     itineraryFlightNumber,
     pnrCode,
     passengers,
     segments,
   } = bookingDetails;
+
+  const { canCancel, canConfirm, canRefund, canDownload, canPay } =
+    allowedFlightBookingActionBtns(
+      bookingStatus,
+      paymentStatus,
+      cancellationPolicy,
+      segments[0].departureDateTime,
+    );
 
   return (
     <div
@@ -52,16 +69,32 @@ export default function FlightBookingDetailsCardSmall({
           </p>
         </div>
         <div className="flex items-center gap-2">
-          <span
-            className={cn(
-              "rounded-full px-3 py-1 text-xs font-semibold capitalize",
-              bookingStatus === "confirmed" && "bg-green-100 text-green-700",
-              bookingStatus === "pending" && "bg-yellow-100 text-yellow-700",
-              bookingStatus === "canceled" && "bg-red-100 text-red-700",
-            )}
-          >
-            {bookingStatus}
-          </span>
+          <div className="space-y-1">
+            <p>
+              <span className="sr-only">Booking Status: </span>
+              <span
+                className={cn(
+                  "rounded-full px-3 py-1 text-xs font-semibold capitalize",
+                  BOOKING_STATUS_BG_COL_TW_CLASS[bookingStatus],
+                  BOOKING_STATUS_TEXT_COL_TW_CLASS[bookingStatus],
+                )}
+              >
+                {bookingStatus}
+              </span>
+            </p>
+            <p>
+              <span className="sr-only">Payment Status: </span>
+              <span
+                className={cn(
+                  "rounded-full px-3 py-1 text-xs font-semibold capitalize",
+                  PAYMENT_STATUS_BG_TW_CLASS[paymentStatus],
+                  PAYMENT_STATUS_TEXT_COL_TW_CLASS[paymentStatus],
+                )}
+              >
+                {paymentStatus}
+              </span>
+            </p>
+          </div>
           <Link
             title="View Flight Details"
             href={`/user/my_bookings/flights/${key}`}
@@ -122,14 +155,19 @@ export default function FlightBookingDetailsCardSmall({
         </div>
       ))}
       <div className="flex items-center gap-2">
-        {bookingStatus === "pending" && (
+        <Button title="View Booking" asChild size="sm" className="text-wrap">
+          <Link title="View Booking" href={`/user/my_bookings/hotels/${key}`}>
+            <View className="mr h-4 w-4" />
+          </Link>
+        </Button>
+        {canPay && (
           <Button title="Pay Now" size="sm" asChild>
             <Link href={`/user/my_bookings/flights/${key}/payment`}>
               <HandCoins className="h-4 w-4" />
             </Link>
           </Button>
         )}
-        {bookingStatus === "confirmed" && (
+        {canDownload && (
           <Button
             title="Download Ticket"
             asChild

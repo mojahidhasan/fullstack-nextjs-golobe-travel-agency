@@ -1,9 +1,7 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 
-import { cn, minutesToHMFormat } from "@/lib/utils";
+import { capitalize, cn, minutesToHMFormat } from "@/lib/utils";
 import { SmallDataCard } from "@/components/pages/profile/ui/SmallDataCard";
 import { Button } from "@/components/ui/button";
 import NoSSR from "@/components/helpers/NoSSR";
@@ -18,27 +16,44 @@ import lineRight from "@/public/icons/line-right.svg";
 import airplaneIcon from "@/public/icons/airplane-filled-mint.svg";
 import airlinesLogos from "@/data/airlinesLogos";
 import StatusChip from "@/components/local-ui/StatusChip";
+import { allowedFlightBookingActionBtns } from "@/lib/helpers/flights/allowedHotelBookingActionBtns";
+import {
+  BOOKING_STATUS_BG_COL_TW_CLASS,
+  BOOKING_STATUS_TEXT_COL_TW_CLASS,
+  PAYMENT_STATUS_BG_TW_CLASS,
+  PAYMENT_STATUS_TEXT_COL_TW_CLASS,
+} from "@/lib/constants";
+import CancelFlightBtn from "./CancelFlightBtn";
+import RequestRefundFlightBtn from "./RequestRefundFlightBtn";
 
 export function FlightBookingDetailsCard({ className, bookingData }) {
   const {
     key,
+
     bookingStatus,
     paymentStatus,
     bookedAt,
     itineraryFlightNumber,
+    cancellationPolicy,
     pnrCode,
     passengers,
     segments,
   } = bookingData;
 
-  const canCancel = bookingStatus !== "canceled";
-  const canRefund = bookingStatus === "canceled" && paymentStatus === "paid";
+  const statusBookingBgColor = BOOKING_STATUS_BG_COL_TW_CLASS[bookingStatus];
+  const statusBookingTextColor =
+    BOOKING_STATUS_TEXT_COL_TW_CLASS[bookingStatus];
+  const statusPaymentBgColor = PAYMENT_STATUS_BG_TW_CLASS[paymentStatus];
+  const statusPaymentTextColor =
+    PAYMENT_STATUS_TEXT_COL_TW_CLASS[paymentStatus];
 
-  const statusColorMap = {
-    confirmed: "bg-green-100 text-green-700",
-    pending: "bg-yellow-100 text-yellow-700",
-    canceled: "bg-red-100 text-red-700",
-  };
+  const { canCancel, canRefund, canDownload, canPay, canConfirm } =
+    allowedFlightBookingActionBtns(
+      bookingStatus,
+      paymentStatus,
+      cancellationPolicy,
+      segments[0].departureDateTime,
+    );
 
   return (
     <div
@@ -50,24 +65,32 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
       {/* Header */}
       <div className="grid grid-cols-1 items-start gap-4 md:grid-cols-[1fr_auto]">
         <div className="space-y-1">
-          <p className="text-sm text-muted-foreground">
-            Booked At:{" "}
-            <NoSSR fallback="dd MMM yyyy, hh:mm:ss a">
-              <ShowTimeInClientSide
-                date={bookedAt}
-                formatStr="dd MMM yyyy, hh:mm:ss a"
-              />
-            </NoSSR>
-          </p>
+          {bookedAt && (
+            <p className="text-sm text-muted-foreground">
+              Booked At:{" "}
+              <NoSSR fallback="dd MMM yyyy, hh:mm:ss a">
+                <ShowTimeInClientSide
+                  date={bookedAt}
+                  formatStr="dd MMM yyyy, hh:mm:ss a"
+                />
+              </NoSSR>
+            </p>
+          )}
           <p className="text-sm font-medium">
             Flight No: {itineraryFlightNumber}
           </p>
           <p className="text-sm font-medium">PNR: {pnrCode}</p>
         </div>
-        <div className="flex flex-col items-end">
+        <div className="flex flex-col items-end gap-1">
           <StatusChip
-            text={bookingStatus}
-            color={statusColorMap[bookingStatus]}
+            text={capitalize(bookingStatus)}
+            color={statusBookingTextColor}
+            bg={statusBookingBgColor}
+          />
+          <StatusChip
+            text={capitalize(paymentStatus)}
+            color={statusPaymentTextColor}
+            bg={statusPaymentBgColor}
           />
         </div>
       </div>
@@ -219,24 +242,20 @@ export function FlightBookingDetailsCard({ className, bookingData }) {
         <Button variant="secondary" className="min-w-[100px]" asChild>
           <Link href={`/user/my_bookings/flights/${key}`}>View</Link>
         </Button>
-        {paymentStatus === "pending" && (
+        {canPay && (
           <Button variant="default" className="min-w-[100px]" asChild>
             <Link href={`/user/my_bookings/flights/${key}/payment`}>Pay</Link>
           </Button>
         )}
-        {paymentStatus === "confirmed" && (
+        {canDownload && (
           <Button variant="outline" className="min-w-[100px]" asChild>
             <Link href={`/user/my_bookings/flights/${key}/ticket`}>
               Download Ticket(s)
             </Link>
           </Button>
         )}
-        {canCancel && <Button variant="destructive">Cancel Flight</Button>}
-        {canRefund && (
-          <Button variant="outline" className="border-green-500 text-green-700">
-            Request Refund
-          </Button>
-        )}
+        {canCancel && <CancelFlightBtn pnrCode={pnrCode} />}
+        {canRefund && <RequestRefundFlightBtn pnrCode={pnrCode} />}
       </div>
     </div>
   );
