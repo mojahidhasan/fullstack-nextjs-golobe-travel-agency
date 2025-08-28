@@ -23,11 +23,13 @@ export default async function FlightBookingDetailsPage() {
 
         const bookingCardData = {
           key: booking._id,
+          pnrCode: booking.pnrCode,
           bookingStatus: booking.ticketStatus,
           paymentStatus: booking.paymentStatus,
-          bookedAt: booking.createdAt,
+          bookedAt: booking.bookedAt,
           itineraryFlightNumber: flightData.flightCode,
-          pnrCode: booking.pnrCode,
+          cancellationPolicy:
+            flightData.carrierInCharge.airlinePolicy.cancellationPolicy,
           passengers: booking.passengers.map((p) => {
             const seatDetails = booking.selectedSeats.find(
               (s) => s.passengerId === p._id,
