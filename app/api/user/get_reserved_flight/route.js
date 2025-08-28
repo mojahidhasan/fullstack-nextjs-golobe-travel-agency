@@ -41,6 +41,22 @@ export async function POST(req) {
         message: "Flight not reserved or got canceled",
       });
     }
+
+    if (
+      Object.keys(flightItinerary).length &&
+      new Date(flightItinerary.date) < new Date()
+    ) {
+      await cancelBooking(reservedFlight.pnrCode, {
+        reason: "Flight expired",
+        canceledAt: new Date(),
+        canceledBy: "system",
+      });
+      return Response.json({
+        success: false,
+        message: "Flight booking has expired as the flight date has passed",
+      });
+    }
+
     const isSeatTakenPromise = reservedFlight.selectedSeats.map(async (el) => {
       const isTaken = await isSeatTakenByElse(el.seatId._id, el.passengerId);
       return isTaken;
