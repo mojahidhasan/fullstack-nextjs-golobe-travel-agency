@@ -15,6 +15,15 @@ import Link from "next/link";
 import NoSSR from "@/components/helpers/NoSSR";
 import ShowTimeInClientSide from "@/components/helpers/ShowTimeInClientSide";
 import { strToObjectId } from "@/lib/db/utilsDB";
+import { allowedFlightBookingActionBtns } from "@/lib/helpers/flights/allowedHotelBookingActionBtns";
+import {
+  BOOKING_STATUS_BG_COL_TW_CLASS,
+  BOOKING_STATUS_TEXT_COL_TW_CLASS,
+  PAYMENT_STATUS_BG_TW_CLASS,
+  PAYMENT_STATUS_TEXT_COL_TW_CLASS,
+} from "@/lib/constants";
+import RequestRefundFlightBtn from "@/components/pages/profile/ui/RequestRefundFlightBtn";
+import CancelFlightBtn from "@/components/pages/profile/ui/CancelFlightBtn";
 export default async function FlightBookingDetailsPage({ params }) {
   const session = await auth();
   const loggedIn = !!session?.user;
@@ -47,10 +56,10 @@ export default async function FlightBookingDetailsPage({ params }) {
 
   const bookingDetails = {
     key: bookingData._id,
+    pnrCode: bookingData.pnrCode,
     bookingStatus: bookingData.ticketStatus,
     paymentStatus: bookingData.paymentStatus,
     itineraryFlightNumber: flightData.flightCode,
-    pnrCode: bookingData.pnrCode,
     passengers: bookingData.passengers.map((p) => {
       const seatDetails = bookingData.selectedSeats.find(
         (s) => s.passengerId === p._id,
@@ -82,10 +91,17 @@ export default async function FlightBookingDetailsPage({ params }) {
       };
     }),
   };
-  const canCancel = bookingDetails.bookingStatus !== "canceled";
-  const canRefund =
-    bookingDetails.bookingStatus === "canceled" &&
-    bookingDetails.paymentStatus === "paid";
+
+  const cancellationPolicy =
+    flightData.carrierInCharge.airlinePolicy.cancellationPolicy;
+
+  const { canCancel, canRefund, canDownload, canPay, canConfirm } =
+    allowedFlightBookingActionBtns(
+      bookingDetails.bookingStatus,
+      bookingDetails.paymentStatus,
+      cancellationPolicy,
+      bookingDetails.segments[0].departureDateTime,
+    );
   return (
     <main className="container mx-auto max-w-6xl px-6 py-12">
       <section className="mb-6 flex flex-col gap-6">
@@ -96,6 +112,11 @@ export default async function FlightBookingDetailsPage({ params }) {
           />
           <InfoCard title="PNR" value={bookingData.pnrCode} />
           <InfoCard title="Status" value={bookingData.ticketStatus} status />
+          <InfoCard
+            title="Payment Status"
+            value={bookingData.paymentStatus}
+            status
+          />
         </div>
       </section>
       <section>
@@ -192,7 +213,7 @@ export default async function FlightBookingDetailsPage({ params }) {
       </section>
 
       <section className="flex flex-wrap justify-start gap-4">
-        {bookingData.ticketStatus === "pending" && (
+        {canPay && (
           <Button className={"min-w-[100px]"} asChild>
             <Link
               href={`/user/my_bookings/flights/${bookingDetails.key}/payment`}
@@ -201,7 +222,7 @@ export default async function FlightBookingDetailsPage({ params }) {
             </Link>
           </Button>
         )}
-        {bookingData.ticketStatus === "confirmed" && (
+        {canDownload && (
           <Button className="text-wrap" addYears>
             <Link
               href={`/user/my_bookings/flights/${bookingDetails.key}/ticket`}
@@ -210,11 +231,9 @@ export default async function FlightBookingDetailsPage({ params }) {
             </Link>
           </Button>
         )}
-        {canCancel && <Button variant="destructive">Cancel Flight</Button>}
+        {canCancel && <CancelFlightBtn pnrCode={bookingDetails.pnrCode} />}
         {canRefund && (
-          <Button variant="outline" className="border-green-500 text-green-700">
-            Request Refund
-          </Button>
+          <RequestRefundFlightBtn pnrCode={bookingDetails.pnrCode} />
         )}
       </section>
     </main>
@@ -222,20 +241,18 @@ export default async function FlightBookingDetailsPage({ params }) {
 }
 
 function InfoCard({ title, value, status = false }) {
-  const statusStyles = {
-    confirmed: "bg-green-100 border-green-500 text-green-700",
-    pending: "bg-yellow-100 border-yellow-500 text-yellow-700",
-    canceled: "bg-red-100 border-red-500 text-red-700",
-  };
   return (
     <div
       className={cn(
         `rounded border bg-white p-4`,
-        status && statusStyles[value],
+        status && BOOKING_STATUS_BG_COL_TW_CLASS[value],
+        status && BOOKING_STATUS_TEXT_COL_TW_CLASS[value],
+        status && PAYMENT_STATUS_BG_TW_CLASS[value],
+        status && PAYMENT_STATUS_TEXT_COL_TW_CLASS[value],
       )}
     >
       <p className="text-xs uppercase text-muted-foreground">{title}</p>
-      <p className={`mt-1 text-sm font-medium`}>{value}</p>
+      <p className={`mt-1 text-sm font-medium capitalize`}>{value}</p>
     </div>
   );
 }
