@@ -82,6 +82,8 @@ export async function TicketsOrBookings() {
                   key: booking._id,
                   bookingStatus: booking.ticketStatus,
                   paymentStatus: booking.paymentStatus,
+                  cancellationPolicy:
+                    flightData.carrierInCharge.airlinePolicy.cancellationPolicy,
                   bookedAt: booking.createdAt,
                   itineraryFlightNumber: flightData.flightCode,
                   pnrCode: booking.pnrCode,
