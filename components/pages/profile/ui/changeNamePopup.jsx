@@ -23,15 +23,12 @@ export function ChangeNamePopup({ firstname, lastname }) {
   const [state, dispatch] = useFormState(updateNameAction, null);
   const [opened, setOpened] = useState(false);
   const { toast } = useToast();
-  let errors = {};
-
-  if (state?.error === "validation_error") {
-    for (let key in state?.message) {
-      errors[state?.message[key].path[0]] = state?.message[key].message;
-    }
-  }
+  const [errors, setErrors] = useState({});
 
   useEffect(() => {
+    if (state?.success === false && state?.error) {
+      setErrors(state?.error);
+    }
     if (state?.success) {
       setTimeout(() => {
         setOpened(false);
@@ -46,7 +43,7 @@ export function ChangeNamePopup({ firstname, lastname }) {
   }, [state]);
 
   return (
-    <Dialog open={ opened } onOpenChange={ setOpened }>
+    <Dialog open={opened} onOpenChange={setOpened}>
       <DialogTrigger asChild>
         <ChangeButton />
       </DialogTrigger>
@@ -56,29 +53,32 @@ export function ChangeNamePopup({ firstname, lastname }) {
           <DialogDescription>
             Make changes to your profile here. Click save when you&apos;re done.
           </DialogDescription>
-          { state?.error === "change_name_error" && (
-            <ErrorMessage message={ state?.message } />
-          ) }
+          {state?.success === false && !state?.error && (
+            <ErrorMessage message={state?.message} />
+          )}
         </DialogHeader>
-        <form id="change-name-form" action={ dispatch }>
+        <form id="change-name-form" action={dispatch}>
           <div className="grid gap-4 py-4">
             <Input
               id="firstname-hsviuxwv"
-              name="firstname"
+              name="firstName"
               label="First name"
-              defaultValue={ firstname }
-              error={ errors?.firstname }
+              defaultValue={firstname}
+              error={errors?.firstName}
             />
             <Input
               id="lastname-sjvch"
               label="Last name"
-              name="lastname"
-              defaultValue={ lastname }
-              error={ errors?.lastname }
+              name="lastName"
+              defaultValue={lastname}
+              error={errors?.lastName}
             />
           </div>
           <DialogFooter>
-            <SubmitBtn customTitle={ { default: "Save", onSubmitting: "Saving..." } } formId={ "change-name-form" } />
+            <SubmitBtn
+              customTitle={{ default: "Save", onSubmitting: "Saving..." }}
+              formId={"change-name-form"}
+            />
           </DialogFooter>
         </form>
       </DialogContent>
