@@ -27,8 +27,8 @@ export function AccountDetails({ userDetails }) {
               {accountDetails.name}
             </p>
             <ChangeNamePopup
-              firstname={userDetails.firstname}
-              lastname={userDetails.lastname}
+              firstname={userDetails.firstName}
+              lastname={userDetails.lastName}
             />
           </div>
         </div>
