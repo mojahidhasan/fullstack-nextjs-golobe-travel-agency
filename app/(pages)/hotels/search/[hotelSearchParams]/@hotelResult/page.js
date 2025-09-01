@@ -11,6 +11,8 @@ import extractFiltersObjFromSearchParams from "@/lib/helpers/hotels/extractFilte
 import validateHotelSearchFilter from "@/lib/zodSchemas/hotelSearchFilterValidation";
 import { singleRoomFareBreakdown } from "@/lib/helpers/hotels/priceCalculation";
 import { EmptyResult } from "@/components/EmptyResult";
+import { cookies } from "next/headers";
+import SetCookies from "@/components/helpers/SetCookies";
 export default async function HotelResultPage({ params }) {
   const decodedSp = decodeURIComponent(params.hotelSearchParams);
   const spObj = Object.fromEntries(new URLSearchParams(decodedSp));
@@ -106,8 +108,23 @@ export default async function HotelResultPage({ params }) {
     )
   ).filter(Boolean);
 
+  const sParams = JSON.stringify(validate.data);
+  const searchStateCookie = cookies().get("hotelSearchState")?.value;
+  let isNewSearch = searchStateCookie !== sParams;
+
   return (
     <div className="w-full">
+      {isNewSearch && (
+        <SetCookies
+          cookies={[
+            {
+              name: "hotelSearchState",
+              value: sParams,
+              expires: new Date(Date.now() + 10 * 24 * 60 * 60 * 1000),
+            },
+          ]}
+        />
+      )}
       <div className="mb-10">
         <Jumper id={"hotelResults"} />
       </div>
