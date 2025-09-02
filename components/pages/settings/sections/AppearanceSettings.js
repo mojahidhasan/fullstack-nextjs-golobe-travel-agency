@@ -3,8 +3,6 @@ import { useState } from "react";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-
 export default function AppearanceSettings() {
   const [theme, setTheme] = useState("system");
   const [accent, setAccent] = useState("#2563eb");
@@ -13,7 +11,7 @@ export default function AppearanceSettings() {
   const [motion, setMotion] = useState(false);
 
   return (
-    <div className="mx-auto max-w-4xl space-y-6 py-10">
+    <div className="mx-auto max-w-4xl space-y-3">
       {/* Theme Selection */}
       <Card>
         <CardHeader>

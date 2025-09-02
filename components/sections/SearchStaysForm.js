@@ -232,13 +232,12 @@ function SearchStaysForm({ params = {} }) {
       },
     ]);
 
-    await addToSearchHistoryAction("hotel", dFForm);
-
     if (!res?.success) {
       setIsSending(false);
       return;
     }
 
+    await addToSearchHistoryAction("hotel", dFForm);
     dispatch(setStayForm({ errors: {} }));
 
     const queryString = new URLSearchParams(dFForm).toString();
