@@ -1,4 +1,5 @@
 "use client";
+
 import { Button } from "@/components/ui/button";
 import {
   Sheet,
@@ -9,9 +10,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
-
-import { useFormState } from "react-dom";
-import { signOutAction } from "@/lib/actions";
+import Logout from "@/components/Logout";
 
 import { LogIn } from "lucide-react";
 import love from "@/public/icons/love.svg";
@@ -19,39 +18,17 @@ import plane from "@/public/icons/airplane-filled.svg";
 import hotel from "@/public/icons/building.svg";
 import support from "@/public/icons/support.svg";
 import logout from "@/public/icons/logout.svg";
-import { useEffect, useState } from "react";
-import { useToast } from "@/components/ui/use-toast";
+
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 
 import routes from "@/data/routes.json";
 export function SideBar({ isLoggedIn, sideBarLinksUser }) {
   const pathname = encodeURIComponent(usePathname());
-  const { toast } = useToast();
-  const [open, setOpen] = useState(false);
-  const [state, dispatch] = useFormState(signOutAction, undefined);
-
-  useEffect(() => {
-    if (state?.success === true) {
-      toast({
-        title: "Logout Successful",
-        description: state?.message,
-        variant: "default",
-      });
-      setOpen(false);
-    }
-
-    if (state?.success === false) {
-      toast({
-        title: "Logout Failed",
-        description: state?.message,
-        variant: "destructive",
-      });
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [state]);
+  const [sheetOpen, setSheetOpen] = useState(false);
 
   return (
-    <Sheet open={open} onOpenChange={() => setOpen(!open)}>
+    <Sheet open={sheetOpen} onOpenChange={() => setSheetOpen(!sheetOpen)}>
       <SheetTrigger asChild>
         <Button
           variant="ghost"
@@ -205,26 +182,18 @@ export function SideBar({ isLoggedIn, sideBarLinksUser }) {
                 </SheetClose>
               </li>
               <li>
-                <form
-                  onSubmit={async (e) => {
-                    e.preventDefault();
-                    toast({
-                      title: "Logging out",
-                      description: "Please wait...",
-                      variant: "info",
-                    });
-                    dispatch();
-                  }}
-                >
-                  <Button
-                    type="submit"
-                    className={"h-auto gap-2 p-0"}
-                    variant="link"
-                  >
-                    <Image src={logout} alt="logout_icon" width={20} />
-                    <span>Logout</span>
-                  </Button>
-                </form>
+                <Logout
+                  type="button"
+                  className={"h-auto gap-2 p-0"}
+                  variant="link"
+                  btnContent={
+                    <>
+                      <Image src={logout} alt="logout_icon" width={20} />
+                      <span>Logout</span>
+                    </>
+                  }
+                  onSuccess={() => setSheetOpen(false)}
+                />
               </li>
             </>
           )}
