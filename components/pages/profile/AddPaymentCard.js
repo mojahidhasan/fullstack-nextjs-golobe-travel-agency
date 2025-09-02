@@ -26,7 +26,11 @@ import { DialogDescription } from "@radix-ui/react-dialog";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PK);
-export function AddPaymentCard({ className, reloadSection = () => {} }) {
+export function AddPaymentCard({
+  customAddButtonElement,
+  className,
+  reloadSection = () => {},
+}) {
   const [setupIntentData, setSetupIntentData] = useState({
     clientSecret: null,
     customerId: null,
@@ -99,9 +103,11 @@ export function AddPaymentCard({ className, reloadSection = () => {} }) {
 
   return (
     <div>
-      <div className="text-center">
-        <Dialog open={opened} onOpenChange={setOpened}>
-          <DialogTrigger asChild title="Add a new card">
+      <Dialog open={opened} onOpenChange={setOpened}>
+        <DialogTrigger asChild title="Add a new card">
+          {customAddButtonElement ? (
+            customAddButtonElement
+          ) : (
             <div
               className={cn(
                 "flex h-[212px] w-[378px] cursor-pointer items-center justify-center rounded-[16px] border-2 border-dashed border-primary",
@@ -133,65 +139,65 @@ export function AddPaymentCard({ className, reloadSection = () => {} }) {
                 <p>Add a new card</p>
               </div>
             </div>
-          </DialogTrigger>
+          )}
+        </DialogTrigger>
 
-          <DialogContent>
-            {loading && <AddPaymentCardLoadingSkeleton />}
+        <DialogContent>
+          {loading && <AddPaymentCardLoadingSkeleton />}
 
-            {!loading &&
-              (fetchingError ? (
-                <>
-                  <DialogHeader>
-                    <DialogTitle>Something went wrong</DialogTitle>
-                  </DialogHeader>
-                  <DialogDescription>
-                    An error occurred during fetching necessary data to add a
-                    card. Please try again
-                  </DialogDescription>
-                  <Button
-                    onClick={() => {
-                      setTryAgain(tryAgain + 1);
-                    }}
-                  >
-                    Try again
-                  </Button>
-                </>
-              ) : (
-                <>
-                  <DialogHeader>
-                    <DialogTitle>Add a new card</DialogTitle>
-                  </DialogHeader>
-                  <div className="flex items-center justify-between rounded-md bg-cyan-300 p-3 text-sm font-medium text-cyan-800">
-                    <div className="flex items-center gap-2">
-                      <InfoIcon className="h-4 w-4" />
-                      Use the following card numbers:
-                      <Link
-                        className="text-cyan-800 underline"
-                        href={"https://stripe.com/docs/testing#cards"}
-                        target="_blank"
-                      >
-                        Demo cards
-                      </Link>
-                    </div>
+          {!loading &&
+            (fetchingError ? (
+              <>
+                <DialogHeader>
+                  <DialogTitle>Something went wrong</DialogTitle>
+                </DialogHeader>
+                <DialogDescription>
+                  An error occurred during fetching necessary data to add a
+                  card. Please try again
+                </DialogDescription>
+                <Button
+                  onClick={() => {
+                    setTryAgain(tryAgain + 1);
+                  }}
+                >
+                  Try again
+                </Button>
+              </>
+            ) : (
+              <>
+                <DialogHeader>
+                  <DialogTitle>Add a new card</DialogTitle>
+                </DialogHeader>
+                <div className="flex items-center justify-between rounded-md bg-cyan-300 p-3 text-sm font-medium text-cyan-800">
+                  <div className="flex items-center gap-2">
+                    <InfoIcon className="h-4 w-4" />
+                    Use the following card numbers:
+                    <Link
+                      className="text-cyan-800 underline"
+                      href={"https://stripe.com/docs/testing#cards"}
+                      target="_blank"
+                    >
+                      Demo cards
+                    </Link>
                   </div>
+                </div>
 
-                  <Elements
-                    stripe={stripePromise}
-                    options={{ clientSecret: setupIntentData.clientSecret }}
-                  >
-                    <Form
-                      clientSecret={setupIntentData.clientSecret}
-                      customerId={setupIntentData.customerId}
-                      tryAgain={setTryAgain}
-                      setOpened={setOpened}
-                      reloadSection={reloadSection}
-                    />
-                  </Elements>
-                </>
-              ))}
-          </DialogContent>
-        </Dialog>
-      </div>
+                <Elements
+                  stripe={stripePromise}
+                  options={{ clientSecret: setupIntentData.clientSecret }}
+                >
+                  <Form
+                    clientSecret={setupIntentData.clientSecret}
+                    customerId={setupIntentData.customerId}
+                    tryAgain={setTryAgain}
+                    setOpened={setOpened}
+                    reloadSection={reloadSection}
+                  />
+                </Elements>
+              </>
+            ))}
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
