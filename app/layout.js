@@ -3,7 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 
 import NextTopLoader from "nextjs-toploader";
-import { Toaster } from "@/components/ui/toaster";
+import { Toaster } from "@/components/ui/sonner";
 import { StoreProvider } from "@/app/StoreProvider";
 import { SessionProvider } from "next-auth/react";
 import mongoose from "mongoose";
@@ -120,7 +120,7 @@ export default async function RootLayout({ children }) {
           </StoreProvider>
         )}
         <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
-        <Toaster className="bg-secondary" />
+        <Toaster richColors closeButton expand position="top-right" />
         <SetNecessaryCookies />
       </body>
     </html>
