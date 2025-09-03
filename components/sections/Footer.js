@@ -1,6 +1,6 @@
 import "server-only";
 import { SubscribeNewsletter } from "@/components/SubscribeNewsletter";
-import { QuickLinks } from "@/components/QuickLinks";
+import { QuickLinks } from "@/components/sections/QuickLinks";
 import { Subscription } from "@/lib/db/models";
 import { auth } from "@/lib/auth";
 import Link from "next/link";
@@ -14,7 +14,7 @@ export async function Footer() {
     <footer className="relative pb-5">
       <SubscribeNewsletter isSubscribed={isSubscribed} />
       <QuickLinks />
-      <div className="relative z-10 text-sm text-center font-medium">
+      <div className="relative z-10 text-center text-sm font-medium">
         Developed by{" "}
         <Link
           aria-label={"Link to Github of the developer"}
@@ -26,7 +26,7 @@ export async function Footer() {
           Mojahid Hasan
         </Link>
       </div>
-      <div className="relative text-sm z-10 text-center font-medium">
+      <div className="relative z-10 text-center text-sm font-medium">
         UI design taken from &nbsp;
         <Link
           aria-label={"Link to Figma Community"}
