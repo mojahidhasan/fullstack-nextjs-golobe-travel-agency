@@ -6,6 +6,7 @@ import { usePathname, useSearchParams } from "next/navigation";
 import { cn } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { useToast } from "../ui/use-toast";
+import { getApiResponseWithToast } from "@/lib/helpers.client/apiResponse";
 /**
  *
  * @param {{keys: object, isBookmarked: boolean, flightOrHotel: string, className: string}} params keys object should contain data that you want to save or delete from db during like and unlike action
@@ -31,21 +32,18 @@ export const LikeButton = ({
 
   async function handleClick(e) {
     setLikeLoading(true);
-    const res = await likeOrUnlikeAction({
+    const likeUnlikePromise = likeOrUnlikeAction({
       keys,
       flightOrHotel,
       callbackPath,
     });
 
-    if (res?.success === false) {
-      toast({
-        title: "Failed",
-        description: "Something went wrong, please try again",
-        variant: "destructive",
-      });
-    } else {
-      setBookmarked(!bookmarked);
-    }
+    await getApiResponseWithToast(likeUnlikePromise, {
+      id: "like-unlike-action" + bookmarked,
+      onSuccess: () => {
+        setBookmarked(!bookmarked);
+      },
+    });
     setLikeLoading(false);
   }
   return (
