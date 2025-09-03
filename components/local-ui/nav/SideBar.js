@@ -10,7 +10,7 @@ import {
 import { Separator } from "@/components/ui/separator";
 import Image from "next/image";
 import Link from "next/link";
-import Logout from "@/components/Logout";
+import LogoutBtn from "@/components/LogoutBtn";
 
 import { LogIn } from "lucide-react";
 import love from "@/public/icons/love.svg";
@@ -182,7 +182,7 @@ export function SideBar({ isLoggedIn, sideBarLinksUser }) {
                 </SheetClose>
               </li>
               <li>
-                <Logout
+                <LogoutBtn
                   type="button"
                   className={"h-auto gap-2 p-0"}
                   variant="link"
