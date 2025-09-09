@@ -16,6 +16,7 @@ import { MaintenanceNotice } from "./MaintenanceNotice";
 import SetNecessaryCookies from "./SetNecessaryCookies";
 import { getOneDoc } from "@/lib/db/getOperationDB";
 import { headers } from "next/headers";
+import { Analytics } from "@vercel/analytics/next";
 
 const monse = Montserrat({
   subsets: ["latin"],
@@ -122,6 +123,7 @@ export default async function RootLayout({ children }) {
         <NextTopLoader showSpinner={false} color="hsl(159, 44%, 69%)" />
         <Toaster richColors closeButton expand position="top-right" />
         <SetNecessaryCookies />
+        <Analytics />
       </body>
     </html>
   );
