@@ -79,7 +79,7 @@ export default async function RootLayout({ children }) {
   const Notice = dynamic(
     () => import("@/app/_notice").then((mod) => mod.Notice),
     {
-      ssr: false,
+      ssr: true,
     },
   );
 
