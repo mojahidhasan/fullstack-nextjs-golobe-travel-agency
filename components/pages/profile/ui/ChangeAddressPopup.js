@@ -23,8 +23,7 @@ import {
 import { Input } from "@/components/local-ui/input";
 
 import { updateAddressAction } from "@/lib/actions";
-import { useFormState } from "react-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useActionState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 import { ErrorMessage } from "@/components/local-ui/errorMessage";
@@ -33,7 +32,7 @@ import { ChangeButton } from "./ChangeButton";
 import { Button } from "@/components/ui/button";
 
 export function ChangeAddressPopup() {
-  const [state, dispatch] = useFormState(updateAddressAction, null);
+  const [state, dispatch] = useActionState(updateAddressAction, null);
   const [opened, setOpened] = useState(false);
   const { toast } = useToast();
 

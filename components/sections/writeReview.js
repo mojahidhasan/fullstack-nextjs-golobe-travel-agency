@@ -7,8 +7,7 @@ import { LoginForm } from "../pages/login/LoginForm";
 import { SuccessMessage } from "../local-ui/successMessage";
 import { ErrorMessage } from "../local-ui/errorMessage";
 import { RatingStar } from "@/components/local-ui/ratingStar";
-import { useRef, useEffect, useState } from "react";
-import { useFormState } from "react-dom";
+import { useRef, useEffect, useState, useActionState } from "react";
 
 import { writeReviewAction } from "@/lib/actions";
 export function WriteReview({
@@ -24,7 +23,7 @@ export function WriteReview({
     isAlreadyReviewed,
     flightOrHotel,
   );
-  const [state, dispatch] = useFormState(extendedWriteReviewAction, undefined);
+  const [state, dispatch] = useActionState(extendedWriteReviewAction, undefined);
   const reviewInput = useRef();
   const reviewBtn = useRef();
 

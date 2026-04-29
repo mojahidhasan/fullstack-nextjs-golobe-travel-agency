@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useActionState } from "react";
 import { Input } from "@/components/local-ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { SubmitBtn } from "@/components/local-ui/SubmitBtn";
@@ -8,13 +8,12 @@ import { AuthenticateWith } from "@/components/local-ui/authenticateWith";
 import { ErrorMessage } from "@/components/local-ui/errorMessage";
 import { SuccessMessage } from "@/components/local-ui/successMessage";
 import { signUpAction } from "@/lib/actions";
-import { useFormState } from "react-dom";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import routes from "@/data/routes.json";
 export function SignupForm() {
   const router = useRouter();
-  const [state, dispatch] = useFormState(signUpAction, undefined);
+  const [state, dispatch] = useActionState(signUpAction, undefined);
 
   useEffect(() => {
     if (state?.success === true && state?.error === undefined) {

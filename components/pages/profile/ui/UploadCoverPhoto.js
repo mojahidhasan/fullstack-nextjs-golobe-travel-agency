@@ -17,8 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Image from "next/image";
 
-import { useState, useEffect } from "react";
-import { useFormState } from "react-dom";
+import { useState, useEffect, useActionState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 import { updateCoverPhotoAction } from "@/lib/actions";
@@ -27,7 +26,7 @@ import upload from "@/public/icons/upload.svg";
 export function UploadCoverPhoto() {
   const [file, setFile] = useState(null);
   const [opened, setOpened] = useState(false);
-  const [state, dispatch] = useFormState(updateCoverPhotoAction, undefined);
+  const [state, dispatch] = useActionState(updateCoverPhotoAction, undefined);
 
   const { toast } = useToast();
 

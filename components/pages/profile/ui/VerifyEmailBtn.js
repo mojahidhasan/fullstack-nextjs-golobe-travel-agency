@@ -1,13 +1,12 @@
 "use client";
-import { useFormState } from "react-dom";
 import { SubmitBtn } from "@/components/local-ui/SubmitBtn";
 import { sendEmailConfimationLinkAction } from "@/lib/actions";
 import { useToast } from "@/components/ui/use-toast";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useActionState } from "react";
 import { addMinutes } from "date-fns";
 export function VerifyEmailBtn({ email, sendAgainAt }) {
   const { toast } = useToast();
-  const [state, dispatch] = useFormState(
+  const [state, dispatch] = useActionState(
     sendEmailConfimationLinkAction,
     undefined
   );

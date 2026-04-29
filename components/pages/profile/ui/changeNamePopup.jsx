@@ -12,15 +12,14 @@ import {
 import { Input } from "@/components/local-ui/input";
 
 import { updateNameAction } from "@/lib/actions";
-import { useFormState } from "react-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useActionState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 import { ErrorMessage } from "@/components/local-ui/errorMessage";
 import { SubmitBtn } from "@/components/local-ui/SubmitBtn";
 import { ChangeButton } from "./ChangeButton";
 export function ChangeNamePopup({ firstname, lastname }) {
-  const [state, dispatch] = useFormState(updateNameAction, null);
+  const [state, dispatch] = useActionState(updateNameAction, null);
   const [opened, setOpened] = useState(false);
   const { toast } = useToast();
   const [errors, setErrors] = useState({});

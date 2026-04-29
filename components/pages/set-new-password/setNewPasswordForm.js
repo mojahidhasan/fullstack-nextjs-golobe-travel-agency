@@ -5,13 +5,13 @@ import { ErrorMessage } from "@/components/local-ui/errorMessage";
 import { SuccessMessage } from "@/components/local-ui/successMessage";
 import { AuthenticateWith } from "@/components/local-ui/authenticateWith";
 import { setNewPasswordAction } from "@/lib/actions";
-import { useFormState, useFormStatus } from "react-dom";
-import { useEffect } from "react";
+import { useFormStatus } from "react-dom";
+import { useEffect, useActionState } from "react";
 import { useRouter } from "next/navigation";
 import routes from "@/data/routes.json";
 export function SetNewPasswordForm() {
   const router = useRouter();
-  const [state, dispatch] = useFormState(setNewPasswordAction, undefined);
+  const [state, dispatch] = useActionState(setNewPasswordAction, undefined);
 
   useEffect(() => {
     if (state?.success === true) {
