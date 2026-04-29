@@ -12,10 +12,10 @@ const cspHeader = `
     frame-ancestors 'none';
     upgrade-insecure-requests;
 `;
-/** @type {import('next').NextConfig} */
 
 const helperDirName = join(process.cwd(), "lib/email/", "helpersHbs");
 
+/** @type {import('next').NextConfig} */
 const nextConfig = {
   webpack: (config, { isServer }) => {
     config.module.rules.push({

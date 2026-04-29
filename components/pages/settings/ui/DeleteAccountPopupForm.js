@@ -1,6 +1,5 @@
 "use client";
-import { useFormState } from "react-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/local-ui/input";
@@ -10,7 +9,7 @@ import { useToast } from "@/components/ui/use-toast";
 import { deleteAccountAction } from "@/lib/actions";
 
 export default function DeleteAccountSection() {
-  const [state, dispatch] = useFormState(deleteAccountAction, null);
+  const [state, dispatch] = useActionState(deleteAccountAction, null);
   const [showForm, setShowForm] = useState(false);
   const { toast } = useToast();
 

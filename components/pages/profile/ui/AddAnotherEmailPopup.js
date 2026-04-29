@@ -12,8 +12,7 @@ import {
 import { Input } from "@/components/local-ui/input";
 
 import { addNewEmailAction } from "@/lib/actions";
-import { useFormState } from "react-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useActionState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 import { ErrorMessage } from "@/components/local-ui/errorMessage";
@@ -21,7 +20,7 @@ import { SubmitBtn } from "@/components/local-ui/SubmitBtn";
 import { Button } from "@/components/ui/button";
 
 export function AddAnotherEmailPopup() {
-  const [state, dispatch] = useFormState(addNewEmailAction, null);
+  const [state, dispatch] = useActionState(addNewEmailAction, null);
   const [opened, setOpened] = useState(false);
   const { toast } = useToast();
 

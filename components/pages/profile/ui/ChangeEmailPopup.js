@@ -12,8 +12,7 @@ import {
 import { Input } from "@/components/local-ui/input";
 
 import { updateEmailAction } from "@/lib/actions";
-import { useFormState } from "react-dom";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useActionState } from "react";
 import { useToast } from "@/components/ui/use-toast";
 
 import { ErrorMessage } from "@/components/local-ui/errorMessage";
@@ -23,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { Edit } from "lucide-react";
 
 export function ChangeEmailPopup({ emails }) {
-  const [state, dispatch] = useFormState(updateEmailAction, null);
+  const [state, dispatch] = useActionState(updateEmailAction, null);
   const [opened, setOpened] = useState(false);
   const [isEmailsEdited, setIsEmailsEdited] = useState({});
   const { toast } = useToast();

@@ -7,14 +7,14 @@ import { SuccessMessage } from "@/components/local-ui/successMessage";
 import { ErrorMessage } from "@/components/local-ui/errorMessage";
 import { authenticateAction } from "@/lib/actions";
 
-import { useFormState, useFormStatus } from "react-dom";
+import { useFormStatus } from "react-dom";
 
 import routes from "@/data/routes.json";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useState, useActionState } from "react";
 export function LoginForm({ className }) {
   const [key, setKey] = useState(0);
-  const [state, dispatch] = useFormState(authenticateAction, null);
+  const [state, dispatch] = useActionState(authenticateAction, null);
   // for resetting the form
   if (state?.success === true) {
     setKey((prev) => prev + 1);
