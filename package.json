@@ -5,6 +5,9 @@
   "browserslist": [
     "defaults"
   ],
+  "engines": {
+    "node": "20.x"
+  },
   "scripts": {
     "dev": "cross-env TZ=UTC next dev",
     "build": "next build",
@@ -40,7 +43,7 @@
     "@stripe/react-stripe-js": "^3.7.0",
     "@stripe/stripe-js": "^7.3.0",
     "@vercel/analytics": "^1.5.0",
-    "bcrypt": "^6.0.0",
+    "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.0",
     "cmdk": "^1.0.0",
